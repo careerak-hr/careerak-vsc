@@ -236,16 +236,25 @@ export default function AuthPage() {
     setShowConfirmPopup(false);
     setLoading(true);
     try {
-      // تحويل الكلمات المفتاحية إلى مصفوفة للربط الذكي في أطلس
       const interestsArray = formData.interests ? formData.interests.split(',').map(s => s.trim()) : [];
       const keywordsArray = formData.companyKeywords ? formData.companyKeywords.split(',').map(s => s.trim()) : [];
 
+      // ✅ تعديل هام: مطابقة أسماء الحقول مع موديل السيرفر (User.js)
       const payload = {
         ...formData,
+        // تحويل education إلى educationLevel كما يتوقع السيرفر
+        educationLevel: formData.education,
+        // تحويل industry إلى companyIndustry كما يتوقع السيرفر
+        companyIndustry: formData.industry,
         profileImage,
         role: userType === 'companies' ? 'HR' : 'Employee',
         interests: interestsArray,
-        companyKeywords: keywordsArray
+        companyKeywords: keywordsArray,
+        // تحويل نوع الاحتياج للإنجليزية كما في الـ Enum بالسيرفر
+        specialNeedsType: formData.specialNeedType === 'بصري' ? 'visual' :
+                          formData.specialNeedType === 'سمعي' ? 'auditory' :
+                          formData.specialNeedType === 'نطقي' ? 'speech' :
+                          formData.specialNeedType === 'حركي' ? 'motor' : 'none'
       };
 
       const res = await userService.register(payload);
@@ -261,7 +270,8 @@ export default function AuthPage() {
       else navigate(user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
 
     } catch (err) {
-      setFieldErrors({ api: err.response?.data?.error || "Error Connection" });
+      console.error("Registration Error:", err.response?.data);
+      setFieldErrors({ api: err.response?.data?.error || "حدث خطأ في الاتصال بالسيرفر" });
     } finally {
       setLoading(false);
     }
@@ -423,10 +433,10 @@ export default function AuthPage() {
                 <div className="w-full">
                   <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={`${inputBase} !p-4 !text-xs appearance-none`} style={{ color: !formData.specialNeedType ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
                     <option value="" disabled>-- {t.needType} --</option>
-                    <option value="visual" style={{color: ACTIVE_COLOR}}>{t.visual}</option>
-                    <option value="hearing" style={{color: ACTIVE_COLOR}}>{t.hearing}</option>
-                    <option value="speech" style={{color: ACTIVE_COLOR}}>{t.speech}</option>
-                    <option value="motor" style={{color: ACTIVE_COLOR}}>{t.motor}</option>
+                    <option value="بصري" style={{color: ACTIVE_COLOR}}>{t.visual}</option>
+                    <option value="سمعي" style={{color: ACTIVE_COLOR}}>{t.hearing}</option>
+                    <option value="نطقي" style={{color: ACTIVE_COLOR}}>{t.speech}</option>
+                    <option value="حركي" style={{color: ACTIVE_COLOR}}>{t.motor}</option>
                   </select>
                 </div>
               )}
@@ -449,7 +459,6 @@ export default function AuthPage() {
         </form>
       </div>
 
-      {/* مودالات (نفس الكود السابق) */}
       {showPhotoModal && (
         <div className="fixed inset-0 z-[13000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">
