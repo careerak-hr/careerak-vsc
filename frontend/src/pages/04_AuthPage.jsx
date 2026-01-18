@@ -9,7 +9,7 @@ import PolicyPage from './14_PolicyPage';
 const countries = [
   { code: '+970', flag: '🇵🇸', name: 'فلسطين', nameEn: 'Palestine' },
   { code: '+962', flag: '🇯🇴', name: 'الأردن', nameEn: 'Jordan' },
-  { code: '+964', flag: 'العراق', name: 'العراق' },
+  { code: '+964', flag: '🇮🇶', name: 'العراق', nameEn: 'Iraq' },
   { code: '+963', flag: '🇸🇾', name: 'سوريا', nameEn: 'Syria' },
   { code: '+961', flag: '🇱🇧', name: 'لبنان', nameEn: 'Lebanon' },
   { code: '+966', flag: '🇸🇦', name: 'المملكة العربية السعودية', nameEn: 'Saudi Arabia' },
@@ -39,7 +39,7 @@ const countries = [
 const translations = {
   ar: {
     signup: "حساب جديد", firstName: "الاسم الأول", lastName: "الاسم الأخير",
-    companyName: "اسم المنشأة", country: "اختر البلد", mustAgree: "يرجى الموافقة على السياسة",
+    companyName: "اسم المنشأة", country: "اختر البلد", city: "المدينة", mustAgree: "يرجى الموافقة على السياسة",
     loading: "جاري التحميل...", aiAnalyzing: "تحليل ذكي محلي... 🤖",
     invalidFace: "⚠️ عذراً، هذه ليست صورة وجه بشرية حقيقية. يرجى التقاط صورة واضحة لوجهك.",
     invalidLogo: "⚠️ عذراً، هذا ليس شعاراً (Logo) صالحاً للمنشأة. يرجى رفع شعار رسمي.",
@@ -47,8 +47,10 @@ const translations = {
     confirmPassword: "تأكيد كلمة المرور", alreadyHave: "لديك حساب بالفعل؟", loginNow: "سجل دخولك الآن",
     eduLevel: "المستوى العلمي", determination: "هل أنت من ذوي الهمم؟", needType: "نوع الاحتياج",
     yes: "نعم", no: "لا", visual: "بصري", hearing: "سمعي", speech: "نطقي", motor: "حركي",
+    ultimate: "حالات قصوى", illiterate: "أميين",
     levels: ["دكتوراة", "ماجستير", "بكالوريوس", "ثانوية", "اعدادية / متوسطة", "ابتدائية / اساسية", "غير متعلم / أقرأ وأكتب", "أمي / لا أقرأ ولا أكتب"],
-    companyIndustry: "مجال عمل الشركة",
+    specialization: "التخصص / المجال", interests: "الاهتمامات (كلمات مفتاحية)",
+    companyIndustry: "مجال عمل الشركة", subIndustry: "المجال الفرعي", companyKeywords: "تارقت الشركة (كلمات مفتاحية)",
     industries: ["شركة صناعية", "شركة تجارية", "شركة خدمية", "مؤسسة تعليمية / أكاديمية", "مؤسسة حكومية", "مكتب", "محل", "ورشة"],
     authorizedName: "اسم الشخص المفوض", authorizedPosition: "وظيفة الشخص المفوض",
     confirmData: "متأكد من كامل البيانات ومسؤول عنها", cropTitle: "تحديد الصورة",
@@ -83,9 +85,11 @@ export default function AuthPage() {
 
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', companyName: '', email: '', password: '',
-    confirmPassword: '', phone: '', country: '', countryCode: '',
-    education: '', isSpecialNeeds: false, specialNeedType: '',
-    industry: '', authorizedName: '', authorizedPosition: ''
+    confirmPassword: '', phone: '', country: '', city: '', countryCode: '',
+    education: '', specialization: '', interests: '',
+    isSpecialNeeds: false, specialNeedType: '',
+    industry: '', subIndustry: '', companyKeywords: '',
+    authorizedName: '', authorizedPosition: ''
   });
 
   const [fieldErrors, setFieldErrors] = useState({});
@@ -122,7 +126,6 @@ export default function AuthPage() {
     } catch (e) {}
   };
 
-  // --- دالة الفحص المحلي الجذري دون الحاجة للسيرفر ---
   const validateImageLocally = (base64Str, type) => {
     return new Promise((resolve) => {
       const img = new Image();
@@ -130,30 +133,24 @@ export default function AuthPage() {
       img.onload = () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 100; // تصغير للتحليل السريع
+        canvas.width = 100;
         canvas.height = 100;
         ctx.drawImage(img, 0, 0, 100, 100);
         const imageData = ctx.getImageData(0, 0, 100, 100).data;
-
         let score = 0;
         if (type === 'face') {
-          // خوارزمية فحص تدرج البشرة والحيوية (Smart Skin & Feature Check)
           for (let i = 0; i < imageData.length; i += 4) {
             const r = imageData[i], g = imageData[i+1], b = imageData[i+2];
-            // منطق تمييز تدرج البشرة البشرية
             if (r > 95 && g > 40 && b > 20 && (Math.max(r,g,b) - Math.min(r,g,b) > 15) && Math.abs(r-g) > 15 && r > g && r > b) {
               score++;
             }
           }
-          // إذا كانت صورة قطة أو جماد، لن تحقق هذه النسبة من تدرج البشرة
           resolve(score > 800);
         } else {
-          // خوارزمية فحص اللوجو (Graphic & Contrast Detection)
           let uniqueColors = new Set();
           for (let i = 0; i < imageData.length; i += 40) {
             uniqueColors.add(`${imageData[i]},${imageData[i+1]},${imageData[i+2]}`);
           }
-          // الشعارات تتميز ببساطة الألوان والتباين العالي عكس الصور الطبيعية المشتتة
           resolve(uniqueColors.size < 40);
         }
       };
@@ -167,10 +164,7 @@ export default function AuthPage() {
       setImgAnalyzing(true);
       setImgError('');
       setProfileImage(null);
-
-      // الفحص المحلي الفوري
       const isValid = await validateImageLocally(croppedImage, userType === 'companies' ? 'logo' : 'face');
-
       setTimeout(() => {
         if (isValid) {
           setProfileImage(croppedImage);
@@ -180,8 +174,7 @@ export default function AuthPage() {
           setProfileImage(null);
         }
         setImgAnalyzing(false);
-      }, 1500); // محاكاة وقت المعالجة للجمالية فقط
-
+      }, 1500);
     } catch (e) {
       console.error(e);
       setImgAnalyzing(false);
@@ -206,16 +199,20 @@ export default function AuthPage() {
   const validate = () => {
     const errors = {};
     if (!formData.country) errors.country = lang === 'ar' ? "يرجى اختيار البلد" : "Select Country";
+    if (!formData.city) errors.city = lang === 'ar' ? "المدينة مطلوبة" : "City required";
+
     if (userType === 'individuals') {
       if (!formData.firstName) errors.firstName = lang === 'ar' ? "الاسم الأول مطلوب" : "First Name required";
       if (!formData.lastName) errors.lastName = lang === 'ar' ? "الاسم الأخير مطلوب" : "Last Name required";
       if (!formData.education) errors.education = lang === 'ar' ? "يرجى اختيار المستوى التعليمي" : "Select Education";
+      if (!formData.specialization) errors.specialization = lang === 'ar' ? "التخصص مطلوب" : "Specialization required";
     } else {
       if (!formData.companyName) errors.companyName = lang === 'ar' ? "اسم المنشأة مطلوب" : "Company Name required";
       if (!formData.industry) errors.industry = lang === 'ar' ? "يرجى اختيار مجال العمل" : "Select Industry";
       if (!formData.authorizedName) errors.authorizedName = lang === 'ar' ? "اسم المفوض مطلوب" : "Authorized Name required";
       if (!formData.authorizedPosition) errors.authorizedPosition = lang === 'ar' ? "وظيفة المفوض مطلوبة" : "Authorized Position required";
     }
+
     if (!formData.phone) errors.phone = lang === 'ar' ? "رقم الجوال مطلوب" : "Phone required";
     if (!formData.countryCode) errors.countryCode = lang === 'ar' ? "مفتاح الدولة مطلوب" : "Code required";
     if (!formData.email) errors.email = lang === 'ar' ? "البريد مطلوب" : "Email required";
@@ -239,13 +236,24 @@ export default function AuthPage() {
     setShowConfirmPopup(false);
     setLoading(true);
     try {
-      const payload = { ...formData, profileImage, role: userType === 'companies' ? 'HR' : 'Employee' };
+      // تحويل الكلمات المفتاحية إلى مصفوفة للربط الذكي في أطلس
+      const interestsArray = formData.interests ? formData.interests.split(',').map(s => s.trim()) : [];
+      const keywordsArray = formData.companyKeywords ? formData.companyKeywords.split(',').map(s => s.trim()) : [];
+
+      const payload = {
+        ...formData,
+        profileImage,
+        role: userType === 'companies' ? 'HR' : 'Employee',
+        interests: interestsArray,
+        companyKeywords: keywordsArray
+      };
+
       const res = await userService.register(payload);
       await performContextLogin(res.data.user, res.data.token);
 
       const user = res.data.user;
-      const isIlliterate = user.education === 'أمي / لا أقرأ ولا أكتب' || user.education === 'Illiterate';
-      const isBlind = user.isSpecialNeeds && user.specialNeedType === 'بصري';
+      const isIlliterate = user.educationLevel === 'أمي / لا أقرأ ولا أكتب';
+      const isBlind = user.isSpecialNeeds && user.specialNeedsType === 'visual';
 
       if (isIlliterate && isBlind) navigate('/onboarding-ultimate');
       else if (isIlliterate) navigate('/onboarding-illiterate');
@@ -253,7 +261,7 @@ export default function AuthPage() {
       else navigate(user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
 
     } catch (err) {
-      setFieldErrors({ api: err.response?.data?.error || "Error" });
+      setFieldErrors({ api: err.response?.data?.error || "Error Connection" });
     } finally {
       setLoading(false);
     }
@@ -261,7 +269,6 @@ export default function AuthPage() {
 
   const inputBase = "w-full p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent focus:border-[#1A365D]/20 outline-none transition-all";
   const errorText = "text-[10px] text-[#FF0000] font-black px-6 mt-1";
-
   const PLACEHOLDER_COLOR = "#A1A1A1";
   const ACTIVE_COLOR = "#1A365D";
 
@@ -281,6 +288,7 @@ export default function AuthPage() {
         </div>
 
         <form onSubmit={handleRegisterClick} className="w-full space-y-4 pb-10" noValidate>
+          {/* صورة الملف الشخصي */}
           <div className="flex flex-col items-center mb-2">
             <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative active:scale-95 transition-all">
               {profileImage ? <img src={profileImage} className="w-full h-full object-cover" /> : <span className="text-7xl opacity-20">👤</span>}
@@ -294,32 +302,48 @@ export default function AuthPage() {
             {imgError && <div className="px-6 text-center mt-2 animate-shake"><p style={{ color: '#FF0000', fontWeight: '900', fontSize: '11px' }}>{imgError}</p></div>}
           </div>
 
-          <div className="w-full">
-            <select name="country" value={formData.country} onChange={handleInputChange} className={`${inputBase} appearance-none`} style={{ color: !formData.country ? PLACEHOLDER_COLOR : ACTIVE_COLOR }} required>
-              <option value="" disabled>-- {t.country} --</option>
-              {countries.map(c => <option key={c.nameEn} value={c.nameEn} style={{color: ACTIVE_COLOR}}>{c.flag} {lang === 'ar' ? c.name : c.nameEn}</option>)}
-            </select>
-            {fieldErrors.country && <p className={errorText}>{fieldErrors.country}</p>}
+          {/* الموقع الجغرافي */}
+          <div className="w-full grid grid-cols-2 gap-3">
+            <div className="w-full">
+              <select name="country" value={formData.country} onChange={handleInputChange} className={`${inputBase} appearance-none text-xs`} style={{ color: !formData.country ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
+                <option value="" disabled>-- {t.country} --</option>
+                {countries.map(c => <option key={c.nameEn} value={c.nameEn} style={{color: ACTIVE_COLOR}}>{c.flag} {lang === 'ar' ? c.name : c.nameEn}</option>)}
+              </select>
+              {fieldErrors.country && <p className={errorText}>{fieldErrors.country}</p>}
+            </div>
+            <div className="w-full">
+              <input type="text" name="city" placeholder={t.city} value={formData.city} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
+              {fieldErrors.city && <p className={errorText}>{fieldErrors.city}</p>}
+            </div>
           </div>
 
           {userType === 'individuals' ? (
             <>
               <div className="w-full grid grid-cols-2 gap-3">
                 <div className="w-full">
-                  <input type="text" name="firstName" placeholder={t.firstName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
+                  <input type="text" name="firstName" placeholder={t.firstName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
                   {fieldErrors.firstName && <p className={errorText}>{fieldErrors.firstName}</p>}
                 </div>
                 <div className="w-full">
-                  <input type="text" name="lastName" placeholder={t.lastName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
+                  <input type="text" name="lastName" placeholder={t.lastName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
                   {fieldErrors.lastName && <p className={errorText}>{fieldErrors.lastName}</p>}
                 </div>
               </div>
+              <div className="w-full grid grid-cols-2 gap-3">
+                <div className="w-full">
+                  <select name="education" value={formData.education} onChange={handleInputChange} className={`${inputBase} appearance-none text-xs`} style={{ color: !formData.education ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
+                    <option value="" disabled>-- {t.eduLevel} --</option>
+                    {t.levels.map(l => <option key={l} value={l} style={{color: ACTIVE_COLOR}}>{l}</option>)}
+                  </select>
+                  {fieldErrors.education && <p className={errorText}>{fieldErrors.education}</p>}
+                </div>
+                <div className="w-full">
+                  <input type="text" name="specialization" placeholder={t.specialization} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
+                  {fieldErrors.specialization && <p className={errorText}>{fieldErrors.specialization}</p>}
+                </div>
+              </div>
               <div className="w-full">
-                <select name="education" value={formData.education} onChange={handleInputChange} className={`${inputBase} appearance-none`} style={{ color: !formData.education ? PLACEHOLDER_COLOR : ACTIVE_COLOR }} required>
-                  <option value="" disabled>-- {t.eduLevel} --</option>
-                  {t.levels.map(l => <option key={l} value={l} style={{color: ACTIVE_COLOR}}>{l}</option>)}
-                </select>
-                {fieldErrors.education && <p className={errorText}>{fieldErrors.education}</p>}
+                <input type="text" name="interests" placeholder={t.interests + " (برمجة، تسويق...)"} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
               </div>
             </>
           ) : (
@@ -328,12 +352,20 @@ export default function AuthPage() {
                 <input type="text" name="companyName" placeholder={t.companyName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
                 {fieldErrors.companyName && <p className={errorText}>{fieldErrors.companyName}</p>}
               </div>
+              <div className="w-full grid grid-cols-2 gap-3">
+                <div className="w-full">
+                  <select name="industry" value={formData.industry} onChange={handleInputChange} className={`${inputBase} appearance-none text-xs`} style={{ color: !formData.industry ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
+                    <option value="" disabled>-- {t.companyIndustry} --</option>
+                    {t.industries.map(ind => <option key={ind} value={ind} style={{color: ACTIVE_COLOR}}>{ind}</option>)}
+                  </select>
+                  {fieldErrors.industry && <p className={errorText}>{fieldErrors.industry}</p>}
+                </div>
+                <div className="w-full">
+                  <input type="text" name="subIndustry" placeholder={t.subIndustry} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
+                </div>
+              </div>
               <div className="w-full">
-                <select name="industry" value={formData.industry} onChange={handleInputChange} className={`${inputBase} appearance-none`} style={{ color: !formData.industry ? PLACEHOLDER_COLOR : ACTIVE_COLOR }} required>
-                  <option value="" disabled>-- {t.companyIndustry} --</option>
-                  {t.industries.map(ind => <option key={ind} value={ind} style={{color: ACTIVE_COLOR}}>{ind}</option>)}
-                </select>
-                {fieldErrors.industry && <p className={errorText}>{fieldErrors.industry}</p>}
+                <input type="text" name="companyKeywords" placeholder={t.companyKeywords + " (جافا، محاسب...)"} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="w-full">
@@ -348,19 +380,13 @@ export default function AuthPage() {
             </>
           )}
 
+          {/* الاتصال */}
           <div className="w-full flex gap-2 items-start">
             <div className="flex-1">
               <input type="tel" name="phone" placeholder={t.phone} onChange={handleInputChange} className="w-full p-5 bg-white/60 text-[#1A365D] placeholder:text-gray-400 rounded-[2rem] font-black text-center shadow-sm outline-none border-2 border-transparent focus:border-[#1A365D]/20 h-[68px]" />
               {fieldErrors.phone && <p className={errorText}>{fieldErrors.phone}</p>}
             </div>
-            <select
-              name="countryCode"
-              value={formData.countryCode}
-              onChange={handleInputChange}
-              className="w-32 p-5 bg-white/60 rounded-[2rem] outline-none font-black text-center shadow-sm appearance-none border-2 border-transparent h-[68px]"
-              style={{ color: !formData.countryCode ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}
-              required
-            >
+            <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className="w-32 p-5 bg-white/60 rounded-[2rem] outline-none font-black text-center shadow-sm appearance-none border-2 border-transparent h-[68px]" style={{ color: !formData.countryCode ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
               <option value="" disabled>--</option>
               {countries.map(c => <option key={c.code} value={c.code} style={{color: ACTIVE_COLOR}}>{c.flag} {c.code}</option>)}
             </select>
@@ -395,12 +421,12 @@ export default function AuthPage() {
               </div>
               {formData.isSpecialNeeds && (
                 <div className="w-full">
-                  <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={`${inputBase} !p-4 !text-xs appearance-none`} style={{ color: !formData.specialNeedType ? PLACEHOLDER_COLOR : ACTIVE_COLOR }} required>
+                  <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={`${inputBase} !p-4 !text-xs appearance-none`} style={{ color: !formData.specialNeedType ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
                     <option value="" disabled>-- {t.needType} --</option>
-                    <option value="بصري" style={{color: ACTIVE_COLOR}}>{t.visual}</option>
-                    <option value="سمعي" style={{color: ACTIVE_COLOR}}>{t.hearing}</option>
-                    <option value="نطقي" style={{color: ACTIVE_COLOR}}>{t.speech}</option>
-                    <option value="حركي" style={{color: ACTIVE_COLOR}}>{t.motor}</option>
+                    <option value="visual" style={{color: ACTIVE_COLOR}}>{t.visual}</option>
+                    <option value="hearing" style={{color: ACTIVE_COLOR}}>{t.hearing}</option>
+                    <option value="speech" style={{color: ACTIVE_COLOR}}>{t.speech}</option>
+                    <option value="motor" style={{color: ACTIVE_COLOR}}>{t.motor}</option>
                   </select>
                 </div>
               )}
@@ -423,6 +449,7 @@ export default function AuthPage() {
         </form>
       </div>
 
+      {/* مودالات (نفس الكود السابق) */}
       {showPhotoModal && (
         <div className="fixed inset-0 z-[13000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">

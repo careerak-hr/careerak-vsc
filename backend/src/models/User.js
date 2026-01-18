@@ -12,7 +12,11 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true, minlength: 8 },
   role: { type: String, enum: ['HR', 'Employee', 'Admin'], required: true },
   phone: { type: String, required: true, unique: true },
-  selectedCountry: { type: Object }, // جعلته اختيارياً لسهولة التجربة
+
+  // الموقع الجغرافي (رؤية م07)
+  country: { type: String, required: true, default: 'Egypt' },
+  city: { type: String },
+
   profileImage: String,
   privacyAccepted: { type: Boolean, default: true },
   
@@ -22,8 +26,14 @@ const userSchema = new mongoose.Schema({
 
   bio: String,
   website: String,
+
+  // نظام الشمول الإنساني (رؤية م07)
   isSpecialNeeds: { type: Boolean, default: false },
-  specialNeedsType: { type: String, default: 'none' }
+  specialNeedsType: {
+    type: String,
+    enum: ['none', 'visual', 'auditory', 'physical', 'ultimate', 'illiterate'],
+    default: 'none'
+  }
 }, baseOptions);
 
 userSchema.pre('save', async function(next) {
@@ -39,26 +49,43 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 
 const User = mongoose.model('User', userSchema);
 
-// تحديث موديل الأفراد ليتطابق مع الحقول المرسلة
+// --- تطوير نموذج الأفراد (Employees) ---
 const Individual = User.discriminator('Employee', new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   gender: { type: String },
-  dob: { type: String }, // تم التغيير من birthDate إلى dob
-  education: String,
+  dob: { type: String },
+
+  // المستوى التعليمي والتخصص (رؤية م07)
+  educationLevel: { type: String, required: true },
+  specialization: { type: String },
+
+  // نظام الربط الذكي
+  interests: [{ type: String }], // الكلمات المفتاحية للاهتمامات
+
   skills: String,
   experience: String,
   cvFile: String
 }));
 
-// تحديث موديل الشركات ليتطابق مع الحقول المرسلة
+// --- تطوير نموذج الشركات (HR) ---
 const Company = User.discriminator('HR', new mongoose.Schema({
   companyName: { type: String, required: true },
-  companyIndustry: String, // تم التغيير من companyField
-  authorizedPersonName: String, // تم التغيير من authorizedPerson
-  authorizedPersonJob: String,  // تم التغيير من authorizedPosition
+
+  // تصنيف الشركات (رؤية م07)
+  companyIndustry: { type: String, required: true },
+  subIndustry: { type: String },
+
+  // بيانات المسؤول
+  authorizedPersonName: String,
+  authorizedPersonJob: String,
+
+  // بيانات رسمية
   commercialRegister: String,
-  employeesCount: String
+  employeesCount: String,
+
+  // نظام الربط الذكي
+  companyKeywords: [{ type: String }] // الكلمات المفتاحية للبحث عن موظفين
 }));
 
 module.exports = { User, Individual, Company };
