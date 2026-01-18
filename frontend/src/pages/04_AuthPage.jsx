@@ -181,28 +181,18 @@ export default function AuthPage() {
     }
   };
 
-  // ✅ تعديل هام جداً: ضغط وتصغير الصورة لضمان عبورها من Vercel
   const getCroppedImg = (imageSrc, pixelCrop) => {
     return new Promise((resolve) => {
       const image = new Image();
       image.src = imageSrc;
       image.onload = () => {
         const canvas = document.createElement('canvas');
-        // تصغير الأبعاد لتقليل الحجم بشكل كبير
-        const TARGET_SIZE = 500;
+        const TARGET_SIZE = 400; // تقليل الحجم أكثر لضمان العبور
         canvas.width = TARGET_SIZE;
         canvas.height = TARGET_SIZE;
         const ctx = canvas.getContext('2d');
-
-        // رسم الجزء المقتطع بحجم 500x500
-        ctx.drawImage(
-          image,
-          pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
-          0, 0, TARGET_SIZE, TARGET_SIZE
-        );
-
-        // التحويل لـ JPEG بجودة متوسطة لتقليل الحجم أكثر (0.7)
-        resolve(canvas.toDataURL('image/jpeg', 0.7));
+        ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, TARGET_SIZE, TARGET_SIZE);
+        resolve(canvas.toDataURL('image/jpeg', 0.6));
       };
     });
   };
@@ -277,8 +267,11 @@ export default function AuthPage() {
       else navigate(user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
 
     } catch (err) {
-      console.error("Registration Error Response:", err.response);
-      setFieldErrors({ api: err.response?.data?.error || "حدث خطأ في الاتصال بالسيرفر. يرجى التأكد من تحديث التطبيق." });
+      // ✅ تعديل تشخيصي: إظهار الخطأ الحقيقي على الشاشة
+      console.error("DEBUG ERROR:", err);
+      const status = err.response?.status || "Network/CORS";
+      const detail = err.response?.data?.error || err.message;
+      setFieldErrors({ api: `❌ خطأ تشخيصي [${status}]: ${detail}` });
     } finally {
       setLoading(false);
     }
@@ -466,6 +459,7 @@ export default function AuthPage() {
         </form>
       </div>
 
+      {/* مودالات */}
       {showPhotoModal && (
         <div className="fixed inset-0 z-[13000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">
