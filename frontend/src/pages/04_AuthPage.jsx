@@ -181,17 +181,28 @@ export default function AuthPage() {
     }
   };
 
+  // ✅ تعديل هام جداً: ضغط وتصغير الصورة لضمان عبورها من Vercel
   const getCroppedImg = (imageSrc, pixelCrop) => {
     return new Promise((resolve) => {
       const image = new Image();
       image.src = imageSrc;
       image.onload = () => {
         const canvas = document.createElement('canvas');
-        canvas.width = pixelCrop.width;
-        canvas.height = pixelCrop.height;
+        // تصغير الأبعاد لتقليل الحجم بشكل كبير
+        const TARGET_SIZE = 500;
+        canvas.width = TARGET_SIZE;
+        canvas.height = TARGET_SIZE;
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, pixelCrop.width, pixelCrop.height);
-        resolve(canvas.toDataURL('image/jpeg'));
+
+        // رسم الجزء المقتطع بحجم 500x500
+        ctx.drawImage(
+          image,
+          pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height,
+          0, 0, TARGET_SIZE, TARGET_SIZE
+        );
+
+        // التحويل لـ JPEG بجودة متوسطة لتقليل الحجم أكثر (0.7)
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
       };
     });
   };
@@ -239,18 +250,14 @@ export default function AuthPage() {
       const interestsArray = formData.interests ? formData.interests.split(',').map(s => s.trim()) : [];
       const keywordsArray = formData.companyKeywords ? formData.companyKeywords.split(',').map(s => s.trim()) : [];
 
-      // ✅ تعديل هام: مطابقة أسماء الحقول مع موديل السيرفر (User.js)
       const payload = {
         ...formData,
-        // تحويل education إلى educationLevel كما يتوقع السيرفر
         educationLevel: formData.education,
-        // تحويل industry إلى companyIndustry كما يتوقع السيرفر
         companyIndustry: formData.industry,
         profileImage,
         role: userType === 'companies' ? 'HR' : 'Employee',
         interests: interestsArray,
         companyKeywords: keywordsArray,
-        // تحويل نوع الاحتياج للإنجليزية كما في الـ Enum بالسيرفر
         specialNeedsType: formData.specialNeedType === 'بصري' ? 'visual' :
                           formData.specialNeedType === 'سمعي' ? 'auditory' :
                           formData.specialNeedType === 'نطقي' ? 'speech' :
@@ -270,8 +277,8 @@ export default function AuthPage() {
       else navigate(user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
 
     } catch (err) {
-      console.error("Registration Error:", err.response?.data);
-      setFieldErrors({ api: err.response?.data?.error || "حدث خطأ في الاتصال بالسيرفر" });
+      console.error("Registration Error Response:", err.response);
+      setFieldErrors({ api: err.response?.data?.error || "حدث خطأ في الاتصال بالسيرفر. يرجى التأكد من تحديث التطبيق." });
     } finally {
       setLoading(false);
     }
