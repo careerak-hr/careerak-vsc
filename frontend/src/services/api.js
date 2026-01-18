@@ -1,25 +1,34 @@
 import axios from 'axios';
 import { Preferences } from '@capacitor/preferences';
 
-// عناوين احتياطية
-const LOCAL_SERVER = 'http://192.168.1.5:5000/api';
-const TUNNEL_BRIDGE = 'https://careerak-server.loca.lt/api';
-const BOOTSTRAP_URL =
-  'https://bootstrab-vercel-a3w37so3b-careeraks-projects.vercel.app/api/bootstrap';
+// ✅ الرابط العالمي الجديد المرفوع على Vercel
+const GLOBAL_SERVER = 'https://careerak-vsc-lj8x.vercel.app/api';
 
-// ✅ تعريف واحد فقط
+// عناوين احتياطية (للمطورين فقط)
+const LOCAL_SERVER = 'http://192.168.1.5:5000/api';
+
 const api = axios.create({
-  baseURL: LOCAL_SERVER,
+  baseURL: GLOBAL_SERVER, // جعل الرابط العالمي هو الخيار الأول والأساسي
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// اكتشاف أفضل سيرفر
+// اكتشاف أفضل سيرفر (نظام ذكي لضمان استمرارية العمل)
 export const discoverBestServer = async () => {
   try {
-    // 1️⃣ جرّب المحفوظ
+    // 1️⃣ جرّب الرابط العالمي أولاً
+    try {
+      await axios.get(`${GLOBAL_SERVER}/users/health-check`, { timeout: 5000 });
+      api.defaults.baseURL = GLOBAL_SERVER;
+      await Preferences.set({ key: 'cached_api_url', value: GLOBAL_SERVER });
+      return GLOBAL_SERVER;
+    } catch (e) {
+      console.log("Global server not reachable, trying alternates...");
+    }
+
+    // 2️⃣ جرّب المحفوظ سابقاً
     const { value: cached } = await Preferences.get({ key: 'cached_api_url' });
     if (cached) {
       try {
@@ -29,27 +38,13 @@ export const discoverBestServer = async () => {
       } catch {}
     }
 
-    // 2️⃣ جرّب المحلي / النفق
-    const servers = [LOCAL_SERVER, TUNNEL_BRIDGE];
-    for (const url of servers) {
-      try {
-        await axios.get(`${url}/users/health-check`, { timeout: 3000 });
-        api.defaults.baseURL = url;
-        await Preferences.set({ key: 'cached_api_url', value: url });
-        return url;
-      } catch {}
-    }
+    // 3️⃣ جرّب المحلي (في حال كان المطور يعمل محلياً)
+    try {
+      await axios.get(`${LOCAL_SERVER}/users/health-check`, { timeout: 3000 });
+      api.defaults.baseURL = LOCAL_SERVER;
+      return LOCAL_SERVER;
+    } catch {}
 
-    // 3️⃣ Bootstrap
-    const res = await axios.get(BOOTSTRAP_URL, { timeout: 5000 });
-    if (res.data?.apiBaseUrl) {
-      api.defaults.baseURL = res.data.apiBaseUrl;
-      await Preferences.set({
-        key: 'cached_api_url',
-        value: res.data.apiBaseUrl,
-      });
-      return res.data.apiBaseUrl;
-    }
   } catch (e) {
     console.error('Server discovery failed', e);
   }
@@ -57,23 +52,5 @@ export const discoverBestServer = async () => {
   return api.defaults.baseURL;
 };
 
-// إعادة الاكتشاف عند فشل الشبكة
-api.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-    const original = error.config;
-    if (!error.response && !original._retry) {
-      original._retry = true;
-      await Preferences.remove({ key: 'cached_api_url' });
-      const newURL = await discoverBestServer();
-      if (newURL) {
-        original.baseURL = newURL;
-        return api(original);
-      }
-    }
-    return Promise.reject(error);
-  }
-);
-
-// ✅ هذا هو التصدير الوحيد
+// التصدير الافتراضي
 export default api;
