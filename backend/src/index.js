@@ -58,22 +58,21 @@ app.get('/api/users/health-check', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'Operational' });
+  res.status(200).json({ status: 'Operational', service: 'Careerak Backend' });
+});
+
+// رسالة ترحيبية عند الدخول للرابط الرئيسي للتأكد من عمل السيرفر
+app.get('/', (req, res) => {
+  res.status(200).send('<h1>Careerak API is Running Successfully!</h1><p>Use /api/health to check status.</p>');
 });
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log('--------------------------------------------------');
-  console.log(`🚀 CAREERAK MASTER SERVER: RUNNING`);
-  
-  const interfaces = os.networkInterfaces();
-  for (const name of Object.keys(interfaces)) {
-    for (const iface of interfaces[name]) {
-      if (iface.family === 'IPv4' && !iface.internal) {
-        console.log(`👉 API URL: http://${iface.address}:${PORT}/api`);
-      }
-    }
-  }
-  console.log('--------------------------------------------------');
-});
+// هذا الجزء يضمن عمل السيرفر محلياً وفي Vercel
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 CAREERAK MASTER SERVER: RUNNING ON PORT ${PORT}`);
+  });
+}
+
+module.exports = app;
