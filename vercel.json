@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "functions": {
+    "backend/src/index.js": {
+      "runtime": "vercel-node@1.0.3"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/src/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/backend/src/index.js"
+    }
+  ]
+}
