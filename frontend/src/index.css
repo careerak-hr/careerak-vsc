@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
+
+/* حماية الهوية البصرية ومنع الوضع الداكن التلقائي */
+:root {
+  color-scheme: light !important;
+}
+
+/* القضاء نهائياً على شريط أدوات النظام ومنع التحديد */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  outline: none !important;
+}
+
+/* استثناء حقول الإدخال للسماح بالكتابة فقط دون قوائم النظام */
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text !important;
+  -khtml-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #E3DAD0 !important;
+  color: #1A365D;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  /* منع ظهور القائمة عند الضغط المطول على مستوى الجسم */
+  -webkit-context-menu: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #E3DAD0 !important;
+  }
+}
+
+.font-arabic {
+  font-family: 'Cairo', sans-serif !important;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #E3DAD0;
+}
+::-webkit-scrollbar-thumb {
+  background: #1A365D;
+  border-radius: 10px;
+}

@@ -1,0 +1,6 @@
+{
+  "appId": "com.careerak.app",
+  "appName": "Careerak",
+  "webDir": "build",
+  "bundledWebRuntime": false
+}

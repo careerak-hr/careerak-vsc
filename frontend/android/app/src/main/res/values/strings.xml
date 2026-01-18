@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Careerak</string>
+    <string name="title_activity_main">Careerak</string>
+    <string name="package_name">com.careerak.app</string>
+    <string name="custom_url_scheme">com.careerak.app</string>
+</resources>

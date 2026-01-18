@@ -1,0 +1,15 @@
+@keyframes fadeSlow {
+  0% { opacity: 0; }
+  20% { opacity: 0.4; }
+  80% { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+.language-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(26, 54, 93, 0.4); /* كحلي شفاف */
+  animation: fadeSlow 5s ease-in-out infinite;
+  z-index: 5;
+  pointer-events: none;
+}

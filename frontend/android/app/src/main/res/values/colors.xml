@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#1A365D</color>
+    <color name="colorPrimaryDark">#E3DAD0</color> <!-- هذا هو لون الـ Status Bar الجديد -->
+    <color name="colorAccent">#1A365D</color>
+</resources>
