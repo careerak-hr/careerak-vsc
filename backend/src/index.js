@@ -16,12 +16,11 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// إعدادات CORS متساهلة جداً لضمان عمل تطبيق الموبايل
+// ✅ تصحيح CORS: السماح للكل بدون تعارض مع Credentials
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 
 const isVercel = process.env.VERCEL === '1';
@@ -43,7 +42,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.get('/api/users/health-check', (req, res) => {
-  res.status(200).json({ status: 'ok', time: new Date() });
+  res.status(200).json({ status: 'ok', serverTime: new Date() });
 });
 
 app.get('/', (req, res) => {
