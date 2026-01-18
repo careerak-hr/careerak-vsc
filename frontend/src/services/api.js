@@ -1,27 +1,20 @@
 import axios from 'axios';
-import { Preferences } from '@capacitor/preferences';
 
-// ✅ الرابط العالمي النهائي (مباشرة وبدون تعقيد)
-const GLOBAL_SERVER = 'https://careerak-vsc-lj8x.vercel.app/api';
+// ✅ الرابط الأساسي نظيف وبدون سلاش في النهاية
+const BASE_URL = 'https://careerak-vsc-lj8x.vercel.app';
 
 const api = axios.create({
-  baseURL: GLOBAL_SERVER,
-  timeout: 30000, // زيادة وقت الانتظار لـ 30 ثانية
+  baseURL: BASE_URL,
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json'
   },
 });
 
-// دالة بسيطة للاختبار
+// ✅ إعادة تصدير الدالة لتجنب أخطاء الاستيراد في App.jsx و EntryPage
 export const discoverBestServer = async () => {
-  try {
-    const res = await axios.get(`${GLOBAL_SERVER}/users/health-check`, { timeout: 10000 });
-    console.log("Global Server is Alive!");
-    return GLOBAL_SERVER;
-  } catch (e) {
-    console.error("Global Server Connection Failed:", e.message);
-    return GLOBAL_SERVER;
-  }
+  return BASE_URL;
 };
 
 export default api;
