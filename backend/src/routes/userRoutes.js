@@ -3,12 +3,12 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const { auth } = require('../middleware/auth');
 
-// ✅ جميع المسارات أدناه تستخدم دوال مؤكدة الوجود في userController.js
+// مسارات عامة
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/analyze-image', userController.analyzeImage);
 
-// مسارات محمية بـ JWT
+// مسارات محمية
 router.get('/profile', auth, userController.getUserProfile);
 router.put('/profile', auth, userController.updateProfile);
 router.get('/ai-recommendations', auth, userController.getAIRecommendations);
