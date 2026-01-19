@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
-// ✅ منع إعادة الاتصال المتكرر في بيئة Vercel
-let cachedDb = null;
+// ✅ ذاكرة مؤقتة للاتصال خارج نطاق الدالة (Global Cache)
+let cachedConnection = null;
 
 const connectDB = async () => {
-  if (cachedDb) {
-    console.log("Using existing MongoDB connection");
-    return cachedDb;
+  if (cachedConnection) {
+    console.log("♻️ Using cached MongoDB connection");
+    return cachedConnection;
   }
 
   try {
@@ -17,16 +17,14 @@ const connectDB = async () => {
       dbName: 'careerak_db'
     };
 
-    console.log("Connecting to MongoDB Atlas...");
-    const conn = await mongoose.connect(process.env.MONGODB_URI, options);
+    console.log("📡 Connecting to MongoDB Atlas...");
+    cachedConnection = await mongoose.connect(process.env.MONGODB_URI, options);
 
-    cachedDb = conn;
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
-    return conn;
+    console.log(`✅ New MongoDB Connected: ${cachedConnection.connection.host}`);
+    return cachedConnection;
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    // في Vercel لا نريد قتل العملية بل نريد إظهار الخطأ
-    throw error;
+    throw error; // نمرر الخطأ ليتم معالجته في البوابة
   }
 };
 
