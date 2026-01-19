@@ -7,9 +7,10 @@ if (!cached) {
 }
 
 const connectDB = async () => {
-  if (cached.conn) {
-    console.log("♻️ MongoDB: Using cached connection");
-    return cached.conn;
+  console.log("🔍 MONGODB_URI =", process.env.MONGODB_URI);
+
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is UNDEFINED");
   }
 
   if (!cached.promise) {
