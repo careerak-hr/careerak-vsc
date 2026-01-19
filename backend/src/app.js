@@ -7,8 +7,22 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// 🔹 اتصال واحد فقط عند تشغيل السيرفر
-connectDB();
+// 🔹 اتصال عند أول طلب فقط (مناسب لـ Vercel)
+let isConnected = false;
+
+app.use(async (req, res, next) => {
+  try {
+    if (!isConnected) {
+      await connectDB();
+      isConnected = true;
+      console.log("✅ MongoDB connected (first request)");
+    }
+    next();
+  } catch (err) {
+    console.error("❌ MongoDB connection failed:", err.message);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
 
 // ✅ الحل الجذري لمشكلة CORS: السماح الكامل واليدوي
 app.use((req, res, next) => {
