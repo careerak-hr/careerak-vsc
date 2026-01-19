@@ -1,5 +1,3 @@
-// ✅ البوابة الرسمية والمبسطة لـ Vercel
-// تقوم فقط بتمرير الطلبات لمحرك الباكيند الصافي
-const app = require('../backend/src/app.js');
+const app = require('../backend/src/index');
 
 module.exports = app;

@@ -34,15 +34,16 @@ const countries = [
 const translations = {
   ar: {
     signup: "حساب جديد", firstName: "الاسم الأول", lastName: "الاسم الأخير",
-    companyName: "اسم المنشأة", country: "اختر البلد", city: "المدينة", mustAgree: "يرجى الموافقة على السياسة",
+    companyName: "اسم المنشأة", country: "البلد", city: "المدينة", mustAgree: "يرجى الموافقة على السياسة",
     loading: "جاري التحميل...", aiAnalyzing: "تحليل ذكي محلي... 🤖",
+    invalidFace: "⚠️ عذراً، هذه ليست صورة وجه بشرية حقيقية.",
     email: "البريد الإلكتروني", phone: "رقم الجوال", password: "كلمة المرور",
     confirmPassword: "تأكيد كلمة المرور", eduLevel: "المستوى العلمي",
     determination: "هل أنت من ذوي الهمم؟", specialization: "التخصص / المجال",
-    interests: "الاهتمامات (كلمات مفتاحية)", companyIndustry: "مجال العمل",
-    subIndustry: "المجال الفرعي", companyKeywords: "تارقت الشركة (كلمات مفتاحية)",
+    interests: "الاهتمامات (الكلمات المفتاحية)", companyIndustry: "مجال العمل",
+    subIndustry: "المجال الفرعي", companyKeywords: "تارقت الشركة (الكلمات المفتاحية)",
     authorizedName: "اسم الشخص المفوض", authorizedPosition: "وظيفة الشخص المفوض",
-    confirmData: "هل أنت متأكد من صحة البيانات ومسؤول عنها؟", yes: "نعم", no: "لا",
+    confirmData: "هل البيانات صحيحة؟", yes: "نعم", no: "لا",
     levels: ["دكتوراة", "ماجستير", "بكالوريوس", "ثانوية", "اعدادية", "ابتدائية", "غير متعلم", "أمي"],
     industries: ["صناعية", "تجارية", "خدمية", "تعليمية", "حكومية", "مكتب", "محل", "ورشة"],
     photoReq: "يرجى رفع صورة شخصية", visual: "بصري", hearing: "سمعي", speech: "نطقي", motor: "حركي", needType: "نوع الاحتياج"
@@ -65,6 +66,8 @@ export default function AuthPage() {
   const [showPolicy, setShowPolicy] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // ✅ التحكم المنفصل للعينين
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
 
@@ -129,9 +132,8 @@ export default function AuthPage() {
   const validate = () => {
     const errors = {};
     if (!formData.country) errors.country = "البلد مطلوب";
-    if (!formData.city) errors.city = "المدينة مطلوبة";
     if (!formData.email) errors.email = "البريد مطلوب";
-    if (!formData.password || formData.password.length < 8) errors.password = "كلمة المرور يجب أن تكون 8 رموز على الأقل";
+    if (!formData.password || formData.password.length < 8) errors.password = "كلمة المرور ضعيفة";
     if (formData.password !== formData.confirmPassword) errors.confirmPassword = "كلمات المرور لا تطابق";
 
     if (userType === 'individuals') {
@@ -158,27 +160,16 @@ export default function AuthPage() {
     setShowConfirmPopup(false);
     setLoading(true);
     try {
-      const interestsArray = formData.interests ? formData.interests.split(',').map(s => s.trim()) : [];
-      const keywordsArray = formData.companyKeywords ? formData.companyKeywords.split(',').map(s => s.trim()) : [];
-
       const payload = {
         ...formData,
         educationLevel: formData.education,
         companyIndustry: formData.industry,
         profileImage,
-        role: userType === 'companies' ? 'HR' : 'Employee',
-        interests: interestsArray,
-        companyKeywords: keywordsArray,
-        specialNeedsType: formData.specialNeedType === 'بصري' ? 'visual' :
-                          formData.specialNeedType === 'سمعي' ? 'auditory' :
-                          formData.specialNeedType === 'نطقي' ? 'speech' :
-                          formData.specialNeedType === 'حركي' ? 'motor' : 'none'
+        role: userType === 'companies' ? 'HR' : 'Employee'
       };
-
       const res = await userService.register(payload);
       await performContextLogin(res.data.user, res.data.token);
       navigate(res.data.user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
-
     } catch (err) {
       const serverError = err.response?.data?.error || "خطأ اتصال";
       const serverDetails = err.response?.data?.details || err.message;
@@ -208,12 +199,11 @@ export default function AuthPage() {
 
         <form onSubmit={handleRegisterClick} className="w-full space-y-4 pb-10">
           <div className="flex flex-col items-center mb-2">
-            <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative active:scale-95 transition-all">
-              {profileImage ? <img src={profileImage} className="w-full h-full object-cover" /> : <span className="text-7xl opacity-20">👤</span>}
+            <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative">
+              {profileImage ? <img src={profileImage} alt="Profile" className="w-full h-full object-cover" /> : <span className="text-7xl opacity-20">👤</span>}
             </button>
           </div>
 
-          {/* الجغرافيا */}
           <div className="grid grid-cols-2 gap-3">
             <select name="country" value={formData.country} onChange={handleInputChange} className={inputBase}>
               <option value="">-- {t.country} --</option>
@@ -224,7 +214,6 @@ export default function AuthPage() {
 
           {userType === 'individuals' ? (
             <>
-              {/* بيانات الأفراد: الاسم + التخصص */}
               <div className="grid grid-cols-2 gap-3">
                 <input type="text" name="firstName" placeholder={t.firstName} value={formData.firstName} onChange={handleInputChange} className={inputBase} />
                 <input type="text" name="lastName" placeholder={t.lastName} value={formData.lastName} onChange={handleInputChange} className={inputBase} />
@@ -240,7 +229,6 @@ export default function AuthPage() {
             </>
           ) : (
             <>
-              {/* بيانات الشركات: المجال + التارقت */}
               <input type="text" name="companyName" placeholder={t.companyName} value={formData.companyName} onChange={handleInputChange} className={inputBase} />
               <div className="grid grid-cols-2 gap-3">
                 <select name="industry" value={formData.industry} onChange={handleInputChange} className={inputBase}>
@@ -257,7 +245,6 @@ export default function AuthPage() {
             </>
           )}
 
-          {/* التواصل */}
           <div className="flex gap-2">
             <input type="tel" name="phone" placeholder={t.phone} value={formData.phone} onChange={handleInputChange} className="flex-1 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent text-xs" />
             <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className="w-24 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm text-xs">
@@ -268,7 +255,6 @@ export default function AuthPage() {
 
           <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} className={inputBase} />
 
-          {/* الأمان مع العينين (تأكيد كلمة المرور) */}
           <div className="relative">
             <input type={showPass ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} className={inputBase} />
             <button type="button" onClick={() => setShowPass(!showPass)} className="absolute left-6 top-1/2 -translate-y-1/2 opacity-30 text-xl">{showPass ? '👁️' : '🙈'}</button>
@@ -278,7 +264,7 @@ export default function AuthPage() {
             <button type="button" onClick={() => setShowConfirmPass(!showConfirmPass)} className="absolute left-6 top-1/2 -translate-y-1/2 opacity-30 text-xl">{showConfirmPass ? '👁️' : '🙈'}</button>
           </div>
 
-          {/* نظام الشمول (ذوي الهمم) */}
+          {/* ✅ حقل ذوي الهمم (موجود ومؤكد) */}
           {userType === 'individuals' && (
             <div className="p-6 bg-white/30 rounded-[2.5rem] space-y-4 shadow-inner border border-white/50">
               <div className="flex items-center justify-between px-2">
@@ -311,7 +297,6 @@ export default function AuthPage() {
             <p>أوافق على <button type="button" onClick={() => setShowPolicy(true)} className="underline font-black text-[#1A365D]">سياسة الخصوصية</button></p>
           </div>
 
-          {/* التشخيص الجراحي */}
           {fieldErrors.api && <div className="p-4 bg-red-100 text-[#FF0000] rounded-2xl text-[10px] font-black text-center border border-red-200 leading-relaxed animate-shake">{fieldErrors.api}</div>}
 
           <button type="submit" disabled={loading} className="w-full py-7 rounded-[3rem] bg-[#1A365D] text-white font-black shadow-2xl active:scale-95 transition-all text-2xl">
@@ -320,7 +305,7 @@ export default function AuthPage() {
         </form>
       </div>
 
-      {/* المودالات المعتادة */}
+      {/* المودالات */}
       {showPhotoModal && (
         <div className="fixed inset-0 z-[13000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">
