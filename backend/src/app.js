@@ -2,18 +2,26 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
 
-// استيراد المسارات
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// إعدادات الأمان
-app.use(cors());
+// ✅ الحل الجذري لمشكلة CORS: السماح الكامل واليدوي
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// ✅ الاتصال بقاعدة البيانات
+// الاتصال بقاعدة البيانات
 app.use(async (req, res, next) => {
   try {
     await connectDB();
@@ -23,27 +31,16 @@ app.use(async (req, res, next) => {
   }
 });
 
-// ✅ الحل الجذري: مطابقة المسارات مع نداءات الهاتف
-// جعل كل المسارات تبدأ بـ /api صراحة داخل Express
+// المسارات
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
 
-// مسار الفحص (سيصبح https://careerak-vsc.vercel.app/api/health)
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'Operational',
-    database: require('mongoose').connection.readyState === 1 ? 'Connected' : 'Disconnected'
-  });
+  res.status(200).json({ status: 'live', server: 'vercel' });
 });
 
-// الصفحة الرئيسية (سيصبح https://careerak-vsc.vercel.app/api)
-app.get('/api', (req, res) => {
-  res.status(200).send("Careerak API Gateway is LIVE.");
-});
-
-// مسار افتراضي للمساعدة في التشخيص
 app.get('/', (req, res) => {
-  res.status(200).send("Careerak Server is running. Use /api path for requests.");
+  res.status(200).send("Careerak API is Ready.");
 });
 
 module.exports = app;
