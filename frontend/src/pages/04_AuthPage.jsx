@@ -29,11 +29,6 @@ const countries = [
   { code: '+252', flag: '🇸🇴', name: 'الصومال', nameEn: 'Somalia' },
   { code: '+253', flag: '🇩🇯', name: 'جيبوتي', nameEn: 'Djibouti' },
   { code: '+269', flag: '🇰🇲', name: 'جزر القمر', nameEn: 'Comoros' },
-  { code: '+1', flag: '🇺🇸', name: 'USA', nameEn: 'USA' },
-  { code: '+44', flag: '🇬🇧', name: 'UK', nameEn: 'UK' },
-  { code: '+33', flag: '🇫🇷', name: 'France', nameEn: 'France' },
-  { code: '+49', flag: '🇩🇪', name: 'Germany', nameEn: 'Germany' },
-  { code: '+90', flag: '🇹🇷', name: 'Turkey', nameEn: 'Turkey' },
 ];
 
 const translations = {
@@ -41,20 +36,17 @@ const translations = {
     signup: "حساب جديد", firstName: "الاسم الأول", lastName: "الاسم الأخير",
     companyName: "اسم المنشأة", country: "اختر البلد", city: "المدينة", mustAgree: "يرجى الموافقة على السياسة",
     loading: "جاري التحميل...", aiAnalyzing: "تحليل ذكي محلي... 🤖",
-    invalidFace: "⚠️ عذراً، هذه ليست صورة وجه بشرية حقيقية. يرجى التقاط صورة واضحة لوجهك.",
-    invalidLogo: "⚠️ عذراً، هذا ليس شعاراً (Logo) صالحاً للمنشأة. يرجى رفع شعار رسمي.",
-    email: "البريد الإلكتروني", emailOptional: "البريد الإلكتروني (اختياري)", phone: "رقم الجوال", password: "كلمة المرور",
-    confirmPassword: "تأكيد كلمة المرور", alreadyHave: "لديك حساب بالفعل؟", loginNow: "سجل دخولك الآن",
-    eduLevel: "المستوى العلمي", determination: "هل أنت من ذوي الهمم؟", needType: "نوع الاحتياج",
-    yes: "نعم", no: "لا", visual: "بصري", hearing: "سمعي", speech: "نطقي", motor: "حركي",
-    ultimate: "حالات قصوى", illiterate: "أميين",
-    levels: ["دكتوراة", "ماجستير", "بكالوريوس", "ثانوية", "اعدادية / متوسطة", "ابتدائية / اساسية", "غير متعلم / أقرأ وأكتب", "أمي / لا أقرأ ولا أكتب"],
-    specialization: "التخصص / المجال", interests: "الاهتمامات (كلمات مفتاحية)",
-    companyIndustry: "مجال عمل الشركة", subIndustry: "المجال الفرعي", companyKeywords: "تارقت الشركة (كلمات مفتاحية)",
-    industries: ["شركة صناعية", "شركة تجارية", "شركة خدمية", "مؤسسة تعليمية / أكاديمية", "مؤسسة حكومية", "مكتب", "محل", "ورشة"],
-    authorizedName: "اسم الشخص المفوض", authorizedPosition: "وظيفة الشخص المفوض",
-    confirmData: "متأكد من كامل البيانات ومسؤول عنها", cropTitle: "تحديد الصورة",
-    passMatch: "كلمات المرور غير متطابقة", photoReq: "يرجى رفع صورة شخصية"
+    invalidFace: "⚠️ عذراً، هذه ليست صورة وجه بشرية حقيقية.",
+    invalidLogo: "⚠️ عذراً، هذا ليس شعاراً صالحاً.",
+    email: "البريد الإلكتروني", phone: "رقم الجوال", password: "كلمة المرور",
+    confirmPassword: "تأكيد كلمة المرور", eduLevel: "المستوى العلمي",
+    determination: "هل أنت من ذوي الهمم؟", specialization: "التخصص / المجال",
+    interests: "الاهتمامات", companyIndustry: "مجال العمل",
+    authorizedName: "اسم المفوض", authorizedPosition: "وظيفة المفوض",
+    confirmData: "هل أنت متأكد من البيانات؟", yes: "نعم", no: "لا",
+    levels: ["دكتوراة", "ماجستير", "بكالوريوس", "ثانوية", "اعدادية", "ابتدائية", "غير متعلم", "أمي"],
+    industries: ["صناعية", "تجارية", "خدمية", "تعليمية", "حكومية", "مكتب", "محل", "ورشة"],
+    photoReq: "يرجى رفع صورة"
   }
 };
 
@@ -99,13 +91,7 @@ export default function AuthPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (fieldErrors[name]) {
-      setFieldErrors(prev => {
-        const newErrs = { ...prev };
-        delete newErrs[name];
-        return newErrs;
-      });
-    }
+    if (fieldErrors[name] || fieldErrors.api) setFieldErrors({});
   };
 
   const onCropComplete = useCallback((activeArea, activeAreaPixels) => {
@@ -126,100 +112,31 @@ export default function AuthPage() {
     } catch (e) {}
   };
 
-  const validateImageLocally = (base64Str, type) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.src = base64Str;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 100;
-        canvas.height = 100;
-        ctx.drawImage(img, 0, 0, 100, 100);
-        const imageData = ctx.getImageData(0, 0, 100, 100).data;
-        let score = 0;
-        if (type === 'face') {
-          for (let i = 0; i < imageData.length; i += 4) {
-            const r = imageData[i], g = imageData[i+1], b = imageData[i+2];
-            if (r > 95 && g > 40 && b > 20 && (Math.max(r,g,b) - Math.min(r,g,b) > 15) && Math.abs(r-g) > 15 && r > g && r > b) {
-              score++;
-            }
-          }
-          resolve(score > 800);
-        } else {
-          let uniqueColors = new Set();
-          for (let i = 0; i < imageData.length; i += 40) {
-            uniqueColors.add(`${imageData[i]},${imageData[i+1]},${imageData[i+2]}`);
-          }
-          resolve(uniqueColors.size < 40);
-        }
-      };
-    });
-  };
-
   const handleCropSave = async () => {
     try {
-      const croppedImage = await getCroppedImg(tempImage, croppedAreaPixels);
-      setShowCropModal(false);
-      setImgAnalyzing(true);
-      setImgError('');
-      setProfileImage(null);
-      const isValid = await validateImageLocally(croppedImage, userType === 'companies' ? 'logo' : 'face');
-      setTimeout(() => {
-        if (isValid) {
-          setProfileImage(croppedImage);
-          setImgError('');
-        } else {
-          setImgError(userType === 'companies' ? t.invalidLogo : t.invalidFace);
-          setProfileImage(null);
-        }
-        setImgAnalyzing(false);
-      }, 1500);
-    } catch (e) {
-      console.error(e);
-      setImgAnalyzing(false);
-    }
-  };
-
-  const getCroppedImg = (imageSrc, pixelCrop) => {
-    return new Promise((resolve) => {
       const image = new Image();
-      image.src = imageSrc;
+      image.src = tempImage;
       image.onload = () => {
         const canvas = document.createElement('canvas');
-        const TARGET_SIZE = 400; // تقليل الحجم أكثر لضمان العبور
+        const TARGET_SIZE = 400;
         canvas.width = TARGET_SIZE;
         canvas.height = TARGET_SIZE;
         const ctx = canvas.getContext('2d');
-        ctx.drawImage(image, pixelCrop.x, pixelCrop.y, pixelCrop.width, pixelCrop.height, 0, 0, TARGET_SIZE, TARGET_SIZE);
-        resolve(canvas.toDataURL('image/jpeg', 0.6));
+        ctx.drawImage(image, croppedAreaPixels.x, croppedAreaPixels.y, croppedAreaPixels.width, croppedAreaPixels.height, 0, 0, TARGET_SIZE, TARGET_SIZE);
+        setProfileImage(canvas.toDataURL('image/jpeg', 0.6));
+        setShowCropModal(false);
       };
-    });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const validate = () => {
     const errors = {};
-    if (!formData.country) errors.country = lang === 'ar' ? "يرجى اختيار البلد" : "Select Country";
-    if (!formData.city) errors.city = lang === 'ar' ? "المدينة مطلوبة" : "City required";
-
-    if (userType === 'individuals') {
-      if (!formData.firstName) errors.firstName = lang === 'ar' ? "الاسم الأول مطلوب" : "First Name required";
-      if (!formData.lastName) errors.lastName = lang === 'ar' ? "الاسم الأخير مطلوب" : "Last Name required";
-      if (!formData.education) errors.education = lang === 'ar' ? "يرجى اختيار المستوى التعليمي" : "Select Education";
-      if (!formData.specialization) errors.specialization = lang === 'ar' ? "التخصص مطلوب" : "Specialization required";
-    } else {
-      if (!formData.companyName) errors.companyName = lang === 'ar' ? "اسم المنشأة مطلوب" : "Company Name required";
-      if (!formData.industry) errors.industry = lang === 'ar' ? "يرجى اختيار مجال العمل" : "Select Industry";
-      if (!formData.authorizedName) errors.authorizedName = lang === 'ar' ? "اسم المفوض مطلوب" : "Authorized Name required";
-      if (!formData.authorizedPosition) errors.authorizedPosition = lang === 'ar' ? "وظيفة المفوض مطلوبة" : "Authorized Position required";
-    }
-
-    if (!formData.phone) errors.phone = lang === 'ar' ? "رقم الجوال مطلوب" : "Phone required";
-    if (!formData.countryCode) errors.countryCode = lang === 'ar' ? "مفتاح الدولة مطلوب" : "Code required";
-    if (!formData.email) errors.email = lang === 'ar' ? "البريد مطلوب" : "Email required";
-    if (!formData.password) errors.password = lang === 'ar' ? "كلمة المرور مطلوبة" : "Password required";
-    if (formData.password !== formData.confirmPassword) errors.confirmPassword = t.passMatch;
-
+    if (!formData.country) errors.country = "يرجى اختيار البلد";
+    if (!formData.email) errors.email = "البريد مطلوب";
+    if (!formData.password || formData.password.length < 8) errors.password = "كلمة المرور يجب أن تكون 8 رموز على الأقل";
+    if (formData.password !== formData.confirmPassword) errors.confirmPassword = "كلمات المرور غير متطابقة";
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -227,9 +144,8 @@ export default function AuthPage() {
   const handleRegisterClick = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    if (imgAnalyzing) return;
     if (!profileImage) { setImgError(t.photoReq); return; }
-    if (!agreed) { setFieldErrors(p => ({...p, agreed: t.mustAgree})); return; }
+    if (!agreed) { setFieldErrors({agreed: "يرجى الموافقة على السياسة"}); return; }
     setShowConfirmPopup(true);
   };
 
@@ -237,41 +153,23 @@ export default function AuthPage() {
     setShowConfirmPopup(false);
     setLoading(true);
     try {
-      const interestsArray = formData.interests ? formData.interests.split(',').map(s => s.trim()) : [];
-      const keywordsArray = formData.companyKeywords ? formData.companyKeywords.split(',').map(s => s.trim()) : [];
-
       const payload = {
         ...formData,
         educationLevel: formData.education,
         companyIndustry: formData.industry,
         profileImage,
-        role: userType === 'companies' ? 'HR' : 'Employee',
-        interests: interestsArray,
-        companyKeywords: keywordsArray,
-        specialNeedsType: formData.specialNeedType === 'بصري' ? 'visual' :
-                          formData.specialNeedType === 'سمعي' ? 'auditory' :
-                          formData.specialNeedType === 'نطقي' ? 'speech' :
-                          formData.specialNeedType === 'حركي' ? 'motor' : 'none'
+        role: userType === 'companies' ? 'HR' : 'Employee'
       };
 
       const res = await userService.register(payload);
       await performContextLogin(res.data.user, res.data.token);
-
-      const user = res.data.user;
-      const isIlliterate = user.educationLevel === 'أمي / لا أقرأ ولا أكتب';
-      const isBlind = user.isSpecialNeeds && user.specialNeedsType === 'visual';
-
-      if (isIlliterate && isBlind) navigate('/onboarding-ultimate');
-      else if (isIlliterate) navigate('/onboarding-illiterate');
-      else if (isBlind) navigate('/onboarding-visual');
-      else navigate(user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
+      navigate(res.data.user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
 
     } catch (err) {
-      // ✅ تعديل تشخيصي: إظهار الخطأ الحقيقي على الشاشة
-      console.error("DEBUG ERROR:", err);
-      const status = err.response?.status || "Network/CORS";
-      const detail = err.response?.data?.error || err.message;
-      setFieldErrors({ api: `❌ خطأ تشخيصي [${status}]: ${detail}` });
+      // ✅ إظهار تفاصيل الخطأ الحقيقي من أطلس
+      const serverError = err.response?.data?.error || "خطأ غير معروف";
+      const serverDetails = err.response?.data?.details || "";
+      setFieldErrors({ api: `❌ فشل في أطلس: ${serverError} (${serverDetails})` });
     } finally {
       setLoading(false);
     }
@@ -279,12 +177,10 @@ export default function AuthPage() {
 
   const inputBase = "w-full p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent focus:border-[#1A365D]/20 outline-none transition-all";
   const errorText = "text-[10px] text-[#FF0000] font-black px-6 mt-1";
-  const PLACEHOLDER_COLOR = "#A1A1A1";
-  const ACTIVE_COLOR = "#1A365D";
 
   return (
-    <div className={`min-h-screen w-full flex flex-col items-center p-4 bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-      {showPolicy && <div className="fixed inset-0 z-[12000] bg-white overflow-y-auto"><PolicyPage /><button onClick={() => { setAgreed(true); setShowPolicy(false); }} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-xs py-5 bg-[#1A365D] text-white rounded-2xl font-black shadow-2xl">{lang === 'ar' ? 'أوافق' : 'I Agree'}</button></div>}
+    <div className={`min-h-screen w-full flex flex-col items-center p-4 bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir="rtl">
+      {showPolicy && <div className="fixed inset-0 z-[12000] bg-white overflow-y-auto"><PolicyPage /><button onClick={() => { setAgreed(true); setShowPolicy(false); }} className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-xs py-5 bg-[#1A365D] text-white rounded-2xl font-black shadow-2xl">أوافق</button></div>}
 
       <div className="w-full max-w-lg flex flex-col items-center mt-4">
         <div className="text-center mb-6">
@@ -293,181 +189,81 @@ export default function AuthPage() {
         </div>
 
         <div className="flex gap-2 p-1 bg-white/30 rounded-2xl mb-6 w-full shadow-inner">
-          <button type="button" onClick={() => setUserType('individuals')} className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${userType === 'individuals' ? 'bg-[#1A365D] text-white shadow-lg' : 'text-[#1A365D]/40'}`}>{lang === 'ar' ? 'أفراد' : 'Individuals'}</button>
-          <button type="button" onClick={() => setUserType('companies')} className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${userType === 'companies' ? 'bg-[#1A365D] text-white shadow-lg' : 'text-[#1A365D]/40'}`}>{lang === 'ar' ? 'شركات' : 'Companies'}</button>
+          <button type="button" onClick={() => setUserType('individuals')} className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${userType === 'individuals' ? 'bg-[#1A365D] text-white shadow-lg' : 'text-[#1A365D]/40'}`}>أفراد</button>
+          <button type="button" onClick={() => setUserType('companies')} className={`flex-1 py-4 rounded-xl text-xs font-black transition-all ${userType === 'companies' ? 'bg-[#1A365D] text-white shadow-lg' : 'text-[#1A365D]/40'}`}>شركات</button>
         </div>
 
-        <form onSubmit={handleRegisterClick} className="w-full space-y-4 pb-10" noValidate>
+        <form onSubmit={handleRegisterClick} className="w-full space-y-4 pb-10">
           {/* صورة الملف الشخصي */}
           <div className="flex flex-col items-center mb-2">
-            <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative active:scale-95 transition-all">
+            <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative">
               {profileImage ? <img src={profileImage} className="w-full h-full object-cover" /> : <span className="text-7xl opacity-20">👤</span>}
-              {imgAnalyzing && (
-                <div className="absolute inset-0 bg-[#1A365D]/60 flex flex-col items-center justify-center gap-2">
-                  <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span className="text-[10px] text-white font-bold">{t.aiAnalyzing}</span>
-                </div>
-              )}
             </button>
-            {imgError && <div className="px-6 text-center mt-2 animate-shake"><p style={{ color: '#FF0000', fontWeight: '900', fontSize: '11px' }}>{imgError}</p></div>}
+            {imgError && <p className={errorText}>{imgError}</p>}
           </div>
 
-          {/* الموقع الجغرافي */}
-          <div className="w-full grid grid-cols-2 gap-3">
-            <div className="w-full">
-              <select name="country" value={formData.country} onChange={handleInputChange} className={`${inputBase} appearance-none text-xs`} style={{ color: !formData.country ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
-                <option value="" disabled>-- {t.country} --</option>
-                {countries.map(c => <option key={c.nameEn} value={c.nameEn} style={{color: ACTIVE_COLOR}}>{c.flag} {lang === 'ar' ? c.name : c.nameEn}</option>)}
-              </select>
-              {fieldErrors.country && <p className={errorText}>{fieldErrors.country}</p>}
-            </div>
-            <div className="w-full">
-              <input type="text" name="city" placeholder={t.city} value={formData.city} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-              {fieldErrors.city && <p className={errorText}>{fieldErrors.city}</p>}
-            </div>
+          {/* الحقول الأساسية */}
+          <div className="grid grid-cols-2 gap-3">
+            <select name="country" onChange={handleInputChange} className={inputBase}>
+              <option value="">-- اختر البلد --</option>
+              {countries.map(c => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
+            </select>
+            <input type="text" name="city" placeholder="المدينة" onChange={handleInputChange} className={inputBase} />
           </div>
 
           {userType === 'individuals' ? (
             <>
-              <div className="w-full grid grid-cols-2 gap-3">
-                <div className="w-full">
-                  <input type="text" name="firstName" placeholder={t.firstName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-                  {fieldErrors.firstName && <p className={errorText}>{fieldErrors.firstName}</p>}
-                </div>
-                <div className="w-full">
-                  <input type="text" name="lastName" placeholder={t.lastName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-                  {fieldErrors.lastName && <p className={errorText}>{fieldErrors.lastName}</p>}
-                </div>
+              <div className="grid grid-cols-2 gap-3">
+                <input type="text" name="firstName" placeholder="الاسم الأول" onChange={handleInputChange} className={inputBase} />
+                <input type="text" name="lastName" placeholder="الاسم الأخير" onChange={handleInputChange} className={inputBase} />
               </div>
-              <div className="w-full grid grid-cols-2 gap-3">
-                <div className="w-full">
-                  <select name="education" value={formData.education} onChange={handleInputChange} className={`${inputBase} appearance-none text-xs`} style={{ color: !formData.education ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
-                    <option value="" disabled>-- {t.eduLevel} --</option>
-                    {t.levels.map(l => <option key={l} value={l} style={{color: ACTIVE_COLOR}}>{l}</option>)}
-                  </select>
-                  {fieldErrors.education && <p className={errorText}>{fieldErrors.education}</p>}
-                </div>
-                <div className="w-full">
-                  <input type="text" name="specialization" placeholder={t.specialization} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-                  {fieldErrors.specialization && <p className={errorText}>{fieldErrors.specialization}</p>}
-                </div>
-              </div>
-              <div className="w-full">
-                <input type="text" name="interests" placeholder={t.interests + " (برمجة، تسويق...)"} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-              </div>
+              <select name="education" onChange={handleInputChange} className={inputBase}>
+                <option value="">-- المستوى العلمي --</option>
+                {t.levels.map(l => <option key={l} value={l}>{l}</option>)}
+              </select>
             </>
           ) : (
-            <>
-              <div className="w-full">
-                <input type="text" name="companyName" placeholder={t.companyName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
-                {fieldErrors.companyName && <p className={errorText}>{fieldErrors.companyName}</p>}
-              </div>
-              <div className="w-full grid grid-cols-2 gap-3">
-                <div className="w-full">
-                  <select name="industry" value={formData.industry} onChange={handleInputChange} className={`${inputBase} appearance-none text-xs`} style={{ color: !formData.industry ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
-                    <option value="" disabled>-- {t.companyIndustry} --</option>
-                    {t.industries.map(ind => <option key={ind} value={ind} style={{color: ACTIVE_COLOR}}>{ind}</option>)}
-                  </select>
-                  {fieldErrors.industry && <p className={errorText}>{fieldErrors.industry}</p>}
-                </div>
-                <div className="w-full">
-                  <input type="text" name="subIndustry" placeholder={t.subIndustry} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-                </div>
-              </div>
-              <div className="w-full">
-                <input type="text" name="companyKeywords" placeholder={t.companyKeywords + " (جافا، محاسب...)"} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="w-full">
-                  <input type="text" name="authorizedName" placeholder={t.authorizedName} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-                  {fieldErrors.authorizedName && <p className={errorText}>{fieldErrors.authorizedName}</p>}
-                </div>
-                <div className="w-full">
-                  <input type="text" name="authorizedPosition" placeholder={t.authorizedPosition} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400 text-xs`} />
-                  {fieldErrors.authorizedPosition && <p className={errorText}>{fieldErrors.authorizedPosition}</p>}
-                </div>
-              </div>
-            </>
+            <input type="text" name="companyName" placeholder="اسم المنشأة" onChange={handleInputChange} className={inputBase} />
           )}
 
-          {/* الاتصال */}
-          <div className="w-full flex gap-2 items-start">
-            <div className="flex-1">
-              <input type="tel" name="phone" placeholder={t.phone} onChange={handleInputChange} className="w-full p-5 bg-white/60 text-[#1A365D] placeholder:text-gray-400 rounded-[2rem] font-black text-center shadow-sm outline-none border-2 border-transparent focus:border-[#1A365D]/20 h-[68px]" />
-              {fieldErrors.phone && <p className={errorText}>{fieldErrors.phone}</p>}
-            </div>
-            <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className="w-32 p-5 bg-white/60 rounded-[2rem] outline-none font-black text-center shadow-sm appearance-none border-2 border-transparent h-[68px]" style={{ color: !formData.countryCode ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
-              <option value="" disabled>--</option>
-              {countries.map(c => <option key={c.code} value={c.code} style={{color: ACTIVE_COLOR}}>{c.flag} {c.code}</option>)}
+          <div className="flex gap-2">
+            <input type="tel" name="phone" placeholder="رقم الجوال" onChange={handleInputChange} className="flex-1 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent" />
+            <select name="countryCode" onChange={handleInputChange} className="w-24 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm">
+              <option value="">كود</option>
+              {countries.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
             </select>
           </div>
 
-          <div className="w-full">
-            <input type="email" name="email" placeholder={t.email} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
-            {fieldErrors.email && <p className={errorText}>{fieldErrors.email}</p>}
+          <input type="email" name="email" placeholder="البريد الإلكتروني" onChange={handleInputChange} className={inputBase} />
+
+          <div className="relative">
+            <input type={showPass ? "text" : "password"} name="password" placeholder="كلمة المرور" onChange={handleInputChange} className={inputBase} />
+            <button type="button" onClick={() => setShowPass(!showPass)} className="absolute left-6 top-1/2 -translate-y-1/2 opacity-30">👁️</button>
           </div>
+          <input type={showConfirmPass ? "text" : "password"} name="confirmPassword" placeholder="تأكيد كلمة المرور" onChange={handleInputChange} className={inputBase} />
 
-          <div className="w-full space-y-4">
-            <div className="relative">
-              <input type={showPass ? "text" : "password"} name="password" placeholder={t.password} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
-              <button type="button" onClick={() => setShowPass(!showPass)} className="absolute left-6 top-1/2 -translate-y-1/2 text-xl opacity-30">{showPass ? '👁️' : '🙈'}</button>
-              {fieldErrors.password && <p className={errorText}>{fieldErrors.password}</p>}
-            </div>
-            <div className="relative">
-              <input type={showConfirmPass ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} onChange={handleInputChange} className={`${inputBase} text-[#1A365D] placeholder:text-gray-400`} />
-              <button type="button" onClick={() => setShowConfirmPass(!showConfirmPass)} className="absolute left-6 top-1/2 -translate-y-1/2 text-xl opacity-30">{showConfirmPass ? '👁️' : '🙈'}</button>
-              {fieldErrors.confirmPassword && <p className={errorText}>{fieldErrors.confirmPassword}</p>}
-            </div>
-          </div>
-
-          {userType === 'individuals' && (
-            <div className="p-6 bg-white/30 rounded-[2.5rem] space-y-4 shadow-inner border border-white/50">
-              <div className="flex items-center justify-between px-2">
-                <span className="text-xs font-black text-[#1A365D]/60">{t.determination}</span>
-                <div className="flex gap-6">
-                  <label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="isSpecialNeeds" checked={formData.isSpecialNeeds === true} onChange={() => setFormData(p => ({...p, isSpecialNeeds: true}))} className="w-5 h-5" /><span className="text-xs font-black text-[#1A365D]">{t.yes}</span></label>
-                  <label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="isSpecialNeeds" checked={formData.isSpecialNeeds === false} onChange={() => setFormData(p => ({...p, isSpecialNeeds: false}))} className="w-5 h-5" /><span className="text-xs font-black text-[#1A365D]">{t.no}</span></label>
-                </div>
-              </div>
-              {formData.isSpecialNeeds && (
-                <div className="w-full">
-                  <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={`${inputBase} !p-4 !text-xs appearance-none`} style={{ color: !formData.specialNeedType ? PLACEHOLDER_COLOR : ACTIVE_COLOR }}>
-                    <option value="" disabled>-- {t.needType} --</option>
-                    <option value="بصري" style={{color: ACTIVE_COLOR}}>{t.visual}</option>
-                    <option value="سمعي" style={{color: ACTIVE_COLOR}}>{t.hearing}</option>
-                    <option value="نطقي" style={{color: ACTIVE_COLOR}}>{t.speech}</option>
-                    <option value="حركي" style={{color: ACTIVE_COLOR}}>{t.motor}</option>
-                  </select>
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="w-full">
-            <div className="flex items-center gap-4 px-6 py-2 text-[11px] font-bold text-[#1A365D]/40">
-              <input type="checkbox" checked={agreed} onChange={(e) => { setAgreed(e.target.checked); if(e.target.checked) setFieldErrors(p => { const n={...p}; delete n.agreed; return n; }) }} className="w-5 h-5 rounded-lg border-white text-[#1A365D] bg-white/50" />
-              <p>{lang === 'ar' ? 'أوافق على' : 'I agree to'} <button type="button" onClick={() => setShowPolicy(true)} className="text-[#1A365D] underline font-black">{lang === 'ar' ? 'سياسة الخصوصية' : 'Privacy Policy'}</button></p>
-            </div>
-            {fieldErrors.agreed && <p className={errorText}>{fieldErrors.agreed}</p>}
+          <div className="flex items-center gap-4 px-6 py-2 text-[11px] font-bold text-[#1A365D]/40">
+            <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="w-5 h-5 rounded-lg" />
+            <p>أوافق على <button type="button" onClick={() => setShowPolicy(true)} className="underline font-black text-[#1A365D]">سياسة الخصوصية</button></p>
           </div>
 
           {fieldErrors.api && <div className="p-4 bg-red-100 text-[#FF0000] rounded-2xl text-[11px] font-black text-center border border-red-200">{fieldErrors.api}</div>}
 
-          <button type="submit" disabled={loading || imgAnalyzing} className="w-full py-7 rounded-[3rem] bg-[#1A365D] text-white font-black shadow-2xl active:scale-95 transition-all text-2xl mt-4">
-            {loading ? <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div> : t.signup}
+          <button type="submit" disabled={loading} className="w-full py-7 rounded-[3rem] bg-[#1A365D] text-white font-black shadow-2xl active:scale-95 transition-all text-2xl">
+            {loading ? "جاري التسجيل..." : "حساب جديد"}
           </button>
         </form>
       </div>
 
-      {/* مودالات */}
+      {/* المودالات المعتادة */}
       {showPhotoModal && (
         <div className="fixed inset-0 z-[13000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">
-            <h3 className="text-[#1A365D] font-black text-xl mb-8">{lang === 'ar' ? 'إضافة صورة' : 'Add Photo'}</h3>
+            <h3 className="text-[#1A365D] font-black text-xl mb-8">إضافة صورة</h3>
             <div className="space-y-4">
-              <button onClick={() => getPhoto(CameraSource.Camera)} className="w-full py-5 bg-gray-50 text-[#1A365D] rounded-[1.5rem] font-black">📷 {lang === 'ar' ? 'الكاميرا' : 'Camera'}</button>
-              <button onClick={() => getPhoto(CameraSource.Photos)} className="w-full py-5 bg-gray-50 text-[#1A365D] rounded-[1.5rem] font-black">🖼️ {lang === 'ar' ? 'المعرض' : 'Gallery'}</button>
-              <button onClick={() => setShowPhotoModal(false)} className="w-full py-4 text-gray-400 font-bold">{lang === 'ar' ? 'إلغاء' : 'Cancel'}</button>
+              <button onClick={() => getPhoto(CameraSource.Camera)} className="w-full py-5 bg-gray-50 text-[#1A365D] rounded-[1.5rem] font-black">📷 الكاميرا</button>
+              <button onClick={() => getPhoto(CameraSource.Photos)} className="w-full py-5 bg-gray-50 text-[#1A365D] rounded-[1.5rem] font-black">🖼️ المعرض</button>
+              <button onClick={() => setShowPhotoModal(false)} className="w-full py-4 text-gray-400 font-bold">إلغاء</button>
             </div>
           </div>
         </div>
@@ -478,20 +274,17 @@ export default function AuthPage() {
           <div className="relative w-full aspect-square bg-white rounded-3xl overflow-hidden mb-6">
             <Cropper image={tempImage} crop={crop} zoom={zoom} aspect={1} cropShape="round" showGrid={false} onCropChange={setCrop} onCropComplete={onCropComplete} onZoomChange={setZoom} />
           </div>
-          <div className="w-full space-y-4 max-w-xs">
-            <button onClick={handleCropSave} className="w-full py-5 bg-[#1A365D] text-white rounded-2xl font-black text-xl shadow-lg">{lang === 'ar' ? 'حفظ الصورة' : 'Save Image'}</button>
-            <button onClick={() => setShowCropModal(false)} className="w-full py-4 text-white/60 font-bold">{lang === 'ar' ? 'إلغاء' : 'Cancel'}</button>
-          </div>
+          <button onClick={handleCropSave} className="w-full max-w-xs py-5 bg-[#1A365D] text-white rounded-2xl font-black text-xl shadow-lg">حفظ الصورة</button>
         </div>
       )}
 
       {showConfirmPopup && (
         <div className="fixed inset-0 z-[15000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">
-            <p className="text-[#1A365D] font-black text-lg mb-8 leading-relaxed">{t.confirmData}</p>
+            <p className="text-[#1A365D] font-black text-lg mb-8 leading-relaxed">هل أنت متأكد من صحة البيانات؟</p>
             <div className="flex gap-4">
-              <button onClick={performRegister} className="flex-1 py-4 bg-[#1A365D] text-white rounded-2xl font-black shadow-lg">{t.yes}</button>
-              <button onClick={() => setShowConfirmPopup(false)} className="flex-1 py-4 border-2 border-[#1A365D] text-[#1A365D] rounded-2xl font-black">{t.no}</button>
+              <button onClick={performRegister} className="flex-1 py-4 bg-[#1A365D] text-white rounded-2xl font-black shadow-lg">نعم</button>
+              <button onClick={() => setShowConfirmPopup(false)} className="flex-1 py-4 border-2 border-[#1A365D] text-[#1A365D] rounded-2xl font-black">لا</button>
             </div>
           </div>
         </div>
