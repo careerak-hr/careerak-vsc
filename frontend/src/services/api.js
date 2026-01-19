@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// ✅ الرابط الأساسي نظيف وبدون سلاش في النهاية
-const BASE_URL = 'https://careerak-vsc-lj8x.vercel.app';
+// ✅ الرابط الرئيسي والثابت للمشروع على Vercel (Production Domain)
+const BASE_URL = 'https://careerak-vsc.vercel.app';
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -12,7 +12,7 @@ const api = axios.create({
   },
 });
 
-// ✅ إعادة تصدير الدالة لتجنب أخطاء الاستيراد في App.jsx و EntryPage
+// دالة الاكتشاف الموحدة
 export const discoverBestServer = async () => {
   return BASE_URL;
 };
