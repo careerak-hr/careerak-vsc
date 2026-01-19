@@ -8,35 +8,37 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// إعدادات الأمان والاتصال
+// إعدادات الأمان
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// ✅ الميدل وير الذكي للاتصال بـ MongoDB
+// ✅ الاتصال الذكي بـ MongoDB (يحدث عند أول طلب فقط بفضل الـ Caching في database.js)
 app.use(async (req, res, next) => {
   try {
     await connectDB();
     next();
   } catch (err) {
-    console.error("❌ DB Middleware Error:", err.message);
+    console.error("❌ DB Connection Error:", err.message);
     next();
   }
 });
 
-// ✅ تفعيل المسارات الحقيقية
-app.use('/api/users', userRoutes);
-app.use('/api/admin', adminRoutes);
+// ✅ الربط الصحيح للمسارات:
+// بما أن الدخول من api/index.js، فإننا لا نكرر كلمة /api هنا إلا إذا أردنا
+// المسارات الحقيقية ستكون تحت /api/users و /api/admin
+app.use('/users', userRoutes);
+app.use('/admin', adminRoutes);
 
-// مسار الفحص السريع
-app.get('/api/health', (req, res) => {
+// مسار الفحص السريع (سيصبح متاحاً على /api/health)
+app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'Operational',
-    server: 'Vercel Serverless',
     database: require('mongoose').connection.readyState === 1 ? 'Connected' : 'Disconnected'
   });
 });
 
+// الصفحة الرئيسية للمحرك (ستصبح متاحة على /api)
 app.get('/', (req, res) => {
   res.status(200).send("Careerak Serverless Engine is LIVE.");
 });

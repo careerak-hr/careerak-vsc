@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const { auth } = require('../middleware/auth');
 
-// مسارات عامة
+// ✅ المسارات نظيفة ومباشرة (يتم استدعاؤها تحت /api/users)
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/analyze-image', userController.analyzeImage);
