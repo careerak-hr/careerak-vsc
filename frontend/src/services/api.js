@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// ✅ الرابط الحقيقي والمؤكد الذي يعمل على Vercel حالياً
-const BASE_URL = 'https://careerak-b132tuqlg-careeraks-projects.vercel.app';
+// ✅ استخدام الرابط المستقر والناجح الذي أكدنا عمله
+const BASE_URL = 'https://careerak-vsc.vercel.app';
 
 const api = axios.create({
   baseURL: BASE_URL,
