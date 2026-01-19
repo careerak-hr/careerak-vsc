@@ -36,17 +36,16 @@ const translations = {
     signup: "حساب جديد", firstName: "الاسم الأول", lastName: "الاسم الأخير",
     companyName: "اسم المنشأة", country: "اختر البلد", city: "المدينة", mustAgree: "يرجى الموافقة على السياسة",
     loading: "جاري التحميل...", aiAnalyzing: "تحليل ذكي محلي... 🤖",
-    invalidFace: "⚠️ عذراً، هذه ليست صورة وجه بشرية حقيقية.",
-    invalidLogo: "⚠️ عذراً، هذا ليس شعاراً صالحاً.",
     email: "البريد الإلكتروني", phone: "رقم الجوال", password: "كلمة المرور",
     confirmPassword: "تأكيد كلمة المرور", eduLevel: "المستوى العلمي",
     determination: "هل أنت من ذوي الهمم؟", specialization: "التخصص / المجال",
-    interests: "الاهتمامات", companyIndustry: "مجال العمل",
-    authorizedName: "اسم المفوض", authorizedPosition: "وظيفة المفوض",
-    confirmData: "هل أنت متأكد من البيانات؟", yes: "نعم", no: "لا",
+    interests: "الاهتمامات (كلمات مفتاحية)", companyIndustry: "مجال العمل",
+    subIndustry: "المجال الفرعي", companyKeywords: "تارقت الشركة (كلمات مفتاحية)",
+    authorizedName: "اسم الشخص المفوض", authorizedPosition: "وظيفة الشخص المفوض",
+    confirmData: "هل أنت متأكد من صحة البيانات ومسؤول عنها؟", yes: "نعم", no: "لا",
     levels: ["دكتوراة", "ماجستير", "بكالوريوس", "ثانوية", "اعدادية", "ابتدائية", "غير متعلم", "أمي"],
     industries: ["صناعية", "تجارية", "خدمية", "تعليمية", "حكومية", "مكتب", "محل", "ورشة"],
-    photoReq: "يرجى رفع صورة"
+    photoReq: "يرجى رفع صورة شخصية", visual: "بصري", hearing: "سمعي", speech: "نطقي", motor: "حركي", needType: "نوع الاحتياج"
   }
 };
 
@@ -65,8 +64,6 @@ export default function AuthPage() {
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [imgAnalyzing, setImgAnalyzing] = useState(false);
-  const [imgError, setImgError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [showConfirmPass, setShowConfirmPass] = useState(false);
@@ -126,17 +123,25 @@ export default function AuthPage() {
         setProfileImage(canvas.toDataURL('image/jpeg', 0.6));
         setShowCropModal(false);
       };
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
   };
 
   const validate = () => {
     const errors = {};
-    if (!formData.country) errors.country = "يرجى اختيار البلد";
+    if (!formData.country) errors.country = "البلد مطلوب";
+    if (!formData.city) errors.city = "المدينة مطلوبة";
     if (!formData.email) errors.email = "البريد مطلوب";
     if (!formData.password || formData.password.length < 8) errors.password = "كلمة المرور يجب أن تكون 8 رموز على الأقل";
-    if (formData.password !== formData.confirmPassword) errors.confirmPassword = "كلمات المرور غير متطابقة";
+    if (formData.password !== formData.confirmPassword) errors.confirmPassword = "كلمات المرور لا تطابق";
+
+    if (userType === 'individuals') {
+      if (!formData.firstName) errors.firstName = "الاسم مطلوب";
+      if (!formData.education) errors.education = "المستوى العلمي مطلوب";
+      if (!formData.specialization) errors.specialization = "التخصص مطلوب";
+    } else {
+      if (!formData.companyName) errors.companyName = "اسم المنشأة مطلوب";
+      if (!formData.industry) errors.industry = "المجال مطلوب";
+    }
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -144,8 +149,8 @@ export default function AuthPage() {
   const handleRegisterClick = (e) => {
     e.preventDefault();
     if (!validate()) return;
-    if (!profileImage) { setImgError(t.photoReq); return; }
-    if (!agreed) { setFieldErrors({agreed: "يرجى الموافقة على السياسة"}); return; }
+    if (!profileImage) { setFieldErrors({api: t.photoReq}); return; }
+    if (!agreed) { setFieldErrors({api: "يرجى الموافقة على السياسة"}); return; }
     setShowConfirmPopup(true);
   };
 
@@ -153,12 +158,21 @@ export default function AuthPage() {
     setShowConfirmPopup(false);
     setLoading(true);
     try {
+      const interestsArray = formData.interests ? formData.interests.split(',').map(s => s.trim()) : [];
+      const keywordsArray = formData.companyKeywords ? formData.companyKeywords.split(',').map(s => s.trim()) : [];
+
       const payload = {
         ...formData,
         educationLevel: formData.education,
         companyIndustry: formData.industry,
         profileImage,
-        role: userType === 'companies' ? 'HR' : 'Employee'
+        role: userType === 'companies' ? 'HR' : 'Employee',
+        interests: interestsArray,
+        companyKeywords: keywordsArray,
+        specialNeedsType: formData.specialNeedType === 'بصري' ? 'visual' :
+                          formData.specialNeedType === 'سمعي' ? 'auditory' :
+                          formData.specialNeedType === 'نطقي' ? 'speech' :
+                          formData.specialNeedType === 'حركي' ? 'motor' : 'none'
       };
 
       const res = await userService.register(payload);
@@ -166,16 +180,15 @@ export default function AuthPage() {
       navigate(res.data.user.role === 'HR' ? '/onboarding-companies' : '/onboarding-individuals');
 
     } catch (err) {
-      // ✅ إظهار تفاصيل الخطأ الحقيقي من أطلس
-      const serverError = err.response?.data?.error || "خطأ غير معروف";
-      const serverDetails = err.response?.data?.details || "";
-      setFieldErrors({ api: `❌ فشل في أطلس: ${serverError} (${serverDetails})` });
+      const serverError = err.response?.data?.error || "خطأ اتصال";
+      const serverDetails = err.response?.data?.details || err.message;
+      setFieldErrors({ api: `❌ فشل أطلس: ${serverError} | التفاصيل: ${serverDetails}` });
     } finally {
       setLoading(false);
     }
   };
 
-  const inputBase = "w-full p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent focus:border-[#1A365D]/20 outline-none transition-all";
+  const inputBase = "w-full p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent focus:border-[#1A365D]/20 outline-none transition-all text-xs";
   const errorText = "text-[10px] text-[#FF0000] font-black px-6 mt-1";
 
   return (
@@ -194,63 +207,115 @@ export default function AuthPage() {
         </div>
 
         <form onSubmit={handleRegisterClick} className="w-full space-y-4 pb-10">
-          {/* صورة الملف الشخصي */}
           <div className="flex flex-col items-center mb-2">
-            <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative">
+            <button type="button" onClick={() => setShowPhotoModal(true)} className="w-36 h-36 rounded-full bg-white/50 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden relative active:scale-95 transition-all">
               {profileImage ? <img src={profileImage} className="w-full h-full object-cover" /> : <span className="text-7xl opacity-20">👤</span>}
             </button>
-            {imgError && <p className={errorText}>{imgError}</p>}
           </div>
 
-          {/* الحقول الأساسية */}
+          {/* الجغرافيا */}
           <div className="grid grid-cols-2 gap-3">
-            <select name="country" onChange={handleInputChange} className={inputBase}>
-              <option value="">-- اختر البلد --</option>
+            <select name="country" value={formData.country} onChange={handleInputChange} className={inputBase}>
+              <option value="">-- {t.country} --</option>
               {countries.map(c => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
             </select>
-            <input type="text" name="city" placeholder="المدينة" onChange={handleInputChange} className={inputBase} />
+            <input type="text" name="city" placeholder={t.city} value={formData.city} onChange={handleInputChange} className={inputBase} />
           </div>
 
           {userType === 'individuals' ? (
             <>
+              {/* بيانات الأفراد: الاسم + التخصص */}
               <div className="grid grid-cols-2 gap-3">
-                <input type="text" name="firstName" placeholder="الاسم الأول" onChange={handleInputChange} className={inputBase} />
-                <input type="text" name="lastName" placeholder="الاسم الأخير" onChange={handleInputChange} className={inputBase} />
+                <input type="text" name="firstName" placeholder={t.firstName} value={formData.firstName} onChange={handleInputChange} className={inputBase} />
+                <input type="text" name="lastName" placeholder={t.lastName} value={formData.lastName} onChange={handleInputChange} className={inputBase} />
               </div>
-              <select name="education" onChange={handleInputChange} className={inputBase}>
-                <option value="">-- المستوى العلمي --</option>
-                {t.levels.map(l => <option key={l} value={l}>{l}</option>)}
-              </select>
+              <div className="grid grid-cols-2 gap-3">
+                <select name="education" value={formData.education} onChange={handleInputChange} className={inputBase}>
+                  <option value="">-- {t.eduLevel} --</option>
+                  {t.levels.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+                <input type="text" name="specialization" placeholder={t.specialization} value={formData.specialization} onChange={handleInputChange} className={inputBase} />
+              </div>
+              <input type="text" name="interests" placeholder={t.interests} value={formData.interests} onChange={handleInputChange} className={inputBase} />
             </>
           ) : (
-            <input type="text" name="companyName" placeholder="اسم المنشأة" onChange={handleInputChange} className={inputBase} />
+            <>
+              {/* بيانات الشركات: المجال + التارقت */}
+              <input type="text" name="companyName" placeholder={t.companyName} value={formData.companyName} onChange={handleInputChange} className={inputBase} />
+              <div className="grid grid-cols-2 gap-3">
+                <select name="industry" value={formData.industry} onChange={handleInputChange} className={inputBase}>
+                  <option value="">-- {t.companyIndustry} --</option>
+                  {t.industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
+                </select>
+                <input type="text" name="subIndustry" placeholder={t.subIndustry} value={formData.subIndustry} onChange={handleInputChange} className={inputBase} />
+              </div>
+              <input type="text" name="companyKeywords" placeholder={t.companyKeywords} value={formData.companyKeywords} onChange={handleInputChange} className={inputBase} />
+              <div className="grid grid-cols-2 gap-3">
+                <input type="text" name="authorizedName" placeholder={t.authorizedName} value={formData.authorizedName} onChange={handleInputChange} className={inputBase} />
+                <input type="text" name="authorizedPosition" placeholder={t.authorizedPosition} value={formData.authorizedPosition} onChange={handleInputChange} className={inputBase} />
+              </div>
+            </>
           )}
 
+          {/* التواصل */}
           <div className="flex gap-2">
-            <input type="tel" name="phone" placeholder="رقم الجوال" onChange={handleInputChange} className="flex-1 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent" />
-            <select name="countryCode" onChange={handleInputChange} className="w-24 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm">
+            <input type="tel" name="phone" placeholder={t.phone} value={formData.phone} onChange={handleInputChange} className="flex-1 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm border-2 border-transparent text-xs" />
+            <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className="w-24 p-5 bg-white/60 rounded-[2rem] font-black text-center shadow-sm text-xs">
               <option value="">كود</option>
               {countries.map(c => <option key={c.code} value={c.code}>{c.code}</option>)}
             </select>
           </div>
 
-          <input type="email" name="email" placeholder="البريد الإلكتروني" onChange={handleInputChange} className={inputBase} />
+          <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} className={inputBase} />
 
+          {/* الأمان مع العينين (تأكيد كلمة المرور) */}
           <div className="relative">
-            <input type={showPass ? "text" : "password"} name="password" placeholder="كلمة المرور" onChange={handleInputChange} className={inputBase} />
-            <button type="button" onClick={() => setShowPass(!showPass)} className="absolute left-6 top-1/2 -translate-y-1/2 opacity-30">👁️</button>
+            <input type={showPass ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} className={inputBase} />
+            <button type="button" onClick={() => setShowPass(!showPass)} className="absolute left-6 top-1/2 -translate-y-1/2 opacity-30 text-xl">{showPass ? '👁️' : '🙈'}</button>
           </div>
-          <input type={showConfirmPass ? "text" : "password"} name="confirmPassword" placeholder="تأكيد كلمة المرور" onChange={handleInputChange} className={inputBase} />
+          <div className="relative">
+            <input type={showConfirmPass ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} className={inputBase} />
+            <button type="button" onClick={() => setShowConfirmPass(!showConfirmPass)} className="absolute left-6 top-1/2 -translate-y-1/2 opacity-30 text-xl">{showConfirmPass ? '👁️' : '🙈'}</button>
+          </div>
+
+          {/* نظام الشمول (ذوي الهمم) */}
+          {userType === 'individuals' && (
+            <div className="p-6 bg-white/30 rounded-[2.5rem] space-y-4 shadow-inner border border-white/50">
+              <div className="flex items-center justify-between px-2">
+                <span className="text-[10px] font-black text-[#1A365D]/60">{t.determination}</span>
+                <div className="flex gap-6">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="isSpecialNeeds" checked={formData.isSpecialNeeds === true} onChange={() => setFormData(p => ({...p, isSpecialNeeds: true}))} className="w-4 h-4" />
+                    <span className="text-[10px] font-black text-[#1A365D]">{t.yes}</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" name="isSpecialNeeds" checked={formData.isSpecialNeeds === false} onChange={() => setFormData(p => ({...p, isSpecialNeeds: false}))} className="w-4 h-4" />
+                    <span className="text-[10px] font-black text-[#1A365D]">{t.no}</span>
+                  </label>
+                </div>
+              </div>
+              {formData.isSpecialNeeds && (
+                <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={inputBase + " !p-3"}>
+                  <option value="">-- {t.needType} --</option>
+                  <option value="بصري">{t.visual}</option>
+                  <option value="سمعي">{t.hearing}</option>
+                  <option value="نطقي">{t.speech}</option>
+                  <option value="حركي">{t.motor}</option>
+                </select>
+              )}
+            </div>
+          )}
 
           <div className="flex items-center gap-4 px-6 py-2 text-[11px] font-bold text-[#1A365D]/40">
             <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="w-5 h-5 rounded-lg" />
             <p>أوافق على <button type="button" onClick={() => setShowPolicy(true)} className="underline font-black text-[#1A365D]">سياسة الخصوصية</button></p>
           </div>
 
-          {fieldErrors.api && <div className="p-4 bg-red-100 text-[#FF0000] rounded-2xl text-[11px] font-black text-center border border-red-200">{fieldErrors.api}</div>}
+          {/* التشخيص الجراحي */}
+          {fieldErrors.api && <div className="p-4 bg-red-100 text-[#FF0000] rounded-2xl text-[10px] font-black text-center border border-red-200 leading-relaxed animate-shake">{fieldErrors.api}</div>}
 
           <button type="submit" disabled={loading} className="w-full py-7 rounded-[3rem] bg-[#1A365D] text-white font-black shadow-2xl active:scale-95 transition-all text-2xl">
-            {loading ? "جاري التسجيل..." : "حساب جديد"}
+            {loading ? <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div> : t.signup}
           </button>
         </form>
       </div>
@@ -281,7 +346,7 @@ export default function AuthPage() {
       {showConfirmPopup && (
         <div className="fixed inset-0 z-[15000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm">
           <div className="bg-white rounded-[3rem] p-10 w-full max-w-xs text-center shadow-2xl">
-            <p className="text-[#1A365D] font-black text-lg mb-8 leading-relaxed">هل أنت متأكد من صحة البيانات؟</p>
+            <p className="text-[#1A365D] font-black text-lg mb-8 leading-relaxed">{t.confirmData}</p>
             <div className="flex gap-4">
               <button onClick={performRegister} className="flex-1 py-4 bg-[#1A365D] text-white rounded-2xl font-black shadow-lg">نعم</button>
               <button onClick={() => setShowConfirmPopup(false)} className="flex-1 py-4 border-2 border-[#1A365D] text-[#1A365D] rounded-2xl font-black">لا</button>
