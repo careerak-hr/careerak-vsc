@@ -7,6 +7,9 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
+// 🔹 اتصال واحد فقط عند تشغيل السيرفر
+connectDB();
+
 // ✅ الحل الجذري لمشكلة CORS: السماح الكامل واليدوي
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -20,16 +23,6 @@ app.use((req, res, next) => {
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-
-// الاتصال بقاعدة البيانات
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    next();
-  }
-});
 
 // المسارات
 app.use('/api/users', userRoutes);

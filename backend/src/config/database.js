@@ -1,38 +1,40 @@
 const mongoose = require('mongoose');
 
-// ذاكرة مؤقتة للاتصال لضمان استقرار Vercel (Caching)
-let cachedConnection = null;
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-  if (cachedConnection && mongoose.connection.readyState === 1) {
-    console.log("♻️ MongoDB: Using existing connection");
-    return cachedConnection;
+  if (cached.conn) {
+    console.log("♻️ MongoDB: Using cached connection");
+    return cached.conn;
   }
 
-  try {
+  if (!cached.promise) {
     const uri = process.env.MONGODB_URI;
     if (!uri) {
-      throw new Error("MONGODB_URI is not defined in environment variables");
+      throw new Error("❌ MONGODB_URI is not defined in environment variables");
     }
 
     const options = {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 10000,
-      // تأكيد اسم قاعدة البيانات لضمان عدم الاختلاط مع العينات
-      dbName: 'careerak_db'
+      dbName: 'careerak'
     };
 
     console.log("📡 MongoDB: Connecting to Atlas...");
-    cachedConnection = await mongoose.connect(uri, options);
 
-    console.log(`✅ MongoDB: Connected to ${cachedConnection.connection.host}/${cachedConnection.connection.name}`);
-    return cachedConnection;
-  } catch (error) {
-    console.error(`❌ MongoDB: Connection Error: ${error.message}`);
-    // لا نقتل العملية في Vercel، بل نمرر الخطأ
-    throw error;
+    cached.promise = mongoose.connect(uri, options).then((mongooseInstance) => {
+      console.log(`✅ MongoDB: Connected to ${mongooseInstance.connection.host}/${mongooseInstance.connection.name}`);
+      return mongooseInstance;
+    });
   }
+
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
 module.exports = connectDB;
