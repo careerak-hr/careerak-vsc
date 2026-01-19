@@ -17,26 +17,61 @@ const sanitizeUser = (user) => {
 exports.register = async (req, res) => {
   try {
     const data = req.body;
+    console.log("--- Processing Registration ---", data.email);
+
+    // 1. فحص التكرار
     const phoneExists = await User.findOne({ phone: data.phone });
     if (phoneExists) return res.status(400).json({ error: 'رقم الهاتف مسجل بالفعل' });
 
     let newUser;
+
+    // ✅ بناء الكائن بدقة وحذر شديد لضمان القبول في Atlas
+    const baseData = {
+      email: data.email?.toLowerCase(),
+      password: data.password,
+      phone: data.phone,
+      role: data.role,
+      country: data.country || 'Egypt',
+      city: data.city || '',
+      profileImage: data.profileImage,
+      isSpecialNeeds: data.isSpecialNeeds || false,
+      specialNeedsType: data.specialNeedsType || 'none',
+      privacyAccepted: true
+    };
+
     if (data.role === 'HR') {
-      newUser = new Company({ ...data, userType: 'HR' });
+      newUser = new Company({
+        ...baseData,
+        userType: 'HR',
+        companyName: data.companyName,
+        companyIndustry: data.companyIndustry || 'General',
+        subIndustry: data.subIndustry || '',
+        companyKeywords: data.companyKeywords || []
+      });
     } else {
       newUser = new Individual({
-        ...data,
+        ...baseData,
         userType: 'Employee',
-        educationLevel: data.educationLevel || data.education || 'N/A'
+        firstName: data.firstName,
+        lastName: data.lastName,
+        educationLevel: data.educationLevel || data.education || 'N/A',
+        specialization: data.specialization || 'General',
+        interests: data.interests || []
       });
     }
 
     await newUser.save();
+    console.log("✅ User Saved Successfully!");
+
     const token = generateToken(newUser);
     res.status(201).json({ token, user: sanitizeUser(newUser) });
+
   } catch (error) {
-    console.error("Register Error:", error);
-    res.status(500).json({ error: 'حدث خطأ أثناء التسجيل' });
+    console.error("❌ MONGODB SAVE ERROR:", error);
+    res.status(500).json({
+      error: 'حدث خطأ في حفظ البيانات في أطلس',
+      details: error.message
+    });
   }
 };
 
@@ -83,7 +118,6 @@ exports.analyzeImage = async (req, res) => {
   }
 };
 
-// ✅ إضافة الدالة المفقودة التي سببت الانهيار
 exports.getAIRecommendations = async (req, res) => {
   try {
     res.status(200).json({ recommendations: [] });
@@ -92,7 +126,6 @@ exports.getAIRecommendations = async (req, res) => {
   }
 };
 
-// ✅ إضافة الدالة المفقودة الأخرى
 exports.parseCV = async (req, res) => {
   try {
     res.status(200).json({ message: "CV Parsing Ready" });
