@@ -1,5 +1,5 @@
 import React from 'react';
-import PolicyPage from '../../pages/14_PolicyPage'; // افترضت أن هذا هو المسار الصحيح
+import PolicyPage from '../../pages/14_PolicyPage.jsx'; // ✅ Corrected path by Waad
 
 const PolicyModal = ({ onClose, onAgree }) => {
   return (

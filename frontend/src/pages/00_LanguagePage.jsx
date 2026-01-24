@@ -91,43 +91,45 @@ export default function LanguagePage() {
       </div>
 
       {/* Popups */}
-      {(showConfirmPopup || showAudioPopup) && (
+      {showConfirmPopup && (
         <div className="fixed inset-0 bg-[#304B60]/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000]">
-          <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
-            <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
-              {showConfirmPopup ? t.confirmLang : t.audioTitle}
-            </p>
-            <div className="flex gap-4">
-              <button
-                onClick={() => {
-                  if (showConfirmPopup) {
-                    setShowConfirmPopup(false);
-                    setShowAudioPopup(true);
-                  } else {
-                    finalize(true);
-                  }
-                }}
-                className="flex-1 bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform"
-              >
-                {showConfirmPopup ? t.ok : t.yes}
-              </button>
-              <button
-                onClick={() => {
-                  if (showConfirmPopup) {
-                    setShowConfirmPopup(false);
-                    setSelectedLang(null);
-                  } else {
-                    finalize(false);
-                  }
-                }}
-                className="flex-1 border-4 border-[#304B60] text-[#304B60] py-4 rounded-2xl font-black text-lg active:scale-95 transition-transform"
-              >
-                {showConfirmPopup ? t.no : t.no}
-              </button>
-            </div>
-          </div>
+         <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
+           <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
+             {showConfirmPopup ? t.confirmLang : t.audioTitle}
+           </p>
+           <div className="flex gap-4">
+          <button
+            onClick={() => {
+              setShowConfirmPopup(false);
+              setShowAudioPopup(true);
+            }}
+          >
+            {t.ok}
+          </button>
+
+          <button
+            onClick={() => {
+              setShowConfirmPopup(false);
+              setSelectedLang(null);
+            }}
+          >
+            {t.no}
+          </button>
+        </div>
+
+      {showAudioPopup && (
+        <div className="fixed inset-0 bg-[#304B60]/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000]">
+         <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
+           <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
+             {showConfirmPopup ? t.confirmLang : t.audioTitle}
+           </p>
+           <div className="flex gap-4">
+          <button onClick={() => finalize(true)}>
+            {t.yes}
+          </button>
+
+          <button onClick={() => finalize(false)}>
+            {t.no}
+          </button>
         </div>
       )}
-    </div>
-  );
-}

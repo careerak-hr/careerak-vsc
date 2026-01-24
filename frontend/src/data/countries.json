@@ -17,7 +17,6 @@
   { "key": "SY", "code": "+963", "name_ar": "سوريا", "name_en": "Syria", "flag": "🇸🇾" },
   { "key": "TN", "code": "+216", "name_ar": "تونس", "name_en": "Tunisia", "flag": "🇹🇳" },
   { "key": "YE", "code": "+967", "name_ar": "اليمن", "name_en": "Yemen", "flag": "🇾🇪" },
-
   { "key": "US", "code": "+1", "name_ar": "الولايات المتحدة", "name_en": "United States", "flag": "🇺🇸" },
   { "key": "GB", "code": "+44", "name_ar": "المملكة المتحدة", "name_en": "United Kingdom", "flag": "🇬🇧" },
   { "key": "DE", "code": "+49", "name_ar": "ألمانيا", "name_en": "Germany", "flag": "🇩🇪" },

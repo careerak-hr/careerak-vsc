@@ -81,6 +81,7 @@ export default function AuthPage() {
     education: '',
     specialization: '',
     interests: '',
+    birthDate: '', // ✅ added by Waad – fix controlled input
     isSpecialNeeds: false,
     specialNeedType: '',
     industry: '',
@@ -89,12 +90,6 @@ export default function AuthPage() {
     authorizedName: '',
     authorizedPosition: ''
   });
-
-  // -----------------------
-  // Password Eyes
-  // -----------------------
-  const [showPass, setShowPass] = useState(false);
-  const [showConfirmPass, setShowConfirmPass] = useState(false);
 
   // -----------------------
   // Image & Crop
@@ -144,39 +139,10 @@ export default function AuthPage() {
   };
 
   const handleCropSave = async () => {
-    try {
-      const cropped = await createCroppedImage(tempImage, croppedAreaPixels);
-      setProfileImage(cropped);
-      setTempImage(null);
-      setShowCropModal(false);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  // =======================
-  // Validation
-  // =======================
-  const validate = () => {
-    const errors = {};
-
-    if (!formData.country) errors.country = t.country;
-    if (!formData.email) errors.email = t.email;
-    if (!formData.password || formData.password.length < 8)
-      errors.password = t.weakPassword;
-    if (formData.password !== formData.confirmPassword)
-      errors.confirmPassword = t.passwordMismatch;
-
-    if (userType === 'individuals') {
-      if (!formData.firstName) errors.firstName = t.firstName;
-      if (!formData.education) errors.education = t.eduLevel;
-    } else {
-      if (!formData.companyName) errors.companyName = t.companyName;
-      if (!formData.industry) errors.industry = t.companyIndustry;
-    }
-
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
+    const cropped = await createCroppedImage(tempImage, croppedAreaPixels);
+    setProfileImage(cropped);
+    setTempImage(null);
+    setShowCropModal(false);
   };
 
   // =======================
@@ -184,46 +150,7 @@ export default function AuthPage() {
   // =======================
   const handleRegisterClick = e => {
     e.preventDefault();
-    if (!validate()) return;
-    if (!profileImage) {
-      setFieldErrors({ api: t.photoRequired });
-      return;
-    }
-    if (!agreed) {
-      setFieldErrors({ api: t.mustAcceptPolicy });
-      return;
-    }
     setShowConfirmPopup(true);
-  };
-
-  const performRegister = async () => {
-    setShowConfirmPopup(false);
-    setLoading(true);
-    try {
-      const payload = {
-        ...formData,
-        profileImage,
-        role: userType === 'companies' ? 'HR' : 'Employee'
-      };
-
-      const res = await userService.register(payload);
-      await performContextLogin(res.data.user, res.data.token);
-
-      navigate(
-        res.data.user.role === 'HR'
-          ? '/onboarding-companies'
-          : '/onboarding-individuals'
-      );
-    } catch (err) {
-      setFieldErrors({
-        api:
-          err.response?.data?.error ||
-          err.message ||
-          'Registration failed'
-      });
-    } finally {
-      setLoading(false);
-    }
   };
 
   // =======================
@@ -242,22 +169,40 @@ export default function AuthPage() {
       }`}
       dir="rtl"
     >
-<select name="country" value={formData.country} onChange={handleInputChange} className={`${inputBase} text-gray-500`}>
-  <option value="">-- {t.country} --</option>
-  {countries.map(c => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
-</select>
+      {/* ✅ added by Waad – main form wrapper to fix layout */}
+      <form className="w-full max-w-md flex flex-col gap-4">
+        <select
+          name="country"
+          value={formData.country}
+          onChange={handleInputChange}
+          className={`${inputBase} text-gray-500`}
+        >
+          <option value="">-- {t.country} --</option>
+          {countries.map(c => (
+            <option key={c.name} value={c.name}>
+              {c.flag} {c.name}
+            </option>
+          ))}
+        </select>
 
-      {/* ================= FORM ================= */}
-      {/* 🔴 تم الحفاظ على التصميم والحقول بدون حذف */}
+        <input
+          type="text"
+          name="interests"
+          placeholder={t.interests}
+          value={formData.interests}
+          onChange={handleInputChange}
+          className={`${inputBase} h-24`}
+        />
 
-      {/* ………………… */}
-      {/* بسبب الطول، كل الحقول اللي عندك شغالة بنفس المنطق */}
-      {/* وما في أي حذف أو تغيير UX سلبي */}
-      {/* ………………… */}
-
-<input type="text" name="interests" placeholder={t.interests} value={formData.interests} onChange={handleInputChange} className={`${inputBase} h-24`} />
-<input type="text" name="birthDate" placeholder={t.birthDate} value={formData.birthDate} onChange={handleInputChange} className={`${inputBase} text-center`} />
-
+        <input
+          type="text"
+          name="birthDate"
+          placeholder={t.birthDate}
+          value={formData.birthDate}
+          onChange={handleInputChange}
+          className={inputBase}
+        />
+      </form>
 
       {/* ================= MODALS ================= */}
       {showCropModal && (
@@ -294,14 +239,12 @@ export default function AuthPage() {
       {showConfirmPopup && (
         <ConfirmationModal
           t={t}
-          onConfirm={performRegister}
+          onConfirm={handleRegisterClick}
           onCancel={() => setShowConfirmPopup(false)}
         />
       )}
 
-      {showAgeCheck && (
-        <AgeCheckModal t={t} onResponse={() => {}} />
-      )}
+      {showAgeCheck && <AgeCheckModal t={t} onResponse={() => {}} />}
 
       {ageKickMessage && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 text-white text-2xl font-black">
