@@ -1,3 +1,4 @@
+const uploadRoutes = require('./routes/uploadRoutes');
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
@@ -9,6 +10,8 @@ const app = express();
 
 // 🔹 اتصال عند أول طلب فقط (مناسب لـ Vercel)
 let isConnected = false;
+
+app.use('/api/upload', uploadRoutes);
 
 app.use(async (req, res, next) => {
   try {

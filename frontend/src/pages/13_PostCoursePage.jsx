@@ -39,17 +39,6 @@ export default function PostCoursePage() {
       price: "سعر الدورة (0 للمجانية)",
       btn: "نشر الدورة التعليمية",
       success: "تم نشر الدورة بنجاح في الأكاديمية!"
-    },
-    en: {
-      title: "Add New Educational Course",
-      courseTitle: "Course Title",
-      desc: "Course Description & Learning Outcomes",
-      instructor: "Instructor Name",
-      category: "Course Category",
-      level: "Course Level",
-      price: "Course Price (0 for Free)",
-      btn: "Publish Course Now",
-      success: "Course published successfully in the Academy!"
     }
   }[language || 'ar'];
 
@@ -58,22 +47,23 @@ export default function PostCoursePage() {
     setLoading(true);
     try {
       await api.post('/educational-courses', formData);
-      alert(t.success);
       navigate('/courses');
     } catch (err) {
-      alert(isRTL ? 'خطأ في نشر الدورة' : 'Error publishing course');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className={`min-h-screen bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <Navbar lang={language} user={user} />
+  const inputCls = "w-full p-5 bg-[#E3DAD1] rounded-[2rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-[#304B60] placeholder:text-gray-400 shadow-sm transition-all";
 
-      <main className="max-w-4xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-[4rem] shadow-2xl p-10 md:p-16 border border-white">
-          <h2 className={`text-3xl font-black text-[#1A365D] mb-10 border-[#1A365D] ${isRTL ? 'border-r-8 pr-4' : 'border-l-8 pl-4'}`}>
+  return (
+    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Navbar />
+
+      <main className="max-w-4xl mx-auto px-4 py-24 pb-32">
+        <div className="bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 md:p-16 border-2 border-[#304B60]/5">
+          <h2 className={`text-3xl font-black text-[#304B60] mb-10 border-[#D48161] ${isRTL ? 'border-r-8 pr-4' : 'border-l-8 pl-4'}`}>
             {t.title}
           </h2>
 
@@ -81,12 +71,12 @@ export default function PostCoursePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input
                 type="text" placeholder={t.courseTitle}
-                className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner"
+                className={inputCls}
                 value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} required
               />
               <input
                 type="text" placeholder={t.instructor}
-                className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner"
+                className={inputCls}
                 value={formData.instructor} onChange={(e) => setFormData({...formData, instructor: e.target.value})} required
               />
             </div>
@@ -94,11 +84,11 @@ export default function PostCoursePage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <input
                 type="text" placeholder={t.category}
-                className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner"
+                className={inputCls}
                 value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}
               />
               <select
-                className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner appearance-none"
+                className={inputCls}
                 value={formData.skillLevel} onChange={(e) => setFormData({...formData, skillLevel: e.target.value})}
               >
                 <option value="Beginner">Beginner</option>
@@ -107,23 +97,23 @@ export default function PostCoursePage() {
               </select>
               <input
                 type="number" placeholder={t.price}
-                className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner"
+                className={inputCls}
                 value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})}
               />
             </div>
 
             <textarea
               placeholder={t.desc}
-              className="w-full p-6 bg-gray-50 rounded-[3rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner h-48"
+              className={`${inputCls} h-48 resize-none`}
               value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} required
             />
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#1A365D] text-white py-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-8"
+              className="w-full bg-[#304B60] text-[#D48161] py-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-8"
             >
-              {loading ? <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div> : t.btn}
+              {loading ? "..." : t.btn}
             </button>
           </form>
         </div>

@@ -5,7 +5,7 @@ import userService from '../services/userService';
 
 export default function OnboardingIlliterate() {
   const navigate = useNavigate();
-  const { language, updateUser } = useAuth();
+  const { updateUser } = useAuth();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -19,10 +19,10 @@ export default function OnboardingIlliterate() {
   }, []);
 
   const steps = [
-    { id: 'bio', icon: '👤', voice: '/voices/tell_us_about_you.mp3', color: 'bg-blue-500' },
-    { id: 'skills', icon: '🛠️', voice: '/voices/what_are_your_skills.mp3', color: 'bg-green-500' },
-    { id: 'experience', icon: '💼', voice: '/voices/your_experience.mp3', color: 'bg-purple-500' },
-    { id: 'finish', icon: '✅', voice: '/voices/all_done.mp3', color: 'bg-orange-500' }
+    { id: 'bio', icon: '👤', voice: '/voices/tell_us_about_you.mp3', color: 'bg-[#304B60]' },
+    { id: 'skills', icon: '🛠️', voice: '/voices/what_are_your_skills.mp3', color: 'bg-[#D48161]' },
+    { id: 'experience', icon: '💼', voice: '/voices/your_experience.mp3', color: 'bg-[#304B60]' },
+    { id: 'finish', icon: '✅', voice: '/voices/all_done.mp3', color: 'bg-[#D48161]' }
   ];
 
   const playInstruction = (index) => {
@@ -33,7 +33,6 @@ export default function OnboardingIlliterate() {
 
   const handleMicClick = () => {
     setIsRecording(!isRecording);
-    // هنا يتم دمج مكتبة SpeechRecognition مستقبلاً
     if (isRecording) {
       setTimeout(() => {
         setIsRecording(false);
@@ -51,7 +50,6 @@ export default function OnboardingIlliterate() {
   const finishRegistration = async () => {
     setLoading(true);
     try {
-      // إرسال البيانات المسجلة صوتياً (تحت التطوير)
       const res = await userService.updateProfile({ isIlliterateMode: true });
       updateUser(res.data.user);
       navigate('/profile');
@@ -63,33 +61,30 @@ export default function OnboardingIlliterate() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD0] flex flex-col items-center justify-center p-6 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-
-      <div className="w-full max-w-lg bg-white rounded-[4rem] shadow-2xl p-12 text-center border-t-8 border-[#1A365D]">
-
-        <div className={`w-32 h-32 ${steps[step].color} rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl transition-all duration-500`}>
+    <div className={`min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center p-6 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="w-full max-w-lg bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-12 text-center border-2 border-[#304B60]/5">
+        <div className={`w-32 h-32 ${steps[step].color} rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl transition-all duration-500 border-4 border-[#E3DAD1]`}>
           <span className="text-6xl">{steps[step].icon}</span>
         </div>
 
         <div className="mb-12">
           <div className="flex justify-center gap-2 mb-4">
             {steps.map((_, i) => (
-              <div key={i} className={`w-3 h-3 rounded-full ${i === step ? 'bg-[#1A365D] w-8' : 'bg-gray-200'} transition-all duration-300`}></div>
+              <div key={i} className={`w-3 h-3 rounded-full ${i === step ? 'bg-[#304B60] w-8' : 'bg-[#304B60]/10'} transition-all duration-300`}></div>
             ))}
           </div>
         </div>
 
         <button
           onClick={handleMicClick}
-          className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto transition-all duration-300 active:scale-90 shadow-2xl ${isRecording ? 'bg-red-500 animate-ping' : 'bg-[#1A365D]'}`}
+          className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto transition-all duration-300 active:scale-90 shadow-2xl ${isRecording ? 'bg-red-600 animate-ping' : 'bg-[#304B60]'}`}
         >
-          <span className="text-5xl text-white">{isRecording ? '⏹️' : '🎤'}</span>
+          <span className="text-5xl text-[#D48161]">{isRecording ? '⏹️' : '🎤'}</span>
         </button>
 
-        <p className="mt-8 text-[#1A365D] font-black text-xl">
+        <p className="mt-8 text-[#304B60] font-black text-xl">
           {isRecording ? 'جاري الاستماع... تحدّث الآن' : 'اضغط وتحدث'}
         </p>
-
       </div>
     </div>
   );

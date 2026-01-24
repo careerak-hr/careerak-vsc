@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { Geolocation } from '@capacitor/geolocation';
-import { Camera } from '@capacitor/camera';
-import { Filesystem } from '@capacitor/filesystem';
 import "./00_LanguagePage.css";
 
 const translations = {
@@ -43,22 +40,8 @@ export default function LanguagePage() {
   const [showConfirmPopup, setShowConfirmPopup] = useState(false);
   const [showAudioPopup, setShowAudioPopup] = useState(false);
 
-  // طلب أذونات الوصول (الموقع، الكاميرا، الملفات) عند تحميل الصفحة
-  useEffect(() => {
-    const requestPermissions = async () => {
-      try {
-        // طلب أذونات الموقع
-        await Geolocation.requestPermissions();
-        // طلب أذونات الكاميرا والصور
-        await Camera.requestPermissions();
-        // طلب أذونات الملفات
-        await Filesystem.requestPermissions();
-      } catch (e) {
-        console.log("Permissions request failed or partially denied", e);
-      }
-    };
-    requestPermissions();
-  }, []);
+  // نبراس: تم إزالة طلب الأذونات الجماعي من هنا لاتباع المعايير الاحترافية (طلب الإذن عند الحاجة فقط)
+  // وعد: هذا يحسن تجربة المستخدم ويضمن توافق النظام مع سياسات الأندرويد والـ iOS الحديثة
 
   const handleLangPick = (lang) => {
     setSelectedLang(lang);
@@ -68,90 +51,78 @@ export default function LanguagePage() {
   const finalize = async (audioConsent) => {
     await saveLanguage(selectedLang);
     await saveAudio(audioConsent);
-
     if (changeLanguage) await changeLanguage(selectedLang);
     if (setAudio) await setAudio(audioConsent);
-
     navigate("/entry", { replace: true });
   };
 
   const t = translations[selectedLang] || translations.ar;
 
-  return (
-    <div className="min-h-screen bg-[#E3DAD0] flex flex-col items-center justify-center relative overflow-hidden p-4">
+  // أزرار اللغات: أرضية بيج، كتابة كحلية، إطار كحلي
+  const langBtnCls = "py-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-lg border-4 border-[#304B60] hover:scale-105 transition-all text-xl";
 
-      {/* تأثير الشفافية الكحلية المتوسع ليغطي كامل الشاشة خلال 10 ثواني */}
+  return (
+    <div className="min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center relative overflow-hidden p-4">
+      {/* تأثير الشفافية الكحلية المتوسع */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <div className="w-2 h-2 bg-[#1A365D] rounded-full animate-expand-glow"></div>
+        <div className="w-2 h-2 bg-[#304B60] rounded-full animate-expand-glow opacity-5"></div>
       </div>
 
       <div className="relative z-10 flex flex-col items-center">
-        {/* اللوجو مع الإطار الكحلي فقط */}
-        <div className="logo-border mb-8">
+        <div className="mb-8 p-1 rounded-full border-4 border-[#304B60] shadow-2xl">
           <img src="/logo.jpg" alt="Logo" className="w-28 h-28 rounded-full object-cover" />
         </div>
 
-        <h1 className="text-[#1A365D] font-black text-2xl text-center mb-10 drop-shadow-sm">
+        <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm">
           Choose Language / Choisir la langue / اختر اللغة
         </h1>
 
         <div className="flex flex-col gap-4 w-full max-w-xs">
-          <button onClick={() => handleLangPick("ar")} className="py-4 bg-white text-[#1A365D] rounded-2xl font-black shadow-lg border-2 border-transparent hover:border-[#1A365D] transition-all text-xl">
+          <button onClick={() => handleLangPick("ar")} className={langBtnCls}>
             العربية
           </button>
-          <button onClick={() => handleLangPick("en")} className="py-4 bg-white text-[#1A365D] rounded-2xl font-black shadow-lg border-2 border-transparent hover:border-[#1A365D] transition-all text-xl">
+          <button onClick={() => handleLangPick("en")} className={langBtnCls}>
             English
           </button>
-          <button onClick={() => handleLangPick("fr")} className="py-4 bg-white text-[#1A365D] rounded-2xl font-black shadow-lg border-2 border-transparent hover:border-[#1A365D] transition-all text-xl">
+          <button onClick={() => handleLangPick("fr")} className={langBtnCls}>
             Français
           </button>
         </div>
       </div>
 
-      {/* Popup 1: تأكيد اللغة مع خياري (تأكيد / لا) */}
-      {showConfirmPopup && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-6 z-[1000]">
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-t-8 border-[#1A365D] animate-in fade-in zoom-in duration-300">
-            <p className="text-[#1A365D] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
-              {t.confirmLang}
+      {/* Popups */}
+      {(showConfirmPopup || showAudioPopup) && (
+        <div className="fixed inset-0 bg-[#304B60]/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000]">
+          <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
+            <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
+              {showConfirmPopup ? t.confirmLang : t.audioTitle}
             </p>
             <div className="flex gap-4">
               <button
-                onClick={() => { setShowConfirmPopup(false); setShowAudioPopup(true); }}
-                className="flex-1 bg-[#1A365D] text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform"
+                onClick={() => {
+                  if (showConfirmPopup) {
+                    setShowConfirmPopup(false);
+                    setShowAudioPopup(true);
+                  } else {
+                    finalize(true);
+                  }
+                }}
+                className="flex-1 bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform"
               >
-                {t.ok}
+                {showConfirmPopup ? t.ok : t.yes}
               </button>
               <button
-                onClick={() => { setShowConfirmPopup(false); setSelectedLang(null); }}
-                className="flex-1 border-2 border-[#1A365D] text-[#1A365D] py-4 rounded-2xl font-black text-lg active:scale-95 transition-transform"
+                onClick={() => {
+                  if (showConfirmPopup) {
+                    setShowConfirmPopup(false);
+                    setSelectedLang(null);
+                  } else {
+                    finalize(false);
+                  }
+                }}
+                className="flex-1 border-4 border-[#304B60] text-[#304B60] py-4 rounded-2xl font-black text-lg active:scale-95 transition-transform"
               >
-                {t.no}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Popup 2: أذونات الصوت */}
-      {showAudioPopup && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center p-6 z-[1000]">
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-t-8 border-[#1A365D] animate-in fade-in zoom-in duration-300">
-            <p className="text-[#1A365D] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
-              {t.audioTitle}
-            </p>
-            <div className="flex gap-4">
-              <button
-                onClick={() => finalize(true)}
-                className="flex-1 bg-[#1A365D] text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-transform"
-              >
-                {t.yes}
-              </button>
-              <button
-                onClick={() => finalize(false)}
-                className="flex-1 border-2 border-[#1A365D] text-[#1A365D] py-4 rounded-2xl font-black text-lg active:scale-95 transition-transform"
-              >
-                {t.no}
+                {showConfirmPopup ? t.no : t.no}
               </button>
             </div>
           </div>

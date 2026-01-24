@@ -9,7 +9,7 @@
   color-scheme: light !important;
 }
 
-/* القضاء نهائياً على شريط أدوات النظام ومنع التحديد */
+/* القضاء نهائياً على شريط أدوات النظام ومنع التحديد والاختيار في كامل التطبيق */
 * {
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none !important;
@@ -21,32 +21,32 @@
   outline: none !important;
 }
 
-/* استثناء حقول الإدخال للسماح بالكتابة فقط دون قوائم النظام */
+/* استثناء حقول الإدخال للسماح بالكتابة فقط مع تعطيل قائمة النظام (نسخ/لصق) */
 input, textarea, [contenteditable="true"] {
   -webkit-user-select: text !important;
   -khtml-user-select: text !important;
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   user-select: text !important;
-  -webkit-touch-callout: default !important;
+  -webkit-touch-callout: none !important; /* منع ظهور قائمة النسخ واللصق */
 }
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #E3DAD0 !important;
-  color: #1A365D;
+  background-color: #E3DAD1 !important;
+  color: #304B60;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   /* منع ظهور القائمة عند الضغط المطول على مستوى الجسم */
-  -webkit-context-menu: none;
+  -webkit-context-menu: none !important;
 }
 
 @media (prefers-color-scheme: dark) {
   body {
-    background-color: #E3DAD0 !important;
+    background-color: #E3DAD1 !important;
   }
 }
 
@@ -59,6 +59,7 @@ img {
   height: auto;
   pointer-events: none;
   -webkit-user-drag: none;
+  -webkit-touch-callout: none !important;
 }
 
 .animate-fade-in {
@@ -74,9 +75,9 @@ img {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #E3DAD0;
+  background: #E3DAD1;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1A365D;
+  background: #304B60;
   border-radius: 10px;
 }

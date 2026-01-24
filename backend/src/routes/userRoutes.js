@@ -7,6 +7,8 @@ const { auth } = require('../middleware/auth');
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 router.post('/analyze-image', userController.analyzeImage);
+router.post('/verify-otp', userController.verifyOTP);
+router.post('/send-otp', userController.sendOTP);
 
 // مسارات محمية
 router.get('/profile', auth, userController.getUserProfile);

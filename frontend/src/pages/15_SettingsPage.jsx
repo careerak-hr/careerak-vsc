@@ -20,42 +20,34 @@ export default function SettingsPage() {
       dangerZone: 'منطقة الخطر',
       deleteAccount: 'حذف الحساب نهائياً',
       logout: 'تسجيل الخروج من كافة الأجهزة'
-    },
-    en: {
-      title: 'General Settings',
-      lang: 'App Language',
-      audio: 'Music & Audio',
-      save: 'Save Changes',
-      account: 'Account Settings',
-      dangerZone: 'Danger Zone',
-      deleteAccount: 'Delete Account Permanently',
-      logout: 'Logout from all devices'
     }
   }[language || 'ar'];
 
-  return (
-    <div className={`min-h-screen bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <Navbar lang={language} user={user} />
+  const sectionCls = "p-8 bg-[#304B60]/5 rounded-[2.5rem] border border-[#D48161]/10 flex flex-col md:flex-row justify-between items-center gap-6";
 
-      <main className="max-w-3xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-[4rem] shadow-2xl p-10 md:p-16 border border-white">
-          <h2 className={`text-3xl font-black text-[#1A365D] mb-12 border-[#1A365D] ${isRTL ? 'border-r-8 pr-4' : 'border-l-8 pl-4'}`}>
+  return (
+    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      <Navbar />
+
+      <main className="max-w-3xl mx-auto px-4 py-24 pb-32">
+        <div className="bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 md:p-16 border-2 border-[#304B60]/5">
+          <h2 className={`text-3xl font-black text-[#304B60] mb-12 border-[#D48161] ${isRTL ? 'border-r-8 pr-4' : 'border-l-8 pl-4'}`}>
             {t.title}
           </h2>
 
           <div className="space-y-10">
             {/* Language Setting */}
-            <section className="p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
+            <section className={sectionCls}>
               <div className="text-center md:text-right">
-                <h3 className="text-[#1A365D] font-black text-lg">{t.lang}</h3>
-                <p className="text-xs text-gray-400 font-bold mt-1">اختر اللغة التي تفضل استخدامها في الواجهات</p>
+                <h3 className="text-[#304B60] font-black text-lg">{t.lang}</h3>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">اختر اللغة التي تفضل استخدامها في الواجهات</p>
               </div>
               <div className="flex gap-2">
                 {['ar', 'en', 'fr'].map((l) => (
                   <button
                     key={l}
                     onClick={() => changeLanguage(l)}
-                    className={`px-6 py-3 rounded-2xl font-black text-xs transition-all ${language === l ? 'bg-[#1A365D] text-white shadow-lg' : 'bg-white text-[#1A365D] border border-gray-200'}`}
+                    className={`px-6 py-3 rounded-2xl font-black text-xs transition-all ${language === l ? 'bg-[#304B60] text-[#D48161] shadow-lg' : 'bg-[#E3DAD1] text-[#304B60] border border-[#D48161]/20'}`}
                   >
                     {l.toUpperCase()}
                   </button>
@@ -64,35 +56,35 @@ export default function SettingsPage() {
             </section>
 
             {/* Audio Setting */}
-            <section className="p-8 bg-gray-50 rounded-[2.5rem] border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
+            <section className={sectionCls}>
               <div className="text-center md:text-right">
-                <h3 className="text-[#1A365D] font-black text-lg">{t.audio}</h3>
-                <p className="text-xs text-gray-400 font-bold mt-1">التحكم في تشغيل الموسيقى الخلفية والمؤثرات</p>
+                <h3 className="text-[#304B60] font-black text-lg">{t.audio}</h3>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">التحكم في تشغيل الموسيقى الخلفية والمؤثرات</p>
               </div>
               <button
                 onClick={() => setAudio(!audioEnabled)}
-                className={`w-24 h-12 rounded-full relative transition-all duration-300 ${audioEnabled ? 'bg-[#1A365D]' : 'bg-gray-200'}`}
+                className={`w-24 h-12 rounded-full relative transition-all duration-300 ${audioEnabled ? 'bg-[#304B60]' : 'bg-[#304B60]/10'}`}
               >
-                <div className={`absolute top-1 w-10 h-10 bg-white rounded-full shadow-md transition-all duration-300 ${audioEnabled ? (isRTL ? 'right-1' : 'left-13') : (isRTL ? 'right-13' : 'left-1')}`} style={{ left: !isRTL && audioEnabled ? 'auto' : '', right: !isRTL && audioEnabled ? '4px' : '', left: isRTL && !audioEnabled ? 'auto' : '', right: isRTL && !audioEnabled ? '4px' : '' }}></div>
-                <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-black ${audioEnabled ? 'text-white' : 'text-gray-400'}`}>
+                <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${audioEnabled ? (isRTL ? 'right-1' : 'left-13') : (isRTL ? 'right-13' : 'left-1')}`} style={{ left: isRTL ? (audioEnabled ? '' : '4px') : (audioEnabled ? 'auto' : '4px'), right: isRTL ? (audioEnabled ? '4px' : 'auto') : (audioEnabled ? '4px' : 'auto') }}></div>
+                <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-black ${audioEnabled ? 'text-[#D48161]' : 'text-[#304B60]/40'}`}>
                    {audioEnabled ? 'ON' : 'OFF'}
                 </span>
               </button>
             </section>
 
             {/* Danger Zone */}
-            <section className="pt-10 border-t border-gray-100">
+            <section className="pt-10 border-t border-[#304B60]/10">
                <h3 className="text-red-600 font-black text-sm uppercase tracking-widest mb-6 px-4">{t.dangerZone}</h3>
                <div className="space-y-4">
                   <button
                     onClick={logout}
-                    className="w-full p-6 border-2 border-gray-100 rounded-[2rem] text-[#1A365D] font-black text-sm flex justify-between items-center hover:bg-gray-50 transition-all"
+                    className="w-full p-6 bg-[#304B60]/5 rounded-[2rem] text-[#304B60] font-black text-sm flex justify-between items-center hover:bg-[#304B60]/10 transition-all border border-[#D48161]/10"
                   >
                     <span>{t.logout}</span>
                     <span>🚪</span>
                   </button>
                   <button
-                    className="w-full p-6 border-2 border-red-50 rounded-[2rem] text-red-600 font-black text-sm flex justify-between items-center hover:bg-red-50 transition-all"
+                    className="w-full p-6 bg-red-600 text-white rounded-[2rem] font-black text-sm flex justify-between items-center shadow-lg shadow-red-200"
                   >
                     <span>{t.deleteAccount}</span>
                     <span>⚠️</span>

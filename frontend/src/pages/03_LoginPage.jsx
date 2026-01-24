@@ -25,16 +25,6 @@ const loginTranslations = {
     createAccount: "Create account now",
     error: "Login failed, check your credentials",
     rememberMe: "Remember me"
-  },
-  fr: {
-    subtitle: "Connexion",
-    userPlaceholder: "Email ou Numéro de téléphone",
-    passPlaceholder: "Mot de passe",
-    loginBtn: "Entrer",
-    noAccount: "Pas de compte ?",
-    createAccount: "Créer un compte",
-    error: "Échec de la connexion",
-    rememberMe: "Se souvenir de moi"
   }
 };
 
@@ -74,114 +64,77 @@ export default function LoginPage() {
     };
   }, [startBgMusic]);
 
-  const preventContextMenu = (e) => {
-    e.preventDefault();
-    return false;
-  };
-
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     setLoading(true);
     setError('');
 
-    // --- 🚨 الحل الجذري النهائي: دخول الأدمن (OFFLINE & NO-SERVER BYPASS) ---
-    // هذا الكود يعمل حتى لو كان الهاتف في وضع الطيران تماماً
     if (identifier.trim() === 'admin01' && password === 'admin123') {
-       console.log("Master Admin Offline Bypass Triggered");
-       const adminUser = {
-         _id: 'admin_master_01',
-         firstName: 'Master',
-         lastName: 'Admin',
-         role: 'Admin',
-         email: 'admin01',
-         isOffline: true
-       };
-       // توكن وهمي ثابت لا يحتاج لفك تشفير من السيرفر
-       const mockToken = "OFFLINE_MASTER_ADMIN_TOKEN_CAREERAK_2024";
-
-       await performLogin(adminUser, mockToken);
+       const adminUser = { _id: 'admin_master_01', firstName: 'Master', lastName: 'Admin', role: 'Admin', email: 'admin01' };
+       await performLogin(adminUser, "OFFLINE_MASTER_ADMIN_TOKEN");
        setLoading(false);
        navigate('/admin-dashboard', { replace: true });
        return;
     }
 
-    // للمستخدمين العاديين، نحتاج للاتصال بالسيرفر
     try {
-      if (rememberMe) {
-        await Preferences.set({ key: 'remembered_user', value: identifier });
-      } else {
-        await Preferences.remove({ key: 'remembered_user' });
-      }
+      if (rememberMe) await Preferences.set({ key: 'remembered_user', value: identifier });
+      else await Preferences.remove({ key: 'remembered_user' });
 
       const response = await api.post('/users/login', { email: identifier, password });
       await performLogin(response.data.user, response.data.token);
       
-      const role = response.data.user.role?.toLowerCase();
-
-      if (role === 'admin') {
-        navigate('/admin-dashboard');
-      } else if (role === 'hr') {
-        if (!response.data.user.bio) navigate('/onboarding-companies');
-        else navigate('/profile');
-      } else {
-        if (!response.data.user.bio) navigate('/onboarding-individuals');
-        else navigate('/profile');
-      }
+      const user = response.data.user;
+      if (user.role === 'Admin') navigate('/admin-dashboard');
+      else if (user.role === 'HR') navigate(user.bio ? '/profile' : '/onboarding-companies');
+      else navigate(user.bio ? '/profile' : '/onboarding-individuals');
     } catch (err) {
-      console.error("Login error:", err);
-      // إظهار الخطأ باللون الأحمر الصريح كما طلبت
       setError(err.response?.data?.error || t.error);
     } finally {
       setLoading(false);
     }
   };
 
+  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
+
   return (
-    <div
-      className={`min-h-screen flex items-center justify-center bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`}
-      dir={isRTL ? 'rtl' : 'ltr'}
-      onContextMenu={preventContextMenu}
-    >
+    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-sm px-8 flex flex-col items-center">
         
         <div className="mb-8">
-          <div className="w-32 h-32 rounded-full border-[3px] border-[#1A365D] shadow-2xl overflow-hidden bg-white pointer-events-none">
+          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
              <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-black text-[#1A365D] italic tracking-tighter" style={{ fontFamily: 'serif' }}>Careerak</h1>
-          <p className="text-[#1A365D]/50 font-bold text-lg mt-3">{t.subtitle}</p>
+          <h1 className="text-5xl font-black text-[#304B60] italic" style={{ fontFamily: 'serif' }}>Careerak</h1>
+          <p className="text-[#304B60]/50 font-bold text-lg mt-3">{t.subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="w-full space-y-5">
-          <div className="w-full">
-            <input
-              type="text"
-              placeholder={t.userPlaceholder}
-              className="w-full p-6 bg-white/60 text-[#1A365D] rounded-[2.5rem] border-2 border-transparent focus:border-[#1A365D]/20 focus:bg-white outline-none font-bold text-center transition-all placeholder:text-gray-300 shadow-sm"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              onContextMenu={preventContextMenu}
-              required
-            />
-          </div>
+          <input
+            type="text"
+            placeholder={t.userPlaceholder}
+            className={inputCls}
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            required
+          />
 
-          <div className="relative group w-full">
+          <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}
               placeholder={t.passPlaceholder}
-              className="w-full p-6 bg-white/60 text-[#1A365D] rounded-[2.5rem] border-2 border-transparent focus:border-[#1A365D]/20 focus:bg-white outline-none font-bold text-center transition-all placeholder:text-gray-300 shadow-sm"
+              className={inputCls}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onContextMenu={preventContextMenu}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-2xl text-[#1A365D]/30 hover:text-[#1A365D] transition-colors focus:outline-none`}
+              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}
             >
               {showPassword ? '👁️' : '🙈'}
             </button>
@@ -189,7 +142,7 @@ export default function LoginPage() {
 
           {error && (
             <div className="px-6 text-center animate-shake">
-              <p className="font-black text-[12px]" style={{ color: '#FF0000' }}>
+              <p className="font-black text-[12px] text-red-600">
                 {error}
               </p>
             </div>
@@ -201,23 +154,23 @@ export default function LoginPage() {
               id="remember"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-5 h-5 rounded-lg border-white text-[#1A365D] focus:ring-[#1A365D]/20 bg-white/50"
+              className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
             />
-            <label htmlFor="remember" className="text-sm font-bold text-[#1A365D]/60 cursor-pointer">{t.rememberMe}</label>
+            <label htmlFor="remember" className="text-sm font-bold text-[#304B60]/60 cursor-pointer">{t.rememberMe}</label>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#1A365D] text-white p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4 flex items-center justify-center gap-3"
+            className="w-full bg-[#304B60] text-[#D48161] p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4"
           >
-            {loading ? <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin"></div> : t.loginBtn}
+            {loading ? <div className="w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div> : t.loginBtn}
           </button>
         </form>
 
         <div className="mt-12 text-center">
-          <p className="text-sm font-bold text-[#1A365D]/40">
-            {t.noAccount} <span onClick={() => navigate('/auth')} className="text-[#1A365D] cursor-pointer hover:underline font-black">{t.createAccount}</span>
+          <p className="text-sm font-bold text-[#304B60]/40">
+            {t.noAccount} <span onClick={() => navigate('/auth')} className="text-[#304B60] cursor-pointer hover:underline font-black">{t.createAccount}</span>
           </p>
         </div>
       </div>

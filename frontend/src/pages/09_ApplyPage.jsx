@@ -1,155 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 
 export default function ApplyPage() {
-  const { jobId } = useParams();
-  const { user, language } = useAuth();
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const { user, language } = useAuth();
   const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [applying, setApplying] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const isRTL = language === 'ar';
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
     const fetchJob = async () => {
       try {
-        const res = await api.get(`/job-postings/${jobId}`);
+        const res = await api.get(`/job-postings/${id}`);
         setJob(res.data);
       } catch (err) {
-        console.error("Job fetch failed");
+        console.error(err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchJob();
-  }, [jobId]);
+  }, [id]);
 
-  const [formData, setFormData] = useState({
-    expectedSalary: '',
-    availability: 'immediate',
-    workPreference: 'office',
-    coverLetter: ''
-  });
-
-  const t = {
-    ar: {
-      title: "تقديم طلب انضمام",
-      salary: "الراتب المتوقع (شهرياً)",
-      pref: "تفضيل العمل",
-      office: "مكتبي", remote: "عن بعد", hybrid: "هجين (مكتبي + عن بعد)",
-      avail: "تاريخ الالتحاق",
-      immediate: "فوري", week2: "خلال أسبوعين", month1: "خلال شهر",
-      letter: "رسالة تغطية (اختياري)",
-      btn: "إرسال طلب التوظيف",
-      success: "تم تقديم طلبك بنجاح! سيقوم فريق التوظيف بمراجعته.",
-      error: "حدث خطأ، يرجى التأكد من ملء كافة الحقول"
-    },
-    en: {
-      title: "Apply for Job",
-      salary: "Expected Salary (Monthly)",
-      pref: "Work Preference",
-      office: "Office", remote: "Remote", hybrid: "Hybrid",
-      avail: "Availability",
-      immediate: "Immediate", week2: "Within 2 weeks", month1: "Within a month",
-      letter: "Cover Letter (Optional)",
-      btn: "Submit Application",
-      success: "Application submitted successfully!",
-      error: "Error, please check your inputs"
-    }
-  }[language || 'ar'];
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+  const handleApply = async () => {
+    setApplying(true);
     try {
-      await api.post(`/job-applications`, { ...formData, jobPostingId: jobId });
-      alert(t.success);
-      navigate('/job-postings');
+      await api.post('/job-applications', { jobPostingId: id });
+      setSuccess(true);
     } catch (err) {
-      alert(t.error);
+      alert("لقد قمت بالتقديم مسبقاً على هذه الوظيفة");
     } finally {
-      setLoading(false);
+      setApplying(false);
     }
   };
 
-  return (
-    <div className={`min-h-screen bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <Navbar lang={language} user={user} />
+  const t = {
+    ar: {
+      title: "تفاصيل الفرصة",
+      apply: "تأكيد التقديم الآن",
+      back: "العودة للملفات",
+      success: "تم إرسال طلبك بنجاح! سيتم التواصل معك قريباً.",
+      requirements: "المتطلبات",
+      description: "الوصف الوظيفي"
+    }
+  }[language || 'ar'];
 
-      <main className="max-w-3xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-[4rem] shadow-2xl p-10 md:p-16 border border-white">
-          <div className="mb-10 text-center">
-             <h2 className="text-3xl font-black text-[#1A365D] mb-4">{t.title}</h2>
-             {job && (
-               <div className="inline-block px-6 py-2 bg-[#1A365D]/5 rounded-2xl text-[#1A365D] font-black">
-                 {job.title} - {job.companyName || 'Careerak'}
-               </div>
-             )}
+  if (loading) return <div className="min-h-screen bg-[#E3DAD1] flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#304B60] border-t-transparent rounded-full animate-spin"></div></div>;
+
+  return (
+    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir="rtl">
+      <Navbar />
+      <main className="max-w-4xl mx-auto px-4 py-24 pb-32">
+        <div className="bg-[#E3DAD1] rounded-[3rem] shadow-2xl p-8 md:p-12 border-2 border-[#304B60]/5">
+          <div className="flex items-center gap-6 mb-10">
+             <div className="w-20 h-20 bg-[#304B60] rounded-3xl flex items-center justify-center text-4xl shadow-inner">🏢</div>
+             <div>
+                <h2 className="text-3xl font-black text-[#304B60]">{job?.title}</h2>
+                <p className="text-[#304B60]/50 font-bold">{job?.companyName}</p>
+             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="block text-xs font-black text-gray-400 uppercase mr-4">{t.salary}</label>
-                <input
-                  type="number"
-                  className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner"
-                  value={formData.expectedSalary}
-                  onChange={(e) => setFormData({...formData, expectedSalary: e.target.value})}
-                  required
-                />
-              </div>
+          <div className="space-y-8 text-[#304B60]">
+            <section>
+              <h3 className="text-xl font-black mb-4 border-r-4 border-[#D48161] pr-3">{t.description}</h3>
+              <p className="font-bold leading-relaxed bg-[#304B60]/5 p-6 rounded-3xl border border-[#D48161]/10">{job?.description}</p>
+            </section>
 
-              <div className="space-y-2">
-                <label className="block text-xs font-black text-gray-400 uppercase mr-4">{t.pref}</label>
-                <select
-                  className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner appearance-none"
-                  value={formData.workPreference}
-                  onChange={(e) => setFormData({...formData, workPreference: e.target.value})}
-                >
-                  <option value="office">{t.office}</option>
-                  <option value="remote">{t.remote}</option>
-                  <option value="hybrid">{t.hybrid}</option>
-                </select>
-              </div>
+            <section>
+              <h3 className="text-xl font-black mb-4 border-r-4 border-[#D48161] pr-3">{t.requirements}</h3>
+              <p className="font-bold leading-relaxed bg-[#304B60]/5 p-6 rounded-3xl border border-[#D48161]/10">{job?.requirements}</p>
+            </section>
+          </div>
+
+          {success ? (
+            <div className="mt-12 p-8 bg-green-50 text-green-700 rounded-3xl font-black text-center border-2 border-green-200 animate-bounce">
+              {t.success}
             </div>
-
-            <div className="space-y-2">
-              <label className="block text-xs font-black text-gray-400 uppercase mr-4">{t.avail}</label>
-              <select
-                className="w-full p-5 bg-gray-50 rounded-[2rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner appearance-none"
-                value={formData.availability}
-                onChange={(e) => setFormData({...formData, availability: e.target.value})}
-              >
-                <option value="immediate">{t.immediate}</option>
-                <option value="2weeks">{t.week2}</option>
-                <option value="1month">{t.month1}</option>
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="block text-xs font-black text-gray-400 uppercase mr-4">{t.letter}</label>
-              <textarea
-                className="w-full p-6 bg-gray-50 rounded-[3rem] border-2 border-transparent focus:border-[#1A365D]/10 focus:bg-white outline-none font-black shadow-inner h-40"
-                value={formData.coverLetter}
-                onChange={(e) => setFormData({...formData, coverLetter: e.target.value})}
-              />
-            </div>
-
+          ) : (
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#1A365D] text-white py-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-8"
+              onClick={handleApply}
+              disabled={applying}
+              className="w-full mt-12 py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl active:scale-95 transition-all text-xl"
             >
-              {loading ? <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div> : t.btn}
+              {applying ? "جاري التقديم..." : t.apply}
             </button>
-          </form>
+          )}
         </div>
       </main>
-
       <Footer />
     </div>
   );

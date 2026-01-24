@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
   profileImage: String,
   privacyAccepted: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
+  otp: {
+    code: String,
+    expiresAt: Date,
+    method: { type: String, enum: ['whatsapp', 'email'] }
+  },
   isSpecialNeeds: { type: Boolean, default: false },
   specialNeedsType: {
     type: String,
@@ -36,16 +41,93 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// ✅ منع إعادة تسجيل الموديل في بيئة Vercel
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// --- تطوير نموذج الأفراد (Employees) ---
+// --- تطوير نموذج الأفراد المتطور (Comprehensive Employee Schema) ---
 const IndividualSchema = new mongoose.Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
-  educationLevel: { type: String, required: true },
+  gender: { type: String, enum: ['male', 'female', 'other'] },
+  birthDate: { type: Date },
+
+  // بيانات السكن والحياة الاجتماعية
+  permanentAddress: String,
+  temporaryAddress: String,
+  socialStatus: { type: String, enum: ['single', 'married', 'divorced', 'widowed'] },
+  hasChildren: { type: Boolean, default: false },
+
+  // الحالة الصحية
+  healthStatus: {
+    hasChronicDiseases: { type: Boolean, default: false },
+    chronicDetails: String,
+    hasSkinDiseases: { type: Boolean, default: false },
+    skinDetails: String,
+    hasInfectiousDiseases: { type: Boolean, default: false },
+    infectiousDetails: String,
+    otherHealthNotes: String
+  },
+
+  // حالة الجيش (للذكور)
+  militaryStatus: { type: String, enum: ['exempt', 'performed', 'paid', 'postponed', 'in_service', 'none'] },
+
+  // المسيرة التعليمية (Unlimited)
+  educationList: [{
+    level: String, // مرحلة
+    degree: String, // درجة
+    institution: String, // جهة
+    city: String,
+    country: String,
+    year: String,
+    grade: String
+  }],
+
+  // المسيرة المهنية (Unlimited)
+  experienceList: [{
+    company: String,
+    position: String,
+    from: Date,
+    to: Date,
+    tasks: String,
+    workType: { type: String, enum: ['field', 'admin', 'technical'] },
+    jobLevel: String,
+    reasonForLeaving: String,
+    country: String,
+    city: String
+  }],
+
+  // المسيرة التدريبية (Unlimited)
+  trainingList: [{
+    courseName: String,
+    provider: String,
+    content: String,
+    country: String,
+    city: String,
+    hasCertificate: { type: Boolean, default: true }
+  }],
+
+  // اللغات
+  languages: [{
+    language: String,
+    proficiency: { type: String, enum: ['beginner', 'intermediate', 'advanced', 'native'] }
+  }],
+
+  // مهارات الحاسوب والبرامج
+  computerSkills: [{
+    skill: String,
+    proficiency: { type: String, enum: ['beginner', 'intermediate', 'advanced', 'expert'] }
+  }],
+  softwareSkills: [{
+    software: String,
+    proficiency: { type: String, enum: ['beginner', 'intermediate', 'advanced', 'expert'] }
+  }],
+
+  // مهارات أخرى
+  otherSkills: [String],
+
   specialization: { type: String },
-  interests: [{ type: String }]
+  interests: [{ type: String }],
+  bio: String,
+  cvFile: String // Base64 or URL
 });
 
 const Individual = User.discriminators?.Employee || User.discriminator('Employee', IndividualSchema);

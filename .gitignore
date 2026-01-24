@@ -5,3 +5,12 @@ uploads/
 *.log
 frontend/node_modules/
 backend/node_modules/
+
+# dependencies
+
+# build outputs
+build/
+dist/
+# env
+# OS
+.DS_Store

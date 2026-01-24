@@ -1,98 +1,176 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import userService from '../services/userService';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { FileTransfer } from '@capacitor/file-transfer';
+import { Filesystem, Directory } from '@capacitor/filesystem';
 
 export default function ProfilePage() {
-  const { user, language, logout } = useAuth();
+  const { user, language, updateUser, logout } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
-  const isRTL = language === 'ar';
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [cvGenerating, setCvGenerating] = useState(false);
+  const [cvLevel, setCvLevel] = useState('intermediate');
 
-  useEffect(() => { setIsVisible(true); }, []);
+  const [formData, setFormData] = useState({
+    firstName: '', lastName: '', gender: '', birthDate: '', email: '', phone: '', country: '', city: '',
+    permanentAddress: '', temporaryAddress: '', socialStatus: '', hasChildren: false,
+    militaryStatus: '',
+    healthStatus: { hasChronic: false, chronic: '', hasSkin: false, skin: '', hasInfectious: false, infectious: '', notes: '' },
+    educationList: [], experienceList: [], trainingList: [],
+    languages: [], computerSkills: [], softwareSkills: [], otherSkills: [],
+    bio: ''
+  });
+
+  useEffect(() => {
+    setIsVisible(true);
+    if (user) {
+      setFormData({
+        ...user,
+        birthDate: user.birthDate ? user.birthDate.split('T')[0] : '',
+        healthStatus: user.healthStatus || { hasChronic: false, chronic: '', hasSkin: false, skin: '', hasInfectious: false, infectious: '', notes: '' },
+        educationList: user.educationList || [],
+        experienceList: user.experienceList || [],
+        trainingList: user.trainingList || [],
+        languages: user.languages || [],
+        computerSkills: user.computerSkills || [],
+        softwareSkills: user.softwareSkills || [],
+        otherSkills: user.otherSkills || []
+      });
+    }
+  }, [user]);
 
   const t = {
     ar: {
-      personalInfo: "المعلومات الشخصية",
-      email: "البريد الإلكتروني",
-      phone: "رقم الهاتف",
-      bio: "نبذة عني",
-      skills: "المهارات",
-      logout: "تسجيل الخروج",
-      experience: "الخبرات العملية",
-      education: "المؤهلات العلمية"
-    },
-    en: {
-      personalInfo: "Personal Information",
-      email: "Email Address",
-      phone: "Phone Number",
-      bio: "About Me",
-      skills: "Skills",
-      logout: "Logout",
-      experience: "Work Experience",
-      education: "Education"
+      title: "الملف الشخصي", edit: "تعديل البيانات", save: "حفظ التغييرات", cancel: "إلغاء",
+      personal: "البيانات الشخصية والاجتماعية", health: "الحالة الصحية", military: "حالة التجنيد",
+      education: "المسيرة التعليمية", experience: "المسيرة المهنية", training: "المسيرة التدريبية",
+      skills: "اللغات والمهارات", aiCv: "منشئ السيرة الذاتية الذكي (AI)", generateCv: "إنشاء سيرة ذاتية احترافية",
+      cvLevels: { beginner: "مبتدئ", intermediate: "متوسط", professional: "احترافي" },
+      logout: "تسجيل الخروج", add: "+ إضافة",
+      socialStatuses: { single: 'عازب', married: 'متزوج', divorced: 'مطلق', widowed: 'أرمل' },
+      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' }
     }
   }[language || 'ar'];
 
-  return (
-    <div className={`min-h-screen bg-[#E3DAD0] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <Navbar lang={language} user={user} />
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const res = await userService.updateProfile(formData);
+      updateUser(res.data.user);
+      setIsEditing(false);
+    } catch (err) { console.error(err); } finally { setLoading(false); }
+  };
 
-      <main className="max-w-4xl mx-auto px-4 py-10">
-        <div className="bg-white rounded-[4rem] shadow-2xl overflow-hidden border border-white">
-          {/* Header/Cover Area */}
-          <div className="h-40 bg-[#1A365D] relative">
-            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2">
-              <div className="w-32 h-32 rounded-full border-8 border-white shadow-2xl overflow-hidden bg-white">
+  const handleGenerateCv = async () => {
+    setCvGenerating(true);
+    try {
+      const response = await userService.generateCv({ cvLevel });
+      const fileUrl = response.data.url;
+      const fileName = fileUrl.split('/').pop();
+
+      await FileTransfer.download(fileUrl, fileName, Directory.Documents);
+
+      alert('تم تحميل السيرة الذاتية بنجاح');
+
+    } catch (err) {
+      console.error('Error generating or downloading CV:', err);
+      alert('حدث خطأ أثناء إنشاء أو تحميل السيرة الذاتية');
+    } finally {
+      setCvGenerating(false);
+    }
+  };
+
+  const addItem = (listName, defaultObj) => {
+    setFormData(prev => ({ ...prev, [listName]: [...prev[listName], defaultObj] }));
+  };
+
+  const handleListChange = (listName, index, field, value) => {
+    const newList = [...formData[listName]];
+    newList[index][field] = value;
+    setFormData(prev => ({ ...prev, [listName]: newList }));
+  };
+
+  const inputCls = "w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all";
+  const labelCls = "block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2";
+
+  return (
+    <div className={`min-h-screen bg-[#E3DAD1] pb-20 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir="rtl">
+      <Navbar />
+      <main className="max-w-5xl mx-auto px-4 py-10 pt-24">
+        <div className="bg-[#E3DAD1] rounded-[4rem] shadow-2xl overflow-hidden border-2 border-[#304B60]/5">
+          <div className="h-48 bg-[#304B60] relative">
+            <div className="absolute -bottom-20 right-12 flex items-end gap-6">
+              <div className="w-40 h-40 rounded-full border-8 border-[#E3DAD1] shadow-2xl overflow-hidden bg-[#E3DAD1]">
                 <img src={user?.profileImage || "/logo.jpg"} alt="Profile" className="w-full h-full object-cover" />
               </div>
+              <div className="mb-6">
+                <h2 className="text-3xl font-black text-[#E3DAD1]">{user?.firstName} {user?.lastName}</h2>
+                <p className="text-[#D48161] font-bold uppercase tracking-widest text-xs">{user?.role}</p>
+              </div>
             </div>
+            {!isEditing && (
+              <button onClick={() => setIsEditing(true)} className="absolute top-8 left-8 px-6 py-3 bg-[#E3DAD1]/20 hover:bg-[#E3DAD1]/30 text-[#E3DAD1] rounded-2xl font-black text-xs backdrop-blur-md">
+                {t.edit} ✏️
+              </button>
+            )}
           </div>
 
-          <div className="pt-20 pb-12 px-8 md:px-16 text-center">
-            <h2 className="text-3xl font-black text-[#1A365D] mb-2">{user?.firstName} {user?.lastName}</h2>
-            <p className="text-[#1A365D]/40 font-bold uppercase tracking-widest text-sm mb-8">{user?.role}</p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-right">
-              <div className="p-6 bg-gray-50 rounded-[2.5rem] border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase mb-2">{t.email}</p>
-                <p className="text-[#1A365D] font-black">{user?.email}</p>
-              </div>
-              <div className="p-6 bg-gray-50 rounded-[2.5rem] border border-gray-100">
-                <p className="text-[10px] font-black text-gray-400 uppercase mb-2">{t.phone}</p>
-                <p className="text-[#1A365D] font-black">{user?.phone || '---'}</p>
-              </div>
-            </div>
-
-            {user?.bio && (
-              <div className="mt-8 p-8 bg-gray-50 rounded-[3rem] text-right border border-gray-100">
-                <h3 className="text-lg font-black text-[#1A365D] mb-4 border-r-4 border-[#1A365D] pr-4">{t.bio}</h3>
-                <p className="text-[#1A365D]/70 font-bold leading-relaxed">{user.bio}</p>
-              </div>
-            )}
-
-            {user?.skills && (
-              <div className="mt-8 text-right">
-                <h3 className="text-lg font-black text-[#1A365D] mb-4 border-r-4 border-[#1A365D] pr-4">{t.skills}</h3>
-                <div className="flex flex-wrap gap-3 mt-4">
-                  {user.skills.split(',').map((skill, i) => (
-                    <span key={i} className="px-6 py-3 bg-[#1A365D]/5 text-[#1A365D] rounded-2xl font-black text-xs border border-[#1A365D]/10">
-                      {skill.trim()}
-                    </span>
-                  ))}
+          <div className="pt-28 pb-12 px-8 md:px-16 space-y-12">
+            <form className="space-y-12">
+              <section className="space-y-6">
+                <h3 className="text-xl font-black text-[#304B60] border-r-4 border-[#D48161] pr-4">{t.personal}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className={labelCls}>عنوان السكن الدائم</label>
+                    {isEditing ? <input type="text" className={inputCls} value={formData.permanentAddress} onChange={e=>setFormData({...formData, permanentAddress:e.target.value})} /> : <p className="p-4 bg-[#304B60]/5 rounded-2xl font-bold text-[#304B60]">{formData.permanentAddress || '---'}</p>}
+                  </div>
+                  <div>
+                    <label className={labelCls}>الحالة الاجتماعية</label>
+                    {isEditing ? (
+                      <select className={inputCls} value={formData.socialStatus} onChange={e=>setFormData({...formData, socialStatus:e.target.value})}>
+                        {Object.entries(t.socialStatuses).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
+                      </select>
+                    ) : <p className="p-4 bg-[#304B60]/5 rounded-2xl font-bold text-[#304B60]">{t.socialStatuses[formData.socialStatus] || '---'}</p>}
+                  </div>
                 </div>
-              </div>
-            )}
+              </section>
 
-            <button
-              onClick={logout}
-              className="mt-12 px-10 py-5 bg-red-50 text-red-600 rounded-[2rem] font-black text-sm hover:bg-red-100 transition-all active:scale-95 border border-red-100"
-            >
-              {t.logout}
-            </button>
+              {isEditing && (
+                <div className="flex gap-4">
+                  <button type="button" onClick={handleSave} className="flex-1 py-5 bg-[#304B60] text-[#D48161] rounded-[2rem] font-black shadow-xl">{t.save}</button>
+                  <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-5 border-2 border-[#304B60] text-[#304B60] rounded-[2rem] font-black">{t.cancel}</button>
+                </div>
+              )}
+            </form>
+
+            <section className="p-10 bg-[#304B60] rounded-[4rem] text-[#E3DAD1] shadow-2xl relative overflow-hidden">
+               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="text-right flex-1">
+                    <h3 className="text-3xl font-black mb-4 flex items-center gap-3">✨ {t.aiCv}</h3>
+                    <p className="text-[#E3DAD1]/70 font-bold text-sm">حول بياناتك إلى سيرة ذاتية احترافية بجودة PDF.</p>
+                  </div>
+                  <div className="bg-[#E3DAD1]/10 p-2 rounded-[2.5rem] flex flex-col gap-3 w-full max-w-xs">
+                     <div className="flex gap-2 p-1 bg-black/20 rounded-2xl">
+                        {Object.entries(t.cvLevels).map(([k,v]) => (
+                          <button key={k} onClick={()=>setCvLevel(k)} className={`flex-1 py-3 rounded-xl text-[10px] font-black ${cvLevel === k ? 'bg-[#E3DAD1] text-[#304B60]' : 'text-[#E3DAD1]/40'}`}>{v}</button>
+                        ))}
+                     </div>
+                     <button onClick={handleGenerateCv} disabled={cvGenerating} className="w-full py-5 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-2xl active:scale-95">{cvGenerating ? 'جاري الإنشاء...' : t.generateCv}</button>
+                  </div>
+               </div>
+            </section>
+
+            <div className="text-center pt-10">
+              <button onClick={logout} className="px-10 py-5 bg-red-600 text-white rounded-[2rem] font-black text-xs shadow-lg shadow-red-200">
+                {t.logout} 🚪
+              </button>
+            </div>
           </div>
         </div>
       </main>
-
       <Footer />
     </div>
   );
