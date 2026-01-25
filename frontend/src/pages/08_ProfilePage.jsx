@@ -3,8 +3,8 @@ import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-import { FileTransfer } from '@capacitor/file-transfer';
-import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Filesystem } from '@capacitor/filesystem'; // وعد: استبدال file-transfer الرسمي
+import { Directory } from '@capacitor/filesystem';
 
 export default function ProfilePage() {
   const { user, language, updateUser, logout } = useAuth();
@@ -71,7 +71,7 @@ export default function ProfilePage() {
       const fileUrl = response.data.url;
       const fileName = fileUrl.split('/').pop();
 
-      await FileTransfer.download(fileUrl, fileName, Directory.Documents);
+      await Filesystem.download(fileUrl, fileName, Directory.Documents);
 
       alert('تم تحميل السيرة الذاتية بنجاح');
 
@@ -81,16 +81,6 @@ export default function ProfilePage() {
     } finally {
       setCvGenerating(false);
     }
-  };
-
-  const addItem = (listName, defaultObj) => {
-    setFormData(prev => ({ ...prev, [listName]: [...prev[listName], defaultObj] }));
-  };
-
-  const handleListChange = (listName, index, field, value) => {
-    const newList = [...formData[listName]];
-    newList[index][field] = value;
-    setFormData(prev => ({ ...prev, [listName]: newList }));
   };
 
   const inputCls = "w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all";
@@ -140,7 +130,9 @@ export default function ProfilePage() {
 
               {isEditing && (
                 <div className="flex gap-4">
-                  <button type="button" onClick={handleSave} className="flex-1 py-5 bg-[#304B60] text-[#D48161] rounded-[2rem] font-black shadow-xl">{t.save}</button>
+                  <button type="button" onClick={handleSave} disabled={loading} className="flex-1 py-5 bg-[#304B60] text-[#D48161] rounded-[2rem] font-black shadow-xl disabled:opacity-50">
+                    {loading ? 'جاري الحفظ...' : t.save}
+                  </button>
                   <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-5 border-2 border-[#304B60] text-[#304B60] rounded-[2rem] font-black">{t.cancel}</button>
                 </div>
               )}

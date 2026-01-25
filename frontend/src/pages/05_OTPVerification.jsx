@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -16,11 +16,6 @@ export default function OTPVerification() {
 
   const isRTL = language === 'ar';
 
-  useEffect(() => {
-    setIsVisible(true);
-    if (tempUser?._id) handleSendOTP('whatsapp');
-  }, [tempUser]);
-
   const t = {
     ar: {
       title: "تأكيد الرمز",
@@ -34,10 +29,15 @@ export default function OTPVerification() {
     }
   }[language || 'ar'];
 
-  const handleSendOTP = async (targetMethod) => {
+  const handleSendOTP = useCallback(async (targetMethod) => {
     setMethod(targetMethod);
     try { await api.post('/users/send-otp', { userId: tempUser?._id, method: targetMethod }); } catch (err) {}
-  };
+  }, [tempUser]);
+
+  useEffect(() => {
+    setIsVisible(true);
+    if (tempUser?._id) handleSendOTP('whatsapp');
+  }, [tempUser, handleSendOTP]);
 
   const handleVerify = async (e) => {
     if (e) e.preventDefault();

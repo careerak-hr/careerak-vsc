@@ -10,7 +10,7 @@
     opacity: 0.3;
   }
   100% {
-    transform: scale(150); /* زيادة الحجم ليملأ الشاشة بالكامل */
+    transform: scale(100);
     opacity: 0;
   }
 }

@@ -8,7 +8,6 @@
     "@capacitor/camera": "^8.0.0",
     "@capacitor/cli": "^8.0.1",
     "@capacitor/core": "^8.0.1",
-    "@capacitor/file-transfer": "^2.0.3",
     "@capacitor/filesystem": "^8.1.0",
     "@capacitor/geolocation": "^8.0.0",
     "@capacitor/preferences": "^8.0.0",
@@ -24,6 +23,7 @@
     "react-i18next": "^14.1.2",
     "react-image-crop": "^11.0.10",
     "react-router-dom": "^6.10.0",
+    "react-scripts": "^5.0.1",
     "tailwindcss": "^3.2.7"
   },
   "scripts": {
@@ -51,7 +51,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.24",
-    "react-scripts": "^5.0.1"
+    "postcss": "^8.4.24"
   }
 }

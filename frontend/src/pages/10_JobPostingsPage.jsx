@@ -10,7 +10,7 @@ export default function JobPostingsPage() {
   const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
-  const { user, language } = useAuth();
+  const { language } = useAuth();
   const isRTL = language === 'ar';
 
   useEffect(() => {

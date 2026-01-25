@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
@@ -28,6 +28,32 @@ export default function OnboardingUltimate() {
     }
   }[language || 'ar'];
 
+  const speak = useCallback((text) => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = language === 'ar' ? 'ar-SA' : 'en-US';
+    utterance.rate = 0.85;
+    window.speechSynthesis.speak(utterance);
+  }, [language]);
+
+  const finalize = useCallback(async (finalData) => {
+    try {
+      const res = await userService.updateProfile({ bio: `[Ultimate] ${finalData.skills}. ${finalData.bio}`, isSpecialNeeds: true, specialNeedType: 'بصري' });
+      updateUser(res.data.user);
+      speak(t.steps[3].prompt);
+      setTimeout(() => navigate('/profile'), 4000);
+    } catch (e) { navigate('/profile'); }
+  }, [navigate, speak, t.steps, updateUser]);
+
+  const processVoiceInput = useCallback((text) => {
+    setIsListening(false);
+    const newData = { ...userData, [t.steps[step].key]: text };
+    setUserData(newData);
+    const nextStep = step + 1;
+    if (nextStep < t.steps.length) { setStep(nextStep); speak(t.steps[nextStep].prompt); }
+    else { finalize(newData); }
+  }, [finalize, speak, step, t.steps, userData]);
+
   useEffect(() => {
     setIsVisible(true);
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -40,38 +66,12 @@ export default function OnboardingUltimate() {
     }
     speak(t.welcome);
     setTimeout(() => speak(t.steps[0].prompt), 9000);
-  }, []);
-
-  const speak = (text) => {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = language === 'ar' ? 'ar-SA' : 'en-US';
-    utterance.rate = 0.85;
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const processVoiceInput = (text) => {
-    setIsListening(false);
-    const newData = { ...userData, [t.steps[step].key]: text };
-    setUserData(newData);
-    const nextStep = step + 1;
-    if (nextStep < t.steps.length) { setStep(nextStep); speak(t.steps[nextStep].prompt); }
-    else { finalize(newData); }
-  };
+  }, [language, processVoiceInput, speak, t.error, t.steps, t.welcome]);
 
   const handleScreenTouch = () => {
     if (isListening) return;
     if (recognitionRef.current) { setIsListening(true); recognitionRef.current.start(); }
     else { setIsListening(true); setTimeout(() => processVoiceInput("بيانات تجريبية"), 3000); }
-  };
-
-  const finalize = async (finalData) => {
-    try {
-      const res = await userService.updateProfile({ bio: `[Ultimate] ${finalData.skills}. ${finalData.bio}`, isSpecialNeeds: true, specialNeedType: 'بصري' });
-      updateUser(res.data.user);
-      speak(t.steps[3].prompt);
-      setTimeout(() => navigate('/profile'), 4000);
-    } catch (e) { navigate('/profile'); }
   };
 
   return (

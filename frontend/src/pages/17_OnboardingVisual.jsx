@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
@@ -28,6 +28,36 @@ export default function OnboardingVisual() {
     }
   }[language || 'ar'];
 
+  const speak = useCallback((text) => {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = language === 'ar' ? 'ar-SA' : 'en-US';
+    utterance.rate = 0.9;
+    window.speechSynthesis.speak(utterance);
+  }, [language]);
+
+  const finish = useCallback(async (data) => {
+    try {
+      const res = await userService.updateProfile({ bio: `${data.profession}. ${data.experience}`, isVisualMode: true });
+      updateUser(res.data.user);
+      speak(t.steps[3].prompt);
+      setTimeout(() => navigate('/profile'), 3000);
+    } catch (e) { navigate('/profile'); }
+  }, [navigate, speak, t.steps, updateUser]);
+
+  const processInput = useCallback((text) => {
+    setIsListening(false);
+    const updatedInput = { ...userInput, [t.steps[step].key]: text };
+    setUserInput(updatedInput);
+    const nextStep = step + 1;
+    if (nextStep < t.steps.length) {
+      setStep(nextStep);
+      speak(t.steps[nextStep].prompt);
+    } else {
+      finish(updatedInput);
+    }
+  }, [finish, speak, step, t.steps, userInput]);
+
   useEffect(() => {
     setIsVisible(true);
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -40,42 +70,12 @@ export default function OnboardingVisual() {
     }
     speak(t.welcome);
     setTimeout(() => speak(t.steps[0].prompt), 6000);
-  }, []);
-
-  const speak = (text) => {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = language === 'ar' ? 'ar-SA' : 'en-US';
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const processInput = (text) => {
-    setIsListening(false);
-    const updatedInput = { ...userInput, [t.steps[step].key]: text };
-    setUserInput(updatedInput);
-    const nextStep = step + 1;
-    if (nextStep < t.steps.length) {
-      setStep(nextStep);
-      speak(t.steps[nextStep].prompt);
-    } else {
-      finish(updatedInput);
-    }
-  };
+  }, [language, processInput, speak, t.error, t.steps, t.welcome]);
 
   const handleScreenTap = () => {
     if (isListening) return;
     if (recognitionRef.current) { setIsListening(true); recognitionRef.current.start(); }
     else { setIsListening(true); setTimeout(() => processInput("بيانات تجريبية"), 3000); }
-  };
-
-  const finish = async (data) => {
-    try {
-      const res = await userService.updateProfile({ bio: `${data.profession}. ${data.experience}`, isVisualMode: true });
-      updateUser(res.data.user);
-      speak(t.steps[3].prompt);
-      setTimeout(() => navigate('/profile'), 3000);
-    } catch (e) { navigate('/profile'); }
   };
 
   return (

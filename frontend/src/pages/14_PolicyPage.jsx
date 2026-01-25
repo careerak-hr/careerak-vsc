@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 
 export default function PolicyPage() {
   const [isVisible, setIsVisible] = useState(false);
-  const { language } = useAuth();
 
   useEffect(() => { setIsVisible(true); }, []);
 

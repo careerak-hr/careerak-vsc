@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
@@ -7,8 +7,7 @@ import { Footer } from '../components/Footer';
 
 export default function ApplyPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { user, language } = useAuth();
+  const { language } = useAuth();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);

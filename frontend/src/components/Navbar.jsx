@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export const Navbar = () => {
-  const { user, language, logout, audioEnabled, setAudioEnabled } = useAuth();
-  const navigate = useNavigate();
+  const { language, logout, audioEnabled, setAudioEnabled } = useAuth();
   const [showSettings, setShowSettings] = useState(false);
 
   const t = {

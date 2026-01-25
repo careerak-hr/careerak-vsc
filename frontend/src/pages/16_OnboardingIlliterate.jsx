@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
@@ -7,16 +7,10 @@ export default function OnboardingIlliterate() {
   const navigate = useNavigate();
   const { updateUser } = useAuth();
   const [step, setStep] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const audioRef = useRef(null);
-
-  useEffect(() => {
-    setIsVisible(true);
-    playInstruction(0);
-  }, []);
 
   const steps = [
     { id: 'bio', icon: '👤', voice: '/voices/tell_us_about_you.mp3', color: 'bg-[#304B60]' },
@@ -25,10 +19,25 @@ export default function OnboardingIlliterate() {
     { id: 'finish', icon: '✅', voice: '/voices/all_done.mp3', color: 'bg-[#D48161]' }
   ];
 
-  const playInstruction = (index) => {
+  const playInstruction = useCallback((index) => {
     if (audioRef.current) audioRef.current.pause();
     audioRef.current = new Audio(steps[index].voice);
     audioRef.current.play().catch(e => console.log("Audio play failed"));
+  }, [steps]);
+
+  useEffect(() => {
+    setIsVisible(true);
+    playInstruction(0);
+  }, [playInstruction]);
+
+  const finishRegistration = async () => {
+    try {
+      const res = await userService.updateProfile({ isIlliterateMode: true });
+      updateUser(res.data.user);
+      navigate('/profile');
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleMicClick = () => {
@@ -44,19 +53,6 @@ export default function OnboardingIlliterate() {
           finishRegistration();
         }
       }, 2000);
-    }
-  };
-
-  const finishRegistration = async () => {
-    setLoading(true);
-    try {
-      const res = await userService.updateProfile({ isIlliterateMode: true });
-      updateUser(res.data.user);
-      navigate('/profile');
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
     }
   };
 

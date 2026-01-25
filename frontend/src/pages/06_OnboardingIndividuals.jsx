@@ -8,7 +8,6 @@ export default function OnboardingIndividuals() {
   const { language, updateUser, user: tempUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [parsing, setParsing] = useState(false);
-  const [error, setError] = useState('');
   const [isAgreed, setIsAgree] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [fileName, setFileName] = useState('');
@@ -108,7 +107,7 @@ export default function OnboardingIndividuals() {
       updateUser(res.data.user);
       navigate('/profile');
     } catch (err) {
-      setError('حدث خطأ أثناء الحفظ');
+      console.error("Error saving profile:", err);
     } finally {
       setLoading(false);
     }

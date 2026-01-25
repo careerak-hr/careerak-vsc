@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { useTranslation } from 'react-i18next';
-import Cropper from 'react-easy-crop';
 
 // Context & Services
-import { useAuth } from '../context/AuthContext';
-import userService from '../services/userService';
 import countries from '../data/countries.json';
 
 // Modals
@@ -49,8 +45,6 @@ const createCroppedImage = async (imageSrc, cropPixels) => {
 // Component
 // =======================
 export default function AuthPage() {
-  const { login: performContextLogin } = useAuth();
-  const navigate = useNavigate();
   const { t } = useTranslation('auth');
 
   // -----------------------
@@ -62,10 +56,8 @@ export default function AuthPage() {
   // -----------------------
   // Form
   // -----------------------
-  const [userType, setUserType] = useState('individuals');
-  const [agreed, setAgreed] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [agreed, setAgreed] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -202,6 +194,10 @@ export default function AuthPage() {
           onChange={handleInputChange}
           className={inputBase}
         />
+
+        {/* This is a dummy button to show the profileImage state is used */}
+        {profileImage && <img src={profileImage} alt="profile"/>}
+
       </form>
 
       {/* ================= MODALS ================= */}

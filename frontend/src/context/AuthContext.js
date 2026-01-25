@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { Preferences } from "@capacitor/preferences";
 import { App } from "@capacitor/app";
@@ -43,8 +44,7 @@ export const AuthProvider = ({ children }) => {
           setUser(JSON.parse(savedUser));
         }
 
-        // افتراضياً نعتبر الصوت مفعلاً مالم يتم حفظ العكس
-        setAudioEnabled(audio === null ? true : audio === "true");
+        setAudioEnabled(audio === "true");
       } catch (error) {
         console.error("Error loading prefs", error);
       } finally {
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
     setCanStartMusic(false);
   };
 
-  const changeLanguage = async (lang) => {
+  const updateLanguage = async (lang) => {
     await Preferences.set({ key: "lang", value: lang });
     setLanguage(lang);
     document.documentElement.lang = lang;
@@ -142,7 +142,7 @@ export const AuthProvider = ({ children }) => {
         login,
         updateUser,
         logout,
-        changeLanguage,
+        setLanguage: updateLanguage,
         setAudio,
         startBgMusic, // دالة لبدء موسيقى الخلفية
         stopBgMusic  // دالة لإيقاف موسيقى الخلفية

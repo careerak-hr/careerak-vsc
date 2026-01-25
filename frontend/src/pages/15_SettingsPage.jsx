@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useAppSettings } from '../context/AppSettingsContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 
 export default function SettingsPage() {
-  const { language, setAudio, audioEnabled, changeLanguage, user, logout } = useAuth();
+  const { language, changeLanguage, logout } = useAuth();
+  const { audioEnabled, saveAudio, musicEnabled, saveMusic } = useAppSettings();
   const [isVisible, setIsVisible] = useState(false);
   const isRTL = language === 'ar';
 
@@ -14,7 +16,8 @@ export default function SettingsPage() {
     ar: {
       title: 'الإعدادات العامة',
       lang: 'لغة التطبيق',
-      audio: 'الموسيقى والصوتيات',
+      audio: 'المؤثرات الصوتية',
+      music: 'الموسيقى الخلفية',
       save: 'حفظ التغييرات',
       account: 'إعدادات الحساب',
       dangerZone: 'منطقة الخطر',
@@ -59,15 +62,32 @@ export default function SettingsPage() {
             <section className={sectionCls}>
               <div className="text-center md:text-right">
                 <h3 className="text-[#304B60] font-black text-lg">{t.audio}</h3>
-                <p className="text-xs text-[#304B60]/40 font-bold mt-1">التحكم في تشغيل الموسيقى الخلفية والمؤثرات</p>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">التحكم في تشغيل المؤثرات الصوتية</p>
               </div>
               <button
-                onClick={() => setAudio(!audioEnabled)}
+                onClick={() => saveAudio(!audioEnabled)}
                 className={`w-24 h-12 rounded-full relative transition-all duration-300 ${audioEnabled ? 'bg-[#304B60]' : 'bg-[#304B60]/10'}`}
               >
-                <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${audioEnabled ? (isRTL ? 'right-1' : 'left-13') : (isRTL ? 'right-13' : 'left-1')}`} style={{ left: isRTL ? (audioEnabled ? '' : '4px') : (audioEnabled ? 'auto' : '4px'), right: isRTL ? (audioEnabled ? '4px' : 'auto') : (audioEnabled ? '4px' : 'auto') }}></div>
+                <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${isRTL ? (audioEnabled ? 'right-1' : 'right-13') : (audioEnabled ? 'left-13' : 'left-1')}`} ></div>
                 <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-black ${audioEnabled ? 'text-[#D48161]' : 'text-[#304B60]/40'}`}>
                    {audioEnabled ? 'ON' : 'OFF'}
+                </span>
+              </button>
+            </section>
+
+            {/* Music Setting */}
+            <section className={sectionCls}>
+              <div className="text-center md:text-right">
+                <h3 className="text-[#304B60] font-black text-lg">{t.music}</h3>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">التحكم في تشغيل الموسيقى الخلفية</p>
+              </div>
+              <button
+                onClick={() => saveMusic(!musicEnabled)}
+                className={`w-24 h-12 rounded-full relative transition-all duration-300 ${musicEnabled ? 'bg-[#304B60]' : 'bg-[#304B60]/10'}`}
+              >
+                <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${isRTL ? (musicEnabled ? 'right-1' : 'right-13') : (musicEnabled ? 'left-13' : 'left-1')}`} ></div>
+                <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-black ${musicEnabled ? 'text-[#D48161]' : 'text-[#304B60]/40'}`}>
+                   {musicEnabled ? 'ON' : 'OFF'}
                 </span>
               </button>
             </section>
