@@ -4,6 +4,7 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import AlertModal from '../components/modals/AlertModal';
 
 export default function ApplyPage() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function ApplyPage() {
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [alertModal, setAlertModal] = useState({ isOpen: false, message: '' });
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function ApplyPage() {
       await api.post('/job-applications', { jobPostingId: id });
       setSuccess(true);
     } catch (err) {
-      alert("لقد قمت بالتقديم مسبقاً على هذه الوظيفة");
+      setAlertModal({ isOpen: true, message: t.alreadyApplied });
     } finally {
       setApplying(false);
     }
@@ -48,7 +50,9 @@ export default function ApplyPage() {
       back: "العودة للملفات",
       success: "تم إرسال طلبك بنجاح! سيتم التواصل معك قريباً.",
       requirements: "المتطلبات",
-      description: "الوصف الوظيفي"
+      description: "الوصف الوظيفي",
+      alreadyApplied: "لقد قمت بالتقديم مسبقاً على هذه الوظيفة",
+      ok: "حسناً"
     }
   }[language || 'ar'];
 
@@ -95,6 +99,14 @@ export default function ApplyPage() {
         </div>
       </main>
       <Footer />
+
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={() => setAlertModal({ isOpen: false, message: '' })}
+        message={alertModal.message}
+        language={language}
+        t={t}
+      />
     </div>
   );
 }

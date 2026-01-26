@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
@@ -12,12 +12,12 @@ export default function OnboardingIlliterate() {
 
   const audioRef = useRef(null);
 
-  const steps = [
+  const steps = useMemo(() => [
     { id: 'bio', icon: '👤', voice: '/voices/tell_us_about_you.mp3', color: 'bg-[#304B60]' },
     { id: 'skills', icon: '🛠️', voice: '/voices/what_are_your_skills.mp3', color: 'bg-[#D48161]' },
     { id: 'experience', icon: '💼', voice: '/voices/your_experience.mp3', color: 'bg-[#304B60]' },
     { id: 'finish', icon: '✅', voice: '/voices/all_done.mp3', color: 'bg-[#D48161]' }
-  ];
+  ], []);
 
   const playInstruction = useCallback((index) => {
     if (audioRef.current) audioRef.current.pause();

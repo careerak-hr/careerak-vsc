@@ -5,6 +5,7 @@ import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import { Filesystem } from '@capacitor/filesystem'; // وعد: استبدال file-transfer الرسمي
 import { Directory } from '@capacitor/filesystem';
+import AlertModal from '../components/modals/AlertModal';
 
 export default function ProfilePage() {
   const { user, language, updateUser, logout } = useAuth();
@@ -13,6 +14,7 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [cvGenerating, setCvGenerating] = useState(false);
   const [cvLevel, setCvLevel] = useState('intermediate');
+  const [alertModal, setAlertModal] = useState({ isOpen: false, message: '' });
 
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', gender: '', birthDate: '', email: '', phone: '', country: '', city: '',
@@ -51,7 +53,39 @@ export default function ProfilePage() {
       cvLevels: { beginner: "مبتدئ", intermediate: "متوسط", professional: "احترافي" },
       logout: "تسجيل الخروج", add: "+ إضافة",
       socialStatuses: { single: 'عازب', married: 'متزوج', divorced: 'مطلق', widowed: 'أرمل' },
-      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' }
+      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' },
+      generating: "جاري الإنشاء...",
+      cvSuccess: "تم تحميل السيرة الذاتية بنجاح",
+      cvError: "حدث خطأ أثناء إنشاء أو تحميل السيرة الذاتية",
+      ok: "حسناً"
+    },
+    en: {
+      title: "Profile", edit: "Edit Data", save: "Save Changes", cancel: "Cancel",
+      personal: "Personal and Social Data", health: "Health Status", military: "Military Status",
+      education: "Educational Background", experience: "Professional Experience", training: "Training Background",
+      skills: "Languages and Skills", aiCv: "Smart CV Generator (AI)", generateCv: "Generate Professional CV",
+      cvLevels: { beginner: "Beginner", intermediate: "Intermediate", professional: "Professional" },
+      logout: "Logout", add: "+ Add",
+      socialStatuses: { single: 'Single', married: 'Married', divorced: 'Divorced', widowed: 'Widowed' },
+      militaryStatuses: { exempt: 'Exempt', performed: 'Performed', paid: 'Paid cash', postponed: 'Postponed', in_service: 'In Service' },
+      generating: "Generating...",
+      cvSuccess: "CV downloaded successfully",
+      cvError: "Error occurred while creating or downloading CV",
+      ok: "OK"
+    },
+    fr: {
+      title: "Profil", edit: "Modifier les données", save: "Enregistrer les modifications", cancel: "Annuler",
+      personal: "Données personnelles et sociales", health: "État de santé", military: "Statut militaire",
+      education: "Parcours éducatif", experience: "Expérience professionnelle", training: "Parcours de formation",
+      skills: "Langues et compétences", aiCv: "Générateur de CV intelligent (IA)", generateCv: "Générer un CV professionnel",
+      cvLevels: { beginner: "Débutant", intermediate: "Intermédiaire", professional: "Professionnel" },
+      logout: "Déconnexion", add: "+ Ajouter",
+      socialStatuses: { single: 'Célibataire', married: 'Marié', divorced: 'Divorcé', widowed: 'Veuf' },
+      militaryStatuses: { exempt: 'Exempté', performed: 'Accompli', paid: 'Payé en espèces', postponed: 'Reporté', in_service: 'En service' },
+      generating: "Génération en cours...",
+      cvSuccess: "CV téléchargé avec succès",
+      cvError: "Erreur lors de la création ou du téléchargement du CV",
+      ok: "OK"
     }
   }[language || 'ar'];
 
@@ -73,11 +107,11 @@ export default function ProfilePage() {
 
       await Filesystem.download(fileUrl, fileName, Directory.Documents);
 
-      alert('تم تحميل السيرة الذاتية بنجاح');
+      setAlertModal({ isOpen: true, message: t.cvSuccess });
 
     } catch (err) {
       console.error('Error generating or downloading CV:', err);
-      alert('حدث خطأ أثناء إنشاء أو تحميل السيرة الذاتية');
+      setAlertModal({ isOpen: true, message: t.cvError });
     } finally {
       setCvGenerating(false);
     }
@@ -150,7 +184,7 @@ export default function ProfilePage() {
                           <button key={k} onClick={()=>setCvLevel(k)} className={`flex-1 py-3 rounded-xl text-[10px] font-black ${cvLevel === k ? 'bg-[#E3DAD1] text-[#304B60]' : 'text-[#E3DAD1]/40'}`}>{v}</button>
                         ))}
                      </div>
-                     <button onClick={handleGenerateCv} disabled={cvGenerating} className="w-full py-5 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-2xl active:scale-95">{cvGenerating ? 'جاري الإنشاء...' : t.generateCv}</button>
+                     <button onClick={handleGenerateCv} disabled={cvGenerating} className="w-full py-5 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-2xl active:scale-95">{cvGenerating ? t.generating : t.generateCv}</button>
                   </div>
                </div>
             </section>
@@ -164,6 +198,14 @@ export default function ProfilePage() {
         </div>
       </main>
       <Footer />
+
+      <AlertModal
+        isOpen={alertModal.isOpen}
+        onClose={() => setAlertModal({ isOpen: false, message: '' })}
+        message={alertModal.message}
+        language={language}
+        t={t}
+      />
     </div>
   );
 }

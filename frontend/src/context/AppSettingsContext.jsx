@@ -11,13 +11,17 @@ export const AppSettingsProvider = ({ children }) => {
 
   useEffect(() => {
     const loadSettings = async () => {
-      const lang = await Preferences.get({ key: "language" });
-      const audio = await Preferences.get({ key: "audioEnabled" });
-      const music = await Preferences.get({ key: "musicEnabled" });
+      try {
+        const lang = await Preferences.get({ key: "lang" });
+        const audio = await Preferences.get({ key: "audio_enabled" });
+        const music = await Preferences.get({ key: "musicEnabled" });
 
-      setLanguage(lang.value || "ar");
-      setAudioEnabled(audio.value === "true");
-      setMusicEnabled(music.value === "true");
+        setLanguage(lang.value || "ar");
+        setAudioEnabled(audio.value === "true");
+        setMusicEnabled(music.value === "true");
+      } catch (error) {
+        console.warn("Preferences not available, using defaults", error);
+      }
       setLoaded(true);
     };
     loadSettings();
@@ -25,12 +29,12 @@ export const AppSettingsProvider = ({ children }) => {
 
   const saveLanguage = async (lang) => {
     setLanguage(lang);
-    await Preferences.set({ key: "language", value: lang });
+    await Preferences.set({ key: "lang", value: lang });
   };
 
   const saveAudio = async (value) => {
     setAudioEnabled(value);
-    await Preferences.set({ key: "audioEnabled", value: String(value) });
+    await Preferences.set({ key: "audio_enabled", value: String(value) });
   };
 
   const saveMusic = async (value) => {

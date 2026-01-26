@@ -38,12 +38,14 @@ export default function EntryPage() {
     };
     initServer();
 
+    console.log("EntryPage useEffect, audioEnabled:", audioEnabled);
     const SYSTEM_DELAY = 1000;
     const timers = [
       setTimeout(() => {
         if (isMounted.current) {
           setPhase(1);
           if (audioEnabled && !audioRef.current) {
+            console.log("Playing intro.mp3");
             audioRef.current = new Audio('/intro.mp3');
             audioRef.current.volume = 0.6;
             audioRef.current.play().catch(() => {});

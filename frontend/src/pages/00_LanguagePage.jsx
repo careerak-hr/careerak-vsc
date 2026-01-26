@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
 import "./00_LanguagePage.css";
 import { Preferences } from "@capacitor/preferences";
+import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
+import AudioSettingsModal from "../components/modals/AudioSettingsModal";
 
 const translations = {
   ar: {
@@ -22,8 +24,8 @@ const translations = {
     title: "Choose Language"
   },
   fr: {
-    confirmLang: "Êtes-vous sûr de la langue sélectionnée ? L\'application fonctionnera entièrement dans cette langue et vous pourrez la modifier à tout moment depuis le tableau de bord.",
-    audioTitle: "Acceptez-vous de jouer de la musique et de l\'audio dans l\'application ? Vous pouvez contrôler l\'audio et la musique depuis le tableau de bord quand vous le souhaitez.",
+    confirmLang: "Êtes-vous sûr de la langue sélectionnée ? L'application fonctionnera entièrement dans cette langue et vous pourrez la modifier à tout moment depuis le tableau de bord.",
+    audioTitle: "Acceptez-vous de jouer de la musique et de l'audio dans l'application ? Vous pouvez contrôler l'audio et la musique depuis le tableau de bord quand vous le souhaitez.",
     yes: "Oui",
     no: "Non",
     ok: "Confirmer",
@@ -32,14 +34,12 @@ const translations = {
 };
 
 export default function LanguagePage() {
-  const appSettings = useAppSettings();
-   }
-  const { saveLanguage, saveAudio, saveMusic } = appSettings || {};
+  const { saveLanguage, saveAudio, saveMusic } = useAppSettings();
   const navigate = useNavigate();
 
   const [selectedLang, setSelectedLang] = useState(null);
-  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
-  const [showAudioPopup, setShowAudioPopup] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
       useEffect(() => {
@@ -75,15 +75,38 @@ export default function LanguagePage() {
 
   const handleLangPick = (lang) => {
     setSelectedLang(lang);
-    setShowConfirmPopup(true);
+    setIsConfirmModalOpen(true);
+  };
+
+  const handleConfirmLanguage = () => {
+    setIsConfirmModalOpen(false);
+    setIsAudioModalOpen(true);
+  };
+
+  const handleCancelLanguage = () => {
+    setIsConfirmModalOpen(false);
+    setSelectedLang(null);
+  };
+
+  const handleAudioConfirm = (consent) => {
+    finalize(consent);
   };
 
   const finalize = async (audioConsent) => {
-    setShowAudioPopup(false);
-    saveLanguage(selectedLang);
-    saveAudio(audioConsent);
-    saveMusic(audioConsent);
-    await Preferences.set({ key: 'onboardingComplete', value: 'true' });
+    console.log("Finalizing with lang:", selectedLang, "audio:", audioConsent);
+    setIsAudioModalOpen(false);
+    try {
+      if (saveLanguage && saveAudio && saveMusic) {
+          await saveLanguage(selectedLang);
+          await saveAudio(audioConsent);
+          await saveMusic(audioConsent);
+      }
+      await Preferences.set({ key: 'onboardingComplete', value: 'true' });
+    } catch (err) {
+      console.warn("Preferences failed, using localStorage", err);
+      localStorage.setItem("onboardingComplete", 'true');
+    }
+    console.log("Navigating to /entry");
     navigate("/entry", { replace: true });
   };
 
@@ -128,40 +151,25 @@ export default function LanguagePage() {
         </div>
       </div>
 
-      {showConfirmPopup && (
-        <div className="fixed inset-0 bg-[#304B60]/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000]">
-         <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
-           <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
-             {t.confirmLang}
-           </p>
-           <div className="flex gap-4 w-full">
-            <button onClick={() => {setShowConfirmPopup(false); setShowAudioPopup(true);}} className={popupBtnCls}>
-                {t.ok}
-            </button>
-            <button onClick={() => {setShowConfirmPopup(false); setSelectedLang(null);}} className={popupBtnCls}>
-                {t.no}
-            </button>
-            </div>
-          </div>
-        </div>
+      {isConfirmModalOpen && (
+        <LanguageConfirmModal
+          isOpen={isConfirmModalOpen}
+          onClose={() => setIsConfirmModalOpen(false)}
+          onConfirm={handleConfirmLanguage}
+          onCancel={handleCancelLanguage}
+          language={selectedLang}
+          t={t}
+        />
       )}
 
-      {showAudioPopup && (
-        <div className="fixed inset-0 bg-[#304B60]/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000]">
-         <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
-           <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={selectedLang === 'ar' ? 'rtl' : 'ltr'}>
-             {t.audioTitle}
-           </p>
-           <div className="flex gap-4 w-full">
-            <button onClick={() => finalize(true)} className={popupBtnCls}>
-                {t.yes}
-            </button>
-            <button onClick={() => finalize(false)} className={popupBtnCls}>
-                {t.no}
-            </button>
-         </div>
-        </div>
-       </div>
+      {isAudioModalOpen && (
+        <AudioSettingsModal
+          isOpen={isAudioModalOpen}
+          onClose={() => setIsAudioModalOpen(false)}
+          onConfirm={handleAudioConfirm}
+          language={selectedLang}
+          t={t}
+        />
       )}
     </div>
   );

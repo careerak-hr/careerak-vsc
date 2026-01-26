@@ -57,8 +57,10 @@ export const AuthProvider = ({ children }) => {
 
   // إدارة الموسيقى العالمية (Music.mp3)
   useEffect(() => {
+    console.log("AuthContext music useEffect, audioEnabled:", audioEnabled, "canStartMusic:", canStartMusic, "loading:", loading);
     // الموسيقى تعمل فقط إذا كان الصوت مفعلاً وتم إعطاء الإشارة بالبدء (من صفحة تسجيل الدخول)
     if (audioEnabled && canStartMusic && !loading) {
+      console.log("Playing Music.mp3");
       if (!audioRef.current) {
         audioRef.current = new Audio('/Music.mp3');
         audioRef.current.loop = true;
@@ -96,6 +98,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const startBgMusic = () => {
+    console.log("startBgMusic called");
     setCanStartMusic(true);
   };
 

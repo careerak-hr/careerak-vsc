@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import userService from '../services/userService';
 import { useAuth } from '../context/AuthContext';
+import ConfirmationModal from '../components/modals/ConfirmationModal';
 
 export default function OnboardingIndividuals() {
   const navigate = useNavigate();
@@ -46,7 +47,7 @@ export default function OnboardingIndividuals() {
   });
 
   const t = {
-    ar: { 
+    ar: {
       title: 'استكمال الملف الاحترافي ✨',
       cvMsg: 'إن رفعك لسيرتك الذاتية يوفر عليك من الجهد والوقت، وسنقوم بتحليلها واسقاط بياناتها هنا.',
       upload: 'ارفع السيرة الذاتية (PDF, Word, Excel, PPT)',
@@ -62,7 +63,166 @@ export default function OnboardingIndividuals() {
       finish: 'حفظ وتأكيد الملف',
       modalMsg: 'يرجى الموافقة على صحة البيانات أولاً',
       socialStatuses: { single: 'عازب', married: 'متزوج', divorced: 'مطلق', widowed: 'أرمل' },
-      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' }
+      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' },
+      placeholders: {
+        permanentAddress: 'عنوان السكن الدائم',
+        temporaryAddress: 'عنوان السكن المؤقت',
+        socialStatus: '-- الحالة الاجتماعية --',
+        hasChildren: 'هل لديك أولاد؟',
+        militaryStatus: '-- اختر الحالة --',
+        level: 'المرحلة',
+        degree: 'الدرجة',
+        institution: 'المؤسسة',
+        city: 'المدينة',
+        country: 'البلد',
+        year: 'السنة',
+        grade: 'التقدير',
+        company: 'الشركة',
+        position: 'المنصب',
+        from: 'من',
+        to: 'إلى',
+        tasks: 'المهام الوظيفية',
+        workType: 'نوع العمل',
+        jobLevel: 'مستوى الوظيفة',
+        reason: 'سبب الترك',
+        courseName: 'اسم الدورة',
+        provider: 'الجهة المقدمة',
+        content: 'المحتوى',
+        language: 'اللغة',
+        proficiency: 'مستوى الإتقان',
+        skill: 'المهارة',
+        software: 'البرمجية',
+        otherSkills: 'مهارات أخرى',
+        bio: 'السيرة الذاتية',
+        agreement: 'أقر بأن كافة البيانات المذكورة أعلاه صحيحة وتحت مسؤوليتي الشخصية.',
+        loading: 'جاري الحفظ...',
+        ok: 'حسناً'
+      },
+      labels: {
+        name: 'الاسم',
+        gender: 'الجنس',
+        date: 'التاريخ',
+        country: 'البلد'
+      },
+      genderOptions: { male: 'ذكر', female: 'أنثى' }
+    },
+    en: {
+      title: 'Complete Your Professional Profile ✨',
+      cvMsg: 'Uploading your CV saves you time and effort, and we will analyze it and populate the data here.',
+      upload: 'Upload CV (PDF, Word, Excel, PPT)',
+      parsing: 'Smart AI analysis in progress... 🤖',
+      personal: 'Personal and Social Data',
+      health: 'Health Status',
+      military: 'Military Service Status (for males)',
+      education: 'Educational Background',
+      experience: 'Professional Experience',
+      training: 'Training Background',
+      skills: 'Languages and Skills',
+      add: '+ Add More',
+      finish: 'Save and Confirm Profile',
+      modalMsg: 'Please agree to the accuracy of the data first',
+      socialStatuses: { single: 'Single', married: 'Married', divorced: 'Divorced', widowed: 'Widowed' },
+      militaryStatuses: { exempt: 'Exempt', performed: 'Completed', paid: 'Paid cash equivalent', postponed: 'Postponed', in_service: 'In Service' },
+      placeholders: {
+        permanentAddress: 'Permanent Address',
+        temporaryAddress: 'Temporary Address',
+        socialStatus: '-- Social Status --',
+        hasChildren: 'Do you have children?',
+        militaryStatus: '-- Choose Status --',
+        level: 'Level',
+        degree: 'Degree',
+        institution: 'Institution',
+        city: 'City',
+        country: 'Country',
+        year: 'Year',
+        grade: 'Grade',
+        company: 'Company',
+        position: 'Position',
+        from: 'From',
+        to: 'To',
+        tasks: 'Job Tasks',
+        workType: 'Work Type',
+        jobLevel: 'Job Level',
+        reason: 'Reason for Leaving',
+        courseName: 'Course Name',
+        provider: 'Provider',
+        content: 'Content',
+        language: 'Language',
+        proficiency: 'Proficiency',
+        skill: 'Skill',
+        software: 'Software',
+        otherSkills: 'Other Skills',
+        bio: 'Bio',
+        agreement: 'I certify that all the above data is correct and under my personal responsibility.',
+        loading: 'Saving...',
+        ok: 'OK'
+      },
+      labels: {
+        name: 'Name',
+        gender: 'Gender',
+        date: 'Date',
+        country: 'Country'
+      },
+      genderOptions: { male: 'Male', female: 'Female' }
+    },
+    fr: {
+      title: 'Complétez Votre Profil Professionnel ✨',
+      cvMsg: 'Télécharger votre CV vous fait gagner du temps et des efforts, et nous l\'analyserons et remplirons les données ici.',
+      upload: 'Télécharger CV (PDF, Word, Excel, PPT)',
+      parsing: 'Analyse intelligente par IA en cours... 🤖',
+      personal: 'Données Personnelles et Sociales',
+      health: 'État de Santé',
+      military: 'Statut de Service Militaire (pour les hommes)',
+      education: 'Parcours Éducatif',
+      experience: 'Expérience Professionnelle',
+      training: 'Parcours de Formation',
+      skills: 'Langues et Compétences',
+      add: '+ Ajouter Plus',
+      finish: 'Enregistrer et Confirmer le Profil',
+      modalMsg: 'Veuillez d\'abord accepter l\'exactitude des données',
+      socialStatuses: { single: 'Célibataire', married: 'Marié', divorced: 'Divorcé', widowed: 'Veuf' },
+      militaryStatuses: { exempt: 'Exempté', performed: 'Accompli', paid: 'Payé en espèces', postponed: 'Reporté', in_service: 'En Service' },
+      placeholders: {
+        permanentAddress: 'Adresse Permanente',
+        temporaryAddress: 'Adresse Temporaire',
+        socialStatus: '-- Statut Social --',
+        hasChildren: 'Avez-vous des enfants ?',
+        militaryStatus: '-- Choisir le Statut --',
+        level: 'Niveau',
+        degree: 'Diplôme',
+        institution: 'Institution',
+        city: 'Ville',
+        country: 'Pays',
+        year: 'Année',
+        grade: 'Note',
+        company: 'Entreprise',
+        position: 'Poste',
+        from: 'De',
+        to: 'À',
+        tasks: 'Tâches Professionnelles',
+        workType: 'Type de Travail',
+        jobLevel: 'Niveau de Poste',
+        reason: 'Raison de Départ',
+        courseName: 'Nom du Cours',
+        provider: 'Fournisseur',
+        content: 'Contenu',
+        language: 'Langue',
+        proficiency: 'Niveau de Maîtrise',
+        skill: 'Compétence',
+        software: 'Logiciel',
+        otherSkills: 'Autres Compétences',
+        bio: 'Biographie',
+        agreement: 'Je certifie que toutes les données ci-dessus sont correctes et sous ma responsabilité personnelle.',
+        loading: 'Enregistrement...',
+        ok: 'OK'
+      },
+      labels: {
+        name: 'Nom',
+        gender: 'Genre',
+        date: 'Date',
+        country: 'Pays'
+      },
+      genderOptions: { male: 'Homme', female: 'Femme' }
     }
   }[language || 'ar'];
 
@@ -105,7 +265,7 @@ export default function OnboardingIndividuals() {
     try {
       const res = await userService.updateProfile(formData);
       updateUser(res.data.user);
-      navigate('/profile');
+      navigate('/interface-individuals');
     } catch (err) {
       console.error("Error saving profile:", err);
     } finally {
@@ -113,18 +273,20 @@ export default function OnboardingIndividuals() {
     }
   };
 
-  const inputCls = "w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all placeholder:text-gray-400 shadow-sm";
-  const labelCls = "block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2";
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
 
   return (
     <div className={`min-h-screen p-4 md:p-8 bg-[#E3DAD1] pb-24 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir="rtl">
       {showModal && (
-        <div className="fixed inset-0 z-[12000] flex items-center justify-center p-6 bg-[#304B60]/40 backdrop-blur-sm">
-          <div className="bg-[#E3DAD1] rounded-[3rem] p-10 max-w-sm w-full text-center shadow-2xl border-2 border-[#304B60]/20">
-            <p className="text-[#304B60] font-black text-lg mb-8">{t.modalMsg}</p>
-            <button onClick={() => setShowModal(false)} className="w-full py-4 bg-[#304B60] text-[#D48161] rounded-[1.5rem] font-black shadow-lg">حسناً</button>
-          </div>
-        </div>
+        <ConfirmationModal
+          isOpen={showModal}
+          onClose={handleModalClose}
+          message={t.modalMsg}
+          confirmText={t.placeholders.ok}
+          language={language}
+        />
       )}
 
       <div className="max-w-4xl mx-auto bg-[#E3DAD1] rounded-[3rem] shadow-2xl p-6 md:p-12 border-2 border-[#304B60]/5">
@@ -145,23 +307,23 @@ export default function OnboardingIndividuals() {
         <form onSubmit={handleSubmit} className="space-y-10">
 
           <section className="grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-[#304B60]/5 rounded-3xl border border-[#D48161]/10">
-             <div><label className={labelCls}>الاسم</label><p className="font-black text-[#304B60]">{formData.firstName} {formData.lastName}</p></div>
-             <div><label className={labelCls}>الجنس</label><p className="font-black text-[#304B60]">{formData.gender === 'male' ? 'ذكر' : 'أنثى'}</p></div>
-             <div><label className={labelCls}>التاريخ</label><p className="font-black text-[#304B60]">{formData.birthDate}</p></div>
-             <div><label className={labelCls}>البلد</label><p className="font-black text-[#304B60]">{formData.country}</p></div>
+             <div><label className={labelCls}>{t.labels.name}</label><p className="font-black text-[#304B60]">{formData.firstName} {formData.lastName}</p></div>
+             <div><label className={labelCls}>{t.labels.gender}</label><p className="font-black text-[#304B60]">{t.genderOptions[formData.gender]}</p></div>
+             <div><label className={labelCls}>{t.labels.date}</label><p className="font-black text-[#304B60]">{formData.birthDate}</p></div>
+             <div><label className={labelCls}>{t.labels.country}</label><p className="font-black text-[#304B60]">{formData.country}</p></div>
           </section>
 
           <section className="space-y-4">
             <h3 className="text-lg font-black text-[#304B60] border-r-4 border-[#D48161] pr-3">{t.personal}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" placeholder="عنوان السكن الدائم" className={inputCls} value={formData.permanentAddress} onChange={e=>setFormData({...formData, permanentAddress:e.target.value})} />
-                <input type="text" placeholder="عنوان السكن المؤقت" className={inputCls} value={formData.temporaryAddress} onChange={e=>setFormData({...formData, temporaryAddress:e.target.value})} />
+                <input type="text" placeholder={t.placeholders.permanentAddress} className={inputCls} value={formData.permanentAddress} onChange={e=>setFormData({...formData, permanentAddress:e.target.value})} />
+                <input type="text" placeholder={t.placeholders.temporaryAddress} className={inputCls} value={formData.temporaryAddress} onChange={e=>setFormData({...formData, temporaryAddress:e.target.value})} />
                 <select className={inputCls} value={formData.socialStatus} onChange={e=>setFormData({...formData, socialStatus:e.target.value})}>
-                    <option value="">-- الحالة الاجتماعية --</option>
+                    <option value="">{t.placeholders.socialStatus}</option>
                     {Object.entries(t.socialStatuses).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
                 </select>
                 <div className="flex items-center gap-4 px-4 bg-[#304B60]/5 rounded-2xl border-2 border-[#D48161]/10 h-[56px]">
-                    <span className="text-xs font-black text-[#304B60]">هل لديك أولاد؟</span>
+                    <span className="text-xs font-black text-[#304B60]">{t.placeholders.hasChildren}</span>
                     <input type="checkbox" checked={formData.hasChildren} onChange={e=>setFormData({...formData, hasChildren:e.target.checked})} className="w-5 h-5 rounded accent-[#304B60]" />
                 </div>
             </div>
@@ -171,7 +333,7 @@ export default function OnboardingIndividuals() {
             <section className="space-y-4">
               <h3 className="text-lg font-black text-[#304B60] border-r-4 border-[#D48161] pr-3">{t.military}</h3>
               <select className={inputCls} value={formData.militaryStatus} onChange={e=>setFormData({...formData, militaryStatus:e.target.value})}>
-                <option value="">-- اختر الحالة --</option>
+                <option value="">{t.placeholders.militaryStatus}</option>
                 {Object.entries(t.militaryStatuses).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </section>
@@ -181,10 +343,10 @@ export default function OnboardingIndividuals() {
             <h3 className="text-lg font-black text-[#304B60] border-r-4 border-[#D48161] pr-3">{t.education}</h3>
             {formData.educationList.map((edu, idx) => (
                 <div key={idx} className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-[#304B60]/5 rounded-2xl border border-[#D48161]/10">
-                    <input type="text" placeholder="المرحلة" className={inputCls} value={edu.level} onChange={e=>handleListChange('educationList', idx, 'level', e.target.value)} />
-                    <input type="text" placeholder="الدرجة" className={inputCls} value={edu.degree} onChange={e=>handleListChange('educationList', idx, 'degree', e.target.value)} />
-                    <input type="text" placeholder="الجهة" className={inputCls} value={edu.institution} onChange={e=>handleListChange('educationList', idx, 'institution', e.target.value)} />
-                    <input type="text" placeholder="السنة" className={inputCls} value={edu.year} onChange={e=>handleListChange('educationList', idx, 'year', e.target.value)} />
+                    <input type="text" placeholder={t.placeholders.level} className={inputCls} value={edu.level} onChange={e=>handleListChange('educationList', idx, 'level', e.target.value)} />
+                    <input type="text" placeholder={t.placeholders.degree} className={inputCls} value={edu.degree} onChange={e=>handleListChange('educationList', idx, 'degree', e.target.value)} />
+                    <input type="text" placeholder={t.placeholders.institution} className={inputCls} value={edu.institution} onChange={e=>handleListChange('educationList', idx, 'institution', e.target.value)} />
+                    <input type="text" placeholder={t.placeholders.year} className={inputCls} value={edu.year} onChange={e=>handleListChange('educationList', idx, 'year', e.target.value)} />
                 </div>
             ))}
             <button type="button" onClick={()=>addItem('educationList', {level:'', degree:'', institution:'', city:'', country:'', year:'', grade:''})} className="text-[#304B60] font-black text-xs hover:text-[#D48161] transition-colors">{t.add}</button>
@@ -195,14 +357,14 @@ export default function OnboardingIndividuals() {
             {formData.experienceList.map((exp, idx) => (
                 <div key={idx} className="space-y-3 p-4 bg-[#304B60]/5 rounded-3xl border border-[#D48161]/10">
                     <div className="grid grid-cols-2 gap-3">
-                        <input type="text" placeholder="الشركة" className={inputCls} value={exp.company} onChange={e=>handleListChange('experienceList', idx, 'company', e.target.value)} />
-                        <input type="text" placeholder="الوظيفة" className={inputCls} value={exp.position} onChange={e=>handleListChange('experienceList', idx, 'position', e.target.value)} />
+                        <input type="text" placeholder={t.placeholders.company} className={inputCls} value={exp.company} onChange={e=>handleListChange('experienceList', idx, 'company', e.target.value)} />
+                        <input type="text" placeholder={t.placeholders.position} className={inputCls} value={exp.position} onChange={e=>handleListChange('experienceList', idx, 'position', e.target.value)} />
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                         <input type="date" className={inputCls} value={exp.from} onChange={e=>handleListChange('experienceList', idx, 'from', e.target.value)} />
                         <input type="date" className={inputCls} value={exp.to} onChange={e=>handleListChange('experienceList', idx, 'to', e.target.value)} />
                     </div>
-                    <textarea placeholder="المهام الوظيفية" className={`${inputCls} h-24 text-right`} value={exp.tasks} onChange={e=>handleListChange('experienceList', idx, 'tasks', e.target.value)} />
+                    <textarea placeholder={t.placeholders.tasks} className={`${inputCls} h-24 text-right`} value={exp.tasks} onChange={e=>handleListChange('experienceList', idx, 'tasks', e.target.value)} />
                 </div>
             ))}
             <button type="button" onClick={()=>addItem('experienceList', {company:'', position:'', from:'', to:'', tasks:'', workType:'admin', jobLevel:'', reason:'', country:'', city:''})} className="text-[#304B60] font-black text-xs hover:text-[#D48161] transition-colors">{t.add}</button>
@@ -210,11 +372,11 @@ export default function OnboardingIndividuals() {
 
           <div className="flex items-center gap-3 px-4">
             <input type="checkbox" checked={isAgreed} onChange={e=>setIsAgree(e.target.checked)} className="w-5 h-5 rounded accent-[#304B60]" />
-            <p className="text-[10px] font-black text-[#304B60]/50">أقر بأن كافة البيانات المذكورة أعلاه صحيحة وتحت مسؤوليتي الشخصية.</p>
+            <p className="text-[10px] font-black text-[#304B60]/50">{t.placeholders.agreement}</p>
           </div>
 
           <button type="submit" disabled={loading || parsing} className="w-full py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl text-xl active:scale-95 transition-all">
-            {loading ? 'جاري الحفظ...' : t.finish}
+            {loading ? t.placeholders.loading : t.finish}
           </button>
         </form>
       </div>
