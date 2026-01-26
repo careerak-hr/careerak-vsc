@@ -25,6 +25,30 @@ export default function OnboardingUltimate() {
       listening: "أنا أسمعك الآن، تفضل بالتحدث...",
       error: "عذراً، لم أستطع سماعك بوضوح. من فضلك المس الشاشة وحاول مرة أخرى.",
       tapToTalk: "المس الشاشة للتحدث"
+    },
+    en: {
+      welcome: "Welcome to Careerak's comprehensive assistance system 'Nabras'. This system has been activated because you are registered as visually impaired and illiterate. I will speak with you now and collect your data vocally. Touch the screen anywhere when you hear the signal to start speaking.",
+      steps: [
+        { key: 'name', prompt: "First, please say your full name after hearing the signal." },
+        { key: 'skills', prompt: "Great. Now tell me, what skills or crafts do you excel at?" },
+        { key: 'bio', prompt: "Finally, would you like to tell me anything else about yourself or the jobs you are looking for?" },
+        { key: 'finish', prompt: "Excellent. We have completed setting up your profile completely. I will now transfer you to your personal voice control panel." }
+      ],
+      listening: "I am listening to you now, please speak...",
+      error: "Sorry, I couldn't hear you clearly. Please touch the screen and try again.",
+      tapToTalk: "Touch the screen to speak"
+    },
+    fr: {
+      welcome: "Bienvenue dans le système d'assistance complet 'Nabras' de Careerak. Ce système a été activé parce que vous êtes enregistré comme malvoyant et analphabète. Je vais parler avec vous maintenant et collecter vos données vocalement. Touchez l'écran n'importe où lorsque vous entendez le signal pour commencer à parler.",
+      steps: [
+        { key: 'name', prompt: "D'abord, veuillez dire votre nom complet après avoir entendu le signal." },
+        { key: 'skills', prompt: "Super. Maintenant dites-moi, quelles compétences ou métiers maîtrisez-vous ?" },
+        { key: 'bio', prompt: "Enfin, aimeriez-vous me dire autre chose sur vous ou les emplois que vous recherchez ?" },
+        { key: 'finish', prompt: "Excellent. Nous avons terminé la configuration complète de votre profil. Je vais maintenant vous transférer vers votre panneau de contrôle vocal personnel." }
+      ],
+      listening: "Je vous écoute maintenant, veuillez parler...",
+      error: "Désolé, je n'ai pas pu vous entendre clairement. Veuillez toucher l'écran et essayer à nouveau.",
+      tapToTalk: "Touchez l'écran pour parler"
     }
   }[language || 'ar'];
 

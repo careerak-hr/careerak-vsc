@@ -38,7 +38,32 @@ export default function PostCoursePage() {
       level: "مستوى الدورة",
       price: "سعر الدورة (0 للمجانية)",
       btn: "نشر الدورة التعليمية",
-      success: "تم نشر الدورة بنجاح في الأكاديمية!"
+      success: "تم نشر الدورة بنجاح في الأكاديمية!",
+      loading: "..."
+    },
+    en: {
+      title: "Add New Educational Course",
+      courseTitle: "Course Title",
+      desc: "Course Description and Learning Outcomes",
+      instructor: "Instructor / Trainer Name",
+      category: "Course Category",
+      level: "Course Level",
+      price: "Course Price (0 for free)",
+      btn: "Publish Educational Course",
+      success: "Course published successfully in the Academy!",
+      loading: "Publishing..."
+    },
+    fr: {
+      title: "Ajouter un nouveau cours éducatif",
+      courseTitle: "Titre du cours",
+      desc: "Description du cours et résultats d'apprentissage",
+      instructor: "Nom de l'instructeur / formateur",
+      category: "Catégorie du cours",
+      level: "Niveau du cours",
+      price: "Prix du cours (0 pour gratuit)",
+      btn: "Publier le cours éducatif",
+      success: "Cours publié avec succès dans l'Académie !",
+      loading: "Publication..."
     }
   }[language || 'ar'];
 
@@ -113,7 +138,7 @@ export default function PostCoursePage() {
               disabled={loading}
               className="w-full bg-[#304B60] text-[#D48161] py-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-8"
             >
-              {loading ? "..." : t.btn}
+              {loading ? t.loading : t.btn}
             </button>
           </form>
         </div>

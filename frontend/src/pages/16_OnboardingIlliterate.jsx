@@ -5,12 +5,27 @@ import userService from '../services/userService';
 
 export default function OnboardingIlliterate() {
   const navigate = useNavigate();
-  const { updateUser } = useAuth();
+  const { language, updateUser } = useAuth();
   const [step, setStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
   const audioRef = useRef(null);
+
+  const t = {
+    ar: {
+      listening: 'جاري الاستماع... تحدّث الآن',
+      tapSpeak: 'اضغط وتحدث'
+    },
+    en: {
+      listening: 'Listening... Speak now',
+      tapSpeak: 'Tap and speak'
+    },
+    fr: {
+      listening: 'Écoute en cours... Parlez maintenant',
+      tapSpeak: 'Appuyez et parlez'
+    }
+  }[language || 'ar'];
 
   const steps = useMemo(() => [
     { id: 'bio', icon: '👤', voice: '/voices/tell_us_about_you.mp3', color: 'bg-[#304B60]' },
@@ -79,7 +94,7 @@ export default function OnboardingIlliterate() {
         </button>
 
         <p className="mt-8 text-[#304B60] font-black text-xl">
-          {isRecording ? 'جاري الاستماع... تحدّث الآن' : 'اضغط وتحدث'}
+          {isRecording ? t.listening : t.tapSpeak}
         </p>
       </div>
     </div>

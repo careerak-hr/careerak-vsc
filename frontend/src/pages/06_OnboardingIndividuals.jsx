@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import userService from '../services/userService';
 import { useAuth } from '../context/AuthContext';
 import ConfirmationModal from '../components/modals/ConfirmationModal';
+import onboardingIndividualsTranslations from '../data/onboardingIndividuals.json';
 
 export default function OnboardingIndividuals() {
   const navigate = useNavigate();
@@ -46,185 +47,7 @@ export default function OnboardingIndividuals() {
     bio: '', cvFile: null
   });
 
-  const t = {
-    ar: {
-      title: 'استكمال الملف الاحترافي ✨',
-      cvMsg: 'إن رفعك لسيرتك الذاتية يوفر عليك من الجهد والوقت، وسنقوم بتحليلها واسقاط بياناتها هنا.',
-      upload: 'ارفع السيرة الذاتية (PDF, Word, Excel, PPT)',
-      parsing: 'جاري التحليل الذكي عبر AI... 🤖',
-      personal: 'البيانات الشخصية والاجتماعية',
-      health: 'الحالة الصحية',
-      military: 'حالة التجنيد (للذكور)',
-      education: 'المسيرة التعليمية',
-      experience: 'المسيرة المهنية',
-      training: 'المسيرة التدريبية',
-      skills: 'اللغات والمهارات',
-      add: '+ إضافة المزيد',
-      finish: 'حفظ وتأكيد الملف',
-      modalMsg: 'يرجى الموافقة على صحة البيانات أولاً',
-      socialStatuses: { single: 'عازب', married: 'متزوج', divorced: 'مطلق', widowed: 'أرمل' },
-      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' },
-      placeholders: {
-        permanentAddress: 'عنوان السكن الدائم',
-        temporaryAddress: 'عنوان السكن المؤقت',
-        socialStatus: '-- الحالة الاجتماعية --',
-        hasChildren: 'هل لديك أولاد؟',
-        militaryStatus: '-- اختر الحالة --',
-        level: 'المرحلة',
-        degree: 'الدرجة',
-        institution: 'المؤسسة',
-        city: 'المدينة',
-        country: 'البلد',
-        year: 'السنة',
-        grade: 'التقدير',
-        company: 'الشركة',
-        position: 'المنصب',
-        from: 'من',
-        to: 'إلى',
-        tasks: 'المهام الوظيفية',
-        workType: 'نوع العمل',
-        jobLevel: 'مستوى الوظيفة',
-        reason: 'سبب الترك',
-        courseName: 'اسم الدورة',
-        provider: 'الجهة المقدمة',
-        content: 'المحتوى',
-        language: 'اللغة',
-        proficiency: 'مستوى الإتقان',
-        skill: 'المهارة',
-        software: 'البرمجية',
-        otherSkills: 'مهارات أخرى',
-        bio: 'السيرة الذاتية',
-        agreement: 'أقر بأن كافة البيانات المذكورة أعلاه صحيحة وتحت مسؤوليتي الشخصية.',
-        loading: 'جاري الحفظ...',
-        ok: 'حسناً'
-      },
-      labels: {
-        name: 'الاسم',
-        gender: 'الجنس',
-        date: 'التاريخ',
-        country: 'البلد'
-      },
-      genderOptions: { male: 'ذكر', female: 'أنثى' }
-    },
-    en: {
-      title: 'Complete Your Professional Profile ✨',
-      cvMsg: 'Uploading your CV saves you time and effort, and we will analyze it and populate the data here.',
-      upload: 'Upload CV (PDF, Word, Excel, PPT)',
-      parsing: 'Smart AI analysis in progress... 🤖',
-      personal: 'Personal and Social Data',
-      health: 'Health Status',
-      military: 'Military Service Status (for males)',
-      education: 'Educational Background',
-      experience: 'Professional Experience',
-      training: 'Training Background',
-      skills: 'Languages and Skills',
-      add: '+ Add More',
-      finish: 'Save and Confirm Profile',
-      modalMsg: 'Please agree to the accuracy of the data first',
-      socialStatuses: { single: 'Single', married: 'Married', divorced: 'Divorced', widowed: 'Widowed' },
-      militaryStatuses: { exempt: 'Exempt', performed: 'Completed', paid: 'Paid cash equivalent', postponed: 'Postponed', in_service: 'In Service' },
-      placeholders: {
-        permanentAddress: 'Permanent Address',
-        temporaryAddress: 'Temporary Address',
-        socialStatus: '-- Social Status --',
-        hasChildren: 'Do you have children?',
-        militaryStatus: '-- Choose Status --',
-        level: 'Level',
-        degree: 'Degree',
-        institution: 'Institution',
-        city: 'City',
-        country: 'Country',
-        year: 'Year',
-        grade: 'Grade',
-        company: 'Company',
-        position: 'Position',
-        from: 'From',
-        to: 'To',
-        tasks: 'Job Tasks',
-        workType: 'Work Type',
-        jobLevel: 'Job Level',
-        reason: 'Reason for Leaving',
-        courseName: 'Course Name',
-        provider: 'Provider',
-        content: 'Content',
-        language: 'Language',
-        proficiency: 'Proficiency',
-        skill: 'Skill',
-        software: 'Software',
-        otherSkills: 'Other Skills',
-        bio: 'Bio',
-        agreement: 'I certify that all the above data is correct and under my personal responsibility.',
-        loading: 'Saving...',
-        ok: 'OK'
-      },
-      labels: {
-        name: 'Name',
-        gender: 'Gender',
-        date: 'Date',
-        country: 'Country'
-      },
-      genderOptions: { male: 'Male', female: 'Female' }
-    },
-    fr: {
-      title: 'Complétez Votre Profil Professionnel ✨',
-      cvMsg: 'Télécharger votre CV vous fait gagner du temps et des efforts, et nous l\'analyserons et remplirons les données ici.',
-      upload: 'Télécharger CV (PDF, Word, Excel, PPT)',
-      parsing: 'Analyse intelligente par IA en cours... 🤖',
-      personal: 'Données Personnelles et Sociales',
-      health: 'État de Santé',
-      military: 'Statut de Service Militaire (pour les hommes)',
-      education: 'Parcours Éducatif',
-      experience: 'Expérience Professionnelle',
-      training: 'Parcours de Formation',
-      skills: 'Langues et Compétences',
-      add: '+ Ajouter Plus',
-      finish: 'Enregistrer et Confirmer le Profil',
-      modalMsg: 'Veuillez d\'abord accepter l\'exactitude des données',
-      socialStatuses: { single: 'Célibataire', married: 'Marié', divorced: 'Divorcé', widowed: 'Veuf' },
-      militaryStatuses: { exempt: 'Exempté', performed: 'Accompli', paid: 'Payé en espèces', postponed: 'Reporté', in_service: 'En Service' },
-      placeholders: {
-        permanentAddress: 'Adresse Permanente',
-        temporaryAddress: 'Adresse Temporaire',
-        socialStatus: '-- Statut Social --',
-        hasChildren: 'Avez-vous des enfants ?',
-        militaryStatus: '-- Choisir le Statut --',
-        level: 'Niveau',
-        degree: 'Diplôme',
-        institution: 'Institution',
-        city: 'Ville',
-        country: 'Pays',
-        year: 'Année',
-        grade: 'Note',
-        company: 'Entreprise',
-        position: 'Poste',
-        from: 'De',
-        to: 'À',
-        tasks: 'Tâches Professionnelles',
-        workType: 'Type de Travail',
-        jobLevel: 'Niveau de Poste',
-        reason: 'Raison de Départ',
-        courseName: 'Nom du Cours',
-        provider: 'Fournisseur',
-        content: 'Contenu',
-        language: 'Langue',
-        proficiency: 'Niveau de Maîtrise',
-        skill: 'Compétence',
-        software: 'Logiciel',
-        otherSkills: 'Autres Compétences',
-        bio: 'Biographie',
-        agreement: 'Je certifie que toutes les données ci-dessus sont correctes et sous ma responsabilité personnelle.',
-        loading: 'Enregistrement...',
-        ok: 'OK'
-      },
-      labels: {
-        name: 'Nom',
-        gender: 'Genre',
-        date: 'Date',
-        country: 'Pays'
-      },
-      genderOptions: { male: 'Homme', female: 'Femme' }
-    }
-  }[language || 'ar'];
+  const t = onboardingIndividualsTranslations[language] || onboardingIndividualsTranslations.ar;
 
   const handleCVUpload = async (e) => {
     const file = e.target.files[0];
@@ -276,6 +99,9 @@ export default function OnboardingIndividuals() {
   const handleModalClose = () => {
     setShowModal(false);
   };
+
+  const inputCls = "w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all placeholder:text-gray-400 shadow-sm";
+  const labelCls = "block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2";
 
   return (
     <div className={`min-h-screen p-4 md:p-8 bg-[#E3DAD1] pb-24 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir="rtl">

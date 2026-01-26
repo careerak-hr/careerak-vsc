@@ -26,6 +26,8 @@ import OnboardingIlliterate from "./pages/16_OnboardingIlliterate";
 import OnboardingVisual from "./pages/17_OnboardingVisual";
 import OnboardingUltimate from "./pages/18_OnboardingUltimate";
 import AdminDashboard from "./pages/19_AdminDashboard";
+import InterfaceIndividuals from "./pages/20_InterfaceIndividuals";
+import InterfaceCompanies from "./pages/21_InterfaceCompanies";
 
 function AppRoutes() {
   const { loaded } = useAppSettings();
@@ -54,6 +56,8 @@ function AppRoutes() {
         <Route path="/onboarding-visual" element={<OnboardingVisual />} />
         <Route path="/onboarding-ultimate" element={<OnboardingUltimate />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/interface-individuals" element={<InterfaceIndividuals />} />
+        <Route path="/interface-companies" element={<InterfaceCompanies />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/apply/:jobId" element={<ApplyPage />} />
         <Route path="/job-postings" element={<JobPostingsPage />} />

@@ -26,6 +26,34 @@ export default function OnboardingCompanies() {
       placeholderWeb: "https://www.company.com",
       placeholderAddr: "المدينة، الشارع، المبنى",
       placeholderEmp: "مثال: 50-100"
+    },
+    en: {
+      title: "Setup Company Profile 🏢",
+      sub: "Complete your company details to start posting jobs and courses",
+      bio: "Company Description",
+      website: "Website",
+      address: "Headquarters Address",
+      employees: "Number of Employees",
+      declaration: "I certify the accuracy of the company data and my legal responsibility for it.",
+      finish: "Save and Start",
+      placeholderBio: "Write a brief about the company's activities and goals...",
+      placeholderWeb: "https://www.company.com",
+      placeholderAddr: "City, Street, Building",
+      placeholderEmp: "Example: 50-100"
+    },
+    fr: {
+      title: "Configurer le profil de l'entreprise 🏢",
+      sub: "Complétez les détails de votre entreprise pour commencer à publier des emplois et des cours",
+      bio: "Description de l'entreprise",
+      website: "Site web",
+      address: "Adresse du siège social",
+      employees: "Nombre d'employés",
+      declaration: "Je certifie l'exactitude des données de l'entreprise et ma responsabilité légale à cet égard.",
+      finish: "Enregistrer et commencer",
+      placeholderBio: "Écrivez un aperçu des activités et objectifs de l'entreprise...",
+      placeholderWeb: "https://www.company.com",
+      placeholderAddr: "Ville, Rue, Bâtiment",
+      placeholderEmp: "Exemple: 50-100"
     }
   }[language || 'ar'];
 
@@ -43,7 +71,7 @@ export default function OnboardingCompanies() {
     try {
       const res = await userService.updateProfile(formData);
       updateUser(res.data.user);
-      navigate('/profile');
+      navigate('/interface-companies');
     } catch (err) {
       console.error(err);
     } finally {

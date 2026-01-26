@@ -38,18 +38,11 @@ export default function EntryPage() {
     };
     initServer();
 
-    console.log("EntryPage useEffect, audioEnabled:", audioEnabled);
     const SYSTEM_DELAY = 1000;
     const timers = [
       setTimeout(() => {
         if (isMounted.current) {
           setPhase(1);
-          if (audioEnabled && !audioRef.current) {
-            console.log("Playing intro.mp3");
-            audioRef.current = new Audio('/intro.mp3');
-            audioRef.current.volume = 0.6;
-            audioRef.current.play().catch(() => {});
-          }
         }
       }, SYSTEM_DELAY),
       setTimeout(() => { if (isMounted.current) setPhase(2); }, SYSTEM_DELAY + 1500),
@@ -78,6 +71,16 @@ export default function EntryPage() {
       listener.then(l => l.remove());
     };
   }, [navigate, audioEnabled]);
+
+  // Separate useEffect for audio to handle audioEnabled changes
+  useEffect(() => {
+    if (audioEnabled && phase === 1 && !audioRef.current) {
+      console.log("Playing intro.mp3");
+      audioRef.current = new Audio('/intro.mp3');
+      audioRef.current.volume = 0.6;
+      audioRef.current.play().catch((e) => console.log("Intro audio play failed:", e));
+    }
+  }, [audioEnabled, phase]);
 
   return (
     <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-[#E3DAD1] select-none">

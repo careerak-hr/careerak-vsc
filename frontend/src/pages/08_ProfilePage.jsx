@@ -6,6 +6,7 @@ import { Footer } from '../components/Footer';
 import { Filesystem } from '@capacitor/filesystem'; // وعد: استبدال file-transfer الرسمي
 import { Directory } from '@capacitor/filesystem';
 import AlertModal from '../components/modals/AlertModal';
+import profilePageTranslations from '../data/profilePage.json';
 
 export default function ProfilePage() {
   const { user, language, updateUser, logout } = useAuth();
@@ -44,50 +45,7 @@ export default function ProfilePage() {
     }
   }, [user]);
 
-  const t = {
-    ar: {
-      title: "الملف الشخصي", edit: "تعديل البيانات", save: "حفظ التغييرات", cancel: "إلغاء",
-      personal: "البيانات الشخصية والاجتماعية", health: "الحالة الصحية", military: "حالة التجنيد",
-      education: "المسيرة التعليمية", experience: "المسيرة المهنية", training: "المسيرة التدريبية",
-      skills: "اللغات والمهارات", aiCv: "منشئ السيرة الذاتية الذكي (AI)", generateCv: "إنشاء سيرة ذاتية احترافية",
-      cvLevels: { beginner: "مبتدئ", intermediate: "متوسط", professional: "احترافي" },
-      logout: "تسجيل الخروج", add: "+ إضافة",
-      socialStatuses: { single: 'عازب', married: 'متزوج', divorced: 'مطلق', widowed: 'أرمل' },
-      militaryStatuses: { exempt: 'معفى', performed: 'مؤداة', paid: 'دافع بدل نقدي', postponed: 'مؤجلة', in_service: 'في الخدمة' },
-      generating: "جاري الإنشاء...",
-      cvSuccess: "تم تحميل السيرة الذاتية بنجاح",
-      cvError: "حدث خطأ أثناء إنشاء أو تحميل السيرة الذاتية",
-      ok: "حسناً"
-    },
-    en: {
-      title: "Profile", edit: "Edit Data", save: "Save Changes", cancel: "Cancel",
-      personal: "Personal and Social Data", health: "Health Status", military: "Military Status",
-      education: "Educational Background", experience: "Professional Experience", training: "Training Background",
-      skills: "Languages and Skills", aiCv: "Smart CV Generator (AI)", generateCv: "Generate Professional CV",
-      cvLevels: { beginner: "Beginner", intermediate: "Intermediate", professional: "Professional" },
-      logout: "Logout", add: "+ Add",
-      socialStatuses: { single: 'Single', married: 'Married', divorced: 'Divorced', widowed: 'Widowed' },
-      militaryStatuses: { exempt: 'Exempt', performed: 'Performed', paid: 'Paid cash', postponed: 'Postponed', in_service: 'In Service' },
-      generating: "Generating...",
-      cvSuccess: "CV downloaded successfully",
-      cvError: "Error occurred while creating or downloading CV",
-      ok: "OK"
-    },
-    fr: {
-      title: "Profil", edit: "Modifier les données", save: "Enregistrer les modifications", cancel: "Annuler",
-      personal: "Données personnelles et sociales", health: "État de santé", military: "Statut militaire",
-      education: "Parcours éducatif", experience: "Expérience professionnelle", training: "Parcours de formation",
-      skills: "Langues et compétences", aiCv: "Générateur de CV intelligent (IA)", generateCv: "Générer un CV professionnel",
-      cvLevels: { beginner: "Débutant", intermediate: "Intermédiaire", professional: "Professionnel" },
-      logout: "Déconnexion", add: "+ Ajouter",
-      socialStatuses: { single: 'Célibataire', married: 'Marié', divorced: 'Divorcé', widowed: 'Veuf' },
-      militaryStatuses: { exempt: 'Exempté', performed: 'Accompli', paid: 'Payé en espèces', postponed: 'Reporté', in_service: 'En service' },
-      generating: "Génération en cours...",
-      cvSuccess: "CV téléchargé avec succès",
-      cvError: "Erreur lors de la création ou du téléchargement du CV",
-      ok: "OK"
-    }
-  }[language || 'ar'];
+  const t = profilePageTranslations[language] || profilePageTranslations.ar;
 
   const handleSave = async () => {
     setLoading(true);

@@ -35,6 +35,24 @@ export default function CoursesPage() {
       free: "دورة مجانية",
       level: "المستوى",
       noCourses: "لا توجد دورات متاحة حالياً"
+    },
+    en: {
+      title: "Careerak Educational Academy",
+      sub: "Develop your skills with the best accredited training courses",
+      enroll: "Enroll in Course",
+      price: "Price",
+      free: "Free Course",
+      level: "Level",
+      noCourses: "No courses available currently"
+    },
+    fr: {
+      title: "Académie éducative Careerak",
+      sub: "Développez vos compétences avec les meilleurs cours de formation accrédités",
+      enroll: "S'inscrire au cours",
+      price: "Prix",
+      free: "Cours gratuit",
+      level: "Niveau",
+      noCourses: "Aucun cours disponible actuellement"
     }
   }[language || 'ar'];
 

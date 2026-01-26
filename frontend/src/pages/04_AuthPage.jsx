@@ -554,12 +554,6 @@ export default function AuthPage() {
       )}
 
       {showAgeCheck && <AgeCheckModal t={t} onResponse={() => {}} />}
-
-      {ageKickMessage && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 text-white text-2xl font-black">
-          {ageKickMessage}
-        </div>
-      )}
     </div>
   );
 }

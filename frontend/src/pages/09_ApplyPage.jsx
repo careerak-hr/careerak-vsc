@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import AlertModal from '../components/modals/AlertModal';
+import applyPageTranslations from '../data/applyPage.json';
 
 export default function ApplyPage() {
   const { id } = useParams();
@@ -43,18 +44,7 @@ export default function ApplyPage() {
     }
   };
 
-  const t = {
-    ar: {
-      title: "تفاصيل الفرصة",
-      apply: "تأكيد التقديم الآن",
-      back: "العودة للملفات",
-      success: "تم إرسال طلبك بنجاح! سيتم التواصل معك قريباً.",
-      requirements: "المتطلبات",
-      description: "الوصف الوظيفي",
-      alreadyApplied: "لقد قمت بالتقديم مسبقاً على هذه الوظيفة",
-      ok: "حسناً"
-    }
-  }[language || 'ar'];
+  const t = applyPageTranslations[language] || applyPageTranslations.ar;
 
   if (loading) return <div className="min-h-screen bg-[#E3DAD1] flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#304B60] border-t-transparent rounded-full animate-spin"></div></div>;
 

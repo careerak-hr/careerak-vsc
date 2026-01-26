@@ -13,6 +13,9 @@ export default function OTPVerification() {
   const [isVisible, setIsVisible] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [method, setMethod] = useState('whatsapp');
+  const [countdown, setCountdown] = useState(0);
+  const [resendDisabled, setResendDisabled] = useState(false);
+  const [notification, setNotification] = useState('');
 
   const isRTL = language === 'ar';
 
@@ -25,19 +28,63 @@ export default function OTPVerification() {
       btn: "تأكيد المتابعة",
       resend: "إعادة إرسال الكود عبر:",
       congrats: "تهانينا",
-      error: "رمز التحقق غير صحيح، يرجى المحاولة مجدداً"
+      error: "رمز التحقق غير صحيح، يرجى المحاولة مجدداً",
+      sent: "تم إرسال الكود بنجاح",
+      resendIn: "إعادة الإرسال خلال",
+      seconds: "ثانية"
+    },
+    en: {
+      title: "Verify Code",
+      sub: "Enter the 4-digit code sent to you via",
+      whatsapp: "WhatsApp",
+      email: "Email",
+      btn: "Confirm & Continue",
+      resend: "Resend code via:",
+      congrats: "Congratulations",
+      error: "Invalid verification code, please try again",
+      sent: "Code sent successfully",
+      resendIn: "Resend in",
+      seconds: "seconds"
+    },
+    fr: {
+      title: "Vérifier le code",
+      sub: "Entrez le code à 4 chiffres envoyé via",
+      whatsapp: "WhatsApp",
+      email: "E-mail",
+      btn: "Confirmer et continuer",
+      resend: "Renvoyer le code via :",
+      congrats: "Félicitations",
+      error: "Code de vérification invalide, veuillez réessayer",
+      sent: "Code envoyé avec succès",
+      resendIn: "Renvoyer dans",
+      seconds: "secondes"
     }
   }[language || 'ar'];
 
   const handleSendOTP = useCallback(async (targetMethod) => {
     setMethod(targetMethod);
-    try { await api.post('/users/send-otp', { userId: tempUser?._id, method: targetMethod }); } catch (err) {}
-  }, [tempUser]);
+    setResendDisabled(true);
+    setCountdown(60);
+    setNotification(t.sent);
+    setTimeout(() => setNotification(''), 3000);
+    try { 
+      await api.post('/users/send-otp', { userId: tempUser?._id, method: targetMethod });
+    } catch (err) {}
+  }, [tempUser, t.sent]);
 
   useEffect(() => {
     setIsVisible(true);
     if (tempUser?._id) handleSendOTP('whatsapp');
   }, [tempUser, handleSendOTP]);
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setResendDisabled(false);
+    }
+  }, [countdown]);
 
   const handleVerify = async (e) => {
     if (e) e.preventDefault();
@@ -86,12 +133,23 @@ export default function OTPVerification() {
         </div>
 
         <div className="flex gap-2 mb-8 bg-[#304B60]/5 p-1 rounded-2xl">
-            <button onClick={() => handleSendOTP('whatsapp')} className={`flex-1 py-3 rounded-xl text-xs font-black transition-all ${method === 'whatsapp' ? 'bg-[#304B60] text-[#D48161] shadow-md' : 'text-[#304B60]/40'}`}>{t.whatsapp}</button>
-            <button onClick={() => handleSendOTP('email')} className={`flex-1 py-3 rounded-xl text-xs font-black transition-all ${method === 'email' ? 'bg-[#304B60] text-[#D48161] shadow-md' : 'text-[#304B60]/40'}`}>{t.email}</button>
+            <button onClick={() => handleSendOTP('whatsapp')} disabled={resendDisabled} className={`flex-1 py-3 rounded-xl text-xs font-black transition-all ${method === 'whatsapp' ? 'bg-[#304B60] text-[#D48161] shadow-md' : 'text-[#304B60]/40'}`}>{t.whatsapp}</button>
+            <button onClick={() => handleSendOTP('email')} disabled={resendDisabled} className={`flex-1 py-3 rounded-xl text-xs font-black transition-all ${method === 'email' ? 'bg-[#304B60] text-[#D48161] shadow-md' : 'text-[#304B60]/40'}`}>{t.email}</button>
         </div>
 
+        {countdown > 0 && (
+          <p className="text-xs font-bold text-[#304B60]/60 mb-4">{t.resendIn} {countdown} {t.seconds}</p>
+        )}
+
+        {notification && (
+          <p className="text-xs font-bold text-green-600 mb-4 animate-fade-in">{notification}</p>
+        )}
+
         <form onSubmit={handleVerify} className="space-y-8">
-          <input type="text" maxLength="4" placeholder="0000" value={code} onChange={(e) => setCode(e.target.value)} className={inputCls} />
+          <input type="text" maxLength="4" placeholder="0000" value={code} onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ''); // أرقام فقط
+            setCode(value);
+          }} className={inputCls} />
           {error && <p className="text-xs font-black text-red-600 animate-shake">{error}</p>}
           <button type="submit" disabled={loading || code.length < 4} className="w-full py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl text-xl active:scale-95 transition-all">
             {loading ? "..." : t.btn}

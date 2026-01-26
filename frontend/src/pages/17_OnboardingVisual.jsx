@@ -25,6 +25,30 @@ export default function OnboardingVisual() {
       listening: "جاري الاستماع...",
       tapToTalk: "المس الشاشة للتحدث",
       error: "عذراً، لم أسمعك جيداً. المس الشاشة وحاول مرة أخرى."
+    },
+    en: {
+      welcome: "Welcome to Careerak's voice interface. We will now set up your profile via voice. Tap anywhere on the screen to speak when you hear the signal.",
+      steps: [
+        { key: 'name', prompt: "Please say your full name after hearing the signal." },
+        { key: 'profession', prompt: "What is your specialty or current profession?" },
+        { key: 'experience', prompt: "Tell us about your previous experiences briefly." },
+        { key: 'finish', prompt: "Your data has been saved successfully. We will now go to your personal page." }
+      ],
+      listening: "Listening...",
+      tapToTalk: "Tap the screen to speak",
+      error: "Sorry, I didn't hear you well. Tap the screen and try again."
+    },
+    fr: {
+      welcome: "Bienvenue dans l'interface vocale de Careerak. Nous allons maintenant configurer votre profil via la voix. Appuyez n'importe où sur l'écran pour parler lorsque vous entendez le signal.",
+      steps: [
+        { key: 'name', prompt: "Veuillez dire votre nom complet après avoir entendu le signal." },
+        { key: 'profession', prompt: "Quelle est votre spécialité ou profession actuelle ?" },
+        { key: 'experience', prompt: "Parlez-nous brièvement de vos expériences précédentes." },
+        { key: 'finish', prompt: "Vos données ont été enregistrées avec succès. Nous allons maintenant accéder à votre page personnelle." }
+      ],
+      listening: "Écoute en cours...",
+      tapToTalk: "Appuyez sur l'écran pour parler",
+      error: "Désolé, je ne vous ai pas bien entendu. Appuyez sur l'écran et essayez à nouveau."
     }
   }[language || 'ar'];
 

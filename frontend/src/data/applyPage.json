@@ -1,0 +1,32 @@
+{
+  "ar": {
+    "title": "تفاصيل الفرصة",
+    "apply": "تأكيد التقديم الآن",
+    "back": "العودة للملفات",
+    "success": "تم إرسال طلبك بنجاح! سيتم التواصل معك قريباً.",
+    "requirements": "المتطلبات",
+    "description": "الوصف الوظيفي",
+    "alreadyApplied": "لقد قمت بالتقديم مسبقاً على هذه الوظيفة",
+    "ok": "حسناً"
+  },
+  "en": {
+    "title": "Job Details",
+    "apply": "Confirm Application Now",
+    "back": "Back to Listings",
+    "success": "Your application has been sent successfully! We will contact you soon.",
+    "requirements": "Requirements",
+    "description": "Job Description",
+    "alreadyApplied": "You have already applied for this job",
+    "ok": "OK"
+  },
+  "fr": {
+    "title": "Détails de l'offre",
+    "apply": "Confirmer la candidature maintenant",
+    "back": "Retour aux offres",
+    "success": "Votre candidature a été envoyée avec succès ! Nous vous contacterons bientôt.",
+    "requirements": "Exigences",
+    "description": "Description du poste",
+    "alreadyApplied": "Vous avez déjà postulé pour ce poste",
+    "ok": "OK"
+  }
+}

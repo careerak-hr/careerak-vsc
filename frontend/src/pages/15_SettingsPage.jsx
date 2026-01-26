@@ -22,7 +22,38 @@ export default function SettingsPage() {
       account: 'إعدادات الحساب',
       dangerZone: 'منطقة الخطر',
       deleteAccount: 'حذف الحساب نهائياً',
-      logout: 'تسجيل الخروج من كافة الأجهزة'
+      logout: 'تسجيل الخروج من كافة الأجهزة',
+      langDesc: 'اختر اللغة التي تفضل استخدامها في الواجهات',
+      audioDesc: 'التحكم في تشغيل المؤثرات الصوتية',
+      musicDesc: 'التحكم في تشغيل الموسيقى الخلفية'
+    },
+    en: {
+      title: 'General Settings',
+      lang: 'App Language',
+      audio: 'Sound Effects',
+      music: 'Background Music',
+      save: 'Save Changes',
+      account: 'Account Settings',
+      dangerZone: 'Danger Zone',
+      deleteAccount: 'Permanently Delete Account',
+      logout: 'Logout from All Devices',
+      langDesc: 'Choose the language you prefer for the interfaces',
+      audioDesc: 'Control sound effects playback',
+      musicDesc: 'Control background music playback'
+    },
+    fr: {
+      title: 'Paramètres généraux',
+      lang: 'Langue de l\'application',
+      audio: 'Effets sonores',
+      music: 'Musique de fond',
+      save: 'Enregistrer les modifications',
+      account: 'Paramètres du compte',
+      dangerZone: 'Zone de danger',
+      deleteAccount: 'Supprimer définitivement le compte',
+      logout: 'Déconnexion de tous les appareils',
+      langDesc: 'Choisissez la langue que vous préférez pour les interfaces',
+      audioDesc: 'Contrôler la lecture des effets sonores',
+      musicDesc: 'Contrôler la lecture de la musique de fond'
     }
   }[language || 'ar'];
 
@@ -43,7 +74,7 @@ export default function SettingsPage() {
             <section className={sectionCls}>
               <div className="text-center md:text-right">
                 <h3 className="text-[#304B60] font-black text-lg">{t.lang}</h3>
-                <p className="text-xs text-[#304B60]/40 font-bold mt-1">اختر اللغة التي تفضل استخدامها في الواجهات</p>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">{t.langDesc}</p>
               </div>
               <div className="flex gap-2">
                 {['ar', 'en', 'fr'].map((l) => (
@@ -62,7 +93,7 @@ export default function SettingsPage() {
             <section className={sectionCls}>
               <div className="text-center md:text-right">
                 <h3 className="text-[#304B60] font-black text-lg">{t.audio}</h3>
-                <p className="text-xs text-[#304B60]/40 font-bold mt-1">التحكم في تشغيل المؤثرات الصوتية</p>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">{t.audioDesc}</p>
               </div>
               <button
                 onClick={() => saveAudio(!audioEnabled)}
@@ -79,7 +110,7 @@ export default function SettingsPage() {
             <section className={sectionCls}>
               <div className="text-center md:text-right">
                 <h3 className="text-[#304B60] font-black text-lg">{t.music}</h3>
-                <p className="text-xs text-[#304B60]/40 font-bold mt-1">التحكم في تشغيل الموسيقى الخلفية</p>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">{t.musicDesc}</p>
               </div>
               <button
                 onClick={() => saveMusic(!musicEnabled)}

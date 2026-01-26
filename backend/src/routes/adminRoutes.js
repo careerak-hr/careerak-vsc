@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models/User');
 const JobPosting = require('../models/JobPosting');
+const JobApplication = require('../models/JobApplication');
+const EducationalCourse = require('../models/EducationalCourse');
+const TrainingCourse = require('../models/TrainingCourse');
 const { auth } = require('../middleware/auth'); // التعديل هنا: إضافة الأقواس {}
 
 // ميدل وير للتأكد أن المستخدم هو Admin فعلاً
@@ -13,9 +16,11 @@ const isAdmin = (req, res, next) => {
 // جلب إحصائيات عامة للنظام
 router.get('/stats', auth, isAdmin, async (req, res) => {
   try {
-    const usersCount = await User.countDocuments();
-    const jobsCount = await JobPosting.countDocuments();
-    res.json({ usersCount, jobsCount, serverStatus: 'Online', lastBackup: new Date() });
+    const users = await User.countDocuments();
+    const jobs = await JobPosting.countDocuments();
+    const courses = await EducationalCourse.countDocuments() + await TrainingCourse.countDocuments();
+    const applications = await JobApplication.countDocuments();
+    res.json({ users, jobs, courses, applications });
   } catch (error) {
     res.status(500).json({ error: 'خطأ في جلب الإحصائيات' });
   }

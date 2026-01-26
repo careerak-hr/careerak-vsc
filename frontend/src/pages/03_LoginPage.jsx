@@ -25,6 +25,16 @@ const loginTranslations = {
     createAccount: "Create account now",
     error: "Login failed, check your credentials",
     rememberMe: "Remember me"
+  },
+  fr: {
+    subtitle: "Connexion",
+    userPlaceholder: "E-mail ou numéro de téléphone",
+    passPlaceholder: "Mot de passe",
+    loginBtn: "Se connecter",
+    noAccount: "Vous n'avez pas de compte ?",
+    createAccount: "Créer un compte maintenant",
+    error: "Échec de la connexion, vérifiez vos identifiants",
+    rememberMe: "Se souvenir de moi"
   }
 };
 

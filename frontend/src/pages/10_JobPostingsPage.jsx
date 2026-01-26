@@ -34,6 +34,18 @@ export default function JobPostingsPage() {
       sub: "اكتشف أفضل الوظائف التي تناسب مهاراتك",
       apply: "عرض التفاصيل / تقديم",
       noJobs: "لا توجد وظائف متاحة حالياً"
+    },
+    en: {
+      title: "Available Job Opportunities",
+      sub: "Discover the best jobs that match your skills",
+      apply: "View Details / Apply",
+      noJobs: "No jobs available currently"
+    },
+    fr: {
+      title: "Opportunités d'emploi disponibles",
+      sub: "Découvrez les meilleurs emplois qui correspondent à vos compétences",
+      apply: "Voir les détails / Postuler",
+      noJobs: "Aucun emploi disponible actuellement"
     }
   }[language || 'ar'];
 

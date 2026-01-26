@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import ConfirmationModal from '../components/modals/ConfirmationModal';
+import adminDashboardTranslations from '../data/adminDashboard.json';
 
 const translations = {
   ar: {
     deleteConfirm: 'هل أنت متأكد من حذف هذا المستخدم؟',
     confirm: 'تأكيد',
-    cancel: 'إلغاء'
+    cancel: 'إلغاء',
   },
   en: {
     deleteConfirm: 'Are you sure you want to delete this user?',
