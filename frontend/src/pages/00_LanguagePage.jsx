@@ -5,33 +5,7 @@ import "./00_LanguagePage.css";
 import { Preferences } from "@capacitor/preferences";
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
-
-const translations = {
-  ar: {
-    confirmLang: "هل أنت متأكد من اللغة التي تم اختيارها؟ مع العلم أن التطبيق سيعمل بشكل كامل باللغة التي تم اختيارها، ويمكنكم تغيير اللغة في اي وقت شئتم من لوحة التحكم",
-    audioTitle: "هل توافق على تشغيل الموسيقى والصوتيات في التطبيق؟ مع العلم أنكم بإمكانكم التحكم في الصوتيات والموسيقى من لوحة التحكم متى شئتم",
-    yes: "نعم",
-    no: "لا",
-    ok: "تأكيد",
-    title: "اختر اللغة"
-  },
-  en: {
-    confirmLang: "Are you sure about the selected language? The app will work entirely in this language, and you can change it anytime from the dashboard.",
-    audioTitle: "Do you agree to play music and audio in the app? You can control audio and music from the dashboard whenever you want.",
-    yes: "Yes",
-    no: "No",
-    ok: "Confirm",
-    title: "Choose Language"
-  },
-  fr: {
-    confirmLang: "Êtes-vous sûr de la langue sélectionnée ? L'application fonctionnera entièrement dans cette langue et vous pourrez la modifier à tout moment depuis le tableau de bord.",
-    audioTitle: "Acceptez-vous de jouer de la musique et de l'audio dans l'application ? Vous pouvez contrôler l'audio et la musique depuis le tableau de bord quand vous le souhaitez.",
-    yes: "Oui",
-    no: "Non",
-    ok: "Confirmer",
-    title: "Choisir la langue"
-  }
-};
+import languagePageTranslations from "../data/languagePage.json";
 
 export default function LanguagePage() {
   const { saveLanguage, saveAudio, saveMusic } = useAppSettings();
@@ -110,10 +84,9 @@ export default function LanguagePage() {
     navigate("/entry", { replace: true });
   };
 
-  const t = translations[selectedLang] || translations.ar;
+  const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
 
   const langBtnCls = "py-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-lg border-4 border-[#304B60] hover:scale-105 transition-all text-xl";
-  const popupBtnCls = "flex-1 py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg";
 
   if (loading) {
     return(

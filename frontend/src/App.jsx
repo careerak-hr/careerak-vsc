@@ -9,25 +9,31 @@ import AppAudioPlayer from "./components/AppAudioPlayer";
 // Import Pages
 import LanguagePage from "./pages/00_LanguagePage";
 import EntryPage from "./pages/01_EntryPage";
-import LoginPage from "./pages/03_LoginPage";
-import AuthPage from "./pages/04_AuthPage";
-import OTPVerification from "./pages/05_OTPVerification";
-import OnboardingIndividuals from "./pages/06_OnboardingIndividuals";
-import OnboardingCompanies from "./pages/07_OnboardingCompanies";
-import ProfilePage from "./pages/08_ProfilePage";
-import ApplyPage from "./pages/09_ApplyPage";
-import JobPostingsPage from "./pages/10_JobPostingsPage";
-import PostJobPage from "./pages/11_PostJobPage";
-import CoursesPage from "./pages/12_CoursesPage";
-import PostCoursePage from "./pages/13_PostCoursePage";
-import PolicyPage from "./pages/14_PolicyPage";
-import SettingsPage from "./pages/15_SettingsPage";
-import OnboardingIlliterate from "./pages/16_OnboardingIlliterate";
-import OnboardingVisual from "./pages/17_OnboardingVisual";
-import OnboardingUltimate from "./pages/18_OnboardingUltimate";
-import AdminDashboard from "./pages/19_AdminDashboard";
-import InterfaceIndividuals from "./pages/20_InterfaceIndividuals";
-import InterfaceCompanies from "./pages/21_InterfaceCompanies";
+import LoginPage from "./pages/02_LoginPage";
+import AuthPage from "./pages/03_AuthPage";
+import OTPVerification from "./pages/04_OTPVerification";
+import OnboardingIndividuals from "./pages/05_OnboardingIndividuals";
+import OnboardingCompanies from "./pages/06_OnboardingCompanies";
+import ProfilePage from "./pages/07_ProfilePage";
+import ApplyPage from "./pages/08_ApplyPage";
+import JobPostingsPage from "./pages/09_JobPostingsPage";
+import PostJobPage from "./pages/10_PostJobPage";
+import CoursesPage from "./pages/11_CoursesPage";
+import PostCoursePage from "./pages/12_PostCoursePage";
+import PolicyPage from "./pages/13_PolicyPage";
+import SettingsPage from "./pages/14_SettingsPage";
+import OnboardingIlliterate from "./pages/15_OnboardingIlliterate";
+import OnboardingVisual from "./pages/16_OnboardingVisual";
+import OnboardingUltimate from "./pages/17_OnboardingUltimate";
+import AdminDashboard from "./pages/18_AdminDashboard";
+import InterfaceIndividuals from "./pages/19_InterfaceIndividuals";
+import InterfaceCompanies from "./pages/20_InterfaceCompanies";
+import InterfaceIlliterate from "./pages/21_InterfaceIlliterate";
+import InterfaceVisual from "./pages/22_InterfaceVisual";
+import InterfaceUltimate from "./pages/23_InterfaceUltimate";
+import InterfaceShops from "./pages/24_InterfaceShops";
+import InterfaceWorkshops from "./pages/25_InterfaceWorkshops";
+import AdminSubDashboard from "./pages/26_AdminSubDashboard";
 
 function AppRoutes() {
   const { loaded } = useAppSettings();
@@ -38,7 +44,11 @@ function AppRoutes() {
   const shouldShowWhatsApp = !hideWhatsAppOnPaths.includes(location.pathname);
 
   if (!loaded) {
-    return null; // or a loading spinner
+    return (
+      <div className="fixed inset-0 bg-[#E3DAD0] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60]"></div>
+      </div>
+    );
   }
 
   return (
@@ -55,12 +65,18 @@ function AppRoutes() {
         <Route path="/onboarding-illiterate" element={<OnboardingIlliterate />} />
         <Route path="/onboarding-visual" element={<OnboardingVisual />} />
         <Route path="/onboarding-ultimate" element={<OnboardingUltimate />} />
-        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/interface-individuals" element={<InterfaceIndividuals />} />
         <Route path="/interface-companies" element={<InterfaceCompanies />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/apply/:jobId" element={<ApplyPage />} />
+        <Route path="/interface-illiterate" element={<InterfaceIlliterate />} />
+        <Route path="/interface-visual" element={<InterfaceVisual />} />
+        <Route path="/interface-ultimate" element={<InterfaceUltimate />} />
+        <Route path="/interface-shops" element={<InterfaceShops />} />
+        <Route path="/interface-workshops" element={<InterfaceWorkshops />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-sub-dashboard" element={<AdminSubDashboard />} />
         <Route path="/job-postings" element={<JobPostingsPage />} />
+        <Route path="/apply/:jobId" element={<ApplyPage />} />
         <Route path="/post-job" element={<PostJobPage />} />
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/post-course" element={<PostCoursePage />} />

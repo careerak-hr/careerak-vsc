@@ -19,12 +19,14 @@ export default function OnboardingCompanies() {
       bio: "وصف المنشأة",
       website: "الموقع الإلكتروني",
       address: "عنوان المقر الرئيسي",
+      location: "موقع الشركة",
       employees: "عدد الموظفين",
       declaration: "أقر بصحة بيانات المنشأة ومسؤوليتي القانونية عنها.",
       finish: "حفظ والبدء",
       placeholderBio: "اكتب نبذة عن نشاط الشركة وأهدافها...",
       placeholderWeb: "https://www.company.com",
       placeholderAddr: "المدينة، الشارع، المبنى",
+      placeholderLoc: "حدد موقع الشركة على الخريطة",
       placeholderEmp: "مثال: 50-100"
     },
     en: {
@@ -33,12 +35,14 @@ export default function OnboardingCompanies() {
       bio: "Company Description",
       website: "Website",
       address: "Headquarters Address",
+      location: "Company Location",
       employees: "Number of Employees",
       declaration: "I certify the accuracy of the company data and my legal responsibility for it.",
       finish: "Save and Start",
       placeholderBio: "Write a brief about the company's activities and goals...",
       placeholderWeb: "https://www.company.com",
       placeholderAddr: "City, Street, Building",
+      placeholderLoc: "Select company location on map",
       placeholderEmp: "Example: 50-100"
     },
     fr: {
@@ -47,12 +51,14 @@ export default function OnboardingCompanies() {
       bio: "Description de l'entreprise",
       website: "Site web",
       address: "Adresse du siège social",
+      location: "Emplacement de l'entreprise",
       employees: "Nombre d'employés",
       declaration: "Je certifie l'exactitude des données de l'entreprise et ma responsabilité légale à cet égard.",
       finish: "Enregistrer et commencer",
       placeholderBio: "Écrivez un aperçu des activités et objectifs de l'entreprise...",
       placeholderWeb: "https://www.company.com",
       placeholderAddr: "Ville, Rue, Bâtiment",
+      placeholderLoc: "Sélectionnez l'emplacement de l'entreprise sur la carte",
       placeholderEmp: "Exemple: 50-100"
     }
   }[language || 'ar'];
@@ -61,6 +67,7 @@ export default function OnboardingCompanies() {
     bio: '',
     website: '',
     address: '',
+    location: '',
     employeeCount: ''
   });
 
@@ -134,6 +141,17 @@ export default function OnboardingCompanies() {
               placeholder={t.placeholderAddr}
               className={inputCls}
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className={labelCls}>{t.location}</label>
+            <input
+              type="text"
+              value={formData.location}
+              onChange={e => setFormData({...formData, location: e.target.value})}
+              placeholder={t.placeholderLoc}
+              className={inputCls}
             />
           </div>
 

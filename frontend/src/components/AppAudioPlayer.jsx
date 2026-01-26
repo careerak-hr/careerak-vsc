@@ -77,8 +77,8 @@ const AppAudioPlayer = () => {
 
   return (
     <>
-      <audio ref={introRef} src="/intro.mp3" />
-      <audio ref={musicRef} src="/Music.mp3" loop />
+      <audio ref={introRef} src={`${process.env.PUBLIC_URL}/intro.mp3`} />
+      <audio ref={musicRef} src={`${process.env.PUBLIC_URL}/Music.mp3`} loop />
     </>
   );
 };

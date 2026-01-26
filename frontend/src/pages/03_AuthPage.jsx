@@ -278,8 +278,17 @@ export default function AuthPage() {
   // -----------------------
   const [isVisible, setIsVisible] = useState(false);
   const [showAgeCheck, setShowAgeCheck] = useState(true);
-  const [showSorry, setShowSorry] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
+
+  const handleAgeResponse = (isAbove18) => {
+    if (isAbove18) {
+      setShowAgeCheck(false);
+    } else {
+      window.location.href = '/';
+    }
+  };
+
   useEffect(() => setIsVisible(true), []);
 
   // -----------------------
@@ -553,7 +562,7 @@ export default function AuthPage() {
         />
       )}
 
-      {showAgeCheck && <AgeCheckModal t={t} onResponse={() => {}} />}
+      {showAgeCheck && <AgeCheckModal t={t} onResponse={handleAgeResponse} />}
     </div>
   );
 }

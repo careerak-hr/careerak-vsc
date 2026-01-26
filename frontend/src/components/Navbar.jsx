@@ -1,22 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import navbarTranslations from '../data/navbar.json';
 
 export const Navbar = () => {
   const { language, logout, audioEnabled, setAudioEnabled } = useAuth();
   const [showSettings, setShowSettings] = useState(false);
 
-  const t = {
-    ar: {
-      settings: "لوحة التحكم",
-      music: "الموسيقى",
-      voice: "الصوتيات",
-      logout: "تسجيل الخروج",
-      deleteAccount: "حذف الحساب نهائياً",
-      notifications: "تنبيهات الهاتف",
-      changePass: "تغيير كلمة المرور",
-      exit: "خروج من التطبيق"
-    }
-  }[language || 'ar'];
+  const t = navbarTranslations[language] || navbarTranslations.ar;
 
   return (
     <>

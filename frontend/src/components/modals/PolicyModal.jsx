@@ -1,5 +1,5 @@
 import React from 'react';
-import PolicyPage from '../../pages/14_PolicyPage.jsx'; // ✅ Corrected path by Waad
+import PolicyPage from '../../pages/13_PolicyPage.jsx'; // ✅ Corrected path by Waad
 
 const PolicyModal = ({ onClose, onAgree }) => {
   return (

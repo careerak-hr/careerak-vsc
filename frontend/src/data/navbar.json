@@ -1,0 +1,32 @@
+{
+  "ar": {
+    "settings": "لوحة التحكم",
+    "music": "الموسيقى",
+    "voice": "الصوتيات",
+    "logout": "تسجيل الخروج",
+    "deleteAccount": "حذف الحساب نهائياً",
+    "notifications": "تنبيهات الهاتف",
+    "changePass": "تغيير كلمة المرور",
+    "exit": "خروج من التطبيق"
+  },
+  "en": {
+    "settings": "Control Panel",
+    "music": "Music",
+    "voice": "Audio",
+    "logout": "Logout",
+    "deleteAccount": "Delete Account Permanently",
+    "notifications": "Phone Notifications",
+    "changePass": "Change Password",
+    "exit": "Exit App"
+  },
+  "fr": {
+    "settings": "Panneau de contrôle",
+    "music": "Musique",
+    "voice": "Audio",
+    "logout": "Déconnexion",
+    "deleteAccount": "Supprimer le compte définitivement",
+    "notifications": "Notifications téléphoniques",
+    "changePass": "Changer le mot de passe",
+    "exit": "Quitter l'application"
+  }
+}

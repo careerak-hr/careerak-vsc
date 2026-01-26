@@ -2,5 +2,19 @@
   "appId": "com.careerak.app",
   "appName": "Careerak",
   "webDir": "build",
-  "bundledWebRuntime": false
+  "bundledWebRuntime": false,
+  "plugins": {
+    "Camera": {
+      "permissions": ["camera", "photos"]
+    },
+    "Filesystem": {
+      "permissions": ["read", "write"]
+    },
+    "Geolocation": {
+      "permissions": ["location"]
+    },
+    "Microphone": {
+      "permissions": ["microphone"]
+    }
+  }
 }

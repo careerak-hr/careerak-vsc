@@ -9,6 +9,7 @@ const userService = {
   getUserProfile: () => api.get('/api/users/profile'),
   analyzeImage: (data) => api.post('/api/users/analyze-image', data),
   generateCv: (data) => api.post('/api/users/generate-cv', data), // <-- الدالة الجديدة
+  parseCV: (data) => api.post('/api/users/parse-cv', data),
 };
 
 export default userService;

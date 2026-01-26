@@ -60,7 +60,54 @@ export default function OnboardingIndividuals() {
         const base64 = reader.result;
         const res = await userService.parseCV({ cvBase64: base64, fileName: file.name });
         if (res.data.data) {
-            setFormData(prev => ({ ...prev, ...res.data.data, cvFile: base64 }));
+          const parsedData = res.data.data;
+          setFormData(prev => {
+            const updated = { ...prev, cvFile: base64 };
+            
+            // Update basic fields
+            if (parsedData.firstName) updated.firstName = parsedData.firstName;
+            if (parsedData.lastName) updated.lastName = parsedData.lastName;
+            if (parsedData.email) updated.email = parsedData.email;
+            if (parsedData.phone) updated.phone = parsedData.phone;
+            if (parsedData.bio) updated.bio = parsedData.bio;
+            
+            // Merge education list
+            if (parsedData.educationList && Array.isArray(parsedData.educationList)) {
+              updated.educationList = [...prev.educationList, ...parsedData.educationList];
+            }
+            
+            // Merge experience list
+            if (parsedData.experienceList && Array.isArray(parsedData.experienceList)) {
+              updated.experienceList = [...prev.experienceList, ...parsedData.experienceList];
+            }
+            
+            // Merge training list
+            if (parsedData.trainingList && Array.isArray(parsedData.trainingList)) {
+              updated.trainingList = [...prev.trainingList, ...parsedData.trainingList];
+            }
+            
+            // Merge languages
+            if (parsedData.languages && Array.isArray(parsedData.languages)) {
+              updated.languages = [...prev.languages, ...parsedData.languages];
+            }
+            
+            // Merge computer skills
+            if (parsedData.computerSkills && Array.isArray(parsedData.computerSkills)) {
+              updated.computerSkills = [...prev.computerSkills, ...parsedData.computerSkills];
+            }
+            
+            // Merge software skills
+            if (parsedData.softwareSkills && Array.isArray(parsedData.softwareSkills)) {
+              updated.softwareSkills = [...prev.softwareSkills, ...parsedData.softwareSkills];
+            }
+            
+            // Merge other skills
+            if (parsedData.otherSkills && Array.isArray(parsedData.otherSkills)) {
+              updated.otherSkills = [...prev.otherSkills, ...parsedData.otherSkills];
+            }
+            
+            return updated;
+          });
         }
       } catch (err) {
         console.error("AI Parsing Failed", err);
@@ -73,6 +120,10 @@ export default function OnboardingIndividuals() {
 
   const addItem = (listName, defaultObj) => {
     setFormData(prev => ({ ...prev, [listName]: [...prev[listName], defaultObj] }));
+  };
+
+  const removeItem = (listName, index) => {
+    setFormData(prev => ({ ...prev, [listName]: prev[listName].filter((_, i) => i !== index) }));
   };
 
   const handleListChange = (listName, index, field, value) => {
@@ -168,11 +219,12 @@ export default function OnboardingIndividuals() {
           <section className="space-y-4">
             <h3 className="text-lg font-black text-[#304B60] border-r-4 border-[#D48161] pr-3">{t.education}</h3>
             {formData.educationList.map((edu, idx) => (
-                <div key={idx} className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-[#304B60]/5 rounded-2xl border border-[#D48161]/10">
+                <div key={idx} className="grid grid-cols-2 md:grid-cols-4 gap-3 p-4 bg-[#304B60]/5 rounded-2xl border border-[#D48161]/10 relative">
                     <input type="text" placeholder={t.placeholders.level} className={inputCls} value={edu.level} onChange={e=>handleListChange('educationList', idx, 'level', e.target.value)} />
                     <input type="text" placeholder={t.placeholders.degree} className={inputCls} value={edu.degree} onChange={e=>handleListChange('educationList', idx, 'degree', e.target.value)} />
                     <input type="text" placeholder={t.placeholders.institution} className={inputCls} value={edu.institution} onChange={e=>handleListChange('educationList', idx, 'institution', e.target.value)} />
                     <input type="text" placeholder={t.placeholders.year} className={inputCls} value={edu.year} onChange={e=>handleListChange('educationList', idx, 'year', e.target.value)} />
+                    <button type="button" onClick={() => removeItem('educationList', idx)} className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-black text-sm">✕</button>
                 </div>
             ))}
             <button type="button" onClick={()=>addItem('educationList', {level:'', degree:'', institution:'', city:'', country:'', year:'', grade:''})} className="text-[#304B60] font-black text-xs hover:text-[#D48161] transition-colors">{t.add}</button>
@@ -181,7 +233,7 @@ export default function OnboardingIndividuals() {
           <section className="space-y-4">
             <h3 className="text-lg font-black text-[#304B60] border-r-4 border-[#D48161] pr-3">{t.experience}</h3>
             {formData.experienceList.map((exp, idx) => (
-                <div key={idx} className="space-y-3 p-4 bg-[#304B60]/5 rounded-3xl border border-[#D48161]/10">
+                <div key={idx} className="space-y-3 p-4 bg-[#304B60]/5 rounded-3xl border border-[#D48161]/10 relative">
                     <div className="grid grid-cols-2 gap-3">
                         <input type="text" placeholder={t.placeholders.company} className={inputCls} value={exp.company} onChange={e=>handleListChange('experienceList', idx, 'company', e.target.value)} />
                         <input type="text" placeholder={t.placeholders.position} className={inputCls} value={exp.position} onChange={e=>handleListChange('experienceList', idx, 'position', e.target.value)} />
@@ -191,6 +243,7 @@ export default function OnboardingIndividuals() {
                         <input type="date" className={inputCls} value={exp.to} onChange={e=>handleListChange('experienceList', idx, 'to', e.target.value)} />
                     </div>
                     <textarea placeholder={t.placeholders.tasks} className={`${inputCls} h-24 text-right`} value={exp.tasks} onChange={e=>handleListChange('experienceList', idx, 'tasks', e.target.value)} />
+                    <button type="button" onClick={() => removeItem('experienceList', idx)} className="absolute top-2 right-2 text-red-500 hover:text-red-700 font-black text-sm">✕</button>
                 </div>
             ))}
             <button type="button" onClick={()=>addItem('experienceList', {company:'', position:'', from:'', to:'', tasks:'', workType:'admin', jobLevel:'', reason:'', country:'', city:''})} className="text-[#304B60] font-black text-xs hover:text-[#D48161] transition-colors">{t.add}</button>

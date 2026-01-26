@@ -5,28 +5,10 @@ import api from '../services/api';
 import ConfirmationModal from '../components/modals/ConfirmationModal';
 import adminDashboardTranslations from '../data/adminDashboard.json';
 
-const translations = {
-  ar: {
-    deleteConfirm: 'هل أنت متأكد من حذف هذا المستخدم؟',
-    confirm: 'تأكيد',
-    cancel: 'إلغاء',
-  },
-  en: {
-    deleteConfirm: 'Are you sure you want to delete this user?',
-    confirm: 'Confirm',
-    cancel: 'Cancel'
-  },
-  fr: {
-    deleteConfirm: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?',
-    confirm: 'Confirmer',
-    cancel: 'Annuler'
-  }
-};
-
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { logout, user, language } = useAuth();
-  const t = translations[language] || translations.ar;
+  const { logout, user, language, token } = useAuth();
+  const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
   const [selectedPath, setSelectedPath] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState({ users: 0, jobs: 0, courses: 0, applications: 0 });
@@ -38,11 +20,14 @@ export default function AdminDashboard() {
   useEffect(() => {
     loadStats();
     if (activeTab === 'users') loadUsers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab]);
 
   const loadStats = async () => {
     try {
-      const res = await api.get('/api/admin/stats');
+      const res = await api.get('/api/admin/stats', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setStats(res.data);
     } catch (err) {
       console.error('Failed to load stats', err);
@@ -52,7 +37,9 @@ export default function AdminDashboard() {
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/api/admin/users');
+      const res = await api.get('/api/admin/users', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setUsers(res.data);
     } catch (err) {
       console.error('Failed to load users', err);
@@ -69,7 +56,9 @@ export default function AdminDashboard() {
   const confirmDeleteUser = async () => {
     if (!userToDelete) return;
     try {
-      await api.delete(`/api/admin/delete-user/${userToDelete}`);
+      await api.delete(`/api/admin/delete-user/${userToDelete}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       loadUsers();
     } catch (err) {
       console.error('Failed to delete user', err);
@@ -104,6 +93,12 @@ export default function AdminDashboard() {
     { name: "الإعدادات (Settings)", path: "/settings" },
     { name: "واجهة الأفراد (Interface Individuals)", path: "/interface-individuals" },
     { name: "واجهة الشركات (Interface Companies)", path: "/interface-companies" },
+    { name: "واجهة الأميين (Interface Illiterate)", path: "/interface-illiterate" },
+    { name: "واجهة ذوي الهمم البصري (Interface Visual)", path: "/interface-visual" },
+    { name: "واجهة المتقدمين (Interface Ultimate)", path: "/interface-ultimate" },
+    { name: "واجهة المحلات (Interface Shops)", path: "/interface-shops" },
+    { name: "واجهة الورشات (Interface Workshops)", path: "/interface-workshops" },
+    { name: "لوحة الأدمن الفرعي (Sub Admin Dashboard)", path: "/admin-sub-dashboard" },
   ];
 
   const handleQuickNav = () => { if (selectedPath) navigate(selectedPath); };
