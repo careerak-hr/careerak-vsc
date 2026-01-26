@@ -38,7 +38,7 @@ const loginTranslations = {
   }
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin, startBgMusic } = useAuth();
   const t = loginTranslations[language] || loginTranslations.ar;
@@ -52,6 +52,9 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
+  await Preferences.set({ key: 'audioConsent', value: 'true' });
+  await setAudio(true);
+  
   useEffect(() => {
     setIsVisible(true);
     startBgMusic();

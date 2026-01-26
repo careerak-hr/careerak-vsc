@@ -24,6 +24,8 @@ export const AuthProvider = ({ children }) => {
         const { value: audio } = await Preferences.get({ key: "audio_enabled" });
         const { value: encryptedToken } = await Preferences.get({ key: "auth_token" });
         const savedUser = localStorage.getItem('user');
+        const { value: audioConsent } = await Preferences.get({ key: 'audioConsent' });
+        setAudioEnabled(audioConsent === 'true');
 
         if (lang) {
           setLanguage(lang);

@@ -43,7 +43,15 @@ export default function LanguagePage() {
             }
           }
         };
-
+         const checkAudioConsent = async () => {
+          const { value } = await Preferences.get({ key: 'audioConsent' });
+          if (value === 'true') {
+            setAudio(true); // من useAuth()
+          } else {
+            setAudio(false);
+          }
+        };
+        checkAudioConsent();
         checkOnboarding();
       }, [navigate]);
 

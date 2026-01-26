@@ -80,7 +80,19 @@ const AppAudioPlayer = () => {
       document.removeEventListener('touchstart', handleInteraction);
       document.removeEventListener('keydown', handleInteraction);
     };
-  }, [handleUserInteraction]);
+    }, [handleUserInteraction]);
+
+    const checkAudioConsent = async () => {
+      const { value } = await Preferences.get({ key: 'audioConsent' });
+      if (value === 'true') {
+        if (!audio.current) {
+          audioRef.current = new Audio('/intro.mp3');
+          audioRef.current.volume = 0.6;
+        }
+        audioRef.current.play().catch((error) => console.log('Audio play error:', e));
+      }
+    };
+    [checkAudioConsent];
 
   // تشغيل المقدمة
   const playIntro = useCallback(async () => {
