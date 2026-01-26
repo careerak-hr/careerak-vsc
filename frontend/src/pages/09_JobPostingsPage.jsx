@@ -86,7 +86,7 @@ export default function JobPostingsPage() {
                   </span>
                 </div>
 
-                <div className="bg-white p-6 rounded-lg shadow-md">
+                <div className="bg-[#E3DAD1] p-6 rounded-2xl shadow-inner border border-[#D48161]/10">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-[#304B60]">{job.title}</h3>

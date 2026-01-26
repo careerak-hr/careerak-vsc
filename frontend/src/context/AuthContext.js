@@ -12,10 +12,11 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [language, setLanguage] = useState(null);
   const [audioEnabled, setAudioEnabled] = useState(null);
-  const [canStartMusic, setCanStartMusic] = useState(false); // مفتاح بدء موسيقى الخلفية
+  const [canStartMusic, setCanStartMusic] = useState(false);
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
 
+  // Effect to load initial preferences from storage
   useEffect(() => {
     const loadPrefs = async () => {
       try {
@@ -28,6 +29,11 @@ export const AuthProvider = ({ children }) => {
           setLanguage(lang);
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+        } else {
+            // Default to 'ar' if no language is set
+            setLanguage('ar');
+            document.documentElement.lang = 'ar';
+            document.documentElement.dir = 'rtl';
         }
 
         if (encryptedToken) {
@@ -42,13 +48,12 @@ export const AuthProvider = ({ children }) => {
 
         if (savedUser) {
           const parsedUser = JSON.parse(savedUser);
-          console.log('Loaded user from localStorage:', parsedUser);
           setUser(parsedUser);
-        } else {
-          console.log('No user found in localStorage');
         }
 
-        setAudioEnabled(audio === "true");
+        // Default to true if audio setting is not found
+        setAudioEnabled(audio === null ? true : audio === "true");
+
       } catch (error) {
         console.error("Error loading prefs", error);
       } finally {
@@ -59,26 +64,11 @@ export const AuthProvider = ({ children }) => {
     loadPrefs();
   }, []);
 
-  // إدارة الموسيقى العالمية (Music.mp3)
+  // Effect to manage music playback state (pause/resume) and app backgrounding
   useEffect(() => {
-    console.log("AuthContext music useEffect, audioEnabled:", audioEnabled, "canStartMusic:", canStartMusic, "loading:", loading);
-    // الموسيقى تعمل فقط إذا كان الصوت مفعلاً وتم إعطاء الإشارة بالبدء (من صفحة تسجيل الدخول)
-    if (audioEnabled && canStartMusic && !loading) {
-      console.log("Playing Music.mp3");
-      if (!audioRef.current) {
-        audioRef.current = new Audio('/Music.mp3');
-        audioRef.current.loop = true;
-        audioRef.current.volume = 0.4;
-      }
-      audioRef.current.play().catch(e => console.log("Background music play failed:", e));
-    } else if (audioRef.current) {
-      audioRef.current.pause();
-    }
-
-    // مراقبة حالة التطبيق (Home, Lock, Background) لإيقاف الموسيقى فوراً
     const handleAppState = (state) => {
-      if (!audioRef.current || !audioEnabled || !canStartMusic) return;
-      if (state.isActive) {
+      if (!audioRef.current) return;
+      if (state.isActive && audioEnabled && canStartMusic) {
         audioRef.current.play().catch(() => {});
       } else {
         audioRef.current.pause();
@@ -86,46 +76,57 @@ export const AuthProvider = ({ children }) => {
     };
 
     const listener = App.addListener('appStateChange', handleAppState);
-    
+
+    // This part handles pausing/resuming when user toggles the setting
+    if (audioRef.current) {
+        if (audioEnabled && canStartMusic) {
+            audioRef.current.play().catch(e => console.log("Audio resume failed", e));
+        } else {
+            audioRef.current.pause();
+        }
+    }
+
     return () => {
       listener.then(l => l.remove());
     };
-  }, [audioEnabled, canStartMusic, loading]);
+  }, [audioEnabled, canStartMusic]);
 
   const login = async (userData, rawToken) => {
-    console.log('AuthContext login called with:', { userData, rawToken });
-    setLoading(true); // Set loading to true during login process
     const encryptedToken = CryptoJS.AES.encrypt(rawToken, SECRET_KEY).toString();
     await Preferences.set({ key: 'auth_token', value: encryptedToken });
     localStorage.setItem('user', JSON.stringify(userData));
-    console.log('User saved to localStorage:', userData);
     setUser(userData);
     setToken(rawToken);
-    setCanStartMusic(true); // تفعيل الموسيقى عند تسجيل الدخول
-    setLoading(false); // Set loading to false after login completes
-    console.log('Login completed successfully');
+
+    // --- Music Start Logic ---
+    if (audioEnabled) {
+      if (!audioRef.current) {
+        console.log("Creating and playing background music for the first time.");
+        audioRef.current = new Audio('/Music.mp3');
+        audioRef.current.loop = true;
+        audioRef.current.volume = 0.4;
+      }
+      audioRef.current.play().catch(e => console.error("Background music play failed on login:", e));
+    }
+    // --- End Music Logic ---
+
+    setCanStartMusic(true); // Signal that music is now managed
   };
 
-  const startBgMusic = () => {
-    console.log("startBgMusic called");
-    setCanStartMusic(true);
-  };
-
-  const stopBgMusic = () => {
-    setCanStartMusic(false);
+  const logout = async () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    await Preferences.remove({ key: 'auth_token' });
+    localStorage.removeItem('user');
+    setUser(null);
+    setToken(null);
+    setCanStartMusic(false); // Signal that music should stop
   };
 
   const updateUser = (userData) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
-  };
-
-  const logout = async () => {
-    await Preferences.remove({ key: 'auth_token' });
-    localStorage.removeItem('user');
-    setUser(null);
-    setToken(null);
-    setCanStartMusic(false);
   };
 
   const updateLanguage = async (lang) => {
@@ -143,6 +144,11 @@ export const AuthProvider = ({ children }) => {
     setAudioEnabled(enabled);
   };
 
+  // Deprecated - can be removed later
+  const startBgMusic = () => setCanStartMusic(true);
+  const stopBgMusic = () => setCanStartMusic(false);
+
+
   return (
     <AuthContext.Provider
       value={{
@@ -156,8 +162,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         setLanguage: updateLanguage,
         setAudio,
-        startBgMusic, // دالة لبدء موسيقى الخلفية
-        stopBgMusic  // دالة لإيقاف موسيقى الخلفية
+        startBgMusic,
+        stopBgMusic
       }}
     >
       {children}
