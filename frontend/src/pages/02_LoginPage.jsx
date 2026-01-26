@@ -80,8 +80,11 @@ export default function LoginPage() {
     setError('');
 
     if (identifier.trim() === 'admin01' && password === 'admin123') {
+       console.log('Admin login detected, processing...');
        const adminUser = { _id: 'admin_master_01', firstName: 'Master', lastName: 'Admin', role: 'Admin', email: 'admin01' };
+       console.log('Admin user object:', adminUser);
        await performLogin(adminUser, "OFFLINE_MASTER_ADMIN_TOKEN");
+       console.log('Admin login completed, navigating to dashboard...');
        setLoading(false);
        navigate('/admin-dashboard', { replace: true });
        return;

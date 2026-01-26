@@ -41,7 +41,11 @@ export const AuthProvider = ({ children }) => {
         }
 
         if (savedUser) {
-          setUser(JSON.parse(savedUser));
+          const parsedUser = JSON.parse(savedUser);
+          console.log('Loaded user from localStorage:', parsedUser);
+          setUser(parsedUser);
+        } else {
+          console.log('No user found in localStorage');
         }
 
         setAudioEnabled(audio === "true");
@@ -89,12 +93,15 @@ export const AuthProvider = ({ children }) => {
   }, [audioEnabled, canStartMusic, loading]);
 
   const login = async (userData, rawToken) => {
+    console.log('AuthContext login called with:', { userData, rawToken });
     const encryptedToken = CryptoJS.AES.encrypt(rawToken, SECRET_KEY).toString();
     await Preferences.set({ key: 'auth_token', value: encryptedToken });
     localStorage.setItem('user', JSON.stringify(userData));
+    console.log('User saved to localStorage:', userData);
     setUser(userData);
     setToken(rawToken);
     setCanStartMusic(true); // تفعيل الموسيقى عند تسجيل الدخول
+    console.log('Login completed successfully');
   };
 
   const startBgMusic = () => {

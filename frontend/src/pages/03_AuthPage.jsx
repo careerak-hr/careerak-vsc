@@ -278,14 +278,19 @@ export default function AuthPage() {
   // -----------------------
   const [isVisible, setIsVisible] = useState(false);
   const [showAgeCheck, setShowAgeCheck] = useState(true);
+  const [showGoodbyeModal, setShowGoodbyeModal] = useState(false);
   // eslint-disable-next-line no-unused-vars
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
+
+  const handleGoodbyeConfirm = () => {
+    window.location.href = '/';
+  };
 
   const handleAgeResponse = (isAbove18) => {
     if (isAbove18) {
       setShowAgeCheck(false);
     } else {
-      window.location.href = '/';
+      setShowGoodbyeModal(true);
     }
   };
 
@@ -563,6 +568,18 @@ export default function AuthPage() {
       )}
 
       {showAgeCheck && <AgeCheckModal t={t} onResponse={handleAgeResponse} />}
+
+      {showGoodbyeModal && (
+        <ConfirmationModal
+          isOpen={showGoodbyeModal}
+          onClose={() => setShowGoodbyeModal(false)}
+          onConfirm={handleGoodbyeConfirm}
+          message={t.sorryMessage}
+          confirmText={t.goodbye}
+          cancelText={null}
+          language={language}
+        />
+      )}
     </div>
   );
 }

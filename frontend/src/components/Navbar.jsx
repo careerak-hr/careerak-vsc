@@ -5,8 +5,18 @@ import navbarTranslations from '../data/navbar.json';
 export const Navbar = () => {
   const { language, logout, audioEnabled, setAudioEnabled } = useAuth();
   const [showSettings, setShowSettings] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const t = navbarTranslations[language] || navbarTranslations.ar;
+
+  // Mock notifications data
+  const notifications = [
+    { id: 1, type: 'application', message: t('new_job_application'), time: '2h ago' },
+    { id: 2, type: 'message', message: t('new_message_received'), time: '1d ago' },
+    { id: 3, type: 'system', message: t('profile_updated_successfully'), time: '3d ago' }
+  ];
 
   return (
     <>
@@ -14,6 +24,63 @@ export const Navbar = () => {
         <div className="flex items-center gap-3">
            <img src="/logo.jpg" alt="Logo" className="w-10 h-10 rounded-full border-2 border-[#1A365D]" />
            <span className="font-black text-[#1A365D] italic text-xl">Careerak</span>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          {/* Search Button */}
+          <button
+            onClick={() => setShowSearch(!showSearch)}
+            className="p-2 text-gray-600 hover:text-[#304B60] transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+
+          {/* Notifications Button */}
+          <div className="relative">
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="p-2 text-gray-600 hover:text-[#304B60] transition-colors relative"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM15 7v5h5l-5 5v-5H9V7h6z" />
+              </svg>
+              {notifications.length > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {notifications.length}
+                </span>
+              )}
+            </button>
+
+            {/* Notifications Dropdown */}
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-[#304B60]">{t('notifications')}</h3>
+                </div>
+                <div className="max-h-96 overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                      <div key={notification.id} className="p-4 border-b border-gray-100 hover:bg-gray-50">
+                        <p className="text-sm text-gray-800">{notification.message}</p>
+                        <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-4 text-center text-gray-500">
+                      {t('no_notifications')}
+                    </div>
+                  )}
+                </div>
+                <div className="p-4 border-t border-gray-200">
+                  <button className="w-full text-[#304B60] hover:text-[#1e3a4d] font-medium">
+                    {t('view_all_notifications')}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <button 
@@ -73,6 +140,39 @@ export const Navbar = () => {
                   {t.exit}
                </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* شريط البحث */}
+      {showSearch && (
+        <div className="absolute top-full left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 p-4">
+          <div className="max-w-md mx-auto">
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('search_jobs_courses_users')}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#304B60] focus:border-transparent"
+              />
+              <svg className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            {searchQuery && (
+              <div className="mt-4 space-y-2">
+                {/* Mock search results */}
+                <div className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <p className="font-medium text-[#304B60]">Software Developer</p>
+                  <p className="text-sm text-gray-600">Job posting</p>
+                </div>
+                <div className="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <p className="font-medium text-[#304B60]">React Course</p>
+                  <p className="text-sm text-gray-600">Training course</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

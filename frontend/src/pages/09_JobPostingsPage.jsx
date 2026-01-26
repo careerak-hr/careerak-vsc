@@ -4,11 +4,13 @@ import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import ReportModal from '../components/modals/ReportModal';
 
 export default function JobPostingsPage() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isVisible, setIsVisible] = useState(false);
+  const [reportModalData, setReportModalData] = useState(null);
   const navigate = useNavigate();
   const { language } = useAuth();
   const isRTL = language === 'ar';
@@ -33,19 +35,22 @@ export default function JobPostingsPage() {
       title: "الفرص المهنية المتاحة",
       sub: "اكتشف أفضل الوظائف التي تناسب مهاراتك",
       apply: "عرض التفاصيل / تقديم",
-      noJobs: "لا توجد وظائف متاحة حالياً"
+      noJobs: "لا توجد وظائف متاحة حالياً",
+      report_job: "الإبلاغ عن وظيفة"
     },
     en: {
       title: "Available Job Opportunities",
       sub: "Discover the best jobs that match your skills",
       apply: "View Details / Apply",
-      noJobs: "No jobs available currently"
+      noJobs: "No jobs available currently",
+      report_job: "Report Job"
     },
     fr: {
       title: "Opportunités d'emploi disponibles",
       sub: "Découvrez les meilleurs emplois qui correspondent à vos compétences",
       apply: "Voir les détails / Postuler",
-      noJobs: "Aucun emploi disponible actuellement"
+      noJobs: "Aucun emploi disponible actuellement",
+      report_job: "Signaler un emploi"
     }
   }[language || 'ar'];
 
@@ -71,7 +76,7 @@ export default function JobPostingsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {jobs.map(job => (
-              <div key={job._id} className="bg-[#304B60]/5 p-8 rounded-[3.5rem] shadow-xl border border-[#D48161]/10 hover:scale-[1.02] transition-all group">
+              <div key={job._id} className="bg-[#304B60]/5 p-8 rounded-[3.5rem] shadow-xl border border-[#D48161]/10 hover:scale-[1.02] transition-all">
                 <div className="flex justify-between items-start mb-6">
                   <div className={`w-14 h-14 rounded-2xl bg-[#304B60] flex items-center justify-center text-2xl shadow-inner`}>
                     🏢
@@ -81,12 +86,27 @@ export default function JobPostingsPage() {
                   </span>
                 </div>
 
-                <h3 className="text-2xl font-black text-[#304B60] mb-2">{job.title}</h3>
-                <p className="text-[#304B60]/40 font-bold mb-6">{job.companyName || 'Careerak Partner'}</p>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-[#304B60]">{job.title}</h3>
+                      <p className="text-[#304B60]/40 font-bold mb-6">{job.companyName || 'Careerak Partner'}</p>
 
-                <div className="flex gap-4 mb-8">
-                  <div className="flex items-center gap-2 text-xs font-bold text-[#304B60]/60">
-                    <span>📍</span> {job.location || 'Remote'}
+                      <div className="flex gap-4 mb-8">
+                        <div className="flex items-center gap-2 text-xs font-bold text-[#304B60]/60">
+                          <span>📍</span> {job.location || 'Remote'}
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setReportModalData({ type: 'job_post', id: job.id, name: job.title })}
+                      className="text-red-600 hover:text-red-800 p-2"
+                      title={t('report_job')}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
 
@@ -103,6 +123,14 @@ export default function JobPostingsPage() {
       </main>
 
       <Footer />
+
+      <ReportModal
+        isOpen={!!reportModalData}
+        onClose={() => setReportModalData(null)}
+        targetType={reportModalData?.type}
+        targetId={reportModalData?.id}
+        targetName={reportModalData?.name}
+      />
     </div>
   );
 }

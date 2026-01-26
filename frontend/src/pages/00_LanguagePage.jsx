@@ -104,7 +104,7 @@ export default function LanguagePage() {
 
       <div className="relative z-10 flex flex-col items-center">
         <div className="mb-8 p-1 rounded-full border-4 border-[#304B60] shadow-2xl">
-          <img src="/logo.jpg" alt="Logo" className="w-28 h-28 rounded-full object-cover" />
+          <img src="/logo.jpg" alt="Logo" className="w-42 h-42 rounded-full object-cover" />
         </div>
 
         <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm">

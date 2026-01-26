@@ -6,6 +6,7 @@ import { Footer } from '../components/Footer';
 import { Filesystem } from '@capacitor/filesystem'; // وعد: استبدال file-transfer الرسمي
 import { Directory } from '@capacitor/filesystem';
 import AlertModal from '../components/modals/AlertModal';
+import ReportModal from '../components/modals/ReportModal';
 import profilePageTranslations from '../data/profilePage.json';
 
 export default function ProfilePage() {
@@ -16,6 +17,7 @@ export default function ProfilePage() {
   const [cvGenerating, setCvGenerating] = useState(false);
   const [cvLevel, setCvLevel] = useState('intermediate');
   const [alertModal, setAlertModal] = useState({ isOpen: false, message: '' });
+  const [showReportModal, setShowReportModal] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', gender: '', birthDate: '', email: '', phone: '', country: '', city: '',
@@ -163,6 +165,14 @@ export default function ProfilePage() {
         message={alertModal.message}
         language={language}
         t={t}
+      />
+
+      <ReportModal
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        targetType="user"
+        targetId={user?.id}
+        targetName={user?.name}
       />
     </div>
   );

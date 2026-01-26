@@ -9,6 +9,21 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const { logout, user, language, token } = useAuth();
   const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
+
+  // Check if user is admin
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { replace: true });
+      return;
+    }
+    if (user.role !== 'Admin') {
+      console.log('User is not admin, redirecting to profile:', user.role);
+      navigate('/profile', { replace: true });
+      return;
+    }
+    console.log('Admin access granted for user:', user);
+  }, [user, navigate]);
+
   const [selectedPath, setSelectedPath] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState({ users: 0, jobs: 0, courses: 0, applications: 0 });

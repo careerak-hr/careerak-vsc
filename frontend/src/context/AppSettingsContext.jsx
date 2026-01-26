@@ -12,15 +12,28 @@ export const AppSettingsProvider = ({ children }) => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const lang = await Preferences.get({ key: "lang" });
-        const audio = await Preferences.get({ key: "audio_enabled" });
-        const music = await Preferences.get({ key: "musicEnabled" });
+        // Set a timeout to ensure loading doesn't take too long
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Settings load timeout')), 3000);
+        });
+
+        const settingsPromise = Promise.all([
+          Preferences.get({ key: "lang" }),
+          Preferences.get({ key: "audio_enabled" }),
+          Preferences.get({ key: "musicEnabled" })
+        ]);
+
+        const [lang, audio, music] = await Promise.race([settingsPromise, timeoutPromise]);
 
         setLanguage(lang.value || "ar");
         setAudioEnabled(audio.value === "true");
         setMusicEnabled(music.value === "true");
       } catch (error) {
-        console.warn("Preferences not available, using defaults", error);
+        console.warn("Preferences not available or timeout, using defaults", error);
+        // Use defaults and mark as loaded
+        setLanguage("ar");
+        setAudioEnabled(false);
+        setMusicEnabled(false);
       }
       setLoaded(true);
     };
