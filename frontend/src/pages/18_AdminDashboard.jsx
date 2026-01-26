@@ -7,12 +7,17 @@ import adminDashboardTranslations from '../data/adminDashboard.json';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { logout, user, language, token } = useAuth();
+  const { logout, user, language, token, loading: authLoading } = useAuth();
   const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
 
   // Check if user is admin
   useEffect(() => {
+    if (authLoading) {
+      console.log('AuthContext still loading, waiting...');
+      return; // Wait for auth to finish loading
+    }
     if (!user) {
+      console.log('No user found, redirecting to login');
       navigate('/login', { replace: true });
       return;
     }
@@ -22,7 +27,7 @@ export default function AdminDashboard() {
       return;
     }
     console.log('Admin access granted for user:', user);
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const [selectedPath, setSelectedPath] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
@@ -117,6 +122,17 @@ export default function AdminDashboard() {
   ];
 
   const handleQuickNav = () => { if (selectedPath) navigate(selectedPath); };
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#E3DAD1] flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60] mx-auto mb-4"></div>
+          <p className="text-[#304B60] font-bold">جاري التحميل...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#E3DAD1] p-6 flex flex-col items-center select-none font-sans" dir="rtl">

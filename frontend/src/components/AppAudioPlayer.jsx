@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAppSettings } from '../context/AppSettingsContext';
 import { App } from '@capacitor/app';
@@ -7,138 +7,62 @@ import { App } from '@capacitor/app';
 const AppAudioPlayer = () => {
   const { musicEnabled, audioEnabled } = useAppSettings();
   const location = useLocation();
-  const musicRef = useRef(null);
-  const introRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const musicBufferRef = useRef(null);
-  const introBufferRef = useRef(null);
-  const musicSourceRef = useRef(null);
+  const musicAudioRef = useRef(null);
+  const introAudioRef = useRef(null);
 
   const [introPlayed, setIntroPlayed] = useState(false);
-  const [audioSupported, setAudioSupported] = useState(true);
   const [audioInitialized, setAudioInitialized] = useState(false);
 
-  // تهيئة Web Audio API
-  const initAudioContext = useCallback(async () => {
+  // تهيئة الصوت عند التفاعل الأول مع المستخدم
+  const initAudio = useCallback(async () => {
+    if (audioInitialized) return;
+
     try {
-      if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      // إنشاء عناصر الصوت
+      if (!musicAudioRef.current) {
+        musicAudioRef.current = new Audio();
+        musicAudioRef.current.src = `${process.env.PUBLIC_URL}/Music.mp3`;
+        musicAudioRef.current.loop = true;
+        musicAudioRef.current.volume = 0.3;
+        musicAudioRef.current.preload = 'auto';
       }
 
-      if (audioContextRef.current.state === 'suspended') {
-        await audioContextRef.current.resume();
+      if (!introAudioRef.current) {
+        introAudioRef.current = new Audio();
+        introAudioRef.current.src = `${process.env.PUBLIC_URL}/intro.mp3`;
+        introAudioRef.current.volume = 0.7;
+        introAudioRef.current.preload = 'auto';
       }
+
+      // إضافة event listeners
+      musicAudioRef.current.addEventListener('error', (e) => {
+        console.error('Music audio error:', e);
+      });
+
+      introAudioRef.current.addEventListener('error', (e) => {
+        console.error('Intro audio error:', e);
+      });
+
+      introAudioRef.current.addEventListener('ended', () => {
+        console.log('Intro audio ended');
+      });
 
       setAudioInitialized(true);
+      console.log('Audio initialized successfully');
     } catch (error) {
-      console.warn('Web Audio API not supported:', error);
-      setAudioSupported(false);
+      console.error('Failed to initialize audio:', error);
     }
-  }, []);
+  }, [audioInitialized]);
 
-  // تحميل ملف صوتي باستخدام fetch
-  const loadAudioBuffer = async (url) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const arrayBuffer = await response.arrayBuffer();
-      return await audioContextRef.current.decodeAudioData(arrayBuffer);
-    } catch (error) {
-      console.error(`Failed to load audio from ${url}:`, error);
-      return null;
-    }
-  };
-
-  // تحميل الملفات الصوتية
-  const loadAudioFiles = useCallback(async () => {
-    if (!audioSupported || !audioInitialized) return;
-
-    try {
-      const [musicBuffer, introBuffer] = await Promise.all([
-        loadAudioBuffer(`${process.env.PUBLIC_URL}/Music.mp3`),
-        loadAudioBuffer(`${process.env.PUBLIC_URL}/intro.mp3`)
-      ]);
-
-      musicBufferRef.current = musicBuffer;
-      introBufferRef.current = introBuffer;
-
-      console.log('Audio files loaded successfully');
-    } catch (error) {
-      console.error('Failed to load audio files:', error);
-    }
-  }, [audioSupported, audioInitialized]);
-
-  // تشغيل صوت باستخدام Web Audio API
-  const playAudioBuffer = (buffer, loop = false) => {
-    if (!buffer || !audioContextRef.current) return null;
-
-    try {
-      const source = audioContextRef.current.createBufferSource();
-      source.buffer = buffer;
-      source.loop = loop;
-      source.connect(audioContextRef.current.destination);
-
-      if (loop) {
-        // إنشاء gain node للتحكم في الصوت
-        const gainNode = audioContextRef.current.createGain();
-        gainNode.gain.value = 0.3; // صوت هادئ للموسيقى
-        source.connect(gainNode);
-        gainNode.connect(audioContextRef.current.destination);
-      }
-
-      source.start();
-      return source;
-    } catch (error) {
-      console.error('Failed to play audio buffer:', error);
-      return null;
-    }
-  };
-
-  // إيقاف الموسيقى
-  const stopMusic = () => {
-    if (musicSourceRef.current) {
-      try {
-        musicSourceRef.current.stop();
-      } catch (error) {
-        // Source might already be stopped
-      }
-      musicSourceRef.current = null;
-    }
-  };
-
-  // تشغيل المقدمة
-  const playIntro = useCallback(() => {
-    if (audioEnabled && !introPlayed && introBufferRef.current) {
-      console.log('Playing intro audio...');
-      playAudioBuffer(introBufferRef.current);
-      setIntroPlayed(true);
-    }
-  }, [audioEnabled, introPlayed]);
-
-  // إدارة الموسيقى
-  const manageMusic = useCallback((shouldPlay) => {
-    if (shouldPlay && musicEnabled && musicBufferRef.current) {
-      console.log('Playing background music...');
-      stopMusic(); // إيقاف أي موسيقى سابقة
-      musicSourceRef.current = playAudioBuffer(musicBufferRef.current, true);
-    } else {
-      console.log('Stopping background music...');
-      stopMusic();
-    }
-  }, [musicEnabled]);
-
-  // تهيئة الصوت عند التفاعل الأول مع المستخدم
+  // تشغيل الصوت عند التفاعل الأول
   const handleUserInteraction = useCallback(async () => {
     if (!audioInitialized) {
-      await initAudioContext();
-      await loadAudioFiles();
+      await initAudio();
     }
-  }, [audioInitialized, initAudioContext, loadAudioFiles]);
+  }, [audioInitialized, initAudio]);
 
+  // إضافة event listeners للتفاعل الأول
   useEffect(() => {
-    // إضافة event listeners للتفاعل الأول
     const handleInteraction = () => {
       handleUserInteraction();
       // إزالة listeners بعد التفاعل الأول
@@ -158,12 +82,60 @@ const AppAudioPlayer = () => {
     };
   }, [handleUserInteraction]);
 
+  // تشغيل المقدمة
+  const playIntro = useCallback(async () => {
+    if (audioEnabled && !introPlayed && introAudioRef.current) {
+      try {
+        console.log('Playing intro audio...');
+        // إيقاف الموسيقى أولاً إذا كانت تعمل
+        if (musicAudioRef.current && !musicAudioRef.current.paused) {
+          musicAudioRef.current.pause();
+          musicAudioRef.current.currentTime = 0;
+        }
+
+        await introAudioRef.current.play();
+        setIntroPlayed(true);
+      } catch (error) {
+        console.error('Failed to play intro:', error);
+      }
+    }
+  }, [audioEnabled, introPlayed]);
+
+  // إدارة الموسيقى
+  const manageMusic = useCallback(async (shouldPlay) => {
+    if (!musicAudioRef.current) return;
+
+    try {
+      if (shouldPlay && musicEnabled) {
+        console.log('Playing background music...');
+        // التأكد من إيقاف المقدمة أولاً
+        if (introAudioRef.current && !introAudioRef.current.paused) {
+          introAudioRef.current.pause();
+          introAudioRef.current.currentTime = 0;
+        }
+
+        await musicAudioRef.current.play();
+      } else {
+        console.log('Stopping background music...');
+        musicAudioRef.current.pause();
+        musicAudioRef.current.currentTime = 0;
+      }
+    } catch (error) {
+      console.error('Failed to manage music:', error);
+    }
+  }, [musicEnabled]);
+
+  // مراقبة حالة التطبيق
   useEffect(() => {
     const handleAppStateChange = ({ isActive }) => {
+      if (!musicAudioRef.current) return;
+
       if (!isActive) {
-        manageMusic(false);
+        console.log('App going to background, pausing music');
+        musicAudioRef.current.pause();
       } else {
-        // استئناف الموسيقى عند العودة للتطبيق إذا كانت الصفحة مناسبة
+        console.log('App coming to foreground');
+        // استئناف الموسيقى إذا كانت الصفحة مناسبة
         if (location.pathname.startsWith('/login') || location.pathname.startsWith('/auth')) {
           manageMusic(true);
         }
@@ -177,6 +149,7 @@ const AppAudioPlayer = () => {
     };
   }, [location.pathname, manageMusic]);
 
+  // التحكم في الموسيقى حسب الصفحة
   useEffect(() => {
     if (location.pathname === '/entry') {
       playIntro();
@@ -188,47 +161,32 @@ const AppAudioPlayer = () => {
     }
   }, [location.pathname, playIntro, manageMusic]);
 
-  // التأكد من إيقاف/تشغيل الموسيقى عند تغيير الإعدادات
+  // التحكم في الموسيقى عند تغيير الإعدادات
   useEffect(() => {
-    if (!musicEnabled) {
-      stopMusic();
-    } else {
-      if (location.pathname.startsWith('/login') || location.pathname.startsWith('/auth')) {
-        manageMusic(true);
-      }
+    if (!musicEnabled && musicAudioRef.current) {
+      musicAudioRef.current.pause();
+      musicAudioRef.current.currentTime = 0;
+    } else if (musicEnabled && (location.pathname.startsWith('/login') || location.pathname.startsWith('/auth'))) {
+      manageMusic(true);
     }
   }, [musicEnabled, location.pathname, manageMusic]);
 
   // تنظيف عند إلغاء المكون
   useEffect(() => {
     return () => {
-      stopMusic();
-      if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-        audioContextRef.current.close();
+      if (musicAudioRef.current) {
+        musicAudioRef.current.pause();
+        musicAudioRef.current = null;
+      }
+      if (introAudioRef.current) {
+        introAudioRef.current.pause();
+        introAudioRef.current = null;
       }
     };
   }, []);
 
-  // Fallback للمتصفحات التي لا تدعم Web Audio API
-  if (!audioSupported) {
-    return (
-      <>
-        <audio
-          ref={introRef}
-          src={`${process.env.PUBLIC_URL}/intro.mp3`}
-          preload="auto"
-        />
-        <audio
-          ref={musicRef}
-          src={`${process.env.PUBLIC_URL}/Music.mp3`}
-          loop
-          preload="auto"
-        />
-      </>
-    );
-  }
-
-  return null; // لا نحتاج لعرض أي شيء، الصوت يُدار برمجياً
+  // لا نحتاج لعرض أي شيء، الصوت يُدار برمجياً
+  return null;
 };
 
 export default AppAudioPlayer;

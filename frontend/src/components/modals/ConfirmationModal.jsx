@@ -9,13 +9,15 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm, message, confirmText, c
         <p className="text-[#304B60] font-bold text-lg mb-6 leading-relaxed" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           {message}
         </p>
-        <div className="flex gap-4 w-full">
-          <button onClick={onConfirm} className="flex-1 py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg">
+        <div className={`flex gap-4 w-full ${!cancelText ? 'justify-center' : ''}`}>
+          <button onClick={onConfirm} className={`${!cancelText ? 'w-full' : 'flex-1'} py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg`}>
             {confirmText || 'Confirm'}
           </button>
-          <button onClick={onClose || (() => {})} className="flex-1 py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg">
-            {cancelText || 'Cancel'}
-          </button>
+          {cancelText && (
+            <button onClick={onClose || (() => {})} className="flex-1 py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg">
+              {cancelText}
+            </button>
+          )}
         </div>
       </div>
     </div>

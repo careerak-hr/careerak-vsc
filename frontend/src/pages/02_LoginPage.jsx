@@ -161,7 +161,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className="flex items-center gap-3 px-6 py-2">
+          <div className="flex items-center justify-center gap-3 px-6 py-2">
             <input
               type="checkbox"
               id="remember"

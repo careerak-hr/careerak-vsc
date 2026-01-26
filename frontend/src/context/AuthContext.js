@@ -94,6 +94,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData, rawToken) => {
     console.log('AuthContext login called with:', { userData, rawToken });
+    setLoading(true); // Set loading to true during login process
     const encryptedToken = CryptoJS.AES.encrypt(rawToken, SECRET_KEY).toString();
     await Preferences.set({ key: 'auth_token', value: encryptedToken });
     localStorage.setItem('user', JSON.stringify(userData));
@@ -101,6 +102,7 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
     setToken(rawToken);
     setCanStartMusic(true); // تفعيل الموسيقى عند تسجيل الدخول
+    setLoading(false); // Set loading to false after login completes
     console.log('Login completed successfully');
   };
 
