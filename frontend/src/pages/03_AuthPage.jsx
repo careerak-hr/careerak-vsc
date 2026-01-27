@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { useAuth } from '../context/AuthContext';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 // Context & Services
 import countries from '../data/countries.json';
 
 // Modals
-import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
-import CropModal from '../components/modals/CropModal';
 import PolicyModal from '../components/modals/PolicyModal';
-import ConfirmationModal from '../components/modals/ConfirmationModal';
 
 const authTranslations = {
   ar: {
@@ -279,34 +278,87 @@ const GoodbyeModal = ({ t, onConfirm }) => {
   );
 };
 
-// AI Analysis Component
-const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing }) => {
+// Photo Options Modal Component
+const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
-        <h3 className="text-xl font-black text-[#304B60] mb-4">{t.aiAnalyzing}</h3>
-        <div className="w-24 h-24 rounded-full border-4 border-[#304B60] border-t-[#D48161] animate-spin mx-auto mb-6"></div>
-        {image && (
-          <img
-            src={image}
-            alt="Analyzing"
-            className="w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4 border-[#304B60]"
-          />
-        )}
-        <div className="flex gap-4">
+        <h3 className="text-xl font-black text-[#304B60] mb-6">{t.uploadPhoto}</h3>
+        <div className="space-y-4">
           <button
-            onClick={onAccept}
-            disabled={isAnalyzing}
-            className="flex-1 bg-[#304B60] text-[#D48161] py-3 rounded-2xl font-black shadow-lg active:scale-95 transition-all disabled:opacity-50"
+            onClick={onSelectFromGallery}
+            className="w-full bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
           >
-            {t.done}
+            📷 {t.selectFromGallery}
           </button>
           <button
-            onClick={onReject}
-            disabled={isAnalyzing}
-            className="flex-1 bg-red-600 text-white py-3 rounded-2xl font-black shadow-lg active:scale-95 transition-all disabled:opacity-50"
+            onClick={onTakePhoto}
+            className="w-full bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
+          >
+            📸 {t.takePhoto}
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full bg-red-600 text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
           >
             {t.cancel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Crop Modal Component
+const CropModal = ({ t, tempImage, crop, setCrop, onCropComplete, onSave, onClose }) => {
+  const imgRef = useRef();
+  
+  const onImageLoad = useCallback((e) => {
+    const { width, height } = e.currentTarget;
+    setCrop({
+      unit: '%',
+      width: 90,
+      height: 90,
+      x: 5,
+      y: 5
+    });
+  }, [setCrop]);
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[#E3DAD1] p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-[#304B60]">
+        <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.cropTitle}</h3>
+        {tempImage && (
+          <div className="flex justify-center mb-4">
+            <ReactCrop 
+              crop={crop} 
+              onChange={c => setCrop(c)} 
+              onComplete={onCropComplete} 
+              aspect={1} 
+              circularCrop={true}
+            >
+              <img 
+                ref={imgRef} 
+                src={tempImage} 
+                onLoad={onImageLoad} 
+                alt="Crop me" 
+                style={{ maxHeight: '60vh' }}
+              />
+            </ReactCrop>
+          </div>
+        )}
+        <div className="flex gap-4">
+          <button 
+            onClick={onClose} 
+            className="flex-1 border-2 border-red-500 text-red-500 py-3 rounded-xl font-black"
+          >
+            {t.cancel}
+          </button>
+          <button 
+            onClick={onSave} 
+            className="flex-1 bg-[#304B60] text-[#D48161] py-3 rounded-xl font-black"
+          >
+            {t.done}
           </button>
         </div>
       </div>
@@ -342,6 +394,21 @@ const createCroppedImage = async (imageSrc, pixelCrop) => {
       resolve(canvas.toDataURL('image/jpeg', 0.8));
     };
   });
+};
+
+// AI Image Analysis Simulation
+const analyzeImage = async (imageData, userType) => {
+  // Simulate AI analysis delay
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  
+  // For demo purposes, randomly accept/reject images
+  // In real implementation, this would call actual AI service
+  const isValid = Math.random() > 0.3; // 70% acceptance rate
+  
+  return {
+    isValid,
+    message: isValid ? 'Image accepted' : 'Invalid image for selected user type'
+  };
 };
 
 // Main Component
@@ -390,8 +457,7 @@ export default function AuthPage() {
   // Image States
   const [profileImage, setProfileImage] = useState(null);
   const [tempImage, setTempImage] = useState(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [crop, setCrop] = useState({ unit: '%', width: 90, height: 90, x: 5, y: 5 });
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
@@ -399,8 +465,6 @@ export default function AuthPage() {
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [showCropModal, setShowCropModal] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
-  const [showConfirmPopup, setShowConfirmPopup] = useState(false);
-  const [showAIAnalysis, setShowAIAnalysis] = useState(false);
 
   useEffect(() => setIsVisible(true), []);
 
@@ -425,8 +489,7 @@ export default function AuthPage() {
   const handleUserTypeChange = (type) => {
     setUserType(type);
     setProfileImage(null);
-    setFormData(prev => ({
-      ...prev,
+    setFormData({
       firstName: '',
       lastName: '',
       companyName: '',
@@ -450,7 +513,7 @@ export default function AuthPage() {
       authorizedPosition: '',
       companyKeywords: '',
       agreed: false
-    }));
+    });
     setFieldErrors({});
   };
 
@@ -475,31 +538,32 @@ export default function AuthPage() {
   }, []);
 
   const handleCropSave = async () => {
-    const cropped = await createCroppedImage(tempImage, croppedAreaPixels);
-    setTempImage(null);
-    setShowCropModal(false);
-    setShowAIAnalysis(true);
+    if (!croppedAreaPixels) return;
+    
     setIsAnalyzing(true);
-
+    const croppedImage = await createCroppedImage(tempImage, croppedAreaPixels);
+    
     // Simulate AI analysis
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      // For demo purposes, always accept the image
-      // In real app, implement actual AI analysis
-      setProfileImage(cropped);
-      setShowAIAnalysis(false);
-    }, 2000);
-  };
-
-  const handleAIAccept = () => {
-    setProfileImage(tempImage);
-    setShowAIAnalysis(false);
-  };
-
-  const handleAIReject = () => {
-    setTempImage(null);
-    setShowAIAnalysis(false);
-    setFieldErrors(prev => ({ ...prev, image: t.invalidImage }));
+    const analysisResult = await analyzeImage(croppedImage, userType);
+    
+    setIsAnalyzing(false);
+    setShowCropModal(false);
+    
+    if (analysisResult.isValid) {
+      setProfileImage(croppedImage);
+      setTempImage(null);
+      if (fieldErrors.image) {
+        setFieldErrors(prev => ({ ...prev, image: '' }));
+      }
+    } else {
+      setTempImage(null);
+      setFieldErrors(prev => ({ 
+        ...prev, 
+        image: userType === 'individual' 
+          ? 'إن الصورة التي تم رفعها ليست صورة شخصية' 
+          : 'إن الصورة التي تم رفعها ليست لوجو'
+      }));
+    }
   };
 
   const validateForm = () => {
@@ -523,11 +587,15 @@ export default function AuthPage() {
       // Email is required unless illiterate or uneducated
       if (formData.education !== 'illiterate' && formData.education !== 'uneducated') {
         if (!formData.email.trim()) errors.email = 'البريد الإلكتروني مطلوب';
+        else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'البريد الإلكتروني غير صحيح';
       }
 
       if (!formData.password) errors.password = 'كلمة المرور مطلوبة';
+      else if (formData.password.length < 6) errors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+      
       if (!formData.confirmPassword) errors.confirmPassword = 'تأكيد كلمة المرور مطلوب';
-      if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'كلمات المرور غير متطابقة';
+      else if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'كلمات المرور غير متطابقة';
+      
       if (formData.isSpecialNeeds && !formData.specialNeedType) errors.specialNeedType = 'نوع الاحتياج مطلوب';
     } else if (userType === 'company') {
       if (!formData.companyName.trim()) errors.companyName = 'اسم المنشأة مطلوب';
@@ -541,9 +609,13 @@ export default function AuthPage() {
       if (!formData.countryCode) errors.countryCode = 'كود البلد مطلوب';
       if (!formData.phone.trim()) errors.phone = 'رقم الهاتف مطلوب';
       if (!formData.email.trim()) errors.email = 'البريد الإلكتروني مطلوب';
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'البريد الإلكتروني غير صحيح';
+      
       if (!formData.password) errors.password = 'كلمة المرور مطلوبة';
+      else if (formData.password.length < 6) errors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+      
       if (!formData.confirmPassword) errors.confirmPassword = 'تأكيد كلمة المرور مطلوب';
-      if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'كلمات المرور غير متطابقة';
+      else if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'كلمات المرور غير متطابقة';
     }
 
     if (!formData.agreed) errors.agreed = 'يجب الموافقة على سياسة الخصوصية';
@@ -552,17 +624,14 @@ export default function AuthPage() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleRegisterClick = (e) => {
+  const handleRegisterClick = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setShowConfirmPopup(true);
+      // Registration logic here
+      console.log('Registering user:', { userType, formData, profileImage });
+      // Navigate to appropriate page based on user type
+      alert('تم التسجيل بنجاح!');
     }
-  };
-
-  const handleFinalRegister = async () => {
-    // Registration logic here
-    console.log('Registering user:', { userType, formData, profileImage });
-    // Navigate to appropriate page based on user type
   };
 
   if (showAgeCheck) {
@@ -573,8 +642,8 @@ export default function AuthPage() {
     return <GoodbyeModal t={t} onConfirm={handleGoodbyeConfirm} />;
   }
 
-  const inputBase = 'w-full p-4 bg-[#F5F5F5] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] placeholder-gray-400 transition-all';
-  const selectBase = 'w-full p-4 bg-[#F5F5F5] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all';
+  const inputBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] placeholder-gray-400 transition-all`;
+  const selectBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all`;
 
   return (
     <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -594,7 +663,7 @@ export default function AuthPage() {
             className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
               userType === 'individual'
                 ? 'bg-[#304B60] text-[#D48161]'
-                : 'bg-[#F5F5F5] text-[#304B60] border-2 border-[#D48161]/20'
+                : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
             }`}
           >
             {t.individuals}
@@ -604,7 +673,7 @@ export default function AuthPage() {
             className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
               userType === 'company'
                 ? 'bg-[#304B60] text-[#D48161]'
-                : 'bg-[#F5F5F5] text-[#304B60] border-2 border-[#D48161]/20'
+                : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
             }`}
           >
             {t.companies}
@@ -618,7 +687,7 @@ export default function AuthPage() {
             <div className="text-center">
               <div
                 onClick={() => setShowPhotoModal(true)}
-                className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#F5F5F5]"
+                className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#E3DAD1] shadow-lg"
               >
                 {profileImage ? (
                   <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
@@ -638,10 +707,10 @@ export default function AuthPage() {
                 onChange={handleInputChange}
                 className={selectBase}
               >
-                <option value="">{t.country}</option>
+                <option value="" className="text-gray-400">{t.country}</option>
                 {countries.map(c => (
-                  <option key={c.name} value={c.name}>
-                    {c.flag} {c.name}
+                  <option key={c.key} value={c.key} className="text-[#304B60]">
+                    {c.flag} {language === 'ar' ? c.name_ar : c.name_en}
                   </option>
                 ))}
               </select>
@@ -688,10 +757,10 @@ export default function AuthPage() {
                     onChange={handleInputChange}
                     className={selectBase}
                   >
-                    <option value="">{t.gender}</option>
-                    <option value="male">{t.male}</option>
-                    <option value="female">{t.female}</option>
-                    <option value="preferNot">{t.preferNot}</option>
+                    <option value="" className="text-gray-400">{t.gender}</option>
+                    <option value="male" className="text-[#304B60]">{t.male}</option>
+                    <option value="female" className="text-[#304B60]">{t.female}</option>
+                    <option value="preferNot" className="text-[#304B60]">{t.preferNot}</option>
                   </select>
                   <input
                     type="date"
@@ -711,15 +780,15 @@ export default function AuthPage() {
                     onChange={handleInputChange}
                     className={selectBase}
                   >
-                    <option value="">{t.educationLevel}</option>
-                    <option value="phd">{t.phd}</option>
-                    <option value="masters">{t.masters}</option>
-                    <option value="bachelors">{t.bachelors}</option>
-                    <option value="highSchool">{t.highSchool}</option>
-                    <option value="middleSchool">{t.middleSchool}</option>
-                    <option value="elementary">{t.elementary}</option>
-                    <option value="illiterate">{t.illiterate}</option>
-                    <option value="uneducated">{t.uneducated}</option>
+                    <option value="" className="text-gray-400">{t.educationLevel}</option>
+                    <option value="phd" className="text-[#304B60]">{t.phd}</option>
+                    <option value="masters" className="text-[#304B60]">{t.masters}</option>
+                    <option value="bachelors" className="text-[#304B60]">{t.bachelors}</option>
+                    <option value="highSchool" className="text-[#304B60]">{t.highSchool}</option>
+                    <option value="middleSchool" className="text-[#304B60]">{t.middleSchool}</option>
+                    <option value="elementary" className="text-[#304B60]">{t.elementary}</option>
+                    <option value="illiterate" className="text-[#304B60]">{t.illiterate}</option>
+                    <option value="uneducated" className="text-[#304B60]">{t.uneducated}</option>
                   </select>
                   <input
                     type="text"
@@ -736,10 +805,10 @@ export default function AuthPage() {
                 <input
                   type="text"
                   name="interests"
-                  placeholder={t.interests}
+                  placeholder={t.keywords}
                   value={formData.interests}
                   onChange={handleInputChange}
-                  className={`${inputBase} h-20`}
+                  className={inputBase}
                 />
                 {fieldErrors.interests && <p className="text-red-600 font-bold text-sm">{fieldErrors.interests}</p>}
 
@@ -750,9 +819,9 @@ export default function AuthPage() {
                     onChange={handleInputChange}
                     className={`${selectBase} text-sm`}
                   >
-                    <option value="">{t.countryCode}</option>
+                    <option value="" className="text-gray-400">{t.countryCode}</option>
                     {countries.map(c => (
-                      <option key={c.code} value={c.code}>
+                      <option key={c.code} value={c.code} className="text-[#304B60]">
                         {c.flag} {c.code}
                       </option>
                     ))}
@@ -770,16 +839,18 @@ export default function AuthPage() {
                 {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
 
                 {(formData.education !== 'illiterate' && formData.education !== 'uneducated') && (
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder={t.email}
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
+                  <>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder={t.email}
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={inputBase}
+                    />
+                    {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
+                  </>
                 )}
-                {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
 
                 <div className="relative">
                   <input
@@ -819,13 +890,13 @@ export default function AuthPage() {
                 </div>
                 {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
 
-                <div className="flex items-center gap-3">
+                <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
                   <input
                     type="checkbox"
                     id="specialNeeds"
                     checked={formData.isSpecialNeeds}
                     onChange={(e) => setFormData(prev => ({ ...prev, isSpecialNeeds: e.target.checked }))}
-                    className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#F5F5F5]"
+                    className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
                   />
                   <label htmlFor="specialNeeds" className="text-sm font-bold text-[#304B60]/80 cursor-pointer">
                     {t.disabilities}
@@ -833,20 +904,22 @@ export default function AuthPage() {
                 </div>
 
                 {formData.isSpecialNeeds && (
-                  <select
-                    name="specialNeedType"
-                    value={formData.specialNeedType}
-                    onChange={handleInputChange}
-                    className={selectBase}
-                  >
-                    <option value="">{t.disabilityType}</option>
-                    <option value="visual">{t.visual}</option>
-                    <option value="hearing">{t.hearing}</option>
-                    <option value="speech">{t.speech}</option>
-                    <option value="mobility">{t.mobility}</option>
-                  </select>
+                  <>
+                    <select
+                      name="specialNeedType"
+                      value={formData.specialNeedType}
+                      onChange={handleInputChange}
+                      className={selectBase}
+                    >
+                      <option value="" className="text-gray-400">{t.disabilityType}</option>
+                      <option value="visual" className="text-[#304B60]">{t.visual}</option>
+                      <option value="hearing" className="text-[#304B60]">{t.hearing}</option>
+                      <option value="speech" className="text-[#304B60]">{t.speech}</option>
+                      <option value="mobility" className="text-[#304B60]">{t.mobility}</option>
+                    </select>
+                    {fieldErrors.specialNeedType && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialNeedType}</p>}
+                  </>
                 )}
-                {fieldErrors.specialNeedType && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialNeedType}</p>}
               </>
             ) : (
               <>
@@ -868,15 +941,15 @@ export default function AuthPage() {
                     onChange={handleInputChange}
                     className={selectBase}
                   >
-                    <option value="">{t.industry}</option>
-                    <option value="industrial">{t.industrial}</option>
-                    <option value="commercial">{t.commercial}</option>
-                    <option value="service">{t.service}</option>
-                    <option value="educational">{t.educational}</option>
-                    <option value="governmental">{t.governmental}</option>
-                    <option value="office">{t.office}</option>
-                    <option value="shop">{t.shop}</option>
-                    <option value="workshop">{t.workshop}</option>
+                    <option value="" className="text-gray-400">{t.industry}</option>
+                    <option value="industrial" className="text-[#304B60]">{t.industrial}</option>
+                    <option value="commercial" className="text-[#304B60]">{t.commercial}</option>
+                    <option value="service" className="text-[#304B60]">{t.service}</option>
+                    <option value="educational" className="text-[#304B60]">{t.educational}</option>
+                    <option value="governmental" className="text-[#304B60]">{t.governmental}</option>
+                    <option value="office" className="text-[#304B60]">{t.office}</option>
+                    <option value="shop" className="text-[#304B60]">{t.shop}</option>
+                    <option value="workshop" className="text-[#304B60]">{t.workshop}</option>
                   </select>
                   <input
                     type="text"
@@ -917,7 +990,7 @@ export default function AuthPage() {
                   placeholder={t.companyKeywords}
                   value={formData.companyKeywords}
                   onChange={handleInputChange}
-                  className={`${inputBase} h-20`}
+                  className={inputBase}
                 />
                 {fieldErrors.companyKeywords && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyKeywords}</p>}
 
@@ -928,9 +1001,9 @@ export default function AuthPage() {
                     onChange={handleInputChange}
                     className={`${selectBase} text-sm`}
                   >
-                    <option value="">{t.countryCode}</option>
+                    <option value="" className="text-gray-400">{t.countryCode}</option>
                     {countries.map(c => (
-                      <option key={c.code} value={c.code}>
+                      <option key={c.code} value={c.code} className="text-[#304B60]">
                         {c.flag} {c.code}
                       </option>
                     ))}
@@ -959,7 +1032,7 @@ export default function AuthPage() {
 
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     placeholder={t.password}
                     value={formData.password}
@@ -978,7 +1051,7 @@ export default function AuthPage() {
 
                 <div className="relative">
                   <input
-                    type="password"
+                    type={showConfirmPassword ? "text" : "password"}
                     name="confirmPassword"
                     placeholder={t.confirmPassword}
                     value={formData.confirmPassword}
@@ -998,13 +1071,13 @@ export default function AuthPage() {
             )}
 
             {/* Privacy Policy Agreement */}
-            <div className="flex items-center gap-3">
+            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
               <input
                 type="checkbox"
                 id="agreePolicy"
                 checked={formData.agreed}
                 onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
-                className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#F5F5F5]"
+                className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
               />
               <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80 cursor-pointer">
                 {t.agreePolicy}
@@ -1040,24 +1113,12 @@ export default function AuthPage() {
         {showCropModal && (
           <CropModal
             t={t}
-            image={tempImage}
+            tempImage={tempImage}
             crop={crop}
-            zoom={zoom}
             setCrop={setCrop}
-            setZoom={setZoom}
             onCropComplete={onCropComplete}
             onSave={handleCropSave}
             onClose={() => setShowCropModal(false)}
-          />
-        )}
-
-        {showAIAnalysis && (
-          <AIAnalysisModal
-            t={t}
-            image={tempImage}
-            onAccept={handleAIAccept}
-            onReject={handleAIReject}
-            isAnalyzing={isAnalyzing}
           />
         )}
 
@@ -1071,18 +1132,16 @@ export default function AuthPage() {
           />
         )}
 
-        {showConfirmPopup && (
-          <ConfirmationModal
-            isOpen={showConfirmPopup}
-            onClose={() => setShowConfirmPopup(false)}
-            onConfirm={handleFinalRegister}
-            message={t.confirmData}
-            confirmText={t.yes}
-            cancelText={t.no}
-            language={language}
-          />
+        {isAnalyzing && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
+              <h3 className="text-xl font-black text-[#304B60] mb-4">{t.aiAnalyzing}</h3>
+              <div className="w-24 h-24 rounded-full border-4 border-[#304B60] border-t-[#D48161] animate-spin mx-auto mb-6"></div>
+            </div>
+          </div>
         )}
       </div>
     </div>
   );
 }
+
