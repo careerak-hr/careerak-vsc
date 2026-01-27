@@ -24,16 +24,18 @@ export default function LanguagePage() {
 
         // التحقق من إتمام الإعداد الأولي
         const onboardingComplete = localStorage.getItem('onboardingComplete');
+        const hasLanguage = localStorage.getItem('lang');
         console.log("📦 Onboarding status:", onboardingComplete);
+        console.log("📦 Language status:", hasLanguage);
 
-        if (onboardingComplete === 'true') {
+        // إذا لم يكن هناك لغة محفوظة، اعرض صفحة اللغات
+        if (!hasLanguage || onboardingComplete !== 'true') {
+          console.log("🆕 First time user or no language set, showing language selection");
+          setLoading(false);
+        } else {
           // المستخدم أكمل الإعداد من قبل، انتقل للصفحة الرئيسية
           console.log("✅ User already completed onboarding, redirecting to entry");
           navigate('/entry', { replace: true });
-        } else {
-          // أول مرة، اعرض صفحة اختيار اللغة
-          console.log("🆕 First time user, showing language selection");
-          setLoading(false);
         }
 
       } catch (err) {

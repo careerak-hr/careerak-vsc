@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
+import { App } from '@capacitor/app';
 import { useAuth } from '../context/AuthContext';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
@@ -238,8 +239,8 @@ const authTranslations = {
 // Age Check Modal Component
 const AgeCheckModal = ({ t, onResponse }) => {
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-[#304B60]">
         <h2 className="text-2xl font-black text-[#304B60] mb-6">{t.ageCheckTitle}</h2>
         <p className="text-lg font-bold text-[#304B60]/80 mb-8">{t.ageCheckMessage}</p>
         <div className="flex gap-4">
@@ -251,7 +252,7 @@ const AgeCheckModal = ({ t, onResponse }) => {
           </button>
           <button
             onClick={() => onResponse(false)}
-            className="flex-1 bg-red-600 text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
+            className="flex-1 bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
           >
             {t.below18}
           </button>
@@ -264,8 +265,8 @@ const AgeCheckModal = ({ t, onResponse }) => {
 // Goodbye Modal Component
 const GoodbyeModal = ({ t, onConfirm }) => {
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-[#304B60]">
         <p className="text-lg font-bold text-[#304B60]/80 mb-8">{t.sorryMessage}</p>
         <button
           onClick={onConfirm}
@@ -477,7 +478,7 @@ export default function AuthPage() {
   };
 
   const handleGoodbyeConfirm = () => {
-    window.location.href = '/';
+    App.exitApp();
   };
 
   const handleInputChange = (e) => {

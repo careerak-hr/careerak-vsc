@@ -48,7 +48,11 @@ export default function EntryPage() {
       setTimeout(() => { if (isMounted.current) setPhase(2); }, SYSTEM_DELAY + 1500),
       setTimeout(() => { if (isMounted.current) setPhase(3); }, SYSTEM_DELAY + 7000),
       setTimeout(() => {
-        if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+        if (audioRef.current) { 
+          audioRef.current.pause(); 
+          audioRef.current.currentTime = 0;
+          audioRef.current = null; 
+        }
         if (isMounted.current) navigate('/login', { replace: true });
       }, SYSTEM_DELAY + 9000)
     ];
@@ -64,11 +68,26 @@ export default function EntryPage() {
     };
     const listener = App.addListener('appStateChange', handleAppState);
 
+    // إضافة مستمع للخروج من التطبيق
+    const backButtonListener = App.addListener('backButton', () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+      }
+      App.exitApp();
+    });
+
     return () => {
       isMounted.current = false;
       timers.forEach(clearTimeout);
-      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      if (audioRef.current) { 
+        audioRef.current.pause(); 
+        audioRef.current.currentTime = 0;
+        audioRef.current = null; 
+      }
       listener.then(l => l.remove());
+      backButtonListener.then(l => l.remove());
     };
   }, [navigate, audioEnabled]);
 

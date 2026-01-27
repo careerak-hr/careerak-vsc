@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { App } from '@capacitor/app';
@@ -50,13 +50,23 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const musicRef = useRef(null);
   
   useEffect(() => {
     // Set audio consent on component mount
     localStorage.setItem('audioConsent', 'true');
     
     setIsVisible(true);
-    startBgMusic();
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && !musicRef.current) {
+      console.log("Playing Music.mp3 on login page");
+      musicRef.current = new Audio('/Music.mp3');
+      musicRef.current.loop = true;
+      musicRef.current.volume = 0.4;
+      musicRef.current.play().catch((e) => console.log("Background music play failed:", e));
+    }
 
     const loadRememberedData = async () => {
       const savedId = localStorage.getItem('remembered_user');
@@ -68,13 +78,35 @@ export default function LoginPage() {
     loadRememberedData();
 
     const backButtonListener = App.addListener('backButton', () => {
+      if (musicRef.current) {
+        musicRef.current.pause();
+        musicRef.current.currentTime = 0;
+        musicRef.current = null;
+      }
       App.exitApp();
     });
 
-    return () => {
-      backButtonListener.then(l => l.remove());
+    const handleAppState = (state) => {
+      if (musicRef.current) {
+        if (state.isActive && audioEnabled) {
+          musicRef.current.play().catch(() => {});
+        } else {
+          musicRef.current.pause();
+        }
+      }
     };
-  }, [startBgMusic]);
+    const appStateListener = App.addListener('appStateChange', handleAppState);
+
+    return () => {
+      if (musicRef.current) {
+        musicRef.current.pause();
+        musicRef.current.currentTime = 0;
+        musicRef.current = null;
+      }
+      backButtonListener.then(l => l.remove());
+      appStateListener.then(l => l.remove());
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
@@ -85,6 +117,14 @@ export default function LoginPage() {
       // Admin login check
       if (identifier.trim() === 'admin01' && password === 'admin123') {
          console.log('Admin login detected, processing...');
+         
+         // إيقاف موسيقى صفحة تسجيل الدخول قبل الانتقال
+         if (musicRef.current) {
+           musicRef.current.pause();
+           musicRef.current.currentTime = 0;
+           musicRef.current = null;
+         }
+         
          const adminUser = { _id: 'admin_master_01', firstName: 'Master', lastName: 'Admin', role: 'Admin', email: 'admin01' };
          console.log('Admin user object:', adminUser);
          await performLogin(adminUser, "OFFLINE_MASTER_ADMIN_TOKEN");
@@ -103,6 +143,14 @@ export default function LoginPage() {
       
       // Navigate based on user role
       const user = response.data.user;
+      
+      // إيقاف موسيقى صفحة تسجيل الدخول قبل الانتقال
+      if (musicRef.current) {
+        musicRef.current.pause();
+        musicRef.current.currentTime = 0;
+        musicRef.current = null;
+      }
+      
       if (user.role === 'Admin') navigate('/admin-dashboard');
       else if (user.role === 'HR') navigate(user.bio ? '/profile' : '/onboarding-companies');
       else navigate(user.bio ? '/profile' : '/onboarding-individuals');

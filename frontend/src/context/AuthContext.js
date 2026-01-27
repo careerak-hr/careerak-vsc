@@ -111,12 +111,16 @@ export const AuthProvider = ({ children }) => {
 
     // --- Music Start Logic ---
     if (audioEnabled) {
-      if (!audioRef.current) {
-        console.log("Creating and playing background music for the first time.");
-        audioRef.current = new Audio('/Music.mp3');
-        audioRef.current.loop = true;
-        audioRef.current.volume = 0.4;
+      // إيقاف أي موسيقى موجودة أولاً
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
       }
+      
+      console.log("Creating and playing background music for the first time.");
+      audioRef.current = new Audio('/Music.mp3');
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.4;
       audioRef.current.play().catch(e => console.error("Background music play failed on login:", e));
     }
     // --- End Music Logic ---
