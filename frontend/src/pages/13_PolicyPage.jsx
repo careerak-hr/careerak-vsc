@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function PolicyPage() {
+  const { startBgMusic } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => { 
+    setIsVisible(true); 
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+  }, [startBgMusic]);
 
   return (
     <div className={`min-h-screen bg-[#E3DAD1] p-6 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir="rtl">

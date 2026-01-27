@@ -6,10 +6,18 @@ import { Footer } from '../components/Footer';
 
 export default function InterfaceShops() {
   const navigate = useNavigate();
-  const { language, user } = useAuth();
+  const { language, user, startBgMusic } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => { 
+    setIsVisible(true); 
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+  }, [startBgMusic]);
 
   const t = {
     ar: {

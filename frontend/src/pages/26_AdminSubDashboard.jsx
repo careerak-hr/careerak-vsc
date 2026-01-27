@@ -5,15 +5,22 @@ import api from '../services/api';
 
 export default function AdminSubDashboard() {
   const navigate = useNavigate();
-  const { user, language, token } = useAuth();
+  const { user, language, token, startBgMusic } = useAuth();
   const [permissions, setPermissions] = useState({});
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     loadPermissions();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [startBgMusic]);
 
   const loadPermissions = async () => {
     try {

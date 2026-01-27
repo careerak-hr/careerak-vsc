@@ -5,7 +5,7 @@ import userService from '../services/userService';
 
 export default function OnboardingVisual() {
   const navigate = useNavigate();
-  const { language, updateUser } = useAuth();
+  const { language, updateUser, startBgMusic } = useAuth();
   const [step, setStep] = useState(0);
   const [isListening, setIsListening] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -84,6 +84,13 @@ export default function OnboardingVisual() {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
@@ -94,7 +101,7 @@ export default function OnboardingVisual() {
     }
     speak(t.welcome);
     setTimeout(() => speak(t.steps[0].prompt), 6000);
-  }, [language, processInput, speak, t.error, t.steps, t.welcome]);
+  }, [language, processInput, speak, t.error, t.steps, t.welcome, startBgMusic]);
 
   const handleScreenTap = () => {
     if (isListening) return;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { App } from '@capacitor/app';
 import { useAuth } from '../context/AuthContext';
+import { useTranslate } from '../hooks/useTranslate';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 
@@ -10,231 +11,6 @@ import countries from '../data/countries.json';
 
 // Modals
 import PolicyModal from '../components/modals/PolicyModal';
-
-const authTranslations = {
-  ar: {
-    firstName: 'الاسم الأول',
-    lastName: 'الاسم الأخير',
-    email: 'البريد الإلكتروني',
-    password: 'كلمة المرور',
-    confirmPassword: 'تأكيد كلمة المرور',
-    phone: 'رقم الهاتف',
-    country: 'البلد',
-    city: 'المدينة',
-    interests: 'الاهتمامات',
-    birthDate: 'تاريخ الميلاد',
-    register: 'تسجيل',
-    confirmData: 'هل أنت متأكد من البيانات المدخلة؟',
-    yes: 'نعم',
-    no: 'لا',
-    ageError: 'يجب أن يكون عمرك 18 سنة على الأقل',
-    above18: 'عمري فوق 18',
-    below18: 'عمري تحت 18',
-    ageCheckTitle: 'التحقق من العمر',
-    ageCheckMessage: 'هل عمرك فوق 18 سنة؟',
-    sorryMessage: 'عذراً، نأسف لعدم إمكانية استخدامك لتطبيق كاريرك بسبب سياسة التطبيق',
-    goodbye: 'حسناً، وداعاً',
-    individuals: 'أفراد',
-    companies: 'شركات',
-    uploadPhoto: 'رفع الصورة',
-    gender: 'الجنس',
-    male: 'ذكر',
-    female: 'أنثى',
-    preferNot: 'أرغب عدم التحديد',
-    educationLevel: 'المستوى العلمي',
-    phd: 'دكتوراة',
-    masters: 'ماجستير',
-    bachelors: 'بكالوريوس',
-    highSchool: 'ثانوية',
-    middleSchool: 'متوسطة / إعدادية',
-    elementary: 'ابتدائية / أساسية',
-    illiterate: 'غير متعلم / أقرأ وأكتب',
-    uneducated: 'أمّي / لا أقرأ ولا أكتب',
-    specialization: 'التخصص',
-    keywords: 'الكلمات المفتاحية',
-    countryCode: 'كود البلد',
-    mobile: 'رقم الجوال',
-    disabilities: 'هل أنت من ذوي الهمم؟',
-    disabilityType: 'نوع الاحتياج',
-    visual: 'بصري',
-    hearing: 'سمعي',
-    speech: 'نطقي',
-    mobility: 'حركي',
-    agreePolicy: 'أوافق على سياسة الخصوصية',
-    companyName: 'اسم المنشأة',
-    industry: 'مجال عمل الشركة',
-    industrial: 'شركة صناعية',
-    commercial: 'شركة تجارية',
-    service: 'شركة خدمية',
-    educational: 'مؤسسة تعليمية / أكاديمية',
-    governmental: 'مؤسسة حكومية',
-    office: 'مكتب',
-    shop: 'محل',
-    workshop: 'ورشة',
-    authorizedName: 'اسم الشخص المفوض',
-    authorizedPosition: 'وظيفة الشخص المفوض',
-    companyKeywords: 'كلمات مفتاحية عن الشركة',
-    invalidImage: 'الصورة غير صالحة. يرجى رفع صورة شخصية للأفراد أو لوجو للشركات.',
-    gallery: 'المعرض',
-    camera: 'الكاميرا',
-    crop: 'قص',
-    done: 'تم',
-    cancel: 'إلغاء',
-    selectFromGallery: 'اختر من المعرض',
-    takePhoto: 'التقط صورة',
-    cropTitle: 'قص الصورة',
-    preview: 'معاينة:',
-    aiAnalyzing: 'تحليل بالذكاء الاصطناعي...'
-  },
-  en: {
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    email: 'Email',
-    password: 'Password',
-    confirmPassword: 'Confirm Password',
-    phone: 'Phone Number',
-    country: 'Country',
-    city: 'City',
-    interests: 'Interests',
-    birthDate: 'Birth Date',
-    register: 'Register',
-    confirmData: 'Are you sure about the entered data?',
-    yes: 'Yes',
-    no: 'No',
-    ageError: 'You must be at least 18 years old',
-    above18: 'I am above 18',
-    below18: 'I am below 18',
-    ageCheckTitle: 'Age Verification',
-    ageCheckMessage: 'Are you above 18 years old?',
-    sorryMessage: 'Sorry, we regret that you cannot use Careerak app due to our policy',
-    goodbye: 'Okay, goodbye',
-    individuals: 'Individuals',
-    companies: 'Companies',
-    uploadPhoto: 'Upload Photo',
-    gender: 'Gender',
-    male: 'Male',
-    female: 'Female',
-    preferNot: 'Prefer not to say',
-    educationLevel: 'Education Level',
-    phd: 'PhD',
-    masters: 'Masters',
-    bachelors: 'Bachelors',
-    highSchool: 'High School',
-    middleSchool: 'Middle School',
-    elementary: 'Elementary',
-    illiterate: 'Illiterate / Can read and write',
-    uneducated: 'Uneducated / Cannot read or write',
-    specialization: 'Specialization',
-    keywords: 'Keywords',
-    countryCode: 'Country Code',
-    mobile: 'Mobile Number',
-    disabilities: 'Do you have disabilities?',
-    disabilityType: 'Disability Type',
-    visual: 'Visual',
-    hearing: 'Hearing',
-    speech: 'Speech',
-    mobility: 'Mobility',
-    agreePolicy: 'I agree to the privacy policy',
-    companyName: 'Company Name',
-    industry: 'Company Industry',
-    industrial: 'Industrial Company',
-    commercial: 'Commercial Company',
-    service: 'Service Company',
-    educational: 'Educational Institution',
-    governmental: 'Governmental Institution',
-    office: 'Office',
-    shop: 'Shop',
-    workshop: 'Workshop',
-    authorizedName: 'Authorized Person Name',
-    authorizedPosition: 'Authorized Person Position',
-    companyKeywords: 'Company Keywords',
-    invalidImage: 'Invalid image. Please upload a personal photo for individuals or a logo for companies.',
-    gallery: 'Gallery',
-    camera: 'Camera',
-    crop: 'Crop',
-    done: 'Done',
-    cancel: 'Cancel',
-    selectFromGallery: 'Select from Gallery',
-    takePhoto: 'Take Photo',
-    cropTitle: 'Crop Image',
-    preview: 'Preview:',
-    aiAnalyzing: 'AI Analyzing...'
-  },
-  fr: {
-    firstName: 'Prénom',
-    lastName: 'Nom de famille',
-    email: 'Email',
-    password: 'Mot de passe',
-    confirmPassword: 'Confirmer le mot de passe',
-    phone: 'Numéro de téléphone',
-    country: 'Pays',
-    city: 'Ville',
-    interests: 'Intérêts',
-    birthDate: 'Date de naissance',
-    register: 'S\'inscrire',
-    confirmData: 'Êtes-vous sûr des données saisies ?',
-    yes: 'Oui',
-    no: 'Non',
-    ageError: 'Vous devez avoir au moins 18 ans',
-    above18: 'J\'ai plus de 18 ans',
-    below18: 'J\'ai moins de 18 ans',
-    ageCheckTitle: 'Vérification de l\'âge',
-    ageCheckMessage: 'Avez-vous plus de 18 ans ?',
-    sorryMessage: 'Désolé, nous regrettons que vous ne puissiez pas utiliser l\'application Careerak en raison de notre politique',
-    goodbye: 'D\'accord, au revoir',
-    individuals: 'Individus',
-    companies: 'Entreprises',
-    uploadPhoto: 'Télécharger une photo',
-    gender: 'Genre',
-    male: 'Homme',
-    female: 'Femme',
-    preferNot: 'Préfère ne pas dire',
-    educationLevel: 'Niveau d\'éducation',
-    phd: 'Doctorat',
-    masters: 'Maîtrise',
-    bachelors: 'Licence',
-    highSchool: 'Lycée',
-    middleSchool: 'Collège',
-    elementary: 'École primaire',
-    illiterate: 'Analphabète / Sait lire et écrire',
-    uneducated: 'Analphabète / Ne sait ni lire ni écrire',
-    specialization: 'Spécialisation',
-    keywords: 'Mots-clés',
-    countryCode: 'Code pays',
-    mobile: 'Numéro de portable',
-    disabilities: 'Avez-vous des handicaps ?',
-    disabilityType: 'Type de handicap',
-    visual: 'Visuel',
-    hearing: 'Auditif',
-    speech: 'Parole',
-    mobility: 'Mobilité',
-    agreePolicy: 'J\'accepte la politique de confidentialité',
-    companyName: 'Nom de l\'établissement',
-    industry: 'Secteur d\'activité de l\'entreprise',
-    industrial: 'Entreprise industrielle',
-    commercial: 'Entreprise commerciale',
-    service: 'Entreprise de services',
-    educational: 'Institution éducative',
-    governmental: 'Institution gouvernementale',
-    office: 'Bureau',
-    shop: 'Magasin',
-    workshop: 'Atelier',
-    authorizedName: 'Nom de la personne autorisée',
-    authorizedPosition: 'Poste de la personne autorisée',
-    companyKeywords: 'Mots-clés sur l\'entreprise',
-    invalidImage: 'Image invalide. Veuillez télécharger une photo personnelle pour les individus ou un logo pour les entreprises.',
-    gallery: 'Galerie',
-    camera: 'Caméra',
-    crop: 'Rogner',
-    done: 'Terminé',
-    cancel: 'Annuler',
-    selectFromGallery: 'Sélectionner dans la galerie',
-    takePhoto: 'Prendre une photo',
-    cropTitle: 'Rogner l\'image',
-    preview: 'Aperçu :',
-    aiAnalyzing: 'Analyse IA...'
-  }
-};
 
 // Age Check Modal Component
 const AgeCheckModal = ({ t, onResponse }) => {
@@ -414,13 +190,13 @@ const analyzeImage = async (imageData, userType) => {
 
 // Main Component
 export default function AuthPage() {
-  const { language } = useAuth();
-  const t = authTranslations[language] || authTranslations.ar;
+  const { language, startBgMusic } = useAuth();
+  const t = useTranslate();
   const isRTL = language === 'ar';
 
   // UI States
   const [isVisible, setIsVisible] = useState(false);
-  const [showAgeCheck, setShowAgeCheck] = useState(true);
+  const [showAgeCheck, setShowAgeCheck] = useState(false); // تبدأ بـ false
   const [showGoodbyeModal, setShowGoodbyeModal] = useState(false);
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
 
@@ -467,7 +243,23 @@ export default function AuthPage() {
   const [showCropModal, setShowCropModal] = useState(false);
   const [showPolicy, setShowPolicy] = useState(false);
 
-  useEffect(() => setIsVisible(true), []);
+  useEffect(() => {
+    setIsVisible(true);
+    
+    // إظهار رسالة التحقق من العمر في كل مرة يتم فتح الصفحة
+    setShowAgeCheck(true);
+    
+    // تشغيل الموسيقى الخلفية عند دخول الصفحة إذا لم تكن تعمل
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled) {
+      // تأخير قصير للسماح للصفحة بالتحميل
+      setTimeout(() => {
+        if (startBgMusic) {
+          startBgMusic();
+        }
+      }, 100);
+    }
+  }, [startBgMusic]);
 
   const handleAgeResponse = (isAbove18) => {
     if (isAbove18) {

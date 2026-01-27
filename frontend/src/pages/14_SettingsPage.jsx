@@ -5,12 +5,20 @@ import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 
 export default function SettingsPage() {
-  const { language, setLanguage, logout } = useAuth();
+  const { language, setLanguage, logout, startBgMusic } = useAuth();
   const { audioEnabled, saveAudio, musicEnabled, saveMusic, notificationsEnabled, saveNotifications } = useAppSettings();
   const [isVisible, setIsVisible] = useState(false);
   const isRTL = language === 'ar';
 
-  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => { 
+    setIsVisible(true); 
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+  }, [startBgMusic]);
 
   const handleLanguageChange = async (newLang) => {
     try {
@@ -70,8 +78,6 @@ export default function SettingsPage() {
       console.error('Failed to change notification setting:', error);
     }
   };
-
-  useEffect(() => { setIsVisible(true); }, []);
 
   const t = {
     ar: {

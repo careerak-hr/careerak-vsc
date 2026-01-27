@@ -3,44 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { App } from '@capacitor/app';
 import { useAuth } from '../context/AuthContext';
-
-const loginTranslations = {
-  ar: {
-    subtitle: "تسجيل الدخول",
-    userPlaceholder: "البريد الإلكتروني أو رقم الهاتف",
-    passPlaceholder: "كلمة المرور",
-    loginBtn: "دخول",
-    noAccount: "ليس لديك حساب؟",
-    createAccount: "أنشئ حساباً الآن",
-    error: "فشل الدخول، تحقق من البيانات",
-    rememberMe: "تذكرني"
-  },
-  en: {
-    subtitle: "Login",
-    userPlaceholder: "Email or Phone Number",
-    passPlaceholder: "Password",
-    loginBtn: "Login",
-    noAccount: "Don't have an account?",
-    createAccount: "Create account now",
-    error: "Login failed, check your credentials",
-    rememberMe: "Remember me"
-  },
-  fr: {
-    subtitle: "Connexion",
-    userPlaceholder: "E-mail ou numéro de téléphone",
-    passPlaceholder: "Mot de passe",
-    loginBtn: "Se connecter",
-    noAccount: "Vous n'avez pas de compte ?",
-    createAccount: "Créer un compte maintenant",
-    error: "Échec de la connexion, vérifiez vos identifiants",
-    rememberMe: "Se souvenir de moi"
-  }
-};
+import { useTranslate } from '../hooks/useTranslate';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin, startBgMusic } = useAuth();
-  const t = loginTranslations[language] || loginTranslations.ar;
+  const t = useTranslate();
+  const loginT = t.loginPage;
   const isRTL = language === 'ar';
 
   const [identifier, setIdentifier] = useState('');
@@ -157,13 +126,20 @@ export default function LoginPage() {
       
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.response?.data?.error || t.error);
+      setError(err.response?.data?.error || loginT.error);
     } finally {
       setLoading(false);
     }
   };
 
   const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
+  
+  // تطبيق الخط المناسب حسب اللغة
+  const fontStyle = {
+    fontFamily: language === 'ar' ? "'Amiri', serif" : 
+                language === 'en' ? "'Cormorant Garamond', serif" : 
+                "'EB Garamond', serif"
+  };
 
   return (
     <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -176,15 +152,16 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-black text-[#304B60] italic" style={{ fontFamily: 'serif' }}>Careerak</h1>
-          <p className="text-[#304B60]/50 font-bold text-lg mt-3">{t.subtitle}</p>
+          <h1 className="text-5xl font-black text-[#304B60] italic" style={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>Careerak</h1>
+          <p className="text-[#304B60]/50 font-bold text-lg mt-3" style={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>{loginT.subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="w-full space-y-5">
           <input
             type="text"
-            placeholder={t.userPlaceholder}
+            placeholder={loginT.userPlaceholder}
             className={inputCls}
+            style={fontStyle}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             required
@@ -193,8 +170,9 @@ export default function LoginPage() {
           <div className="relative w-full">
             <input
               type={showPassword ? "text" : "password"}
-              placeholder={t.passPlaceholder}
+              placeholder={loginT.passPlaceholder}
               className={inputCls}
+              style={fontStyle}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -216,7 +194,7 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className={`flex items-center justify-center gap-3 px-6 py-2 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+          <div className={`flex items-center justify-center gap-3 px-6 py-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
             <input
               type="checkbox"
               id="remember"
@@ -224,21 +202,26 @@ export default function LoginPage() {
               onChange={(e) => setRememberMe(e.target.checked)}
               className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
             />
-            <label htmlFor="remember" className="text-sm font-bold text-[#304B60]/60 cursor-pointer">{t.rememberMe}</label>
+            <label htmlFor="remember" className="text-sm font-bold text-[#304B60]/60 cursor-pointer" style={fontStyle}>{loginT.rememberMe}</label>
           </div>
 
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-[#304B60] text-[#D48161] p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4"
+            style={fontStyle}
           >
-            {loading ? <div className="w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div> : t.loginBtn}
+            {loading ? <div className="w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div> : loginT.loginBtn}
           </button>
         </form>
 
         <div className="mt-12 text-center">
-          <p className="text-sm font-bold text-[#304B60]/40">
-            {t.noAccount} <span onClick={() => navigate('/auth')} className="text-[#304B60] cursor-pointer hover:underline font-black">{t.createAccount}</span>
+          <p className="text-sm font-bold text-[#304B60]/40" style={fontStyle}>
+            {loginT.noAccount} <span onClick={() => {
+              // لا نوقف الموسيقى عند الانتقال لصفحة إنشاء الحساب
+              // الموسيقى ستستمر عبر AuthContext
+              navigate('/auth');
+            }} className="text-[#304B60] cursor-pointer hover:underline font-black">{loginT.createAccount}</span>
           </p>
         </div>
       </div>

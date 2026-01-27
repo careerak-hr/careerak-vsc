@@ -6,7 +6,7 @@ import Confetti from 'react-confetti';
 
 export default function OTPVerification() {
   const navigate = useNavigate();
-  const { language, login: performLogin, user: tempUser } = useAuth();
+  const { language, login: performLogin, user: tempUser, startBgMusic } = useAuth();
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -74,8 +74,15 @@ export default function OTPVerification() {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     if (tempUser?._id) handleSendOTP('whatsapp');
-  }, [tempUser, handleSendOTP]);
+  }, [tempUser, handleSendOTP, startBgMusic]);
 
   useEffect(() => {
     if (countdown > 0) {

@@ -7,11 +7,19 @@ import { Footer } from '../components/Footer';
 
 export default function PostJobPage() {
   const navigate = useNavigate();
-  const { language } = useAuth();
+  const { language, startBgMusic } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => { 
+    setIsVisible(true); 
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+  }, [startBgMusic]);
 
   const [formData, setFormData] = useState({
     title: '', description: '', requirements: '', location: '', jobType: 'Full Time', salary: { min: '', max: '' }

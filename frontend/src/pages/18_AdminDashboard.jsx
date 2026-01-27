@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslate } from '../hooks/useTranslate';
 import api from '../services/api';
 import ConfirmationModal from '../components/modals/ConfirmationModal';
-import adminDashboardTranslations from '../data/adminDashboard.json';
 
 export default function AdminDashboard() {
   const navigate = useNavigate();
-  const { logout, user, language, token, loading: authLoading } = useAuth();
-  const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
+  const { logout, user, language, token, loading: authLoading, startBgMusic } = useAuth();
+  const t = useTranslate();
+  const adminT = t.adminDashboard;
 
   // Check if user is admin
   useEffect(() => {
@@ -27,7 +28,13 @@ export default function AdminDashboard() {
       return;
     }
     console.log('Admin access granted for user:', user);
-  }, [user, authLoading, navigate]);
+    
+    // تشغيل الموسيقى الخلفية للأدمن
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+  }, [user, authLoading, navigate, startBgMusic]);
 
   const [selectedPath, setSelectedPath] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
@@ -297,9 +304,9 @@ export default function AdminDashboard() {
         isOpen={showDeleteModal}
         onClose={cancelDeleteUser}
         onConfirm={confirmDeleteUser}
-        message={t.deleteConfirm}
-        confirmText={t.confirm}
-        cancelText={t.cancel}
+        message={adminT.deleteConfirm}
+        confirmText={adminT.confirm}
+        cancelText={adminT.cancel}
         language={language}
       />
     </div>

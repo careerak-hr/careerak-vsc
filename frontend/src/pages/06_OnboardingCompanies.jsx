@@ -5,12 +5,20 @@ import { useAuth } from '../context/AuthContext';
 
 export default function OnboardingCompanies() {
   const navigate = useNavigate();
-  const { language, updateUser } = useAuth();
+  const { language, updateUser, startBgMusic } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isAgreed, setIsAgreed] = useState(false);
 
-  useEffect(() => { setIsVisible(true); }, []);
+  useEffect(() => { 
+    setIsVisible(true); 
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+  }, [startBgMusic]);
 
   const t = {
     ar: {

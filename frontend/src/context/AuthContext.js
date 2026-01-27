@@ -31,11 +31,19 @@ export const AuthProvider = ({ children }) => {
           setLanguage(lang);
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+          
+          // تطبيق الخط المناسب حسب اللغة
+          const fontFamily = lang === 'ar' ? "'Amiri', 'Cairo', serif" :
+                            lang === 'en' ? "'Cormorant Garamond', serif" :
+                            "'EB Garamond', serif";
+          
+          document.body.style.fontFamily = fontFamily;
         } else {
           // Default to 'ar' if no language is set
           setLanguage('ar');
           document.documentElement.lang = 'ar';
           document.documentElement.dir = 'rtl';
+          document.body.style.fontFamily = "'Amiri', 'Cairo', serif";
         }
 
         // تحديد إعدادات الصوت
@@ -149,6 +157,13 @@ export const AuthProvider = ({ children }) => {
     setLanguage(lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    
+    // تطبيق الخط المناسب حسب اللغة
+    const fontFamily = lang === 'ar' ? "'Amiri', 'Cairo', serif" :
+                      lang === 'en' ? "'Cormorant Garamond', serif" :
+                      "'EB Garamond', serif";
+    
+    document.body.style.fontFamily = fontFamily;
   };
 
   const setAudio = async (enabled) => {
@@ -157,8 +172,26 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Deprecated - can be removed later
-  const startBgMusic = () => setCanStartMusic(true);
-  const stopBgMusic = () => setCanStartMusic(false);
+  const startBgMusic = () => {
+    setCanStartMusic(true);
+    // تشغيل الموسيقى فوراً إذا كانت متاحة
+    if (audioEnabled && !audioRef.current) {
+      console.log("Starting background music manually");
+      audioRef.current = new Audio('/Music.mp3');
+      audioRef.current.loop = true;
+      audioRef.current.volume = 0.4;
+      audioRef.current.play().catch(e => console.error("Manual background music play failed:", e));
+    } else if (audioEnabled && audioRef.current) {
+      audioRef.current.play().catch(e => console.error("Resume background music failed:", e));
+    }
+  };
+  
+  const stopBgMusic = () => {
+    setCanStartMusic(false);
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
 
 
   return (

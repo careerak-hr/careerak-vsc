@@ -12,11 +12,18 @@ export default function JobPostingsPage() {
   const [isVisible, setIsVisible] = useState(false);
   const [reportModalData, setReportModalData] = useState(null);
   const navigate = useNavigate();
-  const { language } = useAuth();
+  const { language, startBgMusic } = useAuth();
   const isRTL = language === 'ar';
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     const fetchJobs = async () => {
       try {
         const res = await api.get('/job-postings');
@@ -28,7 +35,7 @@ export default function JobPostingsPage() {
       }
     };
     fetchJobs();
-  }, []);
+  }, [startBgMusic]);
 
   const t = {
     ar: {

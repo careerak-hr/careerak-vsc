@@ -4,6 +4,174 @@
   "confirmTitle": "Confirmation de la langue",
   "confirmText": "La langue choisie sera utilisée dans toute l'application. Vous pouvez la modifier à tout moment depuis le panneau de contrôle.",
   "confirm": "Confirmer",
+  
+  "languagePage": {
+    "confirmLang": "Êtes-vous sûr de la langue sélectionnée ? L'application fonctionnera entièrement dans cette langue et vous pourrez la modifier à tout moment depuis le tableau de bord.",
+    "audioTitle": "Acceptez-vous de jouer de la musique et de l'audio dans l'application ? Vous pouvez contrôler l'audio et la musique depuis le tableau de bord quand vous le souhaitez.",
+    "notificationTitle": "Acceptez-vous d'activer les notifications de l'application sur votre téléphone ?",
+    "notificationDesc": "Vous recevrez des notifications importantes sur les emplois, les cours et les mises à jour. Vous pouvez les contrôler depuis les paramètres.",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "Confirmer",
+    "title": "Choisir la langue"
+  },
+  
+  "adminDashboard": {
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+    "confirm": "Confirmer",
+    "cancel": "Annuler"
+  },
+  
+  "profilePage": {
+    "title": "Profil",
+    "edit": "Modifier les données",
+    "save": "Enregistrer les modifications",
+    "cancel": "Annuler",
+    "personal": "Données Personnelles et Sociales",
+    "health": "État de Santé",
+    "military": "Statut Militaire",
+    "education": "Parcours Éducatif",
+    "experience": "Expérience Professionnelle",
+    "training": "Parcours de Formation",
+    "skills": "Langues et Compétences",
+    "aiCv": "Générateur de CV intelligent (IA)",
+    "generateCv": "Générer un CV professionnel",
+    "cvLevels": {
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "professional": "Professionnel"
+    },
+    "logout": "Déconnexion",
+    "add": "+ Ajouter",
+    "socialStatuses": {
+      "single": "Célibataire",
+      "married": "Marié",
+      "divorced": "Divorcé",
+      "widowed": "Veuf"
+    },
+    "militaryStatuses": {
+      "exempt": "Exempté",
+      "performed": "Accompli",
+      "paid": "Payé en espèces",
+      "postponed": "Reporté",
+      "in_service": "En Service"
+    },
+    "generating": "Génération en cours...",
+    "cvSuccess": "CV téléchargé avec succès",
+    "cvError": "Erreur lors de la création ou du téléchargement du CV",
+    "ok": "OK"
+  },
+  
+  "navbar": {
+    "settings": "Panneau de contrôle",
+    "music": "Musique",
+    "voice": "Audio",
+    "logout": "Déconnexion",
+    "deleteAccount": "Supprimer le compte définitivement",
+    "notifications": "Notifications téléphoniques",
+    "changePass": "Changer le mot de passe",
+    "exit": "Quitter l'application"
+  },
+  
+  "applyPage": {
+    "title": "Détails de l'offre",
+    "apply": "Confirmer la candidature maintenant",
+    "back": "Retour aux offres",
+    "success": "Votre candidature a été envoyée avec succès ! Nous vous contacterons bientôt.",
+    "requirements": "Exigences",
+    "description": "Description du poste",
+    "alreadyApplied": "Vous avez déjà postulé pour ce poste",
+    "ok": "OK"
+  },
+  
+  "onboardingIndividuals": {
+    "title": "Compléter le Profil Professionnel ✨",
+    "cvMsg": "Télécharger votre CV économise du temps et des efforts, nous l'analyserons et remplirons les données ici.",
+    "upload": "Télécharger CV (PDF, Word, Excel, PPT)",
+    "parsing": "Analyse IA intelligente en cours... 🤖",
+    "personal": "Données Personnelles et Sociales",
+    "health": "État de Santé",
+    "military": "Statut Militaire (pour hommes)",
+    "education": "Parcours Éducatif",
+    "experience": "Expérience Professionnelle",
+    "training": "Parcours de Formation",
+    "skills": "Langues et Compétences",
+    "add": "+ Ajouter Plus",
+    "finish": "Enregistrer et Confirmer le Profil",
+    "modalMsg": "Veuillez d'abord accepter l'exactitude des données",
+    "socialStatuses": {
+      "single": "Célibataire",
+      "married": "Marié",
+      "divorced": "Divorcé",
+      "widowed": "Veuf"
+    },
+    "militaryStatuses": {
+      "exempt": "Exempté",
+      "performed": "Accompli",
+      "paid": "Payé en espèces",
+      "postponed": "Reporté",
+      "in_service": "En Service"
+    },
+    "placeholders": {
+      "permanentAddress": "Adresse Permanente",
+      "temporaryAddress": "Adresse Temporaire",
+      "socialStatus": "-- Statut Social --",
+      "hasChildren": "Avez-vous des enfants ?",
+      "militaryStatus": "-- Sélectionner Statut --",
+      "level": "Niveau",
+      "degree": "Diplôme",
+      "institution": "Institution",
+      "city": "Ville",
+      "country": "Pays",
+      "year": "Année",
+      "grade": "Note",
+      "company": "Entreprise",
+      "position": "Poste",
+      "from": "De",
+      "to": "À",
+      "tasks": "Tâches du Poste",
+      "workType": "Type de Travail",
+      "jobLevel": "Niveau du Poste",
+      "reason": "Raison de Départ",
+      "courseName": "Nom du Cours",
+      "provider": "Fournisseur",
+      "content": "Contenu",
+      "language": "Langue",
+      "proficiency": "Maîtrise",
+      "skill": "Compétence",
+      "software": "Logiciel",
+      "otherSkills": "Autres Compétences",
+      "bio": "Biographie",
+      "agreement": "Je reconnais que toutes les données mentionnées ci-dessus sont correctes et sous ma responsabilité personnelle.",
+      "loading": "Enregistrement...",
+      "ok": "OK"
+    },
+    "labels": {
+      "name": "Nom",
+      "gender": "Genre",
+      "date": "Date de Naissance",
+      "country": "Pays"
+    },
+    "genderOptions": {
+      "male": "Homme",
+      "female": "Femme"
+    }
+  },
+  
+  "loginPage": {
+    "subtitle": "Connexion",
+    "userPlaceholder": "E-mail ou numéro de téléphone",
+    "passPlaceholder": "Mot de passe",
+    "loginBtn": "Connexion",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "createAccount": "Créer un compte maintenant",
+    "error": "Échec de la connexion, vérifiez vos identifiants",
+    "rememberMe": "Se souvenir de moi"
+  },
+  
+  "entryPage": {
+    "slogan": "L'avenir des RH"
+  },
   "report": "Signaler",
   "report_content": "Signaler le contenu",
   "reason_for_report": "Raison du signalement",

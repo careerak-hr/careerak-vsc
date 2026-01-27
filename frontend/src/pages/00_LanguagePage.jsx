@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { useTranslate } from "../hooks/useTranslate";
 import "./00_LanguagePage.css";
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
 import NotificationSettingsModal from "../components/modals/NotificationSettingsModal";
-import languagePageTranslations from "../data/languagePage.json";
 
 export default function LanguagePage() {
   const { saveLanguage, saveAudio, saveMusic } = useAppSettings();
   const navigate = useNavigate();
+  const t = useTranslate();
 
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -127,7 +128,25 @@ export default function LanguagePage() {
     }
   };
 
-  const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
+  // Get translations for the selected language (for language page content)
+  const langTranslations = {
+    ar: t.languagePage,
+    en: { 
+      confirmLang: "Are you sure about the selected language? The app will work entirely in this language, and you can change it anytime from the dashboard.",
+      audioTitle: "Do you agree to play music and audio in the app? You can control audio and music from the dashboard whenever you want.",
+      notificationTitle: "Do you agree to enable app notifications on your phone?",
+      notificationDesc: "You'll receive important notifications about jobs, courses, and updates. You can control them from settings.",
+      yes: "Yes", no: "No", ok: "Confirm", title: "Choose Language"
+    },
+    fr: {
+      confirmLang: "Êtes-vous sûr de la langue sélectionnée ? L'application fonctionnera entièrement dans cette langue et vous pourrez la modifier à tout moment depuis le tableau de bord.",
+      audioTitle: "Acceptez-vous de jouer de la musique et de l'audio dans l'application ? Vous pouvez contrôler l'audio et la musique depuis le tableau de bord quand vous le souhaitez.",
+      notificationTitle: "Acceptez-vous d'activer les notifications de l'application sur votre téléphone ?",
+      notificationDesc: "Vous recevrez des notifications importantes sur les emplois, les cours et les mises à jour. Vous pouvez les contrôler depuis les paramètres.",
+      yes: "Oui", no: "Non", ok: "Confirmer", title: "Choisir la langue"
+    }
+  };
+  const langT = langTranslations[selectedLang] || langTranslations.ar;
 
   const langBtnCls = "py-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-lg border-4 border-[#304B60] hover:scale-105 transition-all text-xl";
 
@@ -148,23 +167,23 @@ export default function LanguagePage() {
 
       <div className="relative z-10 flex flex-col items-center">
         <div className="mb-8">
-          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
+          <div className="w-60 h-60 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
             <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
-        <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm">
+        <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm" style={{ fontFamily: "'Amiri', 'Cormorant Garamond', 'EB Garamond', serif" }}>
           Choose Language / Choisir la langue / اختر اللغة
         </h1>
 
         <div className="flex flex-col gap-4 w-full max-w-xs">
-          <button onClick={() => handleLangPick("ar")} className={langBtnCls}>
+          <button onClick={() => handleLangPick("ar")} className={`${langBtnCls} font-arabic`} style={{ fontFamily: "'Amiri', serif" }}>
             العربية
           </button>
-          <button onClick={() => handleLangPick("en")} className={langBtnCls}>
+          <button onClick={() => handleLangPick("en")} className={`${langBtnCls} font-english`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
             English
           </button>
-          <button onClick={() => handleLangPick("fr")} className={langBtnCls}>
+          <button onClick={() => handleLangPick("fr")} className={`${langBtnCls} font-french`} style={{ fontFamily: "'EB Garamond', serif" }}>
             Français
           </button>
         </div>
@@ -178,7 +197,7 @@ export default function LanguagePage() {
           onConfirm={handleConfirmLanguage}
           onCancel={handleCancelLanguage}
           language={selectedLang}
-          t={t}
+          t={langT}
         />
       )}
 
@@ -189,7 +208,7 @@ export default function LanguagePage() {
           onClose={() => setIsAudioModalOpen(false)}
           onConfirm={handleAudioConfirm}
           language={selectedLang}
-          t={t}
+          t={langT}
         />
       )}
 
@@ -200,7 +219,7 @@ export default function LanguagePage() {
           onClose={() => setIsNotificationModalOpen(false)}
           onConfirm={handleNotificationConfirm}
           language={selectedLang}
-          t={t}
+          t={langT}
         />
       )}
     </div>

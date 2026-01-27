@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useTranslate } from '../hooks/useTranslate';
 import userService from '../services/userService';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
@@ -7,10 +8,10 @@ import { Filesystem } from '@capacitor/filesystem'; // وعد: استبدال fi
 import { Directory } from '@capacitor/filesystem';
 import AlertModal from '../components/modals/AlertModal';
 import ReportModal from '../components/modals/ReportModal';
-import profilePageTranslations from '../data/profilePage.json';
 
 export default function ProfilePage() {
-  const { user, language, updateUser, logout } = useAuth();
+  const { user, language, updateUser, logout, startBgMusic } = useAuth();
+  const t = useTranslate();
   const [isVisible, setIsVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,6 +32,13 @@ export default function ProfilePage() {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     if (user) {
       setFormData({
         ...user,
@@ -45,9 +53,9 @@ export default function ProfilePage() {
         otherSkills: user.otherSkills || []
       });
     }
-  }, [user]);
+  }, [user, startBgMusic]);
 
-  const t = profilePageTranslations[language] || profilePageTranslations.ar;
+  const profileT = t.profilePage;
 
   const handleSave = async () => {
     setLoading(true);
@@ -67,11 +75,11 @@ export default function ProfilePage() {
 
       await Filesystem.download(fileUrl, fileName, Directory.Documents);
 
-      setAlertModal({ isOpen: true, message: t.cvSuccess });
+      setAlertModal({ isOpen: true, message: profileT.cvSuccess });
 
     } catch (err) {
       console.error('Error generating or downloading CV:', err);
-      setAlertModal({ isOpen: true, message: t.cvError });
+      setAlertModal({ isOpen: true, message: profileT.cvError });
     } finally {
       setCvGenerating(false);
     }
@@ -79,6 +87,13 @@ export default function ProfilePage() {
 
   const inputCls = "w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all";
   const labelCls = "block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2";
+  
+  // تطبيق الخط المناسب حسب اللغة
+  const fontStyle = {
+    fontFamily: language === 'ar' ? "'Amiri', serif" : 
+                language === 'en' ? "'Cormorant Garamond', serif" : 
+                "'EB Garamond', serif"
+  };
 
   return (
     <div className={`min-h-screen bg-[#E3DAD1] pb-20 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir="rtl">
@@ -97,7 +112,7 @@ export default function ProfilePage() {
             </div>
             {!isEditing && (
               <button onClick={() => setIsEditing(true)} className="absolute top-8 left-8 px-6 py-3 bg-[#E3DAD1]/20 hover:bg-[#E3DAD1]/30 text-[#E3DAD1] rounded-2xl font-black text-xs backdrop-blur-md">
-                {t.edit} ✏️
+                {profileT.edit} ✏️
               </button>
             )}
           </div>
@@ -105,7 +120,7 @@ export default function ProfilePage() {
           <div className="pt-28 pb-12 px-8 md:px-16 space-y-12">
             <form className="space-y-12">
               <section className="space-y-6">
-                <h3 className="text-xl font-black text-[#304B60] border-r-4 border-[#D48161] pr-4">{t.personal}</h3>
+                <h3 className="text-xl font-black text-[#304B60] border-r-4 border-[#D48161] pr-4">{profileT.personal}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className={labelCls}>عنوان السكن الدائم</label>
@@ -115,9 +130,9 @@ export default function ProfilePage() {
                     <label className={labelCls}>الحالة الاجتماعية</label>
                     {isEditing ? (
                       <select className={inputCls} value={formData.socialStatus} onChange={e=>setFormData({...formData, socialStatus:e.target.value})}>
-                        {Object.entries(t.socialStatuses).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
+                        {Object.entries(profileT.socialStatuses).map(([k,v]) => <option key={k} value={k}>{v}</option>)}
                       </select>
-                    ) : <p className="p-4 bg-[#304B60]/5 rounded-2xl font-bold text-[#304B60]">{t.socialStatuses[formData.socialStatus] || '---'}</p>}
+                    ) : <p className="p-4 bg-[#304B60]/5 rounded-2xl font-bold text-[#304B60]">{profileT.socialStatuses[formData.socialStatus] || '---'}</p>}
                   </div>
                 </div>
               </section>
@@ -125,9 +140,9 @@ export default function ProfilePage() {
               {isEditing && (
                 <div className="flex gap-4">
                   <button type="button" onClick={handleSave} disabled={loading} className="flex-1 py-5 bg-[#304B60] text-[#D48161] rounded-[2rem] font-black shadow-xl disabled:opacity-50">
-                    {loading ? 'جاري الحفظ...' : t.save}
+                    {loading ? 'جاري الحفظ...' : profileT.save}
                   </button>
-                  <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-5 border-2 border-[#304B60] text-[#304B60] rounded-[2rem] font-black">{t.cancel}</button>
+                  <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-5 border-2 border-[#304B60] text-[#304B60] rounded-[2rem] font-black">{profileT.cancel}</button>
                 </div>
               )}
             </form>
@@ -135,23 +150,23 @@ export default function ProfilePage() {
             <section className="p-10 bg-[#304B60] rounded-[4rem] text-[#E3DAD1] shadow-2xl relative overflow-hidden">
                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                   <div className="text-right flex-1">
-                    <h3 className="text-3xl font-black mb-4 flex items-center gap-3">✨ {t.aiCv}</h3>
+                    <h3 className="text-3xl font-black mb-4 flex items-center gap-3">✨ {profileT.aiCv}</h3>
                     <p className="text-[#E3DAD1]/70 font-bold text-sm">حول بياناتك إلى سيرة ذاتية احترافية بجودة PDF.</p>
                   </div>
                   <div className="bg-[#E3DAD1]/10 p-2 rounded-[2.5rem] flex flex-col gap-3 w-full max-w-xs">
                      <div className="flex gap-2 p-1 bg-black/20 rounded-2xl">
-                        {Object.entries(t.cvLevels).map(([k,v]) => (
+                        {Object.entries(profileT.cvLevels).map(([k,v]) => (
                           <button key={k} onClick={()=>setCvLevel(k)} className={`flex-1 py-3 rounded-xl text-[10px] font-black ${cvLevel === k ? 'bg-[#E3DAD1] text-[#304B60]' : 'text-[#E3DAD1]/40'}`}>{v}</button>
                         ))}
                      </div>
-                     <button onClick={handleGenerateCv} disabled={cvGenerating} className="w-full py-5 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-2xl active:scale-95">{cvGenerating ? t.generating : t.generateCv}</button>
+                     <button onClick={handleGenerateCv} disabled={cvGenerating} className="w-full py-5 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-2xl active:scale-95">{cvGenerating ? profileT.generating : profileT.generateCv}</button>
                   </div>
                </div>
             </section>
 
             <div className="text-center pt-10">
               <button onClick={logout} className="px-10 py-5 bg-red-600 text-white rounded-[2rem] font-black text-xs shadow-lg shadow-red-200">
-                {t.logout} 🚪
+                {profileT.logout} 🚪
               </button>
             </div>
           </div>

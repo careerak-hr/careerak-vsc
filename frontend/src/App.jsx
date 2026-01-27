@@ -5,6 +5,7 @@ import { AppSettingsProvider, useAppSettings } from "./context/AppSettingsContex
 import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 import { discoverBestServer } from "./services/api";
 import AppAudioPlayer from "./components/AppAudioPlayer";
+import FontProvider from "./components/FontProvider";
 import "./utils/resetSettings"; // إضافة أداة إعادة التعيين للاختبار
 
 // Lazy load pages for better performance
@@ -100,10 +101,12 @@ export default function App() {
   return (
     <AppSettingsProvider>
       <AuthProvider>
-        <Router>
-          <AppAudioPlayer />
-          <AppRoutes />
-        </Router>
+        <FontProvider>
+          <Router>
+            <AppAudioPlayer />
+            <AppRoutes />
+          </Router>
+        </FontProvider>
       </AuthProvider>
     </AppSettingsProvider>
   );

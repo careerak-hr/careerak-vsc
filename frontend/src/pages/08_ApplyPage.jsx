@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useTranslate } from '../hooks/useTranslate';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 import AlertModal from '../components/modals/AlertModal';
-import applyPageTranslations from '../data/applyPage.json';
 
 export default function ApplyPage() {
   const { id } = useParams();
-  const { language } = useAuth();
+  const { language, startBgMusic } = useAuth();
+  const t = useTranslate();
+  const applyT = t.applyPage;
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [applying, setApplying] = useState(false);
@@ -19,6 +21,13 @@ export default function ApplyPage() {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     const fetchJob = async () => {
       try {
         const res = await api.get(`/job-postings/${id}`);
@@ -30,7 +39,7 @@ export default function ApplyPage() {
       }
     };
     fetchJob();
-  }, [id]);
+  }, [id, startBgMusic]);
 
   const handleApply = async () => {
     setApplying(true);
@@ -38,13 +47,11 @@ export default function ApplyPage() {
       await api.post('/job-applications', { jobPostingId: id });
       setSuccess(true);
     } catch (err) {
-      setAlertModal({ isOpen: true, message: t.alreadyApplied });
+      setAlertModal({ isOpen: true, message: applyT.alreadyApplied });
     } finally {
       setApplying(false);
     }
   };
-
-  const t = applyPageTranslations[language] || applyPageTranslations.ar;
 
   if (loading) return <div className="min-h-screen bg-[#E3DAD1] flex items-center justify-center"><div className="w-12 h-12 border-4 border-[#304B60] border-t-transparent rounded-full animate-spin"></div></div>;
 
@@ -63,19 +70,19 @@ export default function ApplyPage() {
 
           <div className="space-y-8 text-[#304B60]">
             <section>
-              <h3 className="text-xl font-black mb-4 border-r-4 border-[#D48161] pr-3">{t.description}</h3>
+              <h3 className="text-xl font-black mb-4 border-r-4 border-[#D48161] pr-3">{applyT.description}</h3>
               <p className="font-bold leading-relaxed bg-[#304B60]/5 p-6 rounded-3xl border border-[#D48161]/10">{job?.description}</p>
             </section>
 
             <section>
-              <h3 className="text-xl font-black mb-4 border-r-4 border-[#D48161] pr-3">{t.requirements}</h3>
+              <h3 className="text-xl font-black mb-4 border-r-4 border-[#D48161] pr-3">{applyT.requirements}</h3>
               <p className="font-bold leading-relaxed bg-[#304B60]/5 p-6 rounded-3xl border border-[#D48161]/10">{job?.requirements}</p>
             </section>
           </div>
 
           {success ? (
             <div className="mt-12 p-8 bg-green-50 text-green-700 rounded-3xl font-black text-center border-2 border-green-200 animate-bounce">
-              {t.success}
+              {applyT.success}
             </div>
           ) : (
             <button
@@ -83,7 +90,7 @@ export default function ApplyPage() {
               disabled={applying}
               className="w-full mt-12 py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl active:scale-95 transition-all text-xl"
             >
-              {applying ? "جاري التقديم..." : t.apply}
+              {applying ? "جاري التقديم..." : applyT.apply}
             </button>
           )}
         </div>

@@ -5,7 +5,7 @@ import userService from '../services/userService';
 
 export default function OnboardingIlliterate() {
   const navigate = useNavigate();
-  const { language, updateUser } = useAuth();
+  const { language, updateUser, startBgMusic } = useAuth();
   const [step, setStep] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -42,8 +42,15 @@ export default function OnboardingIlliterate() {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     playInstruction(0);
-  }, [playInstruction]);
+  }, [playInstruction, startBgMusic]);
 
   const finishRegistration = async () => {
     try {

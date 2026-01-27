@@ -7,17 +7,24 @@ import { Footer } from '../components/Footer';
 
 export default function PostCoursePage() {
   const navigate = useNavigate();
-  const { user, language } = useAuth();
+  const { user, language, startBgMusic } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const isRTL = language === 'ar';
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل الموسيقى الخلفية
+    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
+    if (audioEnabled && startBgMusic) {
+      startBgMusic();
+    }
+    
     if (user && user.role !== 'HR' && user.role !== 'Admin') {
       navigate('/courses');
     }
-  }, [user, navigate]);
+  }, [user, navigate, startBgMusic]);
 
   const [formData, setFormData] = useState({
     title: '',

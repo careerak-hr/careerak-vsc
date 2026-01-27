@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import navbarTranslations from '../data/navbar.json';
+import { useTranslate } from '../hooks/useTranslate';
 
 export const Navbar = () => {
   const { language, logout, audioEnabled, setAudioEnabled } = useAuth();
+  const t = useTranslate();
+  const navT = t.navbar;
   const [showSettings, setShowSettings] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const t = navbarTranslations[language] || navbarTranslations.ar;
-
   // Mock notifications data
   const notifications = [
-    { id: 1, type: 'application', message: t('new_job_application'), time: '2h ago' },
-    { id: 2, type: 'message', message: t('new_message_received'), time: '1d ago' },
-    { id: 3, type: 'system', message: t('profile_updated_successfully'), time: '3d ago' }
+    { id: 1, type: 'application', message: t.new_job_application, time: '2h ago' },
+    { id: 2, type: 'message', message: t.new_message_received, time: '1d ago' },
+    { id: 3, type: 'system', message: t.profile_updated_successfully, time: '3d ago' }
   ];
 
   return (
@@ -96,48 +96,48 @@ export const Navbar = () => {
         <div className="fixed inset-0 z-[10000] bg-black/40 backdrop-blur-sm flex justify-end" onClick={() => setShowSettings(false)}>
           <div className="w-80 h-full bg-white shadow-2xl p-8 flex flex-col animate-slide-in-right" onClick={e => e.stopPropagation()} dir="rtl">
             <div className="flex justify-between items-center mb-10">
-              <h3 className="text-xl font-black text-[#1A365D]">{t.settings}</h3>
+              <h3 className="text-xl font-black text-[#1A365D]">{navT.settings}</h3>
               <button onClick={() => setShowSettings(false)} className="text-2xl">✕</button>
             </div>
 
             <div className="space-y-6 flex-1 overflow-y-auto">
               {/* خيارات التحكم */}
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
-                <span className="font-bold text-sm text-[#1A365D]">{t.music}</span>
+                <span className="font-bold text-sm text-[#1A365D]">{navT.music}</span>
                 <input type="checkbox" checked={audioEnabled} onChange={() => setAudioEnabled(!audioEnabled)} className="w-6 h-6" />
               </div>
 
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
-                <span className="font-bold text-sm text-[#1A365D]">{t.voice}</span>
+                <span className="font-bold text-sm text-[#1A365D]">{navT.voice}</span>
                 <input type="checkbox" defaultChecked className="w-6 h-6" />
               </div>
 
               <button className="w-full p-4 bg-gray-50 rounded-2xl flex justify-between items-center hover:bg-gray-100 transition-all">
-                <span className="font-bold text-sm text-[#1A365D]">{t.notifications}</span>
+                <span className="font-bold text-sm text-[#1A365D]">{navT.notifications}</span>
                 <span>🔔</span>
               </button>
 
               <button className="w-full p-4 bg-gray-50 rounded-2xl flex justify-between items-center hover:bg-gray-100 transition-all">
-                <span className="font-bold text-sm text-[#1A365D]">{t.changePass}</span>
+                <span className="font-bold text-sm text-[#1A365D]">{navT.changePass}</span>
                 <span>🔑</span>
               </button>
 
               <hr className="border-gray-100" />
 
               <button onClick={logout} className="w-full p-4 bg-red-50 text-red-600 rounded-2xl font-black text-sm text-right flex justify-between items-center">
-                <span>{t.logout}</span>
+                <span>{navT.logout}</span>
                 <span>🚪</span>
               </button>
 
               <button className="w-full p-4 bg-red-600 text-white rounded-2xl font-black text-sm text-right flex justify-between items-center shadow-lg shadow-red-200">
-                <span>{t.deleteAccount}</span>
+                <span>{navT.deleteAccount}</span>
                 <span>⚠️</span>
               </button>
             </div>
 
             <div className="mt-auto">
                <button className="w-full py-5 bg-[#1A365D] text-white rounded-2xl font-black text-sm">
-                  {t.exit}
+                  {navT.exit}
                </button>
             </div>
           </div>
@@ -153,7 +153,7 @@ export const Navbar = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('search_jobs_courses_users')}
+                placeholder={t.search_jobs_courses_users}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#304B60] focus:border-transparent"
               />
               <svg className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

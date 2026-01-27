@@ -1,5 +1,172 @@
 
 {
+  "languagePage": {
+    "confirmLang": "Are you sure about the selected language? The app will work entirely in this language, and you can change it anytime from the dashboard.",
+    "audioTitle": "Do you agree to play music and audio in the app? You can control audio and music from the dashboard whenever you want.",
+    "notificationTitle": "Do you agree to enable app notifications on your phone?",
+    "notificationDesc": "You'll receive important notifications about jobs, courses, and updates. You can control them from settings.",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "Confirm",
+    "title": "Choose Language"
+  },
+  
+  "adminDashboard": {
+    "deleteConfirm": "Are you sure you want to delete this user?",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  
+  "profilePage": {
+    "title": "Profile",
+    "edit": "Edit Data",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "personal": "Personal and Social Data",
+    "health": "Health Status",
+    "military": "Military Status",
+    "education": "Educational Background",
+    "experience": "Professional Experience",
+    "training": "Training Background",
+    "skills": "Languages and Skills",
+    "aiCv": "Smart CV Generator (AI)",
+    "generateCv": "Generate Professional CV",
+    "cvLevels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "professional": "Professional"
+    },
+    "logout": "Logout",
+    "add": "+ Add",
+    "socialStatuses": {
+      "single": "Single",
+      "married": "Married",
+      "divorced": "Divorced",
+      "widowed": "Widowed"
+    },
+    "militaryStatuses": {
+      "exempt": "Exempt",
+      "performed": "Performed",
+      "paid": "Paid cash",
+      "postponed": "Postponed",
+      "in_service": "In Service"
+    },
+    "generating": "Generating...",
+    "cvSuccess": "CV downloaded successfully",
+    "cvError": "Error occurred while creating or downloading CV",
+    "ok": "OK"
+  },
+  
+  "navbar": {
+    "settings": "Control Panel",
+    "music": "Music",
+    "voice": "Audio",
+    "logout": "Logout",
+    "deleteAccount": "Delete Account Permanently",
+    "notifications": "Phone Notifications",
+    "changePass": "Change Password",
+    "exit": "Exit App"
+  },
+  
+  "applyPage": {
+    "title": "Job Details",
+    "apply": "Confirm Application Now",
+    "back": "Back to Listings",
+    "success": "Your application has been sent successfully! We will contact you soon.",
+    "requirements": "Requirements",
+    "description": "Job Description",
+    "alreadyApplied": "You have already applied for this job",
+    "ok": "OK"
+  },
+  
+  "onboardingIndividuals": {
+    "title": "Complete Professional Profile ✨",
+    "cvMsg": "Uploading your CV saves time and effort, we will analyze it and populate the data here.",
+    "upload": "Upload CV (PDF, Word, Excel, PPT)",
+    "parsing": "Smart AI analysis in progress... 🤖",
+    "personal": "Personal and Social Data",
+    "health": "Health Status",
+    "military": "Military Status (for males)",
+    "education": "Educational Background",
+    "experience": "Professional Experience",
+    "training": "Training Background",
+    "skills": "Languages and Skills",
+    "add": "+ Add More",
+    "finish": "Save and Confirm Profile",
+    "modalMsg": "Please agree to the accuracy of the data first",
+    "socialStatuses": {
+      "single": "Single",
+      "married": "Married",
+      "divorced": "Divorced",
+      "widowed": "Widowed"
+    },
+    "militaryStatuses": {
+      "exempt": "Exempt",
+      "performed": "Performed",
+      "paid": "Paid cash",
+      "postponed": "Postponed",
+      "in_service": "In Service"
+    },
+    "placeholders": {
+      "permanentAddress": "Permanent Address",
+      "temporaryAddress": "Temporary Address",
+      "socialStatus": "-- Social Status --",
+      "hasChildren": "Do you have children?",
+      "militaryStatus": "-- Select Status --",
+      "level": "Level",
+      "degree": "Degree",
+      "institution": "Institution",
+      "city": "City",
+      "country": "Country",
+      "year": "Year",
+      "grade": "Grade",
+      "company": "Company",
+      "position": "Position",
+      "from": "From",
+      "to": "To",
+      "tasks": "Job Tasks",
+      "workType": "Work Type",
+      "jobLevel": "Job Level",
+      "reason": "Reason for Leaving",
+      "courseName": "Course Name",
+      "provider": "Provider",
+      "content": "Content",
+      "language": "Language",
+      "proficiency": "Proficiency",
+      "skill": "Skill",
+      "software": "Software",
+      "otherSkills": "Other Skills",
+      "bio": "Biography",
+      "agreement": "I acknowledge that all data mentioned above is correct and under my personal responsibility.",
+      "loading": "Saving...",
+      "ok": "OK"
+    },
+    "labels": {
+      "name": "Name",
+      "gender": "Gender",
+      "date": "Birth Date",
+      "country": "Country"
+    },
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female"
+    }
+  },
+  
+  "loginPage": {
+    "subtitle": "Login",
+    "userPlaceholder": "Email or Phone Number",
+    "passPlaceholder": "Password",
+    "loginBtn": "Login",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account now",
+    "error": "Login failed, check your credentials",
+    "rememberMe": "Remember me"
+  },
+  
+  "entryPage": {
+    "slogan": "The Future of HR"
+  },
   "report": "Report",
   "report_content": "Report Content",
   "reason_for_report": "Reason for Report",
