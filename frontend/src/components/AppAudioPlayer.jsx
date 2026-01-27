@@ -83,6 +83,7 @@ const AppAudioPlayer = () => {
     };
     }, [handleUserInteraction]);
 
+    // eslint-disable-next-line no-unused-vars
     const checkAudioConsent = async () => {
       const value = localStorage.getItem('audioConsent');
       if (value === 'true') {

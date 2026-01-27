@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
 
 export const Navbar = () => {
+  // eslint-disable-next-line no-unused-vars
   const { language, logout, audioEnabled, setAudioEnabled } = useAuth();
   const t = useTranslate();
   const navT = t.navbar;

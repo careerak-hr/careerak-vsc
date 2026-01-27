@@ -91,6 +91,7 @@ const CropModal = ({ t, tempImage, crop, setCrop, onCropComplete, onSave, onClos
   const imgRef = useRef();
   
   const onImageLoad = useCallback((e) => {
+    // eslint-disable-next-line no-unused-vars
     const { width, height } = e.currentTarget;
     setCrop({
       unit: '%',

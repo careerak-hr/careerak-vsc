@@ -89,6 +89,7 @@ export default function ProfilePage() {
   const labelCls = "block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2";
   
   // تطبيق الخط المناسب حسب اللغة
+  // eslint-disable-next-line no-unused-vars
   const fontStyle = {
     fontFamily: language === 'ar' ? "'Amiri', serif" : 
                 language === 'en' ? "'Cormorant Garamond', serif" : 

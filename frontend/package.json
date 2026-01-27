@@ -33,7 +33,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "cap:sync": "npx cap sync android"
+    "cap:sync": "npx cap sync android",
+    "download-fonts": "node ../scripts/download-fonts.js",
+    "setup-fonts": "npm run download-fonts"
   },
   "eslintConfig": {
     "extends": [

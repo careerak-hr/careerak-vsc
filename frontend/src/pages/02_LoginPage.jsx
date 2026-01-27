@@ -7,6 +7,7 @@ import { useTranslate } from '../hooks/useTranslate';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const { language, login: performLogin, startBgMusic } = useAuth();
   const t = useTranslate();
   const loginT = t.loginPage;

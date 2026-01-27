@@ -3,16 +3,14 @@
 
 import notificationManager from '../services/notificationManager';
 import { testNotificationSound } from '../services/notificationSounds';
+import { resetOnboarding, getSavedSettings } from './onboardingUtils';
 
 export const resetAppSettings = () => {
   try {
-    // إزالة جميع الإعدادات من localStorage
-    localStorage.removeItem('onboardingComplete');
-    localStorage.removeItem('lang');
-    localStorage.removeItem('audioConsent');
-    localStorage.removeItem('audio_enabled');
-    localStorage.removeItem('musicEnabled');
-    localStorage.removeItem('notificationsEnabled');
+    // استخدام الأداة المساعدة لإعادة تعيين الإعداد الأولي
+    resetOnboarding();
+    
+    // إزالة إعدادات إضافية
     localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
     localStorage.removeItem('remembered_user');
@@ -26,6 +24,13 @@ export const resetAppSettings = () => {
   } catch (error) {
     console.error('❌ Failed to reset app settings:', error);
   }
+};
+
+// دالة لعرض الإعدادات الحالية
+export const showCurrentSettings = () => {
+  const settings = getSavedSettings();
+  console.log('📋 Current app settings:', settings);
+  return settings;
 };
 
 // دوال اختبار الإشعارات
@@ -63,6 +68,7 @@ export const testNotificationSounds = async () => {
 
 // تصدير للاستخدام في console
 window.resetAppSettings = resetAppSettings;
+window.showCurrentSettings = showCurrentSettings;
 window.testIndividualNotification = testIndividualNotification;
 window.testCompanyNotification = testCompanyNotification;
 window.testNotificationSounds = testNotificationSounds;

@@ -6,6 +6,7 @@ import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 import { discoverBestServer } from "./services/api";
 import AppAudioPlayer from "./components/AppAudioPlayer";
 import FontProvider from "./components/FontProvider";
+import { isOnboardingComplete } from "./utils/onboardingUtils";
 import "./utils/resetSettings"; // إضافة أداة إعادة التعيين للاختبار
 
 // Lazy load pages for better performance
@@ -37,6 +38,21 @@ const InterfaceShops = React.lazy(() => import("./pages/24_InterfaceShops"));
 const InterfaceWorkshops = React.lazy(() => import("./pages/25_InterfaceWorkshops"));
 const AdminSubDashboard = React.lazy(() => import("./pages/26_AdminSubDashboard"));
 
+// مكون للتوجيه الذكي للصفحة الرئيسية
+function SmartHomeRoute() {
+  const isComplete = isOnboardingComplete();
+  
+  // إذا لم يكمل المستخدم الإعداد الأولي
+  if (!isComplete) {
+    console.log("🆕 First time user, showing language selection");
+    return <Suspense fallback={<div className="fixed inset-0 bg-[#E3DAD0] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60]"></div></div>}><LanguagePage /></Suspense>;
+  }
+  
+  // المستخدم أكمل الإعداد، انتقل لصفحة الدخول
+  console.log("✅ User completed onboarding, redirecting to entry");
+  return <Navigate to="/entry" replace />;
+}
+
 function AppRoutes() {
   const { loaded } = useAppSettings();
   const location = useLocation();
@@ -56,7 +72,7 @@ function AppRoutes() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Suspense fallback={<div className="fixed inset-0 bg-[#E3DAD0] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60]"></div></div>}><LanguagePage /></Suspense>} />
+        <Route path="/" element={<SmartHomeRoute />} />
         <Route path="/language" element={<Suspense fallback={<div className="fixed inset-0 bg-[#E3DAD0] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60]"></div></div>}><LanguagePage /></Suspense>} />
         <Route path="/entry" element={<Suspense fallback={<div className="fixed inset-0 bg-[#E3DAD0] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60]"></div></div>}><EntryPage /></Suspense>} />
         <Route path="/login" element={<Suspense fallback={<div className="fixed inset-0 bg-[#E3DAD0] flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60]"></div></div>}><LoginPage /></Suspense>} />

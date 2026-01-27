@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
 import { useTranslate } from "../hooks/useTranslate";
+import { markOnboardingComplete } from "../utils/onboardingUtils";
 import "./00_LanguagePage.css";
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
@@ -19,34 +20,11 @@ export default function LanguagePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkFirstTime = async () => {
-      try {
-        console.log("⏳ Checking if first time setup...");
-
-        // التحقق من إتمام الإعداد الأولي
-        const onboardingComplete = localStorage.getItem('onboardingComplete');
-        const hasLanguage = localStorage.getItem('lang');
-        console.log("📦 Onboarding status:", onboardingComplete);
-        console.log("📦 Language status:", hasLanguage);
-
-        // إذا لم يكن هناك لغة محفوظة، اعرض صفحة اللغات
-        if (!hasLanguage || onboardingComplete !== 'true') {
-          console.log("🆕 First time user or no language set, showing language selection");
-          setLoading(false);
-        } else {
-          // المستخدم أكمل الإعداد من قبل، انتقل للصفحة الرئيسية
-          console.log("✅ User already completed onboarding, redirecting to entry");
-          navigate('/entry', { replace: true });
-        }
-
-      } catch (err) {
-        console.warn("⚠️ Error checking onboarding status:", err);
-        setLoading(false);
-      }
-    };
-
-    checkFirstTime();
-  }, [navigate]);
+    // صفحة اللغات تظهر فقط عندما يتم توجيه المستخدم إليها
+    // لا نحتاج للتحقق من الإعداد الأولي هنا لأن التوجيه يتم في App.jsx
+    console.log("📱 Language page loaded");
+    setLoading(false);
+  }, []);
 
   const handleLangPick = (lang) => {
     console.log("🌍 Language selected:", lang);
@@ -95,16 +73,12 @@ export default function LanguagePage() {
         console.log("✅ Audio settings saved:", audioConsent);
       }
       
-      // حفظ إعدادات إضافية في localStorage للتوافق
-      localStorage.setItem('lang', selectedLang);
-      localStorage.setItem('audioConsent', audioConsent ? 'true' : 'false');
-      localStorage.setItem('audio_enabled', audioConsent ? 'true' : 'false');
-      localStorage.setItem('musicEnabled', audioConsent ? 'true' : 'false');
-      localStorage.setItem('notificationsEnabled', notificationConsent ? 'true' : 'false');
+      // استخدام الأداة المساعدة لحفظ الإعدادات وتحديد اكتمال الإعداد الأولي
+      const success = markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
       
-      // تحديد أن الإعداد الأولي اكتمل
-      localStorage.setItem('onboardingComplete', 'true');
-      console.log("✅ Onboarding marked as complete");
+      if (!success) {
+        throw new Error("Failed to save onboarding settings");
+      }
       
       // طلب إذن الإشعارات من النظام إذا وافق المستخدم
       if (notificationConsent && 'Notification' in window) {
@@ -122,8 +96,8 @@ export default function LanguagePage() {
       
     } catch (err) {
       console.error("❌ Error saving settings:", err);
-      // حتى لو فشل الحفظ، انتقل للصفحة التالية
-      localStorage.setItem('onboardingComplete', 'true');
+      // حتى لو فشل الحفظ، حاول حفظ الإعدادات الأساسية والانتقال
+      markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
       navigate("/entry", { replace: true });
     }
   };

@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }) => {
         const encryptedToken = localStorage.getItem("auth_token");
         const savedUser = localStorage.getItem('user');
         const audioConsent = localStorage.getItem('audioConsent');
+        // eslint-disable-next-line no-unused-vars
         const musicEnabled = localStorage.getItem('musicEnabled');
 
         // تحديد اللغة
