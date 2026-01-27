@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
 import "./00_LanguagePage.css";
-import { Preferences } from "@capacitor/preferences";
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
 import languagePageTranslations from "../data/languagePage.json";
@@ -10,6 +9,7 @@ import languagePageTranslations from "../data/languagePage.json";
 export default function LanguagePage() {
   const { saveLanguage, saveAudio, saveMusic } = useAppSettings();
   const navigate = useNavigate();
+  const [audio, setAudio] = useState(null);
 
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -21,8 +21,8 @@ export default function LanguagePage() {
           try {
             console.log("⏳ Checking onboarding...");
 
-            const { value } = await Preferences.get({ key: 'onboardingComplete' });
-            console.log("📦 Preferences value:", value);
+            const { value } = await localStorage.getitem({ key: 'onboardingComplete' });
+            console.log("📦 localStorage value:", value);
 
             if (value === 'true') {
               navigate('/entry', { replace: true });
@@ -31,7 +31,7 @@ export default function LanguagePage() {
             }
 
           } catch (err) {
-            console.warn("⚠️ Preferences failed, fallback", err);
+            console.warn("⚠️ localStorage failed, fallback", err);
 
             const value = localStorage.getItem("onboardingComplete");
             console.log("📦 localStorage value:", value);
@@ -44,7 +44,7 @@ export default function LanguagePage() {
           }
         };
          const checkAudioConsent = async () => {
-          const { value } = await Preferences.get({ key: 'audioConsent' });
+          const { value } = await localStorage.getitem({ key: 'audioConsent' });
           if (value === 'true') {
             setAudio(true); // من useAuth()
           } else {
@@ -83,9 +83,9 @@ export default function LanguagePage() {
           await saveAudio(audioConsent);
           await saveMusic(audioConsent);
       }
-      await Preferences.set({ key: 'onboardingComplete', value: 'true' });
+      await localStorage.setItem('onboardingComplete', 'true');
     } catch (err) {
-      console.warn("Preferences failed, using localStorage", err);
+      console.warn("localStorage failed, using localStorage", err);
       localStorage.setItem("onboardingComplete", 'true');
     }
     console.log("Navigating to /entry");

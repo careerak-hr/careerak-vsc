@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useEffect, useState, useRef } from "react";
-import { Preferences } from "@capacitor/preferences";
 import { App } from "@capacitor/app";
 import CryptoJS from 'crypto-js';
 
@@ -16,15 +15,15 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const audioRef = useRef(null);
 
-  // Effect to load initial preferences from storage
+  // Effect to load initial localStorage from storage
   useEffect(() => {
     const loadPrefs = async () => {
       try {
-        const { value: lang } = await Preferences.get({ key: "lang" });
-        const { value: audio } = await Preferences.get({ key: "audio_enabled" });
-        const { value: encryptedToken } = await Preferences.get({ key: "auth_token" });
+        const lang = await localStorage.getItem('lang');
+        const { value: audio } = await localStorage.getitem({ key: "audio_enabled" });
+        const { value: encryptedToken } = await localStorage.getitem({ key: "auth_token" });
         const savedUser = localStorage.getItem('user');
-        const { value: audioConsent } = await Preferences.get({ key: 'audioConsent' });
+        const { value: audioConsent } = await localStorage.getitem({ key: 'audioConsent' });
         setAudioEnabled(audioConsent === 'true');
 
         if (lang) {
@@ -95,7 +94,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData, rawToken) => {
     const encryptedToken = CryptoJS.AES.encrypt(rawToken, SECRET_KEY).toString();
-    await Preferences.set({ key: 'auth_token', value: encryptedToken });
+    await localStorage.setItem('auth_token', encryptedToken);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     setToken(rawToken);
@@ -119,7 +118,7 @@ export const AuthProvider = ({ children }) => {
     if (audioRef.current) {
       audioRef.current.pause();
     }
-    await Preferences.remove({ key: 'auth_token' });
+    await localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
     setUser(null);
     setToken(null);
@@ -132,14 +131,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateLanguage = async (lang) => {
-    await Preferences.set({ key: "lang", value: lang });
+    await localStorage.setitem({ key: "lang", value: lang });
     setLanguage(lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   };
 
   const setAudio = async (enabled) => {
-    await Preferences.set({
+    await localStorage.setitem({
       key: "audio_enabled",
       value: enabled ? "true" : "false",
     });

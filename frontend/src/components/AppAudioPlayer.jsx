@@ -5,6 +5,7 @@ import { useAppSettings } from '../context/AppSettingsContext';
 import { App } from '@capacitor/app';
 
 const AppAudioPlayer = () => {
+  const audioRef = useRef(null);
   const { musicEnabled, audioEnabled } = useAppSettings();
   const location = useLocation();
   const musicAudioRef = useRef(null);
@@ -83,17 +84,18 @@ const AppAudioPlayer = () => {
     }, [handleUserInteraction]);
 
     const checkAudioConsent = async () => {
-      const { value } = await Preferences.get({ key: 'audioConsent' });
+      const { value } = await localStorage.getitem({ key: 'audioConsent' });
       if (value === 'true') {
-        if (!audio.current) {
+        if (audioRef.current) {
+          audioRef.current.play().catch((error) => console.log('Audio play error:', error));
+        } else {
           audioRef.current = new Audio('/intro.mp3');
           audioRef.current.volume = 0.6;
+          audioRef.current.play().catch((error) => console.log('Audio play error:', error));
         }
-        audioRef.current.play().catch((error) => console.log('Audio play error:', e));
       }
-    };
-    [checkAudioConsent];
-
+    }; 
+    
   // تشغيل المقدمة
   const playIntro = useCallback(async () => {
     if (audioEnabled && !introPlayed && introAudioRef.current) {

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { App } from '@capacitor/app';
 import { useAuth } from '../context/AuthContext';
-import { Preferences } from '@capacitor/preferences';
 
 const loginTranslations = {
   ar: {
@@ -52,15 +51,18 @@ export default async function LoginPage() {
   const [error, setError] = useState('');
   const [isVisible, setIsVisible] = useState(false);
 
-  await Preferences.set({ key: 'audioConsent', value: 'true' });
-  await setAudio(true);
+  await localStorage.setitem({ key: 'audioConsent', value: 'true' });
+    
+  const LoginPage = () => {
+    const [audio, setAudio] = useState(null);
+  }; 
   
   useEffect(() => {
     setIsVisible(true);
     startBgMusic();
 
     const loadRememberedData = async () => {
-      const { value: savedId } = await Preferences.get({ key: 'remembered_user' });
+      const { value: savedId } = await localStorage.getitem({ key: 'remembered_user' });
       if (savedId) {
         setIdentifier(savedId);
         setRememberMe(true);
@@ -94,8 +96,8 @@ export default async function LoginPage() {
     }
 
     try {
-      if (rememberMe) await Preferences.set({ key: 'remembered_user', value: identifier });
-      else await Preferences.remove({ key: 'remembered_user' });
+      if (rememberMe) await localStorage.setitem({ key: 'remembered_user', value: identifier });
+      else await localStorage.removeItem({ key: 'remembered_user' });
 
       const response = await api.post('/users/login', { email: identifier, password });
       await performLogin(response.data.user, response.data.token);
