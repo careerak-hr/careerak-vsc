@@ -37,7 +37,7 @@ const loginTranslations = {
   }
 };
 
-export default async function LoginPage() {
+export default function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin, startBgMusic } = useAuth();
   const t = loginTranslations[language] || loginTranslations.ar;
@@ -50,19 +50,16 @@ export default async function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [isVisible, setIsVisible] = useState(false);
-
-  await localStorage.setitem({ key: 'audioConsent', value: 'true' });
-    
-  const LoginPage = () => {
-    const [audio, setAudio] = useState(null);
-  }; 
   
   useEffect(() => {
+    // Set audio consent on component mount
+    localStorage.setItem('audioConsent', 'true');
+    
     setIsVisible(true);
     startBgMusic();
 
     const loadRememberedData = async () => {
-      const { value: savedId } = await localStorage.getitem({ key: 'remembered_user' });
+      const savedId = localStorage.getItem('remembered_user');
       if (savedId) {
         setIdentifier(savedId);
         setRememberMe(true);
@@ -84,29 +81,34 @@ export default async function LoginPage() {
     setLoading(true);
     setError('');
 
-    if (identifier.trim() === 'admin01' && password === 'admin123') {
-       console.log('Admin login detected, processing...');
-       const adminUser = { _id: 'admin_master_01', firstName: 'Master', lastName: 'Admin', role: 'Admin', email: 'admin01' };
-       console.log('Admin user object:', adminUser);
-       await performLogin(adminUser, "OFFLINE_MASTER_ADMIN_TOKEN");
-       console.log('Admin login completed, navigating to dashboard...');
-       setLoading(false);
-       navigate('/admin-dashboard', { replace: true });
-       return;
-    }
-
     try {
-      if (rememberMe) await localStorage.setitem({ key: 'remembered_user', value: identifier });
-      else await localStorage.removeItem({ key: 'remembered_user' });
+      // Admin login check
+      if (identifier.trim() === 'admin01' && password === 'admin123') {
+         console.log('Admin login detected, processing...');
+         const adminUser = { _id: 'admin_master_01', firstName: 'Master', lastName: 'Admin', role: 'Admin', email: 'admin01' };
+         console.log('Admin user object:', adminUser);
+         await performLogin(adminUser, "OFFLINE_MASTER_ADMIN_TOKEN");
+         console.log('Admin login completed, navigating to dashboard...');
+         navigate('/admin-dashboard', { replace: true });
+         return;
+      }
 
+      // Remember user preference
+      if (rememberMe) localStorage.setItem('remembered_user', identifier);
+      else localStorage.removeItem('remembered_user');
+
+      // API login
       const response = await api.post('/users/login', { email: identifier, password });
       await performLogin(response.data.user, response.data.token);
       
+      // Navigate based on user role
       const user = response.data.user;
       if (user.role === 'Admin') navigate('/admin-dashboard');
       else if (user.role === 'HR') navigate(user.bio ? '/profile' : '/onboarding-companies');
       else navigate(user.bio ? '/profile' : '/onboarding-individuals');
+      
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.response?.data?.error || t.error);
     } finally {
       setLoading(false);
@@ -166,7 +168,7 @@ export default async function LoginPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-3 px-6 py-2">
+          <div className={`flex items-center justify-center gap-3 px-6 py-2 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
             <input
               type="checkbox"
               id="remember"

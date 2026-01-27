@@ -19,24 +19,36 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const loadPrefs = async () => {
       try {
-        const lang = await localStorage.getItem('lang');
-        const { value: audio } = await localStorage.getitem({ key: "audio_enabled" });
-        const { value: encryptedToken } = await localStorage.getitem({ key: "auth_token" });
+        const lang = localStorage.getItem('lang');
+        const audio = localStorage.getItem("audio_enabled");
+        const encryptedToken = localStorage.getItem("auth_token");
         const savedUser = localStorage.getItem('user');
-        const { value: audioConsent } = await localStorage.getitem({ key: 'audioConsent' });
-        setAudioEnabled(audioConsent === 'true');
+        const audioConsent = localStorage.getItem('audioConsent');
+        const musicEnabled = localStorage.getItem('musicEnabled');
 
+        // تحديد اللغة
         if (lang) {
           setLanguage(lang);
           document.documentElement.lang = lang;
           document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
         } else {
-            // Default to 'ar' if no language is set
-            setLanguage('ar');
-            document.documentElement.lang = 'ar';
-            document.documentElement.dir = 'rtl';
+          // Default to 'ar' if no language is set
+          setLanguage('ar');
+          document.documentElement.lang = 'ar';
+          document.documentElement.dir = 'rtl';
         }
 
+        // تحديد إعدادات الصوت
+        if (audioConsent !== null) {
+          setAudioEnabled(audioConsent === 'true');
+        } else if (audio !== null) {
+          setAudioEnabled(audio === 'true');
+        } else {
+          // Default to true if no audio setting is found
+          setAudioEnabled(true);
+        }
+
+        // استرجاع التوكن المشفر
         if (encryptedToken) {
           try {
             const bytes = CryptoJS.AES.decrypt(encryptedToken, SECRET_KEY);
@@ -47,13 +59,11 @@ export const AuthProvider = ({ children }) => {
           }
         }
 
+        // استرجاع بيانات المستخدم
         if (savedUser) {
           const parsedUser = JSON.parse(savedUser);
           setUser(parsedUser);
         }
-
-        // Default to true if audio setting is not found
-        setAudioEnabled(audio === null ? true : audio === "true");
 
       } catch (error) {
         console.error("Error loading prefs", error);
@@ -94,7 +104,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (userData, rawToken) => {
     const encryptedToken = CryptoJS.AES.encrypt(rawToken, SECRET_KEY).toString();
-    await localStorage.setItem('auth_token', encryptedToken);
+    localStorage.setItem('auth_token', encryptedToken);
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
     setToken(rawToken);
@@ -118,7 +128,7 @@ export const AuthProvider = ({ children }) => {
     if (audioRef.current) {
       audioRef.current.pause();
     }
-    await localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_token');
     localStorage.removeItem('user');
     setUser(null);
     setToken(null);
@@ -131,17 +141,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateLanguage = async (lang) => {
-    await localStorage.setitem({ key: "lang", value: lang });
+    localStorage.setItem("lang", lang);
     setLanguage(lang);
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   };
 
   const setAudio = async (enabled) => {
-    await localStorage.setitem({
-      key: "audio_enabled",
-      value: enabled ? "true" : "false",
-    });
+    localStorage.setItem("audio_enabled", enabled ? "true" : "false");
     setAudioEnabled(enabled);
   };
 

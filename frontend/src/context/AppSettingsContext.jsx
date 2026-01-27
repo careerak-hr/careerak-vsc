@@ -7,6 +7,7 @@ export const AppSettingsProvider = ({ children }) => {
   const [language, setLanguage] = useState("ar");
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [musicEnabled, setMusicEnabled] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -20,20 +21,23 @@ export const AppSettingsProvider = ({ children }) => {
         const settingsPromise = Promise.all([
           Preferences.get({ key: "lang" }),
           Preferences.get({ key: "audio_enabled" }),
-          Preferences.get({ key: "musicEnabled" })
+          Preferences.get({ key: "musicEnabled" }),
+          Preferences.get({ key: "notificationsEnabled" })
         ]);
 
-        const [lang, audio, music] = await Promise.race([settingsPromise, timeoutPromise]);
+        const [lang, audio, music, notifications] = await Promise.race([settingsPromise, timeoutPromise]);
 
         setLanguage(lang.value || "ar");
         setAudioEnabled(audio.value === "true");
         setMusicEnabled(music.value === "true");
+        setNotificationsEnabled(notifications.value === "true");
       } catch (error) {
         console.warn("Preferences not available or timeout, using defaults", error);
         // Use defaults and mark as loaded
         setLanguage("ar");
         setAudioEnabled(false);
         setMusicEnabled(false);
+        setNotificationsEnabled(false);
       }
       setLoaded(true);
     };
@@ -55,15 +59,22 @@ export const AppSettingsProvider = ({ children }) => {
     await Preferences.set({ key: "musicEnabled", value: String(value) });
   };
 
+  const saveNotifications = async (value) => {
+    setNotificationsEnabled(value);
+    await Preferences.set({ key: "notificationsEnabled", value: String(value) });
+  };
+
   return (
     <AppSettingsContext.Provider
       value={{
         language,
         audioEnabled,
         musicEnabled,
+        notificationsEnabled,
         saveLanguage,
         saveAudio,
         saveMusic,
+        saveNotifications,
         loaded
       }}
     >

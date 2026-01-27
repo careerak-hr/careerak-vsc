@@ -5,6 +5,7 @@ import { AppSettingsProvider, useAppSettings } from "./context/AppSettingsContex
 import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 import { discoverBestServer } from "./services/api";
 import AppAudioPlayer from "./components/AppAudioPlayer";
+import "./utils/resetSettings"; // إضافة أداة إعادة التعيين للاختبار
 
 // Lazy load pages for better performance
 const LanguagePage = React.lazy(() => import("./pages/00_LanguagePage"));

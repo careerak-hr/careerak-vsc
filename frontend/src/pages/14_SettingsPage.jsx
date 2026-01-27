@@ -5,10 +5,71 @@ import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
 
 export default function SettingsPage() {
-  const { language, changeLanguage, logout } = useAuth();
-  const { audioEnabled, saveAudio, musicEnabled, saveMusic } = useAppSettings();
+  const { language, setLanguage, logout } = useAuth();
+  const { audioEnabled, saveAudio, musicEnabled, saveMusic, notificationsEnabled, saveNotifications } = useAppSettings();
   const [isVisible, setIsVisible] = useState(false);
   const isRTL = language === 'ar';
+
+  useEffect(() => { setIsVisible(true); }, []);
+
+  const handleLanguageChange = async (newLang) => {
+    try {
+      await setLanguage(newLang);
+      // تحديث localStorage أيضاً للتوافق
+      localStorage.setItem('lang', newLang);
+      console.log('Language changed to:', newLang);
+    } catch (error) {
+      console.error('Failed to change language:', error);
+    }
+  };
+
+  const handleAudioToggle = async () => {
+    try {
+      const newValue = !audioEnabled;
+      await saveAudio(newValue);
+      // تحديث localStorage أيضاً للتوافق
+      localStorage.setItem('audio_enabled', newValue ? 'true' : 'false');
+      localStorage.setItem('audioConsent', newValue ? 'true' : 'false');
+      console.log('Audio setting changed to:', newValue);
+    } catch (error) {
+      console.error('Failed to change audio setting:', error);
+    }
+  };
+
+  const handleMusicToggle = async () => {
+    try {
+      const newValue = !musicEnabled;
+      await saveMusic(newValue);
+      // تحديث localStorage أيضاً للتوافق
+      localStorage.setItem('musicEnabled', newValue ? 'true' : 'false');
+      console.log('Music setting changed to:', newValue);
+    } catch (error) {
+      console.error('Failed to change music setting:', error);
+    }
+  };
+
+  const handleNotificationToggle = async () => {
+    try {
+      const newValue = !notificationsEnabled;
+      await saveNotifications(newValue);
+      // تحديث localStorage أيضاً للتوافق
+      localStorage.setItem('notificationsEnabled', newValue ? 'true' : 'false');
+      
+      // طلب إذن الإشعارات من النظام إذا تم التفعيل
+      if (newValue && 'Notification' in window) {
+        try {
+          const permission = await Notification.requestPermission();
+          console.log("📱 System notification permission:", permission);
+        } catch (error) {
+          console.warn("⚠️ Failed to request notification permission:", error);
+        }
+      }
+      
+      console.log('Notification setting changed to:', newValue);
+    } catch (error) {
+      console.error('Failed to change notification setting:', error);
+    }
+  };
 
   useEffect(() => { setIsVisible(true); }, []);
 
@@ -18,6 +79,7 @@ export default function SettingsPage() {
       lang: 'لغة التطبيق',
       audio: 'المؤثرات الصوتية',
       music: 'الموسيقى الخلفية',
+      notifications: 'الإشعارات',
       save: 'حفظ التغييرات',
       account: 'إعدادات الحساب',
       dangerZone: 'منطقة الخطر',
@@ -25,13 +87,15 @@ export default function SettingsPage() {
       logout: 'تسجيل الخروج من كافة الأجهزة',
       langDesc: 'اختر اللغة التي تفضل استخدامها في الواجهات',
       audioDesc: 'التحكم في تشغيل المؤثرات الصوتية',
-      musicDesc: 'التحكم في تشغيل الموسيقى الخلفية'
+      musicDesc: 'التحكم في تشغيل الموسيقى الخلفية',
+      notificationsDesc: 'التحكم في إشعارات التطبيق والأصوات'
     },
     en: {
       title: 'General Settings',
       lang: 'App Language',
       audio: 'Sound Effects',
       music: 'Background Music',
+      notifications: 'Notifications',
       save: 'Save Changes',
       account: 'Account Settings',
       dangerZone: 'Danger Zone',
@@ -39,13 +103,15 @@ export default function SettingsPage() {
       logout: 'Logout from All Devices',
       langDesc: 'Choose the language you prefer for the interfaces',
       audioDesc: 'Control sound effects playback',
-      musicDesc: 'Control background music playback'
+      musicDesc: 'Control background music playback',
+      notificationsDesc: 'Control app notifications and sounds'
     },
     fr: {
       title: 'Paramètres généraux',
       lang: 'Langue de l\'application',
       audio: 'Effets sonores',
       music: 'Musique de fond',
+      notifications: 'Notifications',
       save: 'Enregistrer les modifications',
       account: 'Paramètres du compte',
       dangerZone: 'Zone de danger',
@@ -53,7 +119,8 @@ export default function SettingsPage() {
       logout: 'Déconnexion de tous les appareils',
       langDesc: 'Choisissez la langue que vous préférez pour les interfaces',
       audioDesc: 'Contrôler la lecture des effets sonores',
-      musicDesc: 'Contrôler la lecture de la musique de fond'
+      musicDesc: 'Contrôler la lecture de la musique de fond',
+      notificationsDesc: 'Contrôler les notifications et les sons de l\'application'
     }
   }[language || 'ar'];
 
@@ -80,7 +147,7 @@ export default function SettingsPage() {
                 {['ar', 'en', 'fr'].map((l) => (
                   <button
                     key={l}
-                    onClick={() => changeLanguage(l)}
+                    onClick={() => handleLanguageChange(l)}
                     className={`px-6 py-3 rounded-2xl font-black text-xs transition-all ${language === l ? 'bg-[#304B60] text-[#D48161] shadow-lg' : 'bg-[#E3DAD1] text-[#304B60] border border-[#D48161]/20'}`}
                   >
                     {l.toUpperCase()}
@@ -96,7 +163,7 @@ export default function SettingsPage() {
                 <p className="text-xs text-[#304B60]/40 font-bold mt-1">{t.audioDesc}</p>
               </div>
               <button
-                onClick={() => saveAudio(!audioEnabled)}
+                onClick={handleAudioToggle}
                 className={`w-24 h-12 rounded-full relative transition-all duration-300 ${audioEnabled ? 'bg-[#304B60]' : 'bg-[#304B60]/10'}`}
               >
                 <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${isRTL ? (audioEnabled ? 'right-1' : 'right-13') : (audioEnabled ? 'left-13' : 'left-1')}`} ></div>
@@ -113,12 +180,29 @@ export default function SettingsPage() {
                 <p className="text-xs text-[#304B60]/40 font-bold mt-1">{t.musicDesc}</p>
               </div>
               <button
-                onClick={() => saveMusic(!musicEnabled)}
+                onClick={handleMusicToggle}
                 className={`w-24 h-12 rounded-full relative transition-all duration-300 ${musicEnabled ? 'bg-[#304B60]' : 'bg-[#304B60]/10'}`}
               >
                 <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${isRTL ? (musicEnabled ? 'right-1' : 'right-13') : (musicEnabled ? 'left-13' : 'left-1')}`} ></div>
                 <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-black ${musicEnabled ? 'text-[#D48161]' : 'text-[#304B60]/40'}`}>
                    {musicEnabled ? 'ON' : 'OFF'}
+                </span>
+              </button>
+            </section>
+
+            {/* Notifications Setting */}
+            <section className={sectionCls}>
+              <div className="text-center md:text-right">
+                <h3 className="text-[#304B60] font-black text-lg">{t.notifications}</h3>
+                <p className="text-xs text-[#304B60]/40 font-bold mt-1">{t.notificationsDesc}</p>
+              </div>
+              <button
+                onClick={handleNotificationToggle}
+                className={`w-24 h-12 rounded-full relative transition-all duration-300 ${notificationsEnabled ? 'bg-[#304B60]' : 'bg-[#304B60]/10'}`}
+              >
+                <div className={`absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300 ${isRTL ? (notificationsEnabled ? 'right-1' : 'right-13') : (notificationsEnabled ? 'left-13' : 'left-1')}`} ></div>
+                <span className={`absolute inset-0 flex items-center justify-center text-[10px] font-black ${notificationsEnabled ? 'text-[#D48161]' : 'text-[#304B60]/40'}`}>
+                   {notificationsEnabled ? 'ON' : 'OFF'}
                 </span>
               </button>
             </section>

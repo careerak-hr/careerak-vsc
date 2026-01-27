@@ -20,11 +20,33 @@ exports.register = async (req, res) => {
     const data = req.body;
     console.log("--- Processing Registration ---", data.email);
 
+    // Basic validation
+    if (!data.phone || !data.password || !data.role) {
+      return res.status(400).json({ error: 'البيانات الأساسية مطلوبة (الهاتف، كلمة المرور، النوع)' });
+    }
+
+    // Password validation
+    if (data.password.length < 8) {
+      return res.status(400).json({ error: 'كلمة المرور يجب أن تكون 8 أحرف على الأقل' });
+    }
+
+    // Email validation (if provided)
+    if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+      return res.status(400).json({ error: 'البريد الإلكتروني غير صحيح' });
+    }
+
+    // Phone validation
+    if (!/^\+?[1-9]\d{1,14}$/.test(data.phone)) {
+      return res.status(400).json({ error: 'رقم الهاتف غير صحيح' });
+    }
+
     const phoneExists = await User.findOne({ phone: data.phone });
     if (phoneExists) return res.status(400).json({ error: 'رقم الهاتف مسجل بالفعل' });
 
-    const emailExists = await User.findOne({ email: data.email?.toLowerCase() });
-    if (emailExists) return res.status(400).json({ error: 'البريد الإلكتروني مسجل بالفعل' });
+    if (data.email) {
+      const emailExists = await User.findOne({ email: data.email?.toLowerCase() });
+      if (emailExists) return res.status(400).json({ error: 'البريد الإلكتروني مسجل بالفعل' });
+    }
 
     let newUser;
     const baseData = {
@@ -117,16 +139,26 @@ exports.sendOTP = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    
+    // Input validation
+    if (!email || !password) {
+      return res.status(400).json({ error: 'البريد الإلكتروني وكلمة المرور مطلوبان' });
+    }
+    
+    // Admin login check
     if (email === 'admin01' && password === 'admin123') {
       const adminUser = { _id: '000000000000000000000000', firstName: 'Master', role: 'Admin', email: 'admin01' };
       return res.status(200).json({ token: generateToken(adminUser), user: adminUser });
     }
+    
     const user = await User.findOne({ $or: [{ email: email?.toLowerCase() }, { phone: email }] });
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: 'بيانات الدخول غير صحيحة' });
     }
+    
     res.status(200).json({ token: generateToken(user), user: sanitizeUser(user) });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ error: 'خطأ في الدخول' });
   }
 };

@@ -130,7 +130,7 @@ const IndividualSchema = new mongoose.Schema({
   cvFile: String // Base64 or URL
 });
 
-const Individual = User.discriminators?.Employee || User.discriminator('Employee', IndividualSchema);
+const Individual = mongoose.models.Employee || User.discriminator('Employee', IndividualSchema);
 
 // --- تطوير نموذج الشركات (HR) ---
 const CompanySchema = new mongoose.Schema({
@@ -140,6 +140,6 @@ const CompanySchema = new mongoose.Schema({
   companyKeywords: [{ type: String }]
 });
 
-const Company = User.discriminators?.HR || User.discriminator('HR', CompanySchema);
+const Company = mongoose.models.HR || User.discriminator('HR', CompanySchema);
 
 module.exports = { User, Individual, Company };

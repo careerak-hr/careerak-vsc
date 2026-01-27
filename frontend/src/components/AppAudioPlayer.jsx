@@ -84,7 +84,7 @@ const AppAudioPlayer = () => {
     }, [handleUserInteraction]);
 
     const checkAudioConsent = async () => {
-      const { value } = await localStorage.getitem({ key: 'audioConsent' });
+      const value = localStorage.getItem('audioConsent');
       if (value === 'true') {
         if (audioRef.current) {
           audioRef.current.play().catch((error) => console.log('Audio play error:', error));
@@ -120,7 +120,7 @@ const AppAudioPlayer = () => {
     if (!musicAudioRef.current) return;
 
     try {
-      if (shouldPlay && musicEnabled) {
+      if (shouldPlay && musicEnabled && audioEnabled) {
         console.log('Playing background music...');
         // التأكد من إيقاف المقدمة أولاً
         if (introAudioRef.current && !introAudioRef.current.paused) {
@@ -137,7 +137,7 @@ const AppAudioPlayer = () => {
     } catch (error) {
       console.error('Failed to manage music:', error);
     }
-  }, [musicEnabled]);
+  }, [musicEnabled, audioEnabled]);
 
   // مراقبة حالة التطبيق
   useEffect(() => {
@@ -177,13 +177,17 @@ const AppAudioPlayer = () => {
 
   // التحكم في الموسيقى عند تغيير الإعدادات
   useEffect(() => {
-    if (!musicEnabled && musicAudioRef.current) {
-      musicAudioRef.current.pause();
-      musicAudioRef.current.currentTime = 0;
-    } else if (musicEnabled && (location.pathname.startsWith('/login') || location.pathname.startsWith('/auth'))) {
+    if (!musicEnabled || !audioEnabled) {
+      // إيقاف الموسيقى إذا تم تعطيل الصوت أو الموسيقى
+      if (musicAudioRef.current) {
+        musicAudioRef.current.pause();
+        musicAudioRef.current.currentTime = 0;
+      }
+    } else if (musicEnabled && audioEnabled && (location.pathname.startsWith('/login') || location.pathname.startsWith('/auth'))) {
+      // تشغيل الموسيقى إذا تم تفعيل الصوت والموسيقى والصفحة مناسبة
       manageMusic(true);
     }
-  }, [musicEnabled, location.pathname, manageMusic]);
+  }, [musicEnabled, audioEnabled, location.pathname, manageMusic]);
 
   // تنظيف عند إلغاء المكون
   useEffect(() => {
