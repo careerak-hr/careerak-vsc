@@ -1,6 +1,11 @@
-import { getCLS, getFID, getFCP, getLCP, getTTFB } from 'web-vitals';
+// 📊 مراقبة الأداء باستخدام Web Vitals (مع fallback)
+let webVitals = null;
+try {
+  webVitals = require('web-vitals');
+} catch (error) {
+  console.warn('web-vitals not available, using fallback performance monitoring');
+}
 
-// 📊 مراقبة الأداء باستخدام Web Vitals
 class PerformanceMonitor {
   constructor() {
     this.metrics = {};
@@ -27,11 +32,43 @@ class PerformanceMonitor {
       this.sendMetric(metric);
     };
 
-    getCLS(sendToAnalytics);
-    getFID(sendToAnalytics);
-    getFCP(sendToAnalytics);
-    getLCP(sendToAnalytics);
-    getTTFB(sendToAnalytics);
+    if (webVitals) {
+      try {
+        webVitals.getCLS(sendToAnalytics);
+        webVitals.getFID(sendToAnalytics);
+        webVitals.getFCP(sendToAnalytics);
+        webVitals.getLCP(sendToAnalytics);
+        webVitals.getTTFB(sendToAnalytics);
+      } catch (error) {
+        console.warn('Error initializing web-vitals:', error);
+        this.initFallbackMetrics();
+      }
+    } else {
+      this.initFallbackMetrics();
+    }
+  }
+
+  // 📊 مقاييس بديلة إذا لم تكن web-vitals متاحة
+  initFallbackMetrics() {
+    // استخدام Performance API المدمج
+    if ('performance' in window && 'getEntriesByType' in performance) {
+      setTimeout(() => {
+        const navigation = performance.getEntriesByType('navigation')[0];
+        if (navigation) {
+          this.metrics['FCP'] = {
+            value: navigation.loadEventEnd - navigation.fetchStart,
+            rating: 'needs-improvement',
+            timestamp: Date.now()
+          };
+          
+          this.metrics['LCP'] = {
+            value: navigation.loadEventEnd - navigation.fetchStart,
+            rating: 'needs-improvement',
+            timestamp: Date.now()
+          };
+        }
+      }, 1000);
+    }
   }
 
   // 🚨 تتبع الأخطاء

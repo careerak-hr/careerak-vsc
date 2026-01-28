@@ -1,5 +1,21 @@
 import axios from 'axios';
-import performanceMonitor, { trackApiCall, logError } from '../utils/monitoring';
+
+// تحميل monitoring بشكل آمن
+let performanceMonitor = null;
+let trackApiCall = null;
+let logError = null;
+
+try {
+  const monitoring = require('../utils/monitoring');
+  performanceMonitor = monitoring.default;
+  trackApiCall = monitoring.trackApiCall;
+  logError = monitoring.logError;
+} catch (error) {
+  console.warn('Performance monitoring not available:', error.message);
+  // إنشاء دوال بديلة فارغة
+  trackApiCall = () => {};
+  logError = () => {};
+}
 
 // ✅ استخدام متغير البيئة مع fallback للرابط المستقر
 const BASE_URL = process.env.REACT_APP_API_URL || 'https://careerak-vsc.vercel.app';
@@ -21,12 +37,14 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    logError({
-      type: 'API Request Error',
-      message: error.message,
-      config: error.config,
-      timestamp: Date.now()
-    });
+    if (logError) {
+      logError({
+        type: 'API Request Error',
+        message: error.message,
+        config: error.config,
+        timestamp: Date.now()
+      });
+    }
     return Promise.reject(error);
   }
 );
@@ -37,12 +55,14 @@ api.interceptors.response.use(
     const duration = Date.now() - response.config.metadata.startTime;
     
     // تتبع استدعاء API ناجح
-    trackApiCall(
-      response.config.method.toUpperCase(),
-      response.config.url,
-      duration,
-      response.status
-    );
+    if (trackApiCall) {
+      trackApiCall(
+        response.config.method.toUpperCase(),
+        response.config.url,
+        duration,
+        response.status
+      );
+    }
     
     return response;
   },
@@ -53,23 +73,27 @@ api.interceptors.response.use(
       : 0;
     
     // تتبع استدعاء API فاشل
-    trackApiCall(
-      error.config?.method?.toUpperCase() || 'UNKNOWN',
-      error.config?.url || 'unknown',
-      duration,
-      error.response?.status || 0,
-      error.message
-    );
+    if (trackApiCall) {
+      trackApiCall(
+        error.config?.method?.toUpperCase() || 'UNKNOWN',
+        error.config?.url || 'unknown',
+        duration,
+        error.response?.status || 0,
+        error.message
+      );
+    }
     
     // تسجيل الخطأ
-    logError({
-      type: 'API Response Error',
-      message: error.message,
-      status: error.response?.status,
-      url: error.config?.url,
-      method: error.config?.method,
-      timestamp: Date.now()
-    });
+    if (logError) {
+      logError({
+        type: 'API Response Error',
+        message: error.message,
+        status: error.response?.status,
+        url: error.config?.url,
+        method: error.config?.method,
+        timestamp: Date.now()
+      });
+    }
     
     return Promise.reject(error);
   }

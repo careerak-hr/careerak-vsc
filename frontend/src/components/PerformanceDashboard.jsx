@@ -1,5 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { getPerformanceReport } from '../utils/monitoring';
+
+// تحميل monitoring بشكل آمن
+let getPerformanceReport = null;
+try {
+  getPerformanceReport = require('../utils/monitoring').getPerformanceReport;
+} catch (error) {
+  console.warn('Performance monitoring not available');
+  getPerformanceReport = () => ({
+    session: { duration: 0 },
+    metrics: {},
+    errors: { count: 0, recent: [], critical: [] },
+    userActions: { count: 0, recent: [] },
+    apiCalls: { count: 0, averageTime: 0, errorRate: 0, slowCalls: [] },
+    memory: null,
+    connection: null
+  });
+}
 
 const PerformanceDashboard = ({ isVisible, onClose }) => {
   const [report, setReport] = useState(null);
@@ -26,8 +42,12 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
   }, [isVisible]);
 
   const updateReport = () => {
-    const newReport = getPerformanceReport();
-    setReport(newReport);
+    try {
+      const newReport = getPerformanceReport();
+      setReport(newReport);
+    } catch (error) {
+      console.error('Error getting performance report:', error);
+    }
   };
 
   if (!isVisible || !report) return null;
@@ -79,25 +99,27 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
           </div>
 
           {/* Web Vitals */}
-          <div className="bg-[#E3DAD1] p-4 rounded-lg">
-            <h3 className="font-bold text-[#304B60] mb-2">⚡ مقاييس الأداء الأساسية</h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {Object.entries(report.metrics).map(([key, metric]) => (
-                <div key={key} className="text-center">
-                  <div className="text-sm font-semibold text-gray-600">{key}</div>
-                  <div className={`text-lg font-bold ${
-                    metric.rating === 'good' ? 'text-green-600' :
-                    metric.rating === 'needs-improvement' ? 'text-yellow-600' :
-                    'text-red-600'
-                  }`}>
-                    {key === 'CLS' ? metric.value.toFixed(3) : Math.round(metric.value)}
-                    {key !== 'CLS' && 'ms'}
+          {Object.keys(report.metrics).length > 0 && (
+            <div className="bg-[#E3DAD1] p-4 rounded-lg">
+              <h3 className="font-bold text-[#304B60] mb-2">⚡ مقاييس الأداء الأساسية</h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {Object.entries(report.metrics).map(([key, metric]) => (
+                  <div key={key} className="text-center">
+                    <div className="text-sm font-semibold text-gray-600">{key}</div>
+                    <div className={`text-lg font-bold ${
+                      metric.rating === 'good' ? 'text-green-600' :
+                      metric.rating === 'needs-improvement' ? 'text-yellow-600' :
+                      'text-red-600'
+                    }`}>
+                      {key === 'CLS' ? metric.value.toFixed(3) : Math.round(metric.value)}
+                      {key !== 'CLS' && 'ms'}
+                    </div>
+                    <div className="text-xs text-gray-500">{metric.rating}</div>
                   </div>
-                  <div className="text-xs text-gray-500">{metric.rating}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* API Performance */}
           <div className="bg-[#E3DAD1] p-4 rounded-lg">
@@ -176,31 +198,6 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
               </div>
             )}
           </div>
-
-          {/* Connection Info */}
-          {report.connection && (
-            <div className="bg-[#E3DAD1] p-4 rounded-lg">
-              <h3 className="font-bold text-[#304B60] mb-2">🌐 معلومات الاتصال</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-center">
-                <div>
-                  <div className="font-semibold">نوع الاتصال</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.connection.effectiveType}</div>
-                </div>
-                <div>
-                  <div className="font-semibold">سرعة التحميل</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.connection.downlink} Mbps</div>
-                </div>
-                <div>
-                  <div className="font-semibold">زمن الاستجابة</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.connection.rtt}ms</div>
-                </div>
-                <div>
-                  <div className="font-semibold">توفير البيانات</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.connection.saveData ? 'مفعل' : 'معطل'}</div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Actions */}
           <div className="flex gap-4 justify-center">

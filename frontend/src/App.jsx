@@ -8,7 +8,14 @@ import FontProvider from "./components/FontProvider";
 import GlobalFontEnforcer from "./components/GlobalFontEnforcer";
 import AppRoutes from "./components/AppRoutes";
 import ErrorBoundary from "./components/ErrorBoundary";
-import performanceMonitor from "./utils/monitoring";
+
+// تحميل monitoring بشكل آمن
+let performanceMonitor = null;
+try {
+  performanceMonitor = require('./utils/monitoring').default;
+} catch (error) {
+  console.warn('Performance monitoring not available:', error.message);
+}
 
 // Import development utilities
 import "./utils/resetSettings"; // إضافة أداة إعادة التعيين للاختبار
@@ -17,7 +24,15 @@ import "./utils/audioTester"; // إضافة أداة اختبار النظام �
 import "./utils/appExitManager"; // إضافة مدير الخروج من التطبيق للتطوير
 import "./utils/exitTester"; // إضافة أداة اختبار نظام الخروج للتطوير
 import "./utils/cvAnalyzerTester"; // إضافة أداة اختبار تحليل السيرة الذاتية للتطوير
-import "./utils/devTools"; // إضافة أدوات التطوير المتقدمة
+
+// تحميل devTools فقط في التطوير
+if (process.env.NODE_ENV === 'development') {
+  try {
+    require("./utils/devTools"); // إضافة أدوات التطوير المتقدمة
+  } catch (error) {
+    console.warn('Dev tools not available:', error.message);
+  }
+}
 
 /**
  * المكون الرئيسي للتطبيق
@@ -40,20 +55,24 @@ export default function App() {
         console.log("Selected API baseURL:", url);
         
         // تسجيل بداية الجلسة
-        performanceMonitor.logUserAction({
-          type: 'session_start',
-          url: window.location.href,
-          timestamp: Date.now(),
-          apiUrl: url
-        });
+        if (performanceMonitor && performanceMonitor.logUserAction) {
+          performanceMonitor.logUserAction({
+            type: 'session_start',
+            url: window.location.href,
+            timestamp: Date.now(),
+            apiUrl: url
+          });
+        }
       })
       .catch(err => {
         console.error("Server discovery failed:", err);
-        performanceMonitor.logError({
-          type: 'Server Discovery Error',
-          message: err.message,
-          timestamp: Date.now()
-        });
+        if (performanceMonitor && performanceMonitor.logError) {
+          performanceMonitor.logError({
+            type: 'Server Discovery Error',
+            message: err.message,
+            timestamp: Date.now()
+          });
+        }
       });
 
     // تسجيل معلومات الجلسة
@@ -76,21 +95,30 @@ export default function App() {
 
     console.log("Session Info:", sessionInfo);
     
-    // حفظ تقرير الأداء كل 5 دقائق
-    const reportInterval = setInterval(() => {
-      performanceMonitor.saveReportLocally();
-    }, 5 * 60 * 1000);
+    // حفظ تقرير الأداء كل 5 دقائق (إذا كان متاحاً)
+    let reportInterval = null;
+    if (performanceMonitor && performanceMonitor.saveReportLocally) {
+      reportInterval = setInterval(() => {
+        performanceMonitor.saveReportLocally();
+      }, 5 * 60 * 1000);
+    }
 
     // تنظيف عند إغلاق التطبيق
     const handleBeforeUnload = () => {
-      performanceMonitor.saveReportLocally();
-      clearInterval(reportInterval);
+      if (performanceMonitor && performanceMonitor.saveReportLocally) {
+        performanceMonitor.saveReportLocally();
+      }
+      if (reportInterval) {
+        clearInterval(reportInterval);
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      clearInterval(reportInterval);
+      if (reportInterval) {
+        clearInterval(reportInterval);
+      }
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
   }, []);

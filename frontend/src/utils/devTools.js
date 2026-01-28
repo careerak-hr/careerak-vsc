@@ -1,7 +1,14 @@
 import performanceMonitor, { getPerformanceReport } from './monitoring';
-import PerformanceDashboard from '../components/PerformanceDashboard';
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+// تحميل PerformanceDashboard بشكل ديناميكي لتجنب مشاكل البناء
+let PerformanceDashboard = null;
+try {
+  PerformanceDashboard = require('../components/PerformanceDashboard').default;
+} catch (error) {
+  console.warn('PerformanceDashboard component not available');
+}
 
 // 🛠️ أدوات التطوير والتشخيص
 class DevTools {
@@ -204,6 +211,11 @@ class DevTools {
   }
 
   showPerformanceDashboard() {
+    if (!PerformanceDashboard) {
+      console.warn('Performance Dashboard not available');
+      return;
+    }
+    
     if (!this.dashboardContainer) {
       this.dashboardContainer = document.createElement('div');
       document.body.appendChild(this.dashboardContainer);
