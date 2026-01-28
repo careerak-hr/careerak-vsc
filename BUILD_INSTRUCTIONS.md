@@ -1,5 +1,27 @@
 # 🚀 إرشادات البناء - Build Instructions
 
+## 🏗️ المعمارية الجديدة - New Architecture
+
+### 📐 Application Shell Pattern:
+```
+App.jsx (Entry Point)
+├── useAppBootstrap() (Lifecycle Hook)
+├── BootstrapManager (System Initialization)
+├── ApplicationShell (UI Shell)
+└── LoadingStates (State Management)
+```
+
+### 🔄 Separation of Concerns:
+- **App.jsx**: نقطة دخول بسيطة (Shell Pattern)
+- **BootstrapManager**: إدارة دورة حياة النظام
+- **useAppBootstrap**: Hook لإدارة حالة التهيئة
+- **ApplicationShell**: الهيكل الأساسي للواجهة
+- **LoadingStates**: إدارة حالات التحميل والأخطاء
+
+### 🛠️ Environment-based Loading:
+- **Development**: جميع الأدوات متاحة
+- **Production**: أدوات التطوير محذوفة تلقائياً
+
 ## 📋 المتطلبات الأساسية
 
 ### Backend:
@@ -48,8 +70,8 @@ REACT_APP_WHATSAPP_NUMBER=+201228195728
 REACT_APP_ENABLE_ANALYTICS=true
 REACT_APP_API_TIMEOUT=30000
 REACT_APP_ENABLE_PERFORMANCE_MONITORING=true
-GENERATE_SOURCEMAP=false
 REACT_APP_DEBUG_MODE=false
+GENERATE_SOURCEMAP=false
 ```
 
 ## 🏗️ عملية البناء
@@ -112,19 +134,26 @@ export NODE_OPTIONS="--max-old-space-size=4096"
 npm run build
 ```
 
+### خطأ Bootstrap:
+إذا فشلت تهيئة التطبيق:
+- تحقق من console للأخطاء
+- استخدم `window.bootstrapManager` في التطوير
+- راجع `BootstrapManager.getSystemStatus()`
+
 ## 📊 مراقبة الأداء
 
-### أدوات التطوير:
+### أدوات التطوير (Development Only):
 - `Ctrl + Shift + P` - لوحة مراقبة الأداء
 - `Ctrl + Shift + D` - تشخيص سريع
 - `window.devTools` - أدوات الكونسول
+- `window.bootstrapManager` - إدارة النظام
 
 ### الاختبارات:
 ```bash
 # اختبارات الأمان
 npm run test:security
 
-# اختبارات الأداء
+# اختبارات الأداء (Development)
 window.devTools.tests.responseTime()
 window.devTools.tests.memoryUsage()
 ```
@@ -180,6 +209,12 @@ GET /api/stats
 Authorization: Bearer admin_token
 ```
 
+### Bootstrap Status:
+```javascript
+// في التطوير فقط
+window.bootstrapManager.getSystemStatus()
+```
+
 ## 🆘 الدعم
 
 في حالة مواجهة مشاكل:
@@ -188,6 +223,7 @@ Authorization: Bearer admin_token
 2. فحص متغيرات البيئة
 3. تأكد من اتصال قاعدة البيانات
 4. راجع تقرير الأمان: `SECURITY_AUDIT_REPORT.md`
+5. فحص Bootstrap Manager: `window.bootstrapManager.getSystemStatus()`
 
 ## ✅ قائمة التحقق النهائية
 
@@ -198,10 +234,35 @@ Authorization: Bearer admin_token
 - [ ] فحص الأمان
 - [ ] اختبار الوظائف الأساسية
 - [ ] مراجعة الأداء
+- [ ] فحص Bootstrap Manager
+- [ ] التأكد من عدم تحميل dev tools في الإنتاج
 - [ ] النشر للإنتاج
+
+## 🏗️ الميزات الجديدة
+
+### ✅ Application Shell Pattern:
+- فصل منطق التهيئة عن واجهة المستخدم
+- إدارة حالات التحميل والأخطاء
+- معمارية نظيفة ومنظمة
+
+### ✅ Bootstrap Manager:
+- إدارة دورة حياة التطبيق
+- تهيئة الخدمات بشكل منظم
+- تنظيف الموارد التلقائي
+
+### ✅ Environment-based Loading:
+- أدوات التطوير تُحمّل فقط في التطوير
+- تحسين الأداء في الإنتاج
+- أمان أفضل
+
+### ✅ Observability Isolation:
+- المراقبة منفصلة عن UI
+- تتبع النظام على مستوى Bootstrap
+- إدارة الجلسات المحسنة
 
 ---
 
-**تم إنشاء هذا الدليل في**: 28 يناير 2026
+**تم تحديث هذا الدليل في**: 28 يناير 2026
 **إصدار التطبيق**: 1.3.0
+**المعمارية**: Application Shell Pattern
 **مستوى الأمان**: 9.6/10 🟢

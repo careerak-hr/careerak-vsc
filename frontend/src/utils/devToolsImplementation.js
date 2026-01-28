@@ -1,29 +1,23 @@
-/**
- * Development Tools - أدوات التطوير المتقدمة
- * Environment-based Conditional Loading
- * 
- * يتم تحميل هذا الملف فقط في بيئة التطوير
- * من خلال Bootstrap Manager
- */
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-// التأكد من أن هذا الملف يعمل فقط في التطوير
-if (process.env.NODE_ENV !== 'development' && process.env.REACT_APP_DEBUG_MODE !== 'true') {
-  console.warn('DevTools loaded in production environment - this should not happen!');
-  // إنهاء التنفيذ في الإنتاج
-  export default null;
-} else {
-  // تحميل الأدوات فقط في التطوير
-  import('./devToolsImplementation')
-    .then(module => {
-      console.log('✅ Development tools initialized');
-      // تصدير الأدوات
-      if (module.default) {
-        window.devTools = module.default;
-      }
-    })
-    .catch(error => {
-      console.warn('⚠️ Failed to load development tools:', error.message);
-    });
+// تحميل الأدوات بشكل آمن
+let performanceMonitor = null;
+let getPerformanceReport = null;
+let PerformanceDashboard = null;
+
+try {
+  const monitoring = require('./monitoring');
+  performanceMonitor = monitoring.default;
+  getPerformanceReport = monitoring.getPerformanceReport;
+} catch (error) {
+  console.warn('Performance monitoring not available in devTools');
+}
+
+try {
+  PerformanceDashboard = require('../components/PerformanceDashboard').default;
+} catch (error) {
+  console.warn('PerformanceDashboard component not available');
 }
 
 // 🛠️ أدوات التطوير والتشخيص
@@ -32,9 +26,7 @@ class DevTools {
     this.dashboardContainer = null;
     this.isDashboardVisible = false;
     
-    if (process.env.NODE_ENV === 'development' || process.env.REACT_APP_DEBUG_MODE === 'true') {
-      this.initDevTools();
-    }
+    this.initDevTools();
   }
 
   // 🚀 تهيئة أدوات التطوير
@@ -43,11 +35,11 @@ class DevTools {
     window.devTools = {
       // 📊 مراقبة الأداء
       performance: {
-        getReport: () => getPerformanceReport(),
+        getReport: () => getPerformanceReport ? getPerformanceReport() : null,
         showDashboard: () => this.showPerformanceDashboard(),
         hideDashboard: () => this.hidePerformanceDashboard(),
-        clearData: () => performanceMonitor.clearData(),
-        saveReport: () => performanceMonitor.saveReportLocally()
+        clearData: () => performanceMonitor ? performanceMonitor.clearData() : null,
+        saveReport: () => performanceMonitor ? performanceMonitor.saveReportLocally() : null
       },
 
       // 🧪 اختبارات الأداء
@@ -145,6 +137,8 @@ class DevTools {
 
         // فحص الأخطاء الحالية
         checkErrors: () => {
+          if (!getPerformanceReport) return null;
+          
           const report = getPerformanceReport();
           console.log('🚨 تقرير الأخطاء:', {
             totalErrors: report.errors.count,
@@ -156,6 +150,8 @@ class DevTools {
 
         // فحص أداء API
         checkApiPerformance: () => {
+          if (!getPerformanceReport) return null;
+          
           const report = getPerformanceReport();
           console.log('🌐 أداء API:', report.apiCalls);
           return report.apiCalls;
@@ -167,12 +163,16 @@ class DevTools {
         clearAllData: () => {
           localStorage.clear();
           sessionStorage.clear();
-          performanceMonitor.clearData();
+          if (performanceMonitor && performanceMonitor.clearData) {
+            performanceMonitor.clearData();
+          }
           console.log('🧹 تم مسح جميع البيانات');
         },
         
         clearPerformanceData: () => {
-          performanceMonitor.clearData();
+          if (performanceMonitor && performanceMonitor.clearData) {
+            performanceMonitor.clearData();
+          }
           console.log('📊 تم مسح بيانات الأداء');
         },
         
