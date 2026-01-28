@@ -18,9 +18,178 @@ class AudioManager {
     
     // حالات الصفحات التي تحتاج موسيقى
     this.musicPages = ['/login', '/auth'];
-    this.introPages = ['/entry'];
+    this.introPages = []; // Entry page manages its own audio
+    this.lastMusicPage = null; // لتتبع آخر صفحة موسيقى
+    
+    // متغيرات لإدارة حالة التطبيق
+    this.isAppActive = true;
+    this.isPageVisible = true;
+    this.wasMusicPlayingBeforePause = false;
+    this.wasIntroPlayingBeforePause = false;
     
     console.log('🎵 AudioManager initialized');
+    
+    // إضافة مستمعي أحداث حالة الصفحة
+    this.setupVisibilityListeners();
+  }
+
+  /**
+   * إعداد مستمعي أحداث رؤية الصفحة وحالة التطبيق
+   */
+  setupVisibilityListeners() {
+    // مراقبة تغيير رؤية الصفحة (قفل الشاشة، تبديل التطبيقات، إلخ)
+    document.addEventListener('visibilitychange', () => {
+      this.isPageVisible = !document.hidden;
+      console.log(`🎵 Page visibility changed: ${this.isPageVisible ? 'visible' : 'hidden'}`);
+      this.handleVisibilityChange();
+    });
+
+    // مراقبة أحداث النافذة
+    window.addEventListener('blur', () => {
+      console.log('🎵 Window lost focus');
+      this.handleWindowBlur();
+    });
+
+    window.addEventListener('focus', () => {
+      console.log('🎵 Window gained focus');
+      this.handleWindowFocus();
+    });
+
+    // مراقبة أحداث الصفحة
+    window.addEventListener('pagehide', () => {
+      console.log('🎵 Page hide event');
+      this.handlePageHide();
+    });
+
+    window.addEventListener('pageshow', () => {
+      console.log('🎵 Page show event');
+      this.handlePageShow();
+    });
+
+    // مراقبة أحداث التطبيق على الأجهزة المحمولة
+    window.addEventListener('beforeunload', () => {
+      console.log('🎵 Before unload event');
+      this.handleAppExit();
+    });
+  }
+
+  /**
+   * معالجة تغيير رؤية الصفحة
+   */
+  handleVisibilityChange() {
+    if (document.hidden) {
+      // الصفحة أصبحت مخفية (قفل الشاشة، تبديل التطبيق، إلخ)
+      this.pauseAllAudio();
+    } else {
+      // الصفحة أصبحت مرئية مرة أخرى
+      this.resumeAllAudio();
+    }
+  }
+
+  /**
+   * معالجة فقدان التركيز
+   */
+  handleWindowBlur() {
+    this.pauseAllAudio();
+  }
+
+  /**
+   * معالجة استعادة التركيز
+   */
+  handleWindowFocus() {
+    // تأخير بسيط للتأكد من استقرار الحالة
+    setTimeout(() => {
+      if (this.isPageVisible) {
+        this.resumeAllAudio();
+      }
+    }, 100);
+  }
+
+  /**
+   * معالجة إخفاء الصفحة
+   */
+  handlePageHide() {
+    this.pauseAllAudio();
+  }
+
+  /**
+   * معالجة إظهار الصفحة
+   */
+  handlePageShow() {
+    setTimeout(() => {
+      if (this.isPageVisible) {
+        this.resumeAllAudio();
+      }
+    }, 100);
+  }
+
+  /**
+   * معالجة الخروج من التطبيق
+   */
+  handleAppExit() {
+    console.log('🎵 App is exiting - stopping all audio permanently');
+    this.stopAll();
+    this.wasMusicPlayingBeforePause = false;
+    this.wasIntroPlayingBeforePause = false;
+  }
+
+  /**
+   * إيقاف مؤقت لجميع الأصوات
+   */
+  pauseAllAudio() {
+    console.log('🎵 Pausing all audio due to app state change');
+    
+    // حفظ الحالة الحالية
+    this.wasMusicPlayingBeforePause = this.isMusicPlaying;
+    this.wasIntroPlayingBeforePause = this.isIntroPlaying;
+    
+    // إيقاف مؤقت للأصوات
+    if (this.musicAudio && this.isMusicPlaying) {
+      this.musicAudio.pause();
+      console.log('🎵 Music paused');
+    }
+    
+    if (this.introAudio && this.isIntroPlaying) {
+      this.introAudio.pause();
+      console.log('🎵 Intro paused');
+    }
+  }
+
+  /**
+   * استئناف جميع الأصوات
+   */
+  async resumeAllAudio() {
+    console.log('🎵 Resuming audio after app state change');
+    
+    // التحقق من الإعدادات أولاً
+    this.updateSettings();
+    
+    if (!this.settings.audioEnabled) {
+      console.log('🎵 Audio disabled, not resuming');
+      return;
+    }
+    
+    try {
+      // استئناف الموسيقى إذا كانت تعمل قبل الإيقاف
+      if (this.wasMusicPlayingBeforePause && this.settings.musicEnabled && this.musicAudio) {
+        const needsMusic = this.musicPages.some(page => this.currentPage?.startsWith(page));
+        if (needsMusic) {
+          await this.musicAudio.play();
+          console.log('🎵 Music resumed');
+        }
+      }
+      
+      // استئناف المقدمة إذا كانت تعمل قبل الإيقاف
+      if (this.wasIntroPlayingBeforePause && this.introAudio) {
+        const needsIntro = this.introPages.includes(this.currentPage);
+        if (needsIntro) {
+          await this.introAudio.play();
+          console.log('🎵 Intro resumed');
+        }
+      }
+    } catch (error) {
+      console.error('🎵 Failed to resume audio:', error);
+    }
   }
 
   /**
@@ -119,23 +288,66 @@ class AudioManager {
     }
 
     console.log(`🎵 Page changed to: ${pathname}`);
+    
+    // إذا كانت نفس الصفحة، لا نفعل شيئاً
+    if (this.currentPage === pathname) {
+      console.log('🎵 Same page, no audio change needed');
+      return;
+    }
+    
+    const previousPage = this.currentPage;
     this.currentPage = pathname;
     
     // تحديث الإعدادات
     this.updateSettings();
     
-    // إيقاف جميع الأصوات أولاً
-    await this.stopAll();
+    // صفحة Entry تدير صوتها بنفسها، لا نتدخل
+    if (pathname === '/entry') {
+      console.log('🎵 Entry page manages its own audio - stopping all AudioManager sounds');
+      await this.stopAll();
+      this.lastMusicPage = null;
+      this.wasMusicPlayingBeforePause = false;
+      this.wasIntroPlayingBeforePause = false;
+      return;
+    }
     
-    // تشغيل الصوت المناسب للصفحة
-    if (this.settings.audioEnabled) {
+    if (this.settings.audioEnabled && this.isPageVisible && this.isAppActive) {
+      // التحقق من الصفحات التي تحتاج موسيقى
+      const needsMusic = this.musicPages.some(page => pathname.startsWith(page));
+      const previousNeedsMusic = previousPage ? this.musicPages.some(page => previousPage.startsWith(page)) : false;
+      
+      if (needsMusic && this.settings.musicEnabled) {
+        // إذا كانت الصفحة السابقة والحالية تحتاجان موسيقى، استمر في التشغيل
+        if (previousNeedsMusic && this.isMusicPlaying) {
+          console.log('🎵 Both pages need music, continuing current playback...');
+          this.lastMusicPage = pathname;
+          return;
+        }
+        
+        // إذا لم تكن الموسيقى تعمل، ابدأ تشغيلها
+        if (!this.isMusicPlaying) {
+          await this.playMusic();
+          this.lastMusicPage = pathname;
+        }
+      } else {
+        // إذا لم نعد في صفحة موسيقى، أوقف الموسيقى
+        if (this.isMusicPlaying) {
+          await this.stopMusic();
+        }
+        this.lastMusicPage = null;
+      }
+      
+      // إيقاف المقدمة إذا كانت تعمل ولسنا في صفحة مقدمة
+      if (!this.introPages.includes(pathname) && this.isIntroPlaying) {
+        await this.stopIntro();
+      }
+      
       if (this.introPages.includes(pathname)) {
         await this.playIntro();
-      } else if (this.musicPages.some(page => pathname.startsWith(page))) {
-        if (this.settings.musicEnabled) {
-          await this.playMusic();
-        }
       }
+    } else {
+      // إذا كان الصوت معطلاً أو الصفحة غير مرئية، أوقف كل شيء
+      await this.stopAll();
     }
   }
 
@@ -143,7 +355,7 @@ class AudioManager {
    * تشغيل المقدمة
    */
   async playIntro() {
-    if (!this.isInitialized || !this.settings.audioEnabled || this.isIntroPlaying) {
+    if (!this.isInitialized || !this.settings.audioEnabled || this.isIntroPlaying || !this.isPageVisible) {
       return;
     }
 
@@ -166,7 +378,14 @@ class AudioManager {
    * تشغيل الموسيقى الخلفية
    */
   async playMusic() {
-    if (!this.isInitialized || !this.settings.audioEnabled || !this.settings.musicEnabled || this.isMusicPlaying) {
+    if (!this.isInitialized || !this.settings.audioEnabled || !this.settings.musicEnabled || !this.isPageVisible) {
+      console.log('🎵 Music not enabled, not initialized, or page not visible');
+      return;
+    }
+
+    // إذا كانت الموسيقى تعمل بالفعل، لا نعيد تشغيلها
+    if (this.isMusicPlaying) {
+      console.log('🎵 Music already playing, not restarting');
       return;
     }
 
@@ -176,7 +395,7 @@ class AudioManager {
       // إيقاف المقدمة إذا كانت تعمل
       await this.stopIntro();
       
-      // تشغيل الموسيقى
+      // تشغيل الموسيقى من البداية
       this.musicAudio.currentTime = 0;
       await this.musicAudio.play();
       
@@ -194,6 +413,7 @@ class AudioManager {
       this.musicAudio.pause();
       this.musicAudio.currentTime = 0;
       this.isMusicPlaying = false;
+      this.wasMusicPlayingBeforePause = false;
     }
   }
 
@@ -206,6 +426,7 @@ class AudioManager {
       this.introAudio.pause();
       this.introAudio.currentTime = 0;
       this.isIntroPlaying = false;
+      this.wasIntroPlayingBeforePause = false;
     }
   }
 
@@ -216,6 +437,8 @@ class AudioManager {
     console.log('🎵 Stopping all audio...');
     await this.stopMusic();
     await this.stopIntro();
+    this.wasMusicPlayingBeforePause = false;
+    this.wasIntroPlayingBeforePause = false;
   }
 
   /**
@@ -224,6 +447,7 @@ class AudioManager {
   async updateAudioSettings(audioEnabled, musicEnabled) {
     console.log(`🎵 Updating audio settings: audio=${audioEnabled}, music=${musicEnabled}`);
     
+    const previousSettings = { ...this.settings };
     this.settings.audioEnabled = audioEnabled;
     this.settings.musicEnabled = musicEnabled;
 
@@ -234,33 +458,42 @@ class AudioManager {
     }
 
     // إذا تم تعطيل الموسيقى فقط، أوقف الموسيقى
-    if (!musicEnabled) {
+    if (!musicEnabled && this.isMusicPlaying) {
       await this.stopMusic();
       return;
     }
 
-    // إعادة تقييم الصفحة الحالية
-    if (this.currentPage) {
-      await this.updatePage(this.currentPage);
+    // إذا تم تفعيل الموسيقى وكنا في صفحة تحتاج موسيقى ولم تكن تعمل
+    if (musicEnabled && !previousSettings.musicEnabled && this.currentPage && this.isPageVisible) {
+      const needsMusic = this.musicPages.some(page => this.currentPage.startsWith(page));
+      if (needsMusic && !this.isMusicPlaying) {
+        await this.playMusic();
+        this.lastMusicPage = this.currentPage;
+      }
     }
   }
 
   /**
-   * التعامل مع تغيير حالة التطبيق (خلفية/مقدمة)
+   * التعامل مع تغيير حالة التطبيق (خلفية/مقدمة) - Capacitor
    */
   handleAppStateChange(isActive) {
     if (!this.isInitialized) return;
 
+    this.isAppActive = isActive;
+    console.log(`🎵 App state changed: ${isActive ? 'active' : 'inactive'}`);
+
     if (isActive) {
       console.log('🎵 App became active');
-      // إعادة تقييم الصفحة الحالية
-      if (this.currentPage) {
-        this.updatePage(this.currentPage);
-      }
+      // تأخير بسيط للتأكد من استقرار الحالة
+      setTimeout(() => {
+        if (this.isPageVisible) {
+          this.resumeAllAudio();
+        }
+      }, 200);
     } else {
-      console.log('🎵 App went to background');
-      // إيقاف جميع الأصوات عند الانتقال للخلفية
-      this.stopAll();
+      console.log('🎵 App went to background/inactive');
+      // إيقاف مؤقت لجميع الأصوات عند الانتقال للخلفية
+      this.pauseAllAudio();
     }
   }
 
@@ -271,6 +504,14 @@ class AudioManager {
     console.log('🎵 Cleaning up AudioManager...');
     
     this.stopAll();
+    
+    // إزالة مستمعي الأحداث
+    document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+    window.removeEventListener('blur', this.handleWindowBlur);
+    window.removeEventListener('focus', this.handleWindowFocus);
+    window.removeEventListener('pagehide', this.handlePageHide);
+    window.removeEventListener('pageshow', this.handlePageShow);
+    window.removeEventListener('beforeunload', this.handleAppExit);
     
     if (this.musicAudio) {
       this.musicAudio.removeEventListener('ended', () => {});
@@ -291,6 +532,12 @@ class AudioManager {
     this.isInitialized = false;
     this.isMusicPlaying = false;
     this.isIntroPlaying = false;
+    this.currentPage = null;
+    this.lastMusicPage = null;
+    this.isAppActive = true;
+    this.isPageVisible = true;
+    this.wasMusicPlayingBeforePause = false;
+    this.wasIntroPlayingBeforePause = false;
   }
 
   /**
@@ -302,6 +549,11 @@ class AudioManager {
       isMusicPlaying: this.isMusicPlaying,
       isIntroPlaying: this.isIntroPlaying,
       currentPage: this.currentPage,
+      lastMusicPage: this.lastMusicPage,
+      isAppActive: this.isAppActive,
+      isPageVisible: this.isPageVisible,
+      wasMusicPlayingBeforePause: this.wasMusicPlayingBeforePause,
+      wasIntroPlayingBeforePause: this.wasIntroPlayingBeforePause,
       settings: { ...this.settings }
     };
   }

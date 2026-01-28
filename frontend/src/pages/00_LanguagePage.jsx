@@ -1,3 +1,11 @@
+/**
+ * 🔒 LOCKED FILE — DO NOT MODIFY
+ * This file is production-stable.
+ * Any change must be approved by Alaa.
+ * Last locked by: Eng. Alaa
+ * Date: 2026-01-28
+ */
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";

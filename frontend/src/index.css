@@ -8,6 +8,9 @@
 /* استيراد ملف فرض الخطوط القوي */
 @import url('./styles/fontEnforcement.css');
 
+/* استيراد ملف إصلاح حقول الإدخال */
+@import url('./styles/inputFix.css');
+
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -21,7 +24,7 @@
 
 /* القضاء نهائياً على شريط أدوات النظام ومنع التحديد والاختيار في كامل التطبيق */
 * {
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
   -khtml-user-select: none !important;
@@ -29,16 +32,55 @@
   -ms-user-select: none !important;
   user-select: none !important;
   outline: none !important;
+  -webkit-context-menu: none !important;
+  context-menu: none !important;
 }
 
-/* استثناء حقول الإدخال للسماح بالكتابة فقط مع تعطيل قائمة النظام (نسخ/لصق) */
+/* تعطيل جميع قوائم السياق والتحديد */
+*::selection {
+  background: transparent !important;
+}
+
+*::-moz-selection {
+  background: transparent !important;
+}
+
+/* استثناء حقول الإدخال للسماح بالكتابة والتحديد */
 input, textarea, [contenteditable="true"] {
   -webkit-user-select: text !important;
   -khtml-user-select: text !important;
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   user-select: text !important;
-  -webkit-touch-callout: none !important; /* منع ظهور قائمة النسخ واللصق */
+  -webkit-touch-callout: default !important;
+  -webkit-context-menu: none !important;
+  context-menu: none !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: rgba(212, 129, 97, 0.2) !important;
+}
+
+/* ضمان عمل حقول الإدخال على الأجهزة المحمولة */
+input:focus, textarea:focus, [contenteditable="true"]:focus {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  outline: none !important;
+  border-color: #D48161 !important;
+}
+
+/* السماح بتحديد النص في حقول الإدخال مع لون خفيف */
+input::selection, textarea::selection, [contenteditable="true"]::selection {
+  background: rgba(212, 129, 97, 0.3) !important;
+  color: inherit !important;
+}
+
+input::-moz-selection, textarea::-moz-selection, [contenteditable="true"]::-moz-selection {
+  background: rgba(212, 129, 97, 0.3) !important;
+  color: inherit !important;
 }
 
 body {

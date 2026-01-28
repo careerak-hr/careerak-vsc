@@ -1,11 +1,11 @@
 /* AuthPage Placeholder Styles - تحسين ظهور النصوص التوضيحية */
 
-/* تحسين ظهور placeholder في جميع المتصفحات */
-.auth-input::placeholder,
-.auth-select option[value=""] {
-  color: #9CA3AF !important;
+/* تحسين ظهور placeholder في جميع المتصفحات - رمادي واضح للقراءة */
+.auth-input::placeholder {
+  color: #9CA3AF !important; /* رمادي واضح للقراءة */
   opacity: 1 !important;
   font-weight: 600 !important;
+  text-align: center !important;
 }
 
 /* Firefox */
@@ -13,6 +13,7 @@
   color: #9CA3AF !important;
   opacity: 1 !important;
   font-weight: 600 !important;
+  text-align: center !important;
 }
 
 /* Safari */
@@ -20,6 +21,7 @@
   color: #9CA3AF !important;
   opacity: 1 !important;
   font-weight: 600 !important;
+  text-align: center !important;
 }
 
 /* Microsoft Edge */
@@ -27,52 +29,168 @@
   color: #9CA3AF !important;
   opacity: 1 !important;
   font-weight: 600 !important;
+  text-align: center !important;
+}
+
+/* تحسين عرض حقل التاريخ */
+.auth-input[type="date"] {
+  position: relative;
+}
+
+.auth-input[type="date"]:invalid {
+  color: #9CA3AF !important;
+}
+
+.auth-input[type="date"]:valid {
+  color: #304B60 !important;
+}
+
+/* إضافة هينت مخصص لحقل التاريخ */
+.auth-input[type="date"]:invalid:before {
+  content: attr(placeholder);
+  color: #9CA3AF !important;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* تحسين لون النص المدخل - كحلي */
+.auth-input {
+  color: #304B60 !important;
+  text-align: center !important;
+}
+
+.auth-input:focus {
+  color: #304B60 !important;
 }
 
 /* تحسين ظهور النص في القوائم المنسدلة */
-.auth-select option[value=""] {
-  color: #9CA3AF !important;
-  font-style: italic;
+.auth-select {
+  color: #9CA3AF !important; /* نفس لون باقي الهينتات */
+  text-align: center !important;
+}
+
+/* عندما يتم اختيار قيمة، غير اللون للأزرق */
+.auth-select:not([value=""]) {
+  color: #304B60 !important;
+}
+
+/* عندما يكون هناك قيمة محددة */
+.auth-select:valid {
+  color: #304B60 !important;
+}
+
+/* إخفاء الهينت من خيارات القائمة المنسدلة */
+.auth-select option[value=""][disabled] {
+  display: none !important;
 }
 
 .auth-select option:not([value=""]) {
   color: #304B60 !important;
   font-style: normal;
+  background-color: #E3DAD1 !important;
 }
 
-/* تحسين الأنيميشن للوجو */
+/* تحسين placeholder للقوائم المنسدلة عبر CSS pseudo-element */
+.auth-select:invalid::before {
+  content: attr(data-placeholder);
+  color: #9CA3AF !important;
+  position: absolute;
+  pointer-events: none;
+}
+
+/* تحسين الأنيميشن للوجو - أنيميشن أكثر سلاسة */
 .logo-animation {
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.logo-animated {
-  transform: translateY(-1rem) scale(0.75);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-origin: center center;
 }
 
 .logo-initial {
-  transform: translateY(2rem) scale(1);
+  /* الحالة الأولية: وسط الشاشة، حجم كبير */
+  transform: translateY(0) scale(1);
+}
+
+.logo-animated {
+  /* بعد الضغط: أعلى الشاشة، حجم طبيعي - مسافة قليلة */
+  transform: translateY(-1.5rem) scale(1);
 }
 
 /* تحسين أنيميشن ظهور النموذج */
 .form-animation {
-  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: 0.3s; /* تأخير لإنهاء أنيميشن اللوجو أولاً */
 }
 
 .form-visible {
   opacity: 1;
   transform: translateY(0);
+  visibility: visible;
 }
 
 .form-hidden {
   opacity: 0;
-  transform: translateY(2rem);
+  transform: translateY(3rem);
+  visibility: hidden;
 }
 
 /* تحسين أنيميشن الأزرار */
 .user-type-buttons {
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .buttons-animated {
-  transform: translateY(-1rem);
+  /* الأزرار تنتقل مع اللوجو للأعلى - مسافة قليلة */
+  transform: translateY(-1.5rem);
+}
+
+/* تحسين الأنيميشن العام للصفحة */
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* أنيميشن لظهور العناصر تدريجياً */
+.form-animation > form > * {
+  animation: slideInFromBottom 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.form-visible > form > *:nth-child(1) { animation-delay: 0.1s; }
+.form-visible > form > *:nth-child(2) { animation-delay: 0.2s; }
+.form-visible > form > *:nth-child(3) { animation-delay: 0.3s; }
+.form-visible > form > *:nth-child(4) { animation-delay: 0.4s; }
+.form-visible > form > *:nth-child(5) { animation-delay: 0.5s; }
+.form-visible > form > *:nth-child(6) { animation-delay: 0.6s; }
+.form-visible > form > *:nth-child(7) { animation-delay: 0.7s; }
+.form-visible > form > *:nth-child(8) { animation-delay: 0.8s; }
+.form-visible > form > *:nth-child(9) { animation-delay: 0.9s; }
+.form-visible > form > *:nth-child(10) { animation-delay: 1.0s; }
+
+/* تحسين الاستجابة للشاشات الصغيرة */
+@media (max-height: 700px) {
+  .logo-animated {
+    transform: translateY(-2rem) scale(0.85);
+  }
+  
+  .buttons-animated {
+    transform: translateY(-2rem);
+  }
+}
+
+@media (max-height: 600px) {
+  .logo-animated {
+    transform: translateY(-1rem) scale(0.75);
+  }
+  
+  .buttons-animated {
+    transform: translateY(-1rem);
+  }
 }

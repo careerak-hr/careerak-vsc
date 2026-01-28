@@ -145,8 +145,11 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'البريد الإلكتروني وكلمة المرور مطلوبان' });
     }
     
-    // Admin login check
-    if (email === 'admin01' && password === 'admin123') {
+    // Admin login check - استخدام متغيرات البيئة للأمان
+    const adminUsername = process.env.ADMIN_USERNAME || 'admin01';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    
+    if (email === adminUsername && password === adminPassword) {
       const adminUser = { _id: '000000000000000000000000', firstName: 'Master', role: 'Admin', email: 'admin01' };
       return res.status(200).json({ token: generateToken(adminUser), user: adminUser });
     }

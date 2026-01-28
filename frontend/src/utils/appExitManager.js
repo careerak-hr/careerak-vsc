@@ -31,12 +31,20 @@ class AppExitManager {
         console.log('🎵 Audio stopped before exit');
       }
 
-      // محاولة الخروج من التطبيق (Capacitor)
-      await App.exitApp();
-      console.log('✅ App exited successfully via Capacitor');
+      // في Capacitor، نحاول الخروج المباشر
+      if (window.Capacitor) {
+        console.log('📱 Attempting Capacitor app exit...');
+        await App.exitApp();
+        console.log('✅ App exited successfully via Capacitor');
+        return;
+      }
+
+      // في المتصفح، نحاول عدة طرق للخروج
+      console.log('🌐 Running in browser, attempting browser exit...');
+      await this.handleBrowserExit();
       
     } catch (capacitorError) {
-      console.log('⚠️ Capacitor exit failed, trying browser alternatives...');
+      console.log('⚠️ Capacitor exit failed, trying browser alternatives...', capacitorError);
       
       // في المتصفح، نحاول عدة طرق للخروج
       await this.handleBrowserExit();
@@ -55,11 +63,17 @@ class AppExitManager {
         
         // انتظار قليل للتحقق من نجاح الإغلاق
         await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // إذا لم تُغلق النافذة، ننتقل للطريقة التالية
+        if (!window.closed) {
+          console.log('🌐 Window close failed, creating goodbye page...');
+          this.createGoodbyePage();
+        }
+      } else {
+        // إذا لم نستطع إغلاق النافذة، ننشئ صفحة الوداع مباشرة
+        console.log('🌐 Cannot close window, creating goodbye page...');
+        this.createGoodbyePage();
       }
-
-      // الطريقة 2: إنشاء صفحة وداع
-      console.log('🌐 Creating goodbye page...');
-      this.createGoodbyePage();
       
     } catch (error) {
       console.error('❌ Browser exit failed:', error);
@@ -264,8 +278,28 @@ class AppExitManager {
         <script>
           function closeWindow() {
             try {
+              // في Capacitor، نحاول الخروج من التطبيق
+              if (window.Capacitor) {
+                if (window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+                  window.Capacitor.Plugins.App.exitApp();
+                  return;
+                }
+              }
+              
+              // في المتصفح، نحاول إغلاق النافذة
               window.close();
+              
+              // إذا لم ينجح الإغلاق، نعرض رسالة
+              setTimeout(() => {
+                if (!window.closed) {
+                  alert('${language === 'ar' ? 'لا يمكن إغلاق النافذة تلقائياً. يرجى إغلاقها يدوياً.' : 
+                         language === 'en' ? 'Cannot close window automatically. Please close it manually.' :
+                         'Impossible de fermer la fenêtre automatiquement. Veuillez la fermer manuellement.'}');
+                }
+              }, 500);
+              
             } catch (e) {
+              console.error('Close window error:', e);
               alert('${language === 'ar' ? 'لا يمكن إغلاق النافذة تلقائياً. يرجى إغلاقها يدوياً.' : 
                      language === 'en' ? 'Cannot close window automatically. Please close it manually.' :
                      'Impossible de fermer la fenêtre automatiquement. Veuillez la fermer manuellement.'}');
@@ -273,17 +307,18 @@ class AppExitManager {
           }
           
           function goHome() {
-            window.location.href = '/';
+            // التوجه لصفحة تسجيل الدخول بدلاً من الصفحة الرئيسية
+            window.location.href = '/login';
           }
           
-          // محاولة إغلاق النافذة تلقائياً بعد 5 ثوان
-          setTimeout(() => {
-            try {
-              window.close();
-            } catch (e) {
-              console.log('Auto-close failed');
-            }
-          }, 5000);
+          // إزالة الإغلاق التلقائي لإعطاء المستخدم الخيار
+          // setTimeout(() => {
+          //   try {
+          //     window.close();
+          //   } catch (e) {
+          //     console.log('Auto-close failed');
+          //   }
+          // }, 5000);
         </script>
       </body>
       </html>

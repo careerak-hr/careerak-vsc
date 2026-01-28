@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 
 export const FloatingWhatsApp = () => {
   const location = useLocation();
-  const phoneNumber = "+201228195728";
+  const phoneNumber = process.env.REACT_APP_WHATSAPP_NUMBER || "+201228195728";
   const message = encodeURIComponent("مرحباً دعم كاريرك، أحتاج إلى مساعدة...");
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 

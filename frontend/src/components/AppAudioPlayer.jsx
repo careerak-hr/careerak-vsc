@@ -41,7 +41,7 @@ const AppAudioPlayer = () => {
     audioManager.updateAudioSettings(audioEnabled, musicEnabled);
   }, [audioEnabled, musicEnabled]);
 
-  // مراقبة حالة التطبيق (خلفية/مقدمة)
+  // مراقبة حالة التطبيق (خلفية/مقدمة) - Capacitor
   useEffect(() => {
     const handleAppStateChange = ({ isActive }) => {
       audioManager.handleAppStateChange(isActive);

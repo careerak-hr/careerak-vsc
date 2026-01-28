@@ -4,6 +4,7 @@ import api from '../services/api';
 import { App } from '@capacitor/app';
 import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
+import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -85,6 +86,7 @@ export default function LoginPage() {
     }
   };
 
+  // تحسين classes للحقول مع ضمان إمكانية الكتابة
   const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
   
   // تطبيق الخط المناسب حسب اللغة
@@ -94,8 +96,20 @@ export default function LoginPage() {
                 "'EB Garamond', serif"
   };
 
+  // إضافة styles مخصصة لضمان عمل حقول الإدخال
+  const inputStyles = {
+    ...fontStyle,
+    WebkitUserSelect: 'text',
+    MozUserSelect: 'text',
+    msUserSelect: 'text',
+    userSelect: 'text',
+    pointerEvents: 'auto',
+    WebkitTouchCallout: 'default',
+    touchAction: 'manipulation'
+  };
+
   return (
-    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none login-page`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-sm px-8 flex flex-col items-center">
         
         <div className="mb-8">
@@ -114,9 +128,15 @@ export default function LoginPage() {
             type="text"
             placeholder={loginT.userPlaceholder}
             className={inputCls}
-            style={fontStyle}
+            style={inputStyles}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
+            onFocus={(e) => {
+              // ضمان إمكانية الكتابة عند التركيز
+              e.target.style.userSelect = 'text';
+              e.target.style.pointerEvents = 'auto';
+            }}
+            autoComplete="username"
             required
           />
 
@@ -125,15 +145,22 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               placeholder={loginT.passPlaceholder}
               className={inputCls}
-              style={fontStyle}
+              style={inputStyles}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onFocus={(e) => {
+                // ضمان إمكانية الكتابة عند التركيز
+                e.target.style.userSelect = 'text';
+                e.target.style.pointerEvents = 'auto';
+              }}
+              autoComplete="current-password"
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}
+              style={{ pointerEvents: 'auto', userSelect: 'none' }}
             >
               {showPassword ? '👁️' : '🙈'}
             </button>
@@ -147,22 +174,22 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className={`flex items-center justify-center gap-3 px-6 py-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-            <input
-              type="checkbox"
+          <div className={`flex items-center justify-center px-6 py-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
+            <PremiumCheckbox
               id="remember"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
+              label={loginT.rememberMe}
+              labelClassName="text-sm font-bold text-[#304B60]/60"
+              labelStyle={fontStyle}
             />
-            <label htmlFor="remember" className="text-sm font-bold text-[#304B60]/60 cursor-pointer" style={fontStyle}>{loginT.rememberMe}</label>
           </div>
 
           <button
             type="submit"
             disabled={loading}
             className="w-full bg-[#304B60] text-[#D48161] p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4"
-            style={fontStyle}
+            style={{ ...fontStyle, pointerEvents: 'auto', userSelect: 'none' }}
           >
             {loading ? <div className="w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div> : loginT.loginBtn}
           </button>
@@ -173,7 +200,7 @@ export default function LoginPage() {
             {loginT.noAccount} <span onClick={() => {
               // الموسيقى ستستمر عبر AuthContext - لا نحتاج لأي إدارة محلية
               navigate('/auth');
-            }} className="text-[#304B60] cursor-pointer hover:underline font-black">{loginT.createAccount}</span>
+            }} className="text-[#304B60] cursor-pointer hover:underline font-black" style={{ pointerEvents: 'auto', userSelect: 'none' }}>{loginT.createAccount}</span>
           </p>
         </div>
       </div>

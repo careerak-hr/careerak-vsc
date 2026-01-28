@@ -14,10 +14,12 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('careerak.keystore')
-            storePassword localProperties.getProperty('RELEASE_STORE_PASSWORD')
-            keyAlias localProperties.getProperty('RELEASE_KEY_ALIAS')
-            keyPassword localProperties.getProperty('RELEASE_KEY_PASSWORD')
+            if (localProperties.getProperty('RELEASE_STORE_PASSWORD') != null) {
+                storeFile file('careerak.keystore')
+                storePassword localProperties.getProperty('RELEASE_STORE_PASSWORD')
+                keyAlias localProperties.getProperty('RELEASE_KEY_ALIAS')
+                keyPassword localProperties.getProperty('RELEASE_KEY_PASSWORD')
+            }
         }
     }
 
@@ -42,7 +44,9 @@ android {
         release {
             minifyEnabled true
             shrinkResources = true // [وعد] تعديل صيغة الإسناد
-            signingConfig = signingConfigs.release // [وعد] تعديل صيغة الإسناد
+            if (localProperties.getProperty('RELEASE_STORE_PASSWORD') != null) {
+                signingConfig = signingConfigs.release // [وعد] تعديل صيغة الإسناد
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

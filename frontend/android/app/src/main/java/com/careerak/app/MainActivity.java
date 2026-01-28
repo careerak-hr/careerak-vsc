@@ -2,6 +2,9 @@ package com.careerak.app;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
@@ -27,20 +30,35 @@ public class MainActivity extends BridgeActivity {
         // اختبار الاتصال بالسيرفر عند بدء التشغيل
         checkBackendConnection();
 
-        // نبراس: تعطيل Smart Text Actions و Clipboard Overlay على مستوى التطبيق كله لضمان عدم ظهور فقاعة Translate/Paste
+        // تعطيل جميع قوائم النظام المنبثقة بشكل كامل
+        disableSystemPopups();
+    }
+
+    private void disableSystemPopups() {
+        // تعطيل Smart Text Actions و Clipboard Overlay على مستوى التطبيق
         getWindow().getDecorView().setImportantForAutofill(
                 View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
         );
 
-        // نبراس: الوصول إلى WebView وتعطيل الـ Long Click لمنع ظهور قوائم النظام المنبثقة
+        // الوصول إلى WebView وتعطيل جميع قوائم النظام
         WebView webView = this.getBridge().getWebView();
         if (webView != null) {
+            // تعطيل Long Click
             webView.setOnLongClickListener(v -> true);
             webView.setLongClickable(false);
             webView.setHapticFeedbackEnabled(false);
             
-            // نبراس: تعطيل Autofill بشكل إضافي على الـ WebView نفسه
+            // تعطيل Autofill
             webView.setImportantForAutofill(View.IMPORTANT_FOR_AUTOFILL_NO);
+            
+            // تعطيل Context Menu
+            webView.setOnCreateContextMenuListener(null);
+            
+            // إعدادات WebView لتعطيل التحديد
+            webView.getSettings().setTextZoom(100);
+            webView.getSettings().setSupportZoom(false);
+            webView.getSettings().setBuiltInZoomControls(false);
+            webView.getSettings().setDisplayZoomControls(false);
         }
     }
 

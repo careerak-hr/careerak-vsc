@@ -18,6 +18,14 @@ allprojects {
             setUrl("https://jitpack.io") // [وعد] إصلاح تحذير Gradle 10 بدون كسر Groovy
         }
     }
+    
+    // Apply consistent versions across all subprojects
+    ext {
+        kotlin_version = rootProject.ext.kotlinVersion
+        compileSdkVersion = rootProject.ext.compileSdkVersion
+        minSdkVersion = rootProject.ext.minSdkVersion
+        targetSdkVersion = rootProject.ext.targetSdkVersion
+    }
 }
 
 task clean(type: Delete) {

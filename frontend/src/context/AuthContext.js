@@ -1,10 +1,9 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { App } from "@capacitor/app";
 import CryptoJS from 'crypto-js';
 
 const AuthContext = createContext();
-const SECRET_KEY = 'careerak_secure_key_2024';
+const SECRET_KEY = process.env.REACT_APP_ENCRYPTION_KEY || 'careerak_secure_key_2024';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

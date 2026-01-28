@@ -3,6 +3,24 @@ export { default as FontProvider } from './FontProvider';
 export { default as GlobalFontEnforcer } from './GlobalFontEnforcer';
 export { default as LanguageAwareText, LanguageAwareHeading, LanguageAwareBody } from './LanguageAwareText';
 
+// تصدير مكونات التوجيه والتحميل
+export { default as AppRoutes } from './AppRoutes';
+export { default as SmartHomeRoute } from './SmartHomeRoute';
+export { default as GlobalLoader, SuspenseWrapper } from './GlobalLoaders';
+
+// تصدير مكونات حماية المسارات
+export { 
+  default as ProtectedRoute,
+  AdminRoute,
+  HRRoute,
+  UserRoute,
+  GuestRoute,
+  OnboardingRoute
+} from './RouteGuards';
+
+// تصدير مكونات مربعات التشيك الفاخرة
+export { default as LuxuryCheckbox, PremiumCheckbox } from './LuxuryCheckbox';
+
 // تصدير المكونات الأخرى
 export { Navbar } from './Navbar';
 export { Footer } from './Footer';

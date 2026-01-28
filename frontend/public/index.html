@@ -37,5 +37,77 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    
+    <script>
+      // تعطيل جميع قوائم النظام المنبثقة بشكل كامل
+      document.addEventListener('DOMContentLoaded', function() {
+        // تعطيل قائمة السياق (Right Click Menu)
+        document.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+          return false;
+        });
+        
+        // تعطيل تحديد النص
+        document.addEventListener('selectstart', function(e) {
+          e.preventDefault();
+          return false;
+        });
+        
+        // تعطيل السحب والإفلات
+        document.addEventListener('dragstart', function(e) {
+          e.preventDefault();
+          return false;
+        });
+        
+        // تعطيل قوائم النظام عند الضغط المطول
+        document.addEventListener('touchstart', function(e) {
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        });
+        
+        // تعطيل قوائم النظام للنصوص المحددة
+        document.addEventListener('selectionchange', function() {
+          if (window.getSelection) {
+            window.getSelection().removeAllRanges();
+          }
+        });
+        
+        // تعطيل اختصارات لوحة المفاتيح للنسخ واللصق
+        document.addEventListener('keydown', function(e) {
+          // تعطيل Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+          if (e.ctrlKey && (e.key === 'a' || e.key === 'c' || e.key === 'v' || e.key === 'x')) {
+            e.preventDefault();
+            return false;
+          }
+          // تعطيل F12 (Developer Tools)
+          if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+          }
+        });
+      });
+      
+      // تعطيل إضافي للتأكد من عدم ظهور قوائم النظام
+      window.addEventListener('load', function() {
+        // إزالة جميع event listeners المتعلقة بالتحديد
+        document.onselectstart = function() { return false; };
+        document.onmousedown = function() { return false; };
+        document.ondragstart = function() { return false; };
+        
+        // تعطيل قوائم النظام على جميع العناصر
+        const allElements = document.querySelectorAll('*');
+        allElements.forEach(function(element) {
+          element.style.webkitUserSelect = 'none';
+          element.style.mozUserSelect = 'none';
+          element.style.msUserSelect = 'none';
+          element.style.userSelect = 'none';
+          element.style.webkitTouchCallout = 'none';
+          element.oncontextmenu = function() { return false; };
+          element.onselectstart = function() { return false; };
+          element.ondragstart = function() { return false; };
+        });
+      });
+    </script>
   </body>
 </html>
