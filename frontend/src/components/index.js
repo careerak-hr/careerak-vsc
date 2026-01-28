@@ -1,5 +1,6 @@
 // تصدير مكونات الخطوط والنصوص الذكية
 export { default as FontProvider } from './FontProvider';
+export { default as GlobalFontEnforcer } from './GlobalFontEnforcer';
 export { default as LanguageAwareText, LanguageAwareHeading, LanguageAwareBody } from './LanguageAwareText';
 
 // تصدير المكونات الأخرى

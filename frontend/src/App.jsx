@@ -6,8 +6,14 @@ import { FloatingWhatsApp } from "./components/FloatingWhatsApp";
 import { discoverBestServer } from "./services/api";
 import AppAudioPlayer from "./components/AppAudioPlayer";
 import FontProvider from "./components/FontProvider";
+import GlobalFontEnforcer from "./components/GlobalFontEnforcer";
 import { isOnboardingComplete } from "./utils/onboardingUtils";
 import "./utils/resetSettings"; // إضافة أداة إعادة التعيين للاختبار
+import "./utils/fontTester"; // إضافة أداة اختبار الخطوط للتطوير
+import "./utils/audioTester"; // إضافة أداة اختبار النظام الصوتي للتطوير
+import "./utils/appExitManager"; // إضافة مدير الخروج من التطبيق للتطوير
+import "./utils/exitTester"; // إضافة أداة اختبار نظام الخروج للتطوير
+import "./utils/cvAnalyzerTester"; // إضافة أداة اختبار تحليل السيرة الذاتية للتطوير
 
 // Lazy load pages for better performance
 const LanguagePage = React.lazy(() => import("./pages/00_LanguagePage"));
@@ -118,6 +124,7 @@ export default function App() {
     <AppSettingsProvider>
       <AuthProvider>
         <FontProvider>
+          <GlobalFontEnforcer />
           <Router>
             <AppAudioPlayer />
             <AppRoutes />

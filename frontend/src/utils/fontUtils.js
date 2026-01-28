@@ -66,3 +66,44 @@ export const getFontFamily = (language) => {
 export const getFontClass = (language, isHeading = false) => {
   return isHeading ? getHeadingFontClass(language) : getBodyFontClass(language);
 };
+
+/**
+ * تطبيق الخط على عنصر DOM مباشرة
+ * @param {HTMLElement} element - العنصر المراد تطبيق الخط عليه
+ * @param {string} language - اللغة المحددة
+ */
+export const applyFontToElement = (element, language) => {
+  if (!element) return;
+  
+  const fontFamily = getFontFamily(language);
+  element.style.setProperty('font-family', fontFamily, 'important');
+  
+  // تطبيق على جميع العناصر الفرعية
+  const childElements = element.querySelectorAll('*');
+  childElements.forEach(child => {
+    child.style.setProperty('font-family', fontFamily, 'important');
+  });
+};
+
+/**
+ * تطبيق الخط على جميع عناصر الصفحة
+ * @param {string} language - اللغة المحددة
+ */
+export const applyFontGlobally = (language) => {
+  const fontFamily = getFontFamily(language);
+  
+  // تطبيق على العناصر الأساسية
+  document.documentElement.style.setProperty('font-family', fontFamily, 'important');
+  document.body.style.setProperty('font-family', fontFamily, 'important');
+  
+  const rootElement = document.getElementById('root');
+  if (rootElement) {
+    rootElement.style.setProperty('font-family', fontFamily, 'important');
+  }
+  
+  // تطبيق على جميع العناصر الموجودة
+  const allElements = document.querySelectorAll('*');
+  allElements.forEach(element => {
+    element.style.setProperty('font-family', fontFamily, 'important');
+  });
+};

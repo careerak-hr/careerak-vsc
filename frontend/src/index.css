@@ -5,6 +5,9 @@
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
+/* استيراد ملف فرض الخطوط القوي */
+@import url('./styles/fontEnforcement.css');
+
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
@@ -52,6 +55,20 @@ body {
   -webkit-context-menu: none !important;
 }
 
+/* تطبيق الخطوط على جميع العناصر بقوة */
+*, *::before, *::after {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص للعناصر الأساسية */
+html {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+#root {
+  font-family: inherit !important;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #E3DAD1 !important;
@@ -71,34 +88,78 @@ body {
 }
 
 /* خطوط حسب اللغة للعناوين */
-.font-heading-ar {
+.font-heading-ar, .font-heading-ar * {
   font-family: 'Amiri', serif !important;
 }
 
-.font-heading-en {
+.font-heading-en, .font-heading-en * {
   font-family: 'Cormorant Garamond', serif !important;
 }
 
-.font-heading-fr {
+.font-heading-fr, .font-heading-fr * {
   font-family: 'EB Garamond', serif !important;
 }
 
 /* خطوط حسب اللغة للنصوص العادية */
-.font-body-ar {
+.font-body-ar, .font-body-ar * {
   font-family: 'Amiri', 'Cairo', serif !important;
 }
 
-.font-body-en {
+.font-body-en, .font-body-en * {
   font-family: 'Cormorant Garamond', serif !important;
 }
 
-.font-body-fr {
+.font-body-fr, .font-body-fr * {
   font-family: 'EB Garamond', serif !important;
 }
 
-/* تطبيق الخطوط على العناصر العامة */
+/* خطوط مبسطة حسب اللغة */
+.font-arabic, .font-arabic * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+.font-english, .font-english * {
+  font-family: 'Cormorant Garamond', serif !important;
+}
+
+.font-french, .font-french * {
+  font-family: 'EB Garamond', serif !important;
+}
+
+/* تطبيق قوي للخطوط على جميع العناصر */
+body.font-body-ar, body.font-body-ar *, 
+body.font-arabic, body.font-arabic * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+body.font-body-en, body.font-body-en *, 
+body.font-english, body.font-english * {
+  font-family: 'Cormorant Garamond', serif !important;
+}
+
+body.font-body-fr, body.font-body-fr *, 
+body.font-french, body.font-french * {
+  font-family: 'EB Garamond', serif !important;
+}
+
+/* تطبيق خاص لعناصر Tailwind CSS */
+.font-sans, .font-serif, .font-mono {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص للعناصر المخصصة في React */
+[class*="css-"], [class*="emotion-"], [class*="styled-"] {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص للعناصر المتحركة والمؤثرات */
+[style*="font-family"] {
+  font-family: inherit !important;
+}
+
+/* تطبيق الخطوط على العناصر العامة بقوة أكبر */
 * {
-  font-family: inherit;
+  font-family: inherit !important;
 }
 
 /* تطبيق خاص للحقول والأزرار */
@@ -113,7 +174,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* تطبيق خاص للنصوص */
-p, span, div, label {
+p, span, div, label, a {
   font-family: inherit !important;
 }
 
@@ -144,6 +205,26 @@ form, fieldset, legend {
 
 /* تطبيق خاص للعناصر المخصصة */
 [class*="font-"], [class*="text-"] {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص لعناصر React */
+[data-reactroot], [data-react-helmet] {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص لعناصر Tailwind */
+.prose, .prose * {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص للعناصر المخفية أو المرئية */
+[hidden], [style*="display: none"] {
+  font-family: inherit !important;
+}
+
+/* تطبيق خاص للعناصر المتحركة */
+[class*="animate-"], [class*="transition-"] {
   font-family: inherit !important;
 }
 

@@ -212,6 +212,8 @@
   "ageCheckTitle": "Age Verification",
   "ageCheckMessage": "Are you above 18 years old?",
   "sorryMessage": "Sorry, we regret that you cannot use Careerak app due to our policy",
+  "sorryTitle": "We're Sorry",
+  "exitMessage": "The app will now close",
   "goodbye": "Okay, goodbye",
   "individuals": "Individuals",
   "companies": "Companies",

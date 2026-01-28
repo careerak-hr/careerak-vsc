@@ -1,0 +1,145 @@
+/* 
+ * ملف فرض الخطوط القوي
+ * Strong Font Enforcement CSS
+ * يضمن تطبيق الخطوط على جميع العناصر بأقوى طريقة ممكنة
+ */
+
+/* فرض الخطوط على جميع العناصر الأساسية */
+html, body, #root, 
+*, *::before, *::after {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر النصية */
+div, span, p, a, label, 
+h1, h2, h3, h4, h5, h6,
+strong, em, i, b, u, s,
+small, big, sub, sup,
+code, pre, kbd, samp,
+var, cite, abbr, acronym,
+address, blockquote, q {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر التفاعلية */
+input, textarea, select, button,
+option, optgroup, legend, fieldset,
+[role="button"], [role="link"],
+[role="menuitem"], [role="tab"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للقوائم والجداول */
+ul, ol, li, dl, dt, dd,
+table, thead, tbody, tfoot,
+tr, th, td, caption {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المخصصة */
+[class*="font-"], [class*="text-"],
+[class*="heading-"], [class*="body-"],
+[class*="title-"], [class*="label-"],
+[class*="button-"], [class*="input-"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص لمكتبات CSS */
+[class*="css-"], [class*="emotion-"],
+[class*="styled-"], [class*="sc-"],
+[class*="chakra-"], [class*="ant-"],
+[class*="mui-"], [class*="mantine-"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص لعناصر Tailwind CSS */
+.font-sans, .font-serif, .font-mono,
+.prose, .prose *,
+[class*="prose-"], [class*="not-prose"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المتحركة */
+[class*="animate-"], [class*="transition-"],
+[class*="transform"], [class*="scale-"],
+[class*="rotate-"], [class*="translate-"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المشروطة */
+[style*="font-family"], [style*="font:"],
+[hidden], [style*="display: none"],
+[style*="visibility: hidden"],
+[style*="opacity: 0"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المنبثقة */
+.modal, .popup, .dialog, .tooltip,
+.dropdown, .menu, .overlay,
+[role="dialog"], [role="menu"],
+[role="tooltip"], [role="popup"] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المخصصة في React */
+[data-reactroot], [data-react-helmet],
+[data-testid], [data-cy], [data-test] {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المتقدمة */
+svg text, canvas, iframe,
+embed, object, applet,
+audio, video, source, track {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر الجديدة في HTML5 */
+article, aside, details, figcaption,
+figure, footer, header, hgroup,
+main, mark, nav, section, summary,
+time, progress, meter {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المخصصة */
+[is], [data-*], [aria-*],
+custom-element, web-component {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المستقبلية */
+:not(svg):not(math) {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر في Shadow DOM */
+::slotted(*) {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر في Web Components */
+:host, :host(*) {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر المتداخلة */
+* * {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر العميقة */
+* * * {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر الأعمق */
+* * * * {
+  font-family: inherit !important;
+}
+
+/* فرض خاص للعناصر الأعمق جداً */
+* * * * * {
+  font-family: inherit !important;
+}

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getFontClass } from '../utils/fontUtils';
+import { getFontClass, applyFontGlobally } from '../utils/fontUtils';
 
 /**
  * مزود الخطوط - يطبق الخطوط المناسبة على الجسم الرئيسي للصفحة
@@ -16,18 +16,15 @@ const FontProvider = ({ children }) => {
     // إزالة جميع كلاسات الخطوط السابقة
     document.body.classList.remove(
       'font-body-ar', 'font-body-en', 'font-body-fr',
-      'font-heading-ar', 'font-heading-en', 'font-heading-fr'
+      'font-heading-ar', 'font-heading-en', 'font-heading-fr',
+      'font-arabic', 'font-english', 'font-french'
     );
     
     // إضافة الكلاس الجديد
     document.body.classList.add(bodyFontClass);
     
-    // تطبيق الخط مباشرة على الجسم
-    const fontFamily = language === 'ar' ? "'Amiri', 'Cairo', serif" :
-                      language === 'en' ? "'Cormorant Garamond', serif" :
-                      "'EB Garamond', serif";
-    
-    document.body.style.fontFamily = fontFamily;
+    // تطبيق الخط على جميع عناصر الصفحة
+    applyFontGlobally(language);
     
   }, [language]);
 

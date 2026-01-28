@@ -1,148 +1,26 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import { App } from '@capacitor/app';
 import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
-import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
+import appExitManager from '../utils/appExitManager';
 
 // Context & Services
 import countries from '../data/countries.json';
 
+// Styles
+import '../styles/authPageStyles.css';
+
 // Modals
 import PolicyModal from '../components/modals/PolicyModal';
+import AgeCheckModal from '../components/modals/AgeCheckModal';
+import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
+import CropModal from '../components/modals/CropModal';
+import GoodbyeModal from '../components/modals/GoodbyeModal';
 
-// Age Check Modal Component
-const AgeCheckModal = ({ t, onResponse }) => {
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-[#304B60]">
-        <h2 className="text-2xl font-black text-[#304B60] mb-6">{t.ageCheckTitle}</h2>
-        <p className="text-lg font-bold text-[#304B60]/80 mb-8">{t.ageCheckMessage}</p>
-        <div className="flex gap-4">
-          <button
-            onClick={() => onResponse(true)}
-            className="flex-1 bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
-          >
-            {t.above18}
-          </button>
-          <button
-            onClick={() => onResponse(false)}
-            className="flex-1 bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
-          >
-            {t.below18}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+// Removed embedded PhotoOptionsModal - using separate component
 
-// Goodbye Modal Component
-const GoodbyeModal = ({ t, onConfirm }) => {
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-4 border-[#304B60]">
-        <p className="text-lg font-bold text-[#304B60]/80 mb-8">{t.sorryMessage}</p>
-        <button
-          onClick={onConfirm}
-          className="bg-[#304B60] text-[#D48161] py-4 px-8 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
-        >
-          {t.goodbye}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Photo Options Modal Component
-const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
-        <h3 className="text-xl font-black text-[#304B60] mb-6">{t.uploadPhoto}</h3>
-        <div className="space-y-4">
-          <button
-            onClick={onSelectFromGallery}
-            className="w-full bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
-          >
-            📷 {t.selectFromGallery}
-          </button>
-          <button
-            onClick={onTakePhoto}
-            className="w-full bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
-          >
-            📸 {t.takePhoto}
-          </button>
-          <button
-            onClick={onClose}
-            className="w-full bg-red-600 text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
-          >
-            {t.cancel}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Crop Modal Component
-const CropModal = ({ t, tempImage, crop, setCrop, onCropComplete, onSave, onClose }) => {
-  const imgRef = useRef();
-  
-  const onImageLoad = useCallback((e) => {
-    // eslint-disable-next-line no-unused-vars
-    const { width, height } = e.currentTarget;
-    setCrop({
-      unit: '%',
-      width: 90,
-      height: 90,
-      x: 5,
-      y: 5
-    });
-  }, [setCrop]);
-
-  return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#E3DAD1] p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-[#304B60]">
-        <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.cropTitle}</h3>
-        {tempImage && (
-          <div className="flex justify-center mb-4">
-            <ReactCrop 
-              crop={crop} 
-              onChange={c => setCrop(c)} 
-              onComplete={onCropComplete} 
-              aspect={1} 
-              circularCrop={true}
-            >
-              <img 
-                ref={imgRef} 
-                src={tempImage} 
-                onLoad={onImageLoad} 
-                alt="Crop me" 
-                style={{ maxHeight: '60vh' }}
-              />
-            </ReactCrop>
-          </div>
-        )}
-        <div className="flex gap-4">
-          <button 
-            onClick={onClose} 
-            className="flex-1 border-2 border-red-500 text-red-500 py-3 rounded-xl font-black"
-          >
-            {t.cancel}
-          </button>
-          <button 
-            onClick={onSave} 
-            className="flex-1 bg-[#304B60] text-[#D48161] py-3 rounded-xl font-black"
-          >
-            {t.done}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+// Removed embedded CropModal - using separate component
 
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
@@ -191,6 +69,7 @@ const analyzeImage = async (imageData, userType) => {
 
 // Main Component
 export default function AuthPage() {
+  // eslint-disable-next-line no-unused-vars
   const { language, startBgMusic } = useAuth();
   const t = useTranslate();
   const isRTL = language === 'ar';
@@ -200,6 +79,8 @@ export default function AuthPage() {
   const [showAgeCheck, setShowAgeCheck] = useState(false); // تبدأ بـ false
   const [showGoodbyeModal, setShowGoodbyeModal] = useState(false);
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
+  const [showForm, setShowForm] = useState(false); // للتحكم في ظهور النموذج
+  const [logoAnimated, setLogoAnimated] = useState(false); // للتحكم في حركة اللوجو
 
   // Form States
   const [formData, setFormData] = useState({
@@ -250,28 +131,28 @@ export default function AuthPage() {
     // إظهار رسالة التحقق من العمر في كل مرة يتم فتح الصفحة
     setShowAgeCheck(true);
     
-    // تشغيل الموسيقى الخلفية عند دخول الصفحة إذا لم تكن تعمل
-    const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
-    if (audioEnabled) {
-      // تأخير قصير للسماح للصفحة بالتحميل
-      setTimeout(() => {
-        if (startBgMusic) {
-          startBgMusic();
-        }
-      }, 100);
-    }
-  }, [startBgMusic]);
+    // لا نحتاج لتشغيل الموسيقى هنا لأنها تستمر من صفحة تسجيل الدخول
+    // الموسيقى تدار بواسطة AuthContext وتستمر عبر الصفحات
+    console.log("AuthPage loaded - music should continue from LoginPage");
+    
+  }, []);
 
   const handleAgeResponse = (isAbove18) => {
     if (isAbove18) {
+      // المستخدم فوق 18 سنة - إخفاء رسالة التحقق من العمر والمتابعة للصفحة الرئيسية
       setShowAgeCheck(false);
     } else {
+      // المستخدم تحت 18 سنة - إظهار رسالة الوداع فوق رسالة التحقق من العمر
       setShowGoodbyeModal(true);
+      // لا نخفي رسالة التحقق من العمر هنا لتظهر رسالة الوداع فوقها
     }
   };
 
-  const handleGoodbyeConfirm = () => {
-    App.exitApp();
+  const handleGoodbyeConfirm = async () => {
+    console.log('🚪 المستخدم اختار الخروج من التطبيق - استخدام AppExitManager');
+    
+    // استخدام AppExitManager للخروج النهائي
+    await appExitManager.exitApp('User under 18 - Age verification failed');
   };
 
   const handleInputChange = (e) => {
@@ -282,6 +163,19 @@ export default function AuthPage() {
 
   const handleUserTypeChange = (type) => {
     setUserType(type);
+    
+    // تشغيل الأنيميشن
+    if (!logoAnimated) {
+      setLogoAnimated(true);
+      // إظهار النموذج بعد انتهاء أنيميشن اللوجو
+      setTimeout(() => {
+        setShowForm(true);
+      }, 800); // مدة أنيميشن اللوجو
+    } else {
+      // إذا كان اللوجو متحرك بالفعل، أظهر النموذج مباشرة
+      setShowForm(true);
+    }
+    
     setProfileImage(null);
     setFormData({
       firstName: '',
@@ -428,30 +322,30 @@ export default function AuthPage() {
     }
   };
 
-  if (showAgeCheck) {
-    return <AgeCheckModal t={t} onResponse={handleAgeResponse} />;
-  }
-
-  if (showGoodbyeModal) {
-    return <GoodbyeModal t={t} onConfirm={handleGoodbyeConfirm} />;
-  }
-
-  const inputBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] placeholder-gray-400 transition-all`;
-  const selectBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all`;
+  const inputBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input`;
+  const selectBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select`;
 
   return (
     <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex flex-col items-center p-6 pt-12">
 
-        {/* Logo */}
-        <div className="mb-8">
+        {/* Logo - مع الأنيميشن المحسن */}
+        <div className={`mb-8 logo-animation ${
+          logoAnimated 
+            ? 'logo-animated' 
+            : 'logo-initial'
+        }`}>
           <div className="w-32 h-32 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden">
             <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
-        {/* User Type Selection */}
-        <div className="flex gap-4 mb-8 w-full max-w-md">
+        {/* User Type Selection - مع الأنيميشن المحسن */}
+        <div className={`flex gap-4 mb-8 w-full max-w-md user-type-buttons ${
+          logoAnimated 
+            ? 'buttons-animated' 
+            : ''
+        }`}>
           <button
             onClick={() => handleUserTypeChange('individual')}
             className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
@@ -474,8 +368,14 @@ export default function AuthPage() {
           </button>
         </div>
 
+        {/* Form - يظهر بأنيميشن احترافي محسن */}
         {userType && (
-          <form onSubmit={handleRegisterClick} className="w-full max-w-md space-y-4">
+          <div className={`w-full max-w-md form-animation ${
+            showForm 
+              ? 'form-visible' 
+              : 'form-hidden'
+          }`}>
+            <form onSubmit={handleRegisterClick} className="space-y-4">
 
             {/* Photo Upload */}
             <div className="text-center">
@@ -864,14 +764,18 @@ export default function AuthPage() {
               </>
             )}
 
-            {/* Privacy Policy Agreement */}
-            <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+            {/* Privacy Policy Agreement - تحسين موضع checkbox حسب اللغة */}
+            <div className={`flex items-center gap-3 ${
+              isRTL 
+                ? 'flex-row text-right' // العربية: checkbox على اليسار، النص على اليمين
+                : 'flex-row-reverse text-left' // الإنجليزية/الفرنسية: checkbox على اليمين، النص على اليسار
+            }`}>
               <input
                 type="checkbox"
                 id="agreePolicy"
                 checked={formData.agreed}
                 onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
-                className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
+                className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1] flex-shrink-0"
               />
               <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80 cursor-pointer">
                 {t.agreePolicy}
@@ -891,7 +795,8 @@ export default function AuthPage() {
             >
               {t.register}
             </button>
-          </form>
+            </form>
+          </div>
         )}
 
         {/* Modals */}
@@ -933,6 +838,16 @@ export default function AuthPage() {
               <div className="w-24 h-24 rounded-full border-4 border-[#304B60] border-t-[#D48161] animate-spin mx-auto mb-6"></div>
             </div>
           </div>
+        )}
+
+        {/* رسالة التحقق من العمر */}
+        {showAgeCheck && (
+          <AgeCheckModal t={t} onResponse={handleAgeResponse} />
+        )}
+
+        {/* رسالة الوداع - تظهر فوق رسالة التحقق من العمر */}
+        {showGoodbyeModal && (
+          <GoodbyeModal t={t} onConfirm={handleGoodbyeConfirm} />
         )}
       </div>
     </div>

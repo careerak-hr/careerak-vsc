@@ -1,0 +1,78 @@
+/* AuthPage Placeholder Styles - تحسين ظهور النصوص التوضيحية */
+
+/* تحسين ظهور placeholder في جميع المتصفحات */
+.auth-input::placeholder,
+.auth-select option[value=""] {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
+/* Firefox */
+.auth-input::-moz-placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
+/* Safari */
+.auth-input::-webkit-input-placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
+/* Microsoft Edge */
+.auth-input::-ms-input-placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+  font-weight: 600 !important;
+}
+
+/* تحسين ظهور النص في القوائم المنسدلة */
+.auth-select option[value=""] {
+  color: #9CA3AF !important;
+  font-style: italic;
+}
+
+.auth-select option:not([value=""]) {
+  color: #304B60 !important;
+  font-style: normal;
+}
+
+/* تحسين الأنيميشن للوجو */
+.logo-animation {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-animated {
+  transform: translateY(-1rem) scale(0.75);
+}
+
+.logo-initial {
+  transform: translateY(2rem) scale(1);
+}
+
+/* تحسين أنيميشن ظهور النموذج */
+.form-animation {
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.form-hidden {
+  opacity: 0;
+  transform: translateY(2rem);
+}
+
+/* تحسين أنيميشن الأزرار */
+.user-type-buttons {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.buttons-animated {
+  transform: translateY(-1rem);
+}
