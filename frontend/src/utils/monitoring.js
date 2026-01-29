@@ -1,11 +1,4 @@
-// 📊 مراقبة الأداء باستخدام Web Vitals (مع fallback)
-let webVitals = null;
-try {
-  webVitals = require('web-vitals');
-} catch (error) {
-  console.warn('web-vitals not available, using fallback performance monitoring');
-}
-
+// 📊 مراقبة الأداء مع fallback كامل (بدون web-vitals)
 class PerformanceMonitor {
   constructor() {
     this.metrics = {};
@@ -14,44 +7,15 @@ class PerformanceMonitor {
     this.apiCalls = [];
     this.startTime = Date.now();
     
-    this.initWebVitals();
+    this.initFallbackMetrics();
     this.initErrorTracking();
     this.initUserActionTracking();
-  }
-
-  // 🎯 تهيئة Web Vitals
-  initWebVitals() {
-    const sendToAnalytics = (metric) => {
-      this.metrics[metric.name] = {
-        value: metric.value,
-        rating: metric.rating,
-        timestamp: Date.now()
-      };
-      
-      // إرسال إلى خدمة التحليل (يمكن تخصيصها لاحقاً)
-      this.sendMetric(metric);
-    };
-
-    if (webVitals) {
-      try {
-        webVitals.getCLS(sendToAnalytics);
-        webVitals.getFID(sendToAnalytics);
-        webVitals.getFCP(sendToAnalytics);
-        webVitals.getLCP(sendToAnalytics);
-        webVitals.getTTFB(sendToAnalytics);
-      } catch (error) {
-        console.warn('Error initializing web-vitals:', error);
-        this.initFallbackMetrics();
-      }
-    } else {
-      this.initFallbackMetrics();
-    }
   }
 
   // 📊 مقاييس بديلة إذا لم تكن web-vitals متاحة
   initFallbackMetrics() {
     // استخدام Performance API المدمج
-    if ('performance' in window && 'getEntriesByType' in performance) {
+    if (typeof window !== 'undefined' && 'performance' in window && 'getEntriesByType' in performance) {
       setTimeout(() => {
         const navigation = performance.getEntriesByType('navigation')[0];
         if (navigation) {
@@ -73,56 +37,60 @@ class PerformanceMonitor {
 
   // 🚨 تتبع الأخطاء
   initErrorTracking() {
-    window.addEventListener('error', (event) => {
-      this.logError({
-        type: 'JavaScript Error',
-        message: event.message,
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno,
-        stack: event.error?.stack,
-        timestamp: Date.now(),
-        url: window.location.href,
-        userAgent: navigator.userAgent
+    if (typeof window !== 'undefined') {
+      window.addEventListener('error', (event) => {
+        this.logError({
+          type: 'JavaScript Error',
+          message: event.message,
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+          stack: event.error?.stack,
+          timestamp: Date.now(),
+          url: window.location.href,
+          userAgent: navigator.userAgent
+        });
       });
-    });
 
-    window.addEventListener('unhandledrejection', (event) => {
-      this.logError({
-        type: 'Unhandled Promise Rejection',
-        message: event.reason?.message || 'Unknown promise rejection',
-        stack: event.reason?.stack,
-        timestamp: Date.now(),
-        url: window.location.href
+      window.addEventListener('unhandledrejection', (event) => {
+        this.logError({
+          type: 'Unhandled Promise Rejection',
+          message: event.reason?.message || 'Unknown promise rejection',
+          stack: event.reason?.stack,
+          timestamp: Date.now(),
+          url: window.location.href
+        });
       });
-    });
+    }
   }
 
   // 👤 تتبع إجراءات المستخدم
   initUserActionTracking() {
-    // تتبع النقرات
-    document.addEventListener('click', (event) => {
-      this.logUserAction({
-        type: 'click',
-        element: event.target.tagName,
-        className: event.target.className,
-        id: event.target.id,
-        text: event.target.textContent?.substring(0, 50),
-        timestamp: Date.now(),
-        url: window.location.href
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      // تتبع النقرات
+      document.addEventListener('click', (event) => {
+        this.logUserAction({
+          type: 'click',
+          element: event.target.tagName,
+          className: event.target.className,
+          id: event.target.id,
+          text: event.target.textContent?.substring(0, 50),
+          timestamp: Date.now(),
+          url: window.location.href
+        });
       });
-    });
 
-    // تتبع تغيير الصفحات
-    let currentPath = window.location.pathname;
-    const observer = new MutationObserver(() => {
-      if (window.location.pathname !== currentPath) {
-        this.logPageView(window.location.pathname, currentPath);
-        currentPath = window.location.pathname;
-      }
-    });
-    
-    observer.observe(document.body, { childList: true, subtree: true });
+      // تتبع تغيير الصفحات
+      let currentPath = window.location.pathname;
+      const observer = new MutationObserver(() => {
+        if (window.location.pathname !== currentPath) {
+          this.logPageView(window.location.pathname, currentPath);
+          currentPath = window.location.pathname;
+        }
+      });
+      
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
   }
 
   // 📝 تسجيل الأخطاء
@@ -154,16 +122,18 @@ class PerformanceMonitor {
 
   // 📄 تسجيل عرض الصفحات
   logPageView(newPath, oldPath) {
-    const pageView = {
-      type: 'page_view',
-      from: oldPath,
-      to: newPath,
-      timestamp: Date.now(),
-      loadTime: performance.now()
-    };
-    
-    this.userActions.push(pageView);
-    this.sendPageView(pageView);
+    if (typeof window !== 'undefined' && typeof performance !== 'undefined') {
+      const pageView = {
+        type: 'page_view',
+        from: oldPath,
+        to: newPath,
+        timestamp: Date.now(),
+        loadTime: performance.now()
+      };
+      
+      this.userActions.push(pageView);
+      this.sendPageView(pageView);
+    }
   }
 
   // 🌐 تتبع استدعاءات API
@@ -247,8 +217,8 @@ class PerformanceMonitor {
       session: {
         duration: sessionDuration,
         startTime: this.startTime,
-        url: window.location.href,
-        userAgent: navigator.userAgent
+        url: typeof window !== 'undefined' ? window.location.href : 'N/A',
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'N/A'
       },
       metrics: this.metrics,
       errors: {
@@ -287,7 +257,7 @@ class PerformanceMonitor {
 
   // 💾 معلومات الذاكرة
   getMemoryInfo() {
-    if ('memory' in performance) {
+    if (typeof performance !== 'undefined' && 'memory' in performance) {
       return {
         used: Math.round(performance.memory.usedJSHeapSize / 1024 / 1024),
         total: Math.round(performance.memory.totalJSHeapSize / 1024 / 1024),
@@ -299,7 +269,7 @@ class PerformanceMonitor {
 
   // 🌐 معلومات الاتصال
   getConnectionInfo() {
-    if ('connection' in navigator) {
+    if (typeof navigator !== 'undefined' && 'connection' in navigator) {
       return {
         effectiveType: navigator.connection.effectiveType,
         downlink: navigator.connection.downlink,

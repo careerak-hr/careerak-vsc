@@ -8,7 +8,6 @@ import {
   ProtectedRoute, 
   AdminRoute, 
   HRRoute, 
-  UserRoute, 
   GuestRoute, 
   OnboardingRoute 
 } from './RouteGuards';

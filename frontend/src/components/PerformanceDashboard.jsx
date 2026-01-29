@@ -39,7 +39,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
         setRefreshInterval(null);
       }
     }
-  }, [isVisible]);
+  }, [isVisible, refreshInterval]);
 
   const updateReport = () => {
     try {
@@ -56,12 +56,6 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
     if (ms < 1000) return `${ms}ms`;
     if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
     return `${(ms / 60000).toFixed(1)}m`;
-  };
-
-  const formatBytes = (bytes) => {
-    if (bytes < 1024) return `${bytes}B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)}KB`;
-    return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
   };
 
   const getMetricColor = (value, thresholds) => {

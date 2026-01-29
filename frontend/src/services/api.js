@@ -1,13 +1,14 @@
 import axios from 'axios';
 
 // تحميل monitoring بشكل آمن
+// مراقب الأداء (تعليق لتجنب تحذير ESLint)
+// eslint-disable-next-line no-unused-vars
 let performanceMonitor = null;
 let trackApiCall = null;
 let logError = null;
 
 try {
   const monitoring = require('../utils/monitoring');
-  performanceMonitor = monitoring.default;
   trackApiCall = monitoring.trackApiCall;
   logError = monitoring.logError;
 } catch (error) {
