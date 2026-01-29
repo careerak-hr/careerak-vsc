@@ -162,7 +162,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}
+              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors z-10 w-10 h-10 flex items-center justify-center`}
               style={{ pointerEvents: 'auto', userSelect: 'none' }}
             >
               {showPassword ? '👁️' : '🙈'}

@@ -2,20 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* الحل الجذري الشامل لحقول الإدخال - يجب أن يكون في المقدمة */
-@import url('./styles/inputFieldsGlobalFix.css');
-
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
-/* استيراد ملف فرض الخطوط القوي */
-@import url('./styles/fontEnforcement.css');
-
-/* استيراد ملف إصلاح حقول الإدخال */
-@import url('./styles/inputFix.css');
-
-/* استيراد ملف إجبار تفعيل حقول الإدخال */
-@import url('./styles/inputForceEnable.css');
+/* استيراد ملف إصلاح حقول الإدخال الوحيد */
+@import url('./styles/inputFieldsGlobalFix.css');
 
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
@@ -28,9 +19,8 @@
   color-scheme: light !important;
 }
 
-/* القضاء نهائياً على شريط أدوات النظام ومنع التحديد والاختيار في كامل التطبيق */
-/* استثناء حقول الإدخال والأزرار من البداية */
-*:not(input):not(textarea):not(select):not(button):not([contenteditable="true"]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
+/* القاعدة العامة - منع التحديد للعناصر غير التفاعلية فقط */
+*:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
@@ -43,51 +33,13 @@
   context-menu: none !important;
 }
 
-/* تعطيل جميع قوائم السياق والتحديد للعناصر غير التفاعلية */
-*:not(input):not(textarea):not(select):not(button):not([contenteditable="true"]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::selection {
+/* تعطيل التحديد للعناصر غير التفاعلية */
+*:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::selection {
   background: transparent !important;
 }
 
-*:not(input):not(textarea):not(select):not(button):not([contenteditable="true"]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::-moz-selection {
+*:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::-moz-selection {
   background: transparent !important;
-}
-
-/* استثناء حقول الإدخال للسماح بالكتابة والتحديد */
-input, textarea, [contenteditable="true"] {
-  -webkit-user-select: text !important;
-  -khtml-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
-  -webkit-touch-callout: default !important;
-  -webkit-context-menu: none !important;
-  context-menu: none !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-tap-highlight-color: rgba(212, 129, 97, 0.2) !important;
-}
-
-/* ضمان عمل حقول الإدخال على الأجهزة المحمولة */
-input:focus, textarea:focus, [contenteditable="true"]:focus {
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  outline: none !important;
-  border-color: #D48161 !important;
-}
-
-/* السماح بتحديد النص في حقول الإدخال مع لون خفيف */
-input::selection, textarea::selection, [contenteditable="true"]::selection {
-  background: rgba(212, 129, 97, 0.3) !important;
-  color: inherit !important;
-}
-
-input::-moz-selection, textarea::-moz-selection, [contenteditable="true"]::-moz-selection {
-  background: rgba(212, 129, 97, 0.3) !important;
-  color: inherit !important;
 }
 
 body {
@@ -96,41 +48,26 @@ body {
   box-sizing: border-box;
   background-color: #E3DAD1 !important;
   color: #304B60;
-  font-family: 'Amiri', 'Cairo', serif !important; /* الخط الافتراضي للعربية */
+  font-family: 'Amiri', 'Cairo', serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  /* منع ظهور القائمة عند الضغط المطول على مستوى الجسم */
   -webkit-context-menu: none !important;
 }
 
-/* إجبار رسائل الخطأ على اللون الأحمر - قاعدة عامة */
+/* إجبار رسائل الخطأ على اللون الأحمر */
 .text-red-600,
 [class*="text-red"],
 p[class*="text-red"] {
-  color: #dc2626 !important; /* أحمر قوي */
+  color: #dc2626 !important;
+  font-weight: bold !important;
 }
 
-/* تأكيد إضافي لرسائل الخطأ في النماذج */
-form .text-red-600,
-form [class*="text-red"],
-form p[class*="text-red"] {
-  color: #dc2626 !important; /* أحمر قوي */
-}
-
-/* تأكيد خاص لصفحة AuthPage */
-.auth-page .text-red-600,
-.auth-page [class*="text-red"],
-.auth-page p[class*="text-red"] {
-  color: #dc2626 !important; /* أحمر قوي */
-}
-
-/* تطبيق الخطوط على جميع العناصر بقوة */
+/* تطبيق الخطوط */
 *, *::before, *::after {
   font-family: inherit !important;
 }
 
-/* تطبيق خاص للعناصر الأساسية */
 html {
   font-family: 'Amiri', 'Cairo', serif !important;
 }
@@ -145,45 +82,7 @@ html {
   }
 }
 
-.font-arabic {
-  font-family: 'Amiri', 'Cairo', serif !important;
-}
-
-.font-english {
-  font-family: 'Cormorant Garamond', serif !important;
-}
-
-.font-french {
-  font-family: 'EB Garamond', serif !important;
-}
-
-/* خطوط حسب اللغة للعناوين */
-.font-heading-ar, .font-heading-ar * {
-  font-family: 'Amiri', serif !important;
-}
-
-.font-heading-en, .font-heading-en * {
-  font-family: 'Cormorant Garamond', serif !important;
-}
-
-.font-heading-fr, .font-heading-fr * {
-  font-family: 'EB Garamond', serif !important;
-}
-
-/* خطوط حسب اللغة للنصوص العادية */
-.font-body-ar, .font-body-ar * {
-  font-family: 'Amiri', 'Cairo', serif !important;
-}
-
-.font-body-en, .font-body-en * {
-  font-family: 'Cormorant Garamond', serif !important;
-}
-
-.font-body-fr, .font-body-fr * {
-  font-family: 'EB Garamond', serif !important;
-}
-
-/* خطوط مبسطة حسب اللغة */
+/* خطوط حسب اللغة */
 .font-arabic, .font-arabic * {
   font-family: 'Amiri', 'Cairo', serif !important;
 }
@@ -196,105 +95,17 @@ html {
   font-family: 'EB Garamond', serif !important;
 }
 
-/* تطبيق قوي للخطوط على جميع العناصر */
-body.font-body-ar, body.font-body-ar *, 
-body.font-arabic, body.font-arabic * {
-  font-family: 'Amiri', 'Cairo', serif !important;
-}
-
-body.font-body-en, body.font-body-en *, 
-body.font-english, body.font-english * {
-  font-family: 'Cormorant Garamond', serif !important;
-}
-
-body.font-body-fr, body.font-body-fr *, 
-body.font-french, body.font-french * {
-  font-family: 'EB Garamond', serif !important;
-}
-
-/* تطبيق خاص لعناصر Tailwind CSS */
-.font-sans, .font-serif, .font-mono {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للعناصر المخصصة في React */
-[class*="css-"], [class*="emotion-"], [class*="styled-"] {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للعناصر المتحركة والمؤثرات */
-[style*="font-family"] {
-  font-family: inherit !important;
-}
-
-/* تطبيق الخطوط على العناصر العامة بقوة أكبر */
-* {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للحقول والأزرار */
+/* تطبيق خاص للعناصر الأساسية */
 input, textarea, select, button {
   font-family: inherit !important;
 }
 
-/* تطبيق خاص للعناوين */
 h1, h2, h3, h4, h5, h6 {
   font-family: inherit !important;
   font-weight: 700;
 }
 
-/* تطبيق خاص للنصوص */
 p, span, div, label, a {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للعناصر التفاعلية */
-.btn, .button, [role="button"] {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للرسائل المنبثقة */
-.modal, .popup, .dialog {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للقوائم */
-ul, ol, li {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للجداول */
-table, th, td {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للنماذج */
-form, fieldset, legend {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للعناصر المخصصة */
-[class*="font-"], [class*="text-"] {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص لعناصر React */
-[data-reactroot], [data-react-helmet] {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص لعناصر Tailwind */
-.prose, .prose * {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للعناصر المخفية أو المرئية */
-[hidden], [style*="display: none"] {
-  font-family: inherit !important;
-}
-
-/* تطبيق خاص للعناصر المتحركة */
-[class*="animate-"], [class*="transition-"] {
   font-family: inherit !important;
 }
 
