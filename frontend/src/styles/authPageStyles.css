@@ -32,9 +32,10 @@
   text-align: center !important;
 }
 
-/* تحسين عرض حقل التاريخ */
+/* تحسين عرض حقل التاريخ - إصلاح جذري */
 .auth-input[type="date"] {
   position: relative;
+  color: #9CA3AF !important; /* لون الهينت الافتراضي */
 }
 
 .auth-input[type="date"]:invalid {
@@ -45,15 +46,54 @@
   color: #304B60 !important;
 }
 
-/* إضافة هينت مخصص لحقل التاريخ */
-.auth-input[type="date"]:invalid:before {
-  content: attr(placeholder);
+/* إضافة هينت مخصص لحقل التاريخ - محسن وواضح */
+.auth-input[type="date"]:invalid::before {
+  content: attr(data-placeholder);
   color: #9CA3AF !important;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  font-weight: 600;
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+}
+
+/* إخفاء الهينت عند وجود قيمة */
+.auth-input[type="date"]:valid::before {
+  display: none;
+}
+
+/* إخفاء الهينت عند التركيز */
+.auth-input[type="date"]:focus::before {
+  display: none;
+}
+
+/* تحسين مظهر حقل التاريخ على WebKit */
+.auth-input[type="date"]::-webkit-datetime-edit-text,
+.auth-input[type="date"]::-webkit-datetime-edit-month-field,
+.auth-input[type="date"]::-webkit-datetime-edit-day-field,
+.auth-input[type="date"]::-webkit-datetime-edit-year-field {
+  color: #304B60 !important;
+}
+
+/* إخفاء أيقونة التقويم الافتراضية عند عدم وجود قيمة */
+.auth-input[type="date"]:invalid::-webkit-calendar-picker-indicator {
+  opacity: 0.3;
+}
+
+.auth-input[type="date"]:valid::-webkit-calendar-picker-indicator {
+  opacity: 1;
+}
+
+/* إصلاح خاص للأجهزة المحمولة */
+@media screen and (max-width: 768px) {
+  .auth-input[type="date"]:invalid::before {
+    font-size: 14px;
+    font-weight: 600;
+  }
 }
 
 /* تحسين لون النص المدخل - كحلي */
@@ -66,7 +106,7 @@
   color: #304B60 !important;
 }
 
-/* تحسين ظهور النص في القوائم المنسدلة */
+/* تحسين ظهور النص في القوائم المنسدلة - إصلاح جذري */
 .auth-select {
   color: #9CA3AF !important; /* نفس لون باقي الهينتات */
   text-align: center !important;
@@ -80,6 +120,29 @@
 /* عندما يكون هناك قيمة محددة */
 .auth-select:valid {
   color: #304B60 !important;
+}
+
+/* إجبار لون الهينت للقوائم المنسدلة الفارغة */
+.auth-select[value=""] {
+  color: #9CA3AF !important;
+}
+
+/* إجبار لون الهينت عند عدم وجود قيمة محددة */
+.auth-select:invalid {
+  color: #9CA3AF !important;
+}
+
+/* إصلاح خاص لحقل كود البلد */
+select[name="countryCode"] {
+  color: #9CA3AF !important;
+}
+
+select[name="countryCode"]:not([value=""]) {
+  color: #304B60 !important;
+}
+
+select[name="countryCode"][value=""] {
+  color: #9CA3AF !important;
 }
 
 /* إخفاء الهينت من خيارات القائمة المنسدلة */
@@ -101,10 +164,11 @@
   pointer-events: none;
 }
 
-/* تحسين الأنيميشن للوجو - أنيميشن أكثر سلاسة */
+/* تحسين الأنيميشن للوجو - حل جذري ونهائي */
 .logo-animation {
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
   transform-origin: center center;
+  will-change: transform;
 }
 
 .logo-initial {
@@ -113,14 +177,26 @@
 }
 
 .logo-animated {
-  /* بعد الضغط: أعلى الشاشة، حجم طبيعي - مسافة قليلة */
-  transform: translateY(-1.5rem) scale(1);
+  /* بعد الضغط: أعلى الشاشة، حجم أصغر - موضع صحيح محسن */
+  transform: translateY(-2vh) scale(0.75);
 }
 
-/* تحسين أنيميشن ظهور النموذج */
+/* تحسين أنيميشن الأزرار - حل جذري */
+.user-type-buttons {
+  transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+  will-change: transform;
+}
+
+.buttons-animated {
+  /* الأزرار تنتقل مع اللوجو للأعلى - موضع صحيح محسن */
+  transform: translateY(-2vh);
+}
+
+/* تحسين أنيميشن ظهور النموذج - محسن */
 .form-animation {
-  transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  transition-delay: 0.3s; /* تأخير لإنهاء أنيميشن اللوجو أولاً */
+  transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
+  transition-delay: 0.6s; /* تأخير أطول لإنهاء أنيميشن اللوجو */
+  will-change: opacity, transform, visibility;
 }
 
 .form-visible {
@@ -131,66 +207,139 @@
 
 .form-hidden {
   opacity: 0;
-  transform: translateY(3rem);
+  transform: translateY(4rem);
   visibility: hidden;
 }
 
-/* تحسين أنيميشن الأزرار */
-.user-type-buttons {
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.buttons-animated {
-  /* الأزرار تنتقل مع اللوجو للأعلى - مسافة قليلة */
-  transform: translateY(-1.5rem);
-}
-
-/* تحسين الأنيميشن العام للصفحة */
-@keyframes slideInFromBottom {
-  from {
-    opacity: 0;
-    transform: translateY(2rem);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* أنيميشن لظهور العناصر تدريجياً */
-.form-animation > form > * {
-  animation: slideInFromBottom 0.6s ease-out forwards;
-  opacity: 0;
-}
-
-.form-visible > form > *:nth-child(1) { animation-delay: 0.1s; }
-.form-visible > form > *:nth-child(2) { animation-delay: 0.2s; }
-.form-visible > form > *:nth-child(3) { animation-delay: 0.3s; }
-.form-visible > form > *:nth-child(4) { animation-delay: 0.4s; }
-.form-visible > form > *:nth-child(5) { animation-delay: 0.5s; }
-.form-visible > form > *:nth-child(6) { animation-delay: 0.6s; }
-.form-visible > form > *:nth-child(7) { animation-delay: 0.7s; }
-.form-visible > form > *:nth-child(8) { animation-delay: 0.8s; }
-.form-visible > form > *:nth-child(9) { animation-delay: 0.9s; }
-.form-visible > form > *:nth-child(10) { animation-delay: 1.0s; }
-
-/* تحسين الاستجابة للشاشات الصغيرة */
-@media (max-height: 700px) {
+/* تحسين الاستجابة للشاشات الصغيرة - حل جذري محسن */
+@media (max-height: 800px) {
   .logo-animated {
-    transform: translateY(-2rem) scale(0.85);
+    transform: translateY(-1vh) scale(0.7);
   }
   
   .buttons-animated {
-    transform: translateY(-2rem);
+    transform: translateY(-1vh);
+  }
+}
+
+@media (max-height: 700px) {
+  .logo-animated {
+    transform: translateY(0) scale(0.65);
+  }
+  
+  .buttons-animated {
+    transform: translateY(0);
   }
 }
 
 @media (max-height: 600px) {
   .logo-animated {
-    transform: translateY(-1rem) scale(0.75);
+    transform: translateY(0) scale(0.6);
   }
   
   .buttons-animated {
-    transform: translateY(-1rem);
+    transform: translateY(0);
   }
+}
+
+/* تحسين إضافي للشاشات الصغيرة جداً */
+@media (max-height: 500px) {
+  .logo-animated {
+    transform: translateY(0) scale(0.5);
+  }
+  
+  .buttons-animated {
+    transform: translateY(0);
+  }
+  
+  /* تقليل المسافات في الشاشات الصغيرة */
+  .form-animation {
+    margin-top: 0.5rem;
+  }
+}
+
+/* منع التذبذب والحركة غير المرغوبة */
+.logo-animation,
+.user-type-buttons,
+.form-animation {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+}
+
+/* تحسين شريط التمرير للنوافذ المنبثقة */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #304B60 #E3DAD1;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #E3DAD1;
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #304B60;
+  border-radius: 4px;
+  border: 1px solid #E3DAD1;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #D48161;
+}
+
+/* تحسين التمرير على الأجهزة المحمولة */
+@media (max-width: 768px) {
+  .scrollbar-thin {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
+
+/* ضمان ظهور المحتوى بالكامل على الشاشات الصغيرة */
+@media (max-height: 700px) {
+  .min-h-screen {
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+}
+
+/* تحسين إضافي للأجهزة مع notch */
+@supports (padding: max(0px)) {
+  .min-h-screen {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+/* إجبار رسائل الخطأ على اللون الأحمر - قاعدة خاصة بـ AuthPage */
+.auth-page .text-red-600,
+.auth-page [class*="text-red"],
+.auth-page p[class*="text-red"] {
+  color: #dc2626 !important; /* أحمر قوي */
+  font-weight: bold !important;
+}
+
+/* تأكيد إضافي لرسائل الخطأ في النماذج */
+.auth-page form .text-red-600,
+.auth-page form [class*="text-red"],
+.auth-page form p[class*="text-red"] {
+  color: #dc2626 !important; /* أحمر قوي */
+  font-weight: bold !important;
+}
+
+/* قاعدة شاملة لجميع رسائل الخطأ */
+p.text-red-600 {
+  color: #dc2626 !important; /* أحمر قوي */
+  font-weight: bold !important;
+}
+
+/* قاعدة عامة لضمان ظهور جميع رسائل الخطأ بالأحمر */
+[class*="text-red-"] {
+  color: #dc2626 !important;
+  font-weight: bold !important;
 }

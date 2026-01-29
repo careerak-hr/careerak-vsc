@@ -129,16 +129,26 @@ export default function AuthPage() {
     
   }, []);
 
-  // تحديد لون القوائم المنسدلة عند التحميل
+  // تحديد لون القوائم المنسدلة عند التحميل - محسن
   useEffect(() => {
-    const selectElements = document.querySelectorAll('.auth-select');
-    selectElements.forEach(select => {
-      if (!select.value || select.value === '') {
-        select.style.color = '#9CA3AF'; // لون الهينت
-      } else {
-        select.style.color = '#304B60'; // اللون الأزرق
-      }
-    });
+    const updateSelectColors = () => {
+      const selectElements = document.querySelectorAll('.auth-select');
+      selectElements.forEach(select => {
+        if (!select.value || select.value === '') {
+          select.style.color = '#9CA3AF'; // لون الهينت
+        } else {
+          select.style.color = '#304B60'; // اللون الأزرق
+        }
+      });
+    };
+
+    // تحديث الألوان عند التحميل
+    updateSelectColors();
+    
+    // تحديث الألوان عند تغيير البيانات
+    const timeoutId = setTimeout(updateSelectColors, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, [formData, userType]);
 
   const handleInputChange = (e) => {
@@ -146,9 +156,9 @@ export default function AuthPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (fieldErrors[name]) setFieldErrors(prev => ({ ...prev, [name]: '' }));
     
-    // تحديث لون القائمة المنسدلة عند اختيار قيمة
+    // تحديث لون القائمة المنسدلة عند اختيار قيمة - محسن
     if (e.target.tagName === 'SELECT') {
-      if (value) {
+      if (value && value !== '') {
         e.target.style.color = '#304B60'; // اللون الأزرق عند اختيار قيمة
       } else {
         e.target.style.color = '#9CA3AF'; // لون الهينت عند عدم اختيار قيمة
@@ -202,6 +212,7 @@ export default function AuthPage() {
 
   const getPhoto = async (source) => {
     setShowPhotoModal(false);
+    
     try {
       console.log('🔍 Attempting to get photo from source:', source);
       
@@ -229,11 +240,17 @@ export default function AuthPage() {
       console.log('✅ Photo captured successfully');
       
       if (image.base64String) {
-        setTempImage(`data:image/jpeg;base64,${image.base64String}`);
+        const imageData = `data:image/jpeg;base64,${image.base64String}`;
+        setTempImage(imageData);
         setShowCropModal(true);
+        console.log('📸 Image data prepared for cropping');
       } else {
         console.error('❌ No base64 data received');
-        alert('فشل في الحصول على الصورة. يرجى المحاولة مرة أخرى.');
+        // عرض رسالة خطأ للمستخدم
+        setFieldErrors(prev => ({ 
+          ...prev, 
+          image: 'فشل في الحصول على الصورة. يرجى المحاولة مرة أخرى.' 
+        }));
       }
     } catch (error) {
       console.error('❌ Camera error:', error);
@@ -244,8 +261,22 @@ export default function AuthPage() {
         return; // لا نظهر رسالة خطأ إذا ألغى المستخدم
       }
       
-      // لا نظهر أي رسائل خطأ للمستخدم - فقط نسجل في الكونسول
-      console.log('ℹ️ Photo selection cancelled or failed silently');
+      // معالجة أخطاء الأذونات
+      if (error.message && (error.message.includes('permission') || error.message.includes('denied'))) {
+        setFieldErrors(prev => ({ 
+          ...prev, 
+          image: 'يرجى السماح بالوصول للكاميرا أو المعرض من إعدادات التطبيق' 
+        }));
+        return;
+      }
+      
+      // معالجة الأخطاء العامة
+      setFieldErrors(prev => ({ 
+        ...prev, 
+        image: 'حدث خطأ أثناء رفع الصورة. يرجى المحاولة مرة أخرى.' 
+      }));
+      
+      console.log('ℹ️ Photo selection failed with error:', error.message);
     }
   };
 
@@ -350,18 +381,18 @@ export default function AuthPage() {
     }
   };
 
-  const inputBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input`;
-  const selectBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select`;
+  const inputBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled`;
+  const selectBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled`;
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none auth-page`} dir={isRTL ? 'rtl' : 'ltr'}>
       
-      {/* Container الرئيسي مع تخطيط مرن */}
+      {/* Container الرئيسي مع تخطيط مرن محسن */}
       <div className={`min-h-screen flex flex-col transition-all duration-1000 ${
-        logoAnimated ? 'justify-start pt-8' : 'justify-center'
+        logoAnimated ? 'justify-start pt-4 pb-8' : 'justify-center'
       }`}>
         
-        <div className="flex flex-col items-center px-6">
+        <div className="flex flex-col items-center px-6 pb-8">
 
           {/* Logo - مع الأنيميشن المحسن */}
           <div className={`mb-8 logo-animation ${
@@ -411,7 +442,7 @@ export default function AuthPage() {
                 ? 'form-visible' 
                 : 'form-hidden'
             }`}>
-              <form onSubmit={handleRegisterClick} className="space-y-4">
+              <form onSubmit={handleRegisterClick} className="space-y-4 pb-8">
 
             {/* Photo Upload */}
             <div className="text-center">
@@ -497,12 +528,20 @@ export default function AuthPage() {
                   <input
                     type="date"
                     name="birthDate"
-                    placeholder={t.birthDate}
-                    title={t.birthDate || "تاريخ الميلاد"}
+                    data-placeholder={t.birthDate || "تاريخ الميلاد"}
                     value={formData.birthDate}
                     onChange={handleInputChange}
                     className={inputBase}
-                    onFocus={(e) => e.target.showPicker && e.target.showPicker()}
+                    onFocus={(e) => {
+                      // محاولة فتح منتقي التاريخ
+                      if (e.target.showPicker) {
+                        try {
+                          e.target.showPicker();
+                        } catch (error) {
+                          console.log('Date picker not available');
+                        }
+                      }
+                    }}
                   />
                 </div>
                 {fieldErrors.gender && <p className="text-red-600 font-bold text-sm">{fieldErrors.gender}</p>}
@@ -548,31 +587,45 @@ export default function AuthPage() {
                 />
                 {fieldErrors.interests && <p className="text-red-600 font-bold text-sm">{fieldErrors.interests}</p>}
 
-                <div className="grid grid-cols-3 gap-2">
-                  <select
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    className={`${selectBase} text-sm`}
-                  >
-                    <option value="" disabled hidden>{t.countryCode}</option>
-                    {countries.map(c => (
-                      <option key={c.code} value={c.code} className="text-[#304B60]">
-                        {c.flag} {c.code}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder={t.mobile}
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className={`${inputBase} col-span-2`}
-                  />
+                {/* حقل الهاتف المدمج مع كود البلد - للأفراد */}
+                <div className="relative">
+                  <div className="flex">
+                    {/* كود البلد على الجهة اليمنى (اليسار الحقيقي) */}
+                    <select
+                      name="countryCode"
+                      value={formData.countryCode}
+                      onChange={handleInputChange}
+                      className="w-24 p-4 bg-[#E3DAD1] rounded-r-2xl border-2 border-[#D48161]/20 border-l-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled text-xs font-bold text-center"
+                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                    >
+                      <option value="" disabled hidden style={{ color: '#9CA3AF' }}>كود</option>
+                      {countries.map(c => (
+                        <option key={c.code} value={c.code} className="text-[#304B60] text-xs">
+                          {c.flag} {c.code}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    {/* رقم الهاتف على الجهة اليسرى (اليمين الحقيقي) */}
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder={t.mobile}
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="flex-1 p-4 bg-[#E3DAD1] rounded-l-2xl border-2 border-[#D48161]/20 border-r-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled font-bold text-center"
+                      style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    />
+                  </div>
+                  
+                  {/* رسائل الخطأ */}
+                  {(fieldErrors.countryCode || fieldErrors.phone) && (
+                    <div className="mt-1">
+                      {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
+                      {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
+                    </div>
+                  )}
                 </div>
-                {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
-                {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
 
                 {(formData.education !== 'illiterate' && formData.education !== 'uneducated') && (
                   <>
@@ -729,31 +782,45 @@ export default function AuthPage() {
                 />
                 {fieldErrors.companyKeywords && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyKeywords}</p>}
 
-                <div className="grid grid-cols-3 gap-2">
-                  <select
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    className={`${selectBase} text-sm`}
-                  >
-                    <option value="" disabled hidden>{t.countryCode}</option>
-                    {countries.map(c => (
-                      <option key={c.code} value={c.code} className="text-[#304B60]">
-                        {c.flag} {c.code}
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder={t.mobile}
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className={`${inputBase} col-span-2`}
-                  />
+                {/* حقل الهاتف المدمج مع كود البلد - للشركات */}
+                <div className="relative">
+                  <div className="flex">
+                    {/* كود البلد على الجهة اليمنى (اليسار الحقيقي) */}
+                    <select
+                      name="countryCode"
+                      value={formData.countryCode}
+                      onChange={handleInputChange}
+                      className="w-24 p-4 bg-[#E3DAD1] rounded-r-2xl border-2 border-[#D48161]/20 border-l-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled text-xs font-bold text-center"
+                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                    >
+                      <option value="" disabled hidden style={{ color: '#9CA3AF' }}>كود</option>
+                      {countries.map(c => (
+                        <option key={c.code} value={c.code} className="text-[#304B60] text-xs">
+                          {c.flag} {c.code}
+                        </option>
+                      ))}
+                    </select>
+                    
+                    {/* رقم الهاتف على الجهة اليسرى (اليمين الحقيقي) */}
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder={t.mobile}
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className="flex-1 p-4 bg-[#E3DAD1] rounded-l-2xl border-2 border-[#D48161]/20 border-r-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled font-bold text-center"
+                      style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
+                    />
+                  </div>
+                  
+                  {/* رسائل الخطأ */}
+                  {(fieldErrors.countryCode || fieldErrors.phone) && (
+                    <div className="mt-1">
+                      {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
+                      {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
+                    </div>
+                  )}
                 </div>
-                {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
-                {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
 
                 <input
                   type="email"
@@ -837,7 +904,7 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#304B60] text-[#D48161] py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-6"
+              className="w-full bg-[#304B60] text-[#D48161] py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-8 mb-4"
             >
               {t.register}
             </button>

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* الحل الجذري الشامل لحقول الإدخال - يجب أن يكون في المقدمة */
+@import url('./styles/inputFieldsGlobalFix.css');
+
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
@@ -10,6 +13,9 @@
 
 /* استيراد ملف إصلاح حقول الإدخال */
 @import url('./styles/inputFix.css');
+
+/* استيراد ملف إجبار تفعيل حقول الإدخال */
+@import url('./styles/inputForceEnable.css');
 
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
@@ -23,7 +29,8 @@
 }
 
 /* القضاء نهائياً على شريط أدوات النظام ومنع التحديد والاختيار في كامل التطبيق */
-* {
+/* استثناء حقول الإدخال والأزرار من البداية */
+*:not(input):not(textarea):not(select):not(button):not([contenteditable="true"]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
@@ -36,12 +43,12 @@
   context-menu: none !important;
 }
 
-/* تعطيل جميع قوائم السياق والتحديد */
-*::selection {
+/* تعطيل جميع قوائم السياق والتحديد للعناصر غير التفاعلية */
+*:not(input):not(textarea):not(select):not(button):not([contenteditable="true"]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::selection {
   background: transparent !important;
 }
 
-*::-moz-selection {
+*:not(input):not(textarea):not(select):not(button):not([contenteditable="true"]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::-moz-selection {
   background: transparent !important;
 }
 
@@ -95,6 +102,27 @@ body {
   overflow-x: hidden;
   /* منع ظهور القائمة عند الضغط المطول على مستوى الجسم */
   -webkit-context-menu: none !important;
+}
+
+/* إجبار رسائل الخطأ على اللون الأحمر - قاعدة عامة */
+.text-red-600,
+[class*="text-red"],
+p[class*="text-red"] {
+  color: #dc2626 !important; /* أحمر قوي */
+}
+
+/* تأكيد إضافي لرسائل الخطأ في النماذج */
+form .text-red-600,
+form [class*="text-red"],
+form p[class*="text-red"] {
+  color: #dc2626 !important; /* أحمر قوي */
+}
+
+/* تأكيد خاص لصفحة AuthPage */
+.auth-page .text-red-600,
+.auth-page [class*="text-red"],
+.auth-page p[class*="text-red"] {
+  color: #dc2626 !important; /* أحمر قوي */
 }
 
 /* تطبيق الخطوط على جميع العناصر بقوة */

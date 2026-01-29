@@ -111,6 +111,26 @@ class DevTools {
             
             img.src = imageUrl;
           });
+        },
+
+        // اختبار حقول الإدخال
+        inputFields: async () => {
+          try {
+            const inputTester = await import('./inputFieldTester');
+            return inputTester.default.runComprehensiveTest();
+          } catch (error) {
+            console.error('❌ فشل تحميل أداة اختبار حقول الإدخال:', error);
+          }
+        },
+
+        // اختبار سريع لحقل إدخال محدد
+        quickInputTest: async (selector) => {
+          try {
+            const inputTester = await import('./inputFieldTester');
+            return inputTester.default.quickTest(selector);
+          } catch (error) {
+            console.error('❌ فشل تحميل أداة اختبار حقول الإدخال:', error);
+          }
         }
       },
 
@@ -209,10 +229,17 @@ class DevTools {
       // Ctrl + Shift + C = مسح البيانات
       if (event.ctrlKey && event.shiftKey && event.key === 'C') {
         event.preventDefault();
-        if (confirm('هل تريد مسح جميع بيانات التطبيق؟')) {
+        // استخدام window.confirm بدلاً من confirm المباشر
+        if (window.confirm('هل تريد مسح جميع بيانات التطبيق؟')) {
           window.devTools.cleanup.clearAllData();
           window.location.reload();
         }
+      }
+      
+      // Ctrl + Shift + I = اختبار حقول الإدخال
+      if (event.ctrlKey && event.shiftKey && event.key === 'I') {
+        event.preventDefault();
+        window.devTools.tests.inputFields();
       }
     });
   }
@@ -336,6 +363,8 @@ class DevTools {
 🧪 الاختبارات:
   • window.devTools.tests.responseTime() - اختبار سرعة الاستجابة
   • window.devTools.tests.memoryUsage() - اختبار الذاكرة
+  • window.devTools.tests.inputFields() - اختبار حقول الإدخال
+  • window.devTools.tests.quickInputTest(selector) - اختبار سريع لحقل محدد
 
 🔍 التشخيص:
   • window.devTools.diagnostics.healthCheck() - فحص الحالة
@@ -344,6 +373,7 @@ class DevTools {
 ⌨️ اختصارات لوحة المفاتيح:
   • Ctrl + Shift + P - لوحة الأداء
   • Ctrl + Shift + D - تشخيص سريع
+  • Ctrl + Shift + I - اختبار حقول الإدخال
   • Ctrl + Shift + C - مسح البيانات
 
 🧹 التنظيف:

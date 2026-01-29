@@ -179,8 +179,11 @@ class BootstrapManager {
       
       try {
         // تحميل أدوات التطوير بشكل ديناميكي
-        await import('../utils/devTools');
-        console.log('✅ Development tools loaded');
+        const devToolsModule = await import('../utils/devToolsImplementation');
+        if (devToolsModule.default) {
+          this.services.set('devTools', devToolsModule.default);
+          console.log('✅ Development tools loaded');
+        }
       } catch (error) {
         console.warn('⚠️ Development tools not available:', error.message);
       }
@@ -197,19 +200,28 @@ class BootstrapManager {
 
     // تحميل الأدوات المساعدة (فقط في التطوير)
     if (process.env.NODE_ENV === 'development') {
+      console.log('🛠️ Loading development utilities...');
+      
       try {
-        await Promise.all([
-          import('../utils/resetSettings'),
-          import('../utils/fontTester'),
-          import('../utils/audioTester'),
-          import('../utils/appExitManager'),
-          import('../utils/exitTester'),
-          import('../utils/cvAnalyzerTester')
-        ]);
-        console.log('✅ Development utilities loaded');
+        // تحميل الأدوات المساعدة بشكل ديناميكي
+        const utilityPromises = [
+          import('../utils/resetSettings').catch(() => null),
+          import('../utils/fontTester').catch(() => null),
+          import('../utils/audioTester').catch(() => null),
+          import('../utils/appExitManager').catch(() => null),
+          import('../utils/exitTester').catch(() => null),
+          import('../utils/cvAnalyzerTester').catch(() => null)
+        ];
+        
+        const results = await Promise.allSettled(utilityPromises);
+        const loadedCount = results.filter(r => r.status === 'fulfilled' && r.value).length;
+        
+        console.log(`✅ Development utilities loaded: ${loadedCount}/6`);
       } catch (error) {
         console.warn('⚠️ Some development utilities not available:', error.message);
       }
+    } else {
+      console.log('🏭 Production mode: Development utilities skipped');
     }
   }
 

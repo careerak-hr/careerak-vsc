@@ -87,7 +87,7 @@ export default function LoginPage() {
   };
 
   // تحسين classes للحقول مع ضمان إمكانية الكتابة
-  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
+  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm input-field-enabled";
   
   // تطبيق الخط المناسب حسب اللغة
   const fontStyle = {
@@ -96,7 +96,7 @@ export default function LoginPage() {
                 "'EB Garamond', serif"
   };
 
-  // إضافة styles مخصصة لضمان عمل حقول الإدخال
+  // إضافة styles مخصصة لضمان عمل حقول الإدخال - محسن
   const inputStyles = {
     ...fontStyle,
     WebkitUserSelect: 'text',
@@ -105,7 +105,10 @@ export default function LoginPage() {
     userSelect: 'text',
     pointerEvents: 'auto',
     WebkitTouchCallout: 'default',
-    touchAction: 'manipulation'
+    touchAction: 'manipulation',
+    WebkitTapHighlightColor: 'rgba(212, 129, 97, 0.2)',
+    position: 'relative',
+    zIndex: 1
   };
 
   return (

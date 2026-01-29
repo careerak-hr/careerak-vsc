@@ -1,0 +1,199 @@
+/*
+ * إجبار تفعيل حقول الإدخال - Force Enable Input Fields
+ * حل جذري لمشكلة عدم القدرة على الكتابة في الحقول
+ */
+
+/* إجبار تفعيل جميع حقول الإدخال */
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable] {
+  /* إجبار السماح بالتحديد والكتابة */
+  -webkit-user-select: text !important;
+  -khtml-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  
+  /* إجبار التفاعل */
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  
+  /* إجبار الرؤية والوصول */
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  
+  /* إزالة أي حظر */
+  -webkit-touch-callout: default !important;
+  -webkit-tap-highlight-color: rgba(212, 129, 97, 0.2) !important;
+  
+  /* إزالة أي تأثيرات تمنع الكتابة */
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  
+  /* ضمان الطبقة العلوية */
+  z-index: 999 !important;
+  position: relative !important;
+  
+  /* إزالة أي تأثيرات CSS قد تمنع الكتابة */
+  transform: none !important;
+  filter: none !important;
+  
+  /* ضمان الخط والحجم */
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  
+  /* ضمان الحدود والخلفية */
+  background-color: #E3DAD1 !important;
+  border: 1px solid #D48161 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  
+  /* ضمان اللون */
+  color: #304B60 !important;
+  
+  /* إزالة أي تأثيرات انتقالية قد تتداخل */
+  transition: border-color 0.2s ease !important;
+}
+
+/* تأكيد إضافي عند التركيز */
+input:focus,
+textarea:focus,
+select:focus,
+[contenteditable="true"]:focus,
+[contenteditable]:focus {
+  /* تأكيد السماح بالتحديد والكتابة */
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  
+  /* تأكيد التفاعل */
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  
+  /* تأكيد الرؤية */
+  opacity: 1 !important;
+  visibility: visible !important;
+  
+  /* تأكيد الطبقة العلوية */
+  z-index: 1000 !important;
+  
+  /* تأكيد الحدود عند التركيز */
+  border-color: #D48161 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(212, 129, 97, 0.2) !important;
+}
+
+/* إجبار السماح بتحديد النص */
+input::selection,
+textarea::selection,
+select::selection,
+[contenteditable="true"]::selection,
+[contenteditable]::selection {
+  background: rgba(212, 129, 97, 0.3) !important;
+  color: inherit !important;
+}
+
+input::-moz-selection,
+textarea::-moz-selection,
+select::-moz-selection,
+[contenteditable="true"]::-moz-selection,
+[contenteditable]::-moz-selection {
+  background: rgba(212, 129, 97, 0.3) !important;
+  color: inherit !important;
+}
+
+/* إصلاح خاص للأجهزة المحمولة */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    /* منع التكبير التلقائي في iOS */
+    font-size: 16px !important;
+    -webkit-text-size-adjust: 100% !important;
+    text-size-adjust: 100% !important;
+    
+    /* ضمان التفاعل على الأجهزة المحمولة */
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    
+    /* ضمان عدم التداخل مع الكيبورد */
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+  }
+}
+
+/* إصلاح خاص لـ iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+}
+
+/* إصلاح خاص لـ Android Chrome */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input,
+  textarea,
+  select {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-touch-callout: default !important;
+  }
+}
+
+/* إجبار تفعيل حقول الإدخال في جميع الحالات */
+input[disabled],
+textarea[disabled],
+select[disabled] {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
+/* إزالة أي تأثيرات من المكتبات الخارجية */
+.form-control,
+.form-input,
+.input,
+.textarea,
+[class*="input"],
+[class*="field"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
+
+/* إصلاح خاص لحقول التاريخ والوقت */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"],
+input[type="week"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* إصلاح خاص للحقول المخصصة */
+[role="textbox"],
+[role="combobox"],
+[role="searchbox"] {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+}
