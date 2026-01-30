@@ -5,6 +5,9 @@ import { LanguageProvider } from "./context/LanguageContext";
 import "./i18n/i18n"; // Import i18n configuration
 import "./index.css";
 
+// تشغيل النظام العام لإصلاح حقول الإدخال
+import "./utils/globalInputFieldsFix";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <LanguageProvider>
     <App />

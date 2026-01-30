@@ -1,0 +1,317 @@
+/*
+ * إصلاح طارئ لحقول الإدخال - يتجاوز جميع القيود
+ * EMERGENCY FIX for Input Fields - Overrides all restrictions
+ * 
+ * هذا الملف يحل المشكلة بقوة مطلقة
+ */
+
+/* ===== إجبار مطلق لجميع حقول الإدخال - لا يمكن تجاوزه ===== */
+input,
+textarea,
+select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 2147483647 !important; /* أعلى z-index ممكن */
+  position: relative !important;
+  isolation: isolate !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  
+  /* إزالة جميع التأثيرات المحتملة */
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  clip: auto !important;
+  clip-path: none !important;
+  mask: none !important;
+  -webkit-mask: none !important;
+  overflow: visible !important;
+  
+  /* ضمان عدم وجود حدود خفية */
+  border: inherit !important;
+  outline: none !important;
+  
+  /* ضمان الخط المناسب */
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  
+  /* منع التكبير في iOS */
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+  
+  /* خصائص إضافية للتأكد */
+  -webkit-touch-callout: default !important;
+  -webkit-user-modify: read-write !important;
+  -moz-user-modify: read-write !important;
+  
+  /* إجبار التفاعل */
+  -webkit-pointer-events: auto !important;
+  -moz-pointer-events: auto !important;
+  
+  /* ضمان عدم التأثر بالعناصر الأخرى */
+  mix-blend-mode: normal !important;
+  will-change: auto !important;
+  contain: none !important;
+}
+
+/* إصلاح خاص للقوائم المنسدلة */
+select {
+  cursor: pointer !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  
+  /* إضافة سهم مخصص */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23304B60' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  background-size: 16px !important;
+  padding-right: 40px !important;
+}
+
+/* إصلاح عند التركيز */
+input:focus,
+textarea:focus,
+select:focus {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  z-index: 2147483647 !important;
+  outline: none !important;
+  border: 2px solid #304B60 !important;
+  box-shadow: 0 0 0 3px rgba(48, 75, 96, 0.1) !important;
+}
+
+/* إزالة pointer-events: none من جميع العناصر التي قد تحجب */
+* {
+  /* لا نغير pointer-events للعناصر الأخرى، فقط نضمن أن الحقول تعمل */
+}
+
+/* إصلاح خاص للحقول داخل العناصر المحجوبة */
+[style*="pointer-events: none"] input,
+[style*="pointer-events: none"] textarea,
+[style*="pointer-events: none"] select,
+.pointer-events-none input,
+.pointer-events-none textarea,
+.pointer-events-none select {
+  pointer-events: auto !important;
+  z-index: 2147483647 !important;
+}
+
+/* إصلاح للحقول داخل العناصر المخفية */
+[style*="visibility: hidden"] input,
+[style*="visibility: hidden"] textarea,
+[style*="visibility: hidden"] select,
+[style*="opacity: 0"] input,
+[style*="opacity: 0"] textarea,
+[style*="opacity: 0"] select {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 2147483647 !important;
+}
+
+/* إصلاح للحقول داخل العناصر ذات z-index منخفض */
+[style*="z-index: -"] input,
+[style*="z-index: -"] textarea,
+[style*="z-index: -"] select,
+[style*="z-index: 0"] input,
+[style*="z-index: 0"] textarea,
+[style*="z-index: 0"] select,
+[style*="z-index: 1"] input,
+[style*="z-index: 1"] textarea,
+[style*="z-index: 1"] select {
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+
+/* إصلاح للحقول المعطلة */
+input[disabled],
+textarea[disabled],
+select[disabled] {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  cursor: text !important;
+  z-index: 2147483647 !important;
+}
+
+select[disabled] {
+  cursor: pointer !important;
+}
+
+/* إصلاح للحقول للقراءة فقط */
+input[readonly],
+textarea[readonly] {
+  pointer-events: auto !important;
+  cursor: text !important;
+  z-index: 2147483647 !important;
+}
+
+/* إصلاح خاص للكلاسات المستخدمة */
+.auth-input,
+.auth-select,
+input.auth-input,
+select.auth-select,
+[class*="auth-input"],
+[class*="auth-select"],
+[class*="input"],
+[class*="field"] {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  z-index: 2147483647 !important;
+  cursor: text !important;
+}
+
+.auth-select,
+select.auth-select,
+[class*="auth-select"] {
+  cursor: pointer !important;
+}
+
+/* إصلاح للحقول داخل النماذج */
+form input,
+form textarea,
+form select,
+.form-animation input,
+.form-animation textarea,
+.form-animation select,
+.form-visible input,
+.form-visible textarea,
+.form-visible select,
+.form-hidden input,
+.form-hidden textarea,
+.form-hidden select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  z-index: 2147483647 !important;
+}
+
+/* إصلاح للحقول داخل الصفحات */
+.login-page input,
+.login-page textarea,
+.login-page select,
+.auth-page input,
+.auth-page textarea,
+.auth-page select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  z-index: 2147483647 !important;
+}
+
+/* إصلاح للحقول داخل المودالات والطبقات */
+.modal input,
+.modal textarea,
+.modal select,
+[role="dialog"] input,
+[role="dialog"] textarea,
+[role="dialog"] select,
+.fixed input,
+.fixed textarea,
+.fixed select,
+.absolute input,
+.absolute textarea,
+.absolute select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  z-index: 2147483647 !important;
+}
+
+/* إصلاح للحقول مع backdrop-blur */
+[class*="backdrop-blur"] input,
+[class*="backdrop-blur"] textarea,
+[class*="backdrop-blur"] select {
+  pointer-events: auto !important;
+  z-index: 2147483647 !important;
+  backdrop-filter: none !important;
+}
+
+/* إصلاح للحقول داخل العناصر المتحركة */
+[class*="transition"] input,
+[class*="transition"] textarea,
+[class*="transition"] select,
+[class*="animate"] input,
+[class*="animate"] textarea,
+[class*="animate"] select,
+[class*="duration"] input,
+[class*="duration"] textarea,
+[class*="duration"] select {
+  pointer-events: auto !important;
+  z-index: 2147483647 !important;
+}
+
+/* قاعدة نهائية مطلقة - لا يمكن تجاوزها */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  z-index: 2147483647 !important;
+  position: relative !important;
+  isolation: isolate !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  cursor: text !important;
+}
+
+select {
+  cursor: pointer !important;
+}
+
+/* إصلاح خاص للأجهزة المحمولة */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important;
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    z-index: 2147483647 !important;
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+  }
+  
+  select {
+    cursor: pointer !important;
+  }
+}
+
+/* إصلاحات خاصة بـ iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    z-index: 2147483647 !important;
+  }
+}
+
+/* إصلاحات خاصة بـ Android Chrome */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input,
+  textarea,
+  select {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    z-index: 2147483647 !important;
+  }
+}

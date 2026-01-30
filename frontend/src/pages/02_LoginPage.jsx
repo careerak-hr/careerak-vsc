@@ -8,6 +8,7 @@ import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
 // Input Fields Forcer
 import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
+import { initializeEmergencySystem } from '../utils/inputFieldsEmergencyForcer';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -45,11 +46,17 @@ export default function LoginPage() {
 
     // تشغيل مُجبر حقول الإدخال
     const forcer = initializeInputFieldsForcer();
+    
+    // تشغيل النظام الطارئ
+    const emergency = initializeEmergencySystem();
 
     return () => {
       backButtonListener.then(l => l.remove());
       if (forcer && forcer.cleanup) {
         forcer.cleanup();
+      }
+      if (emergency && emergency.cleanup) {
+        emergency.cleanup();
       }
     };
   }, []);

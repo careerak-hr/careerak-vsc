@@ -20,6 +20,7 @@ import CropModal from '../components/modals/CropModal';
 // Input Fields Forcer
 import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
 import { printFieldsReport } from '../utils/inputFieldsTester';
+import { initializeEmergencySystem } from '../utils/inputFieldsEmergencyForcer';
 
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
@@ -126,6 +127,9 @@ export default function AuthPage() {
     // تشغيل مُجبر حقول الإدخال
     const forcer = initializeInputFieldsForcer();
     
+    // تشغيل النظام الطارئ
+    const emergency = initializeEmergencySystem();
+    
     // طباعة تقرير الحقول بعد ثانيتين
     setTimeout(() => {
       printFieldsReport();
@@ -134,6 +138,9 @@ export default function AuthPage() {
     return () => {
       if (forcer && forcer.cleanup) {
         forcer.cleanup();
+      }
+      if (emergency && emergency.cleanup) {
+        emergency.cleanup();
       }
     };
   }, []);
