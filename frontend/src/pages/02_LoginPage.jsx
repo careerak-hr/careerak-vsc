@@ -82,7 +82,7 @@ export default function LoginPage() {
   };
 
   // تحسين classes للحقول مع ضمان إمكانية الكتابة
-  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm input-field-enabled";
+  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
   
   // تطبيق الخط المناسب حسب اللغة
   const fontStyle = {
@@ -91,23 +91,8 @@ export default function LoginPage() {
                 "'EB Garamond', serif"
   };
 
-  // إضافة styles مخصصة لضمان عمل حقول الإدخال - محسن
-  const inputStyles = {
-    ...fontStyle,
-    WebkitUserSelect: 'text',
-    MozUserSelect: 'text',
-    msUserSelect: 'text',
-    userSelect: 'text',
-    pointerEvents: 'auto',
-    WebkitTouchCallout: 'default',
-    touchAction: 'manipulation',
-    WebkitTapHighlightColor: 'rgba(212, 129, 97, 0.2)',
-    position: 'relative',
-    zIndex: 1
-  };
-
   return (
-    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none login-page`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} login-page`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-sm px-8 flex flex-col items-center">
         
         <div className="mb-8">
@@ -126,14 +111,9 @@ export default function LoginPage() {
             type="text"
             placeholder={loginT.userPlaceholder}
             className={inputCls}
-            style={inputStyles}
+            style={fontStyle}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            onFocus={(e) => {
-              // ضمان إمكانية الكتابة عند التركيز
-              e.target.style.userSelect = 'text';
-              e.target.style.pointerEvents = 'auto';
-            }}
             autoComplete="username"
             required
           />
@@ -143,14 +123,9 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               placeholder={loginT.passPlaceholder}
               className={inputCls}
-              style={inputStyles}
+              style={fontStyle}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onFocus={(e) => {
-                // ضمان إمكانية الكتابة عند التركيز
-                e.target.style.userSelect = 'text';
-                e.target.style.pointerEvents = 'auto';
-              }}
               autoComplete="current-password"
               required
             />
@@ -158,7 +133,6 @@ export default function LoginPage() {
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors z-10 w-10 h-10 flex items-center justify-center`}
-              style={{ pointerEvents: 'auto', userSelect: 'none' }}
             >
               {showPassword ? '👁️' : '🙈'}
             </button>
@@ -187,7 +161,7 @@ export default function LoginPage() {
             type="submit"
             disabled={loading}
             className="w-full bg-[#304B60] text-[#D48161] p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4"
-            style={{ ...fontStyle, pointerEvents: 'auto', userSelect: 'none' }}
+            style={fontStyle}
           >
             {loading ? <div className="w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div> : loginT.loginBtn}
           </button>
@@ -196,9 +170,8 @@ export default function LoginPage() {
         <div className="mt-12 text-center">
           <p className="text-sm font-bold text-[#304B60]/40" style={fontStyle}>
             {loginT.noAccount} <span onClick={() => {
-              // الموسيقى ستستمر عبر AuthContext - لا نحتاج لأي إدارة محلية
               navigate('/auth');
-            }} className="text-[#304B60] cursor-pointer hover:underline font-black" style={{ pointerEvents: 'auto', userSelect: 'none' }}>{loginT.createAccount}</span>
+            }} className="text-[#304B60] cursor-pointer hover:underline font-black">{loginT.createAccount}</span>
           </p>
         </div>
       </div>

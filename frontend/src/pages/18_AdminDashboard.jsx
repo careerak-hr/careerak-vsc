@@ -142,7 +142,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#E3DAD1] p-6 flex flex-col items-center select-none font-sans" dir="rtl">
+    <div className="min-h-screen bg-[#E3DAD1] p-6 flex flex-col items-center font-sans" dir="rtl">
       {/* Header */}
       <div className="w-full max-w-6xl flex items-center justify-between mb-8 bg-[#304B60]/5 p-4 rounded-3xl border border-[#D48161]/10 shadow-sm">
         <div className="flex items-center gap-3">

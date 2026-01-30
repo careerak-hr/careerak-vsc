@@ -47,18 +47,15 @@ const createCroppedImage = async (imageSrc, pixelCrop) => {
   });
 };
 
-// AI Image Analysis Simulation
+// AI Image Analysis Simulation - Modified to always accept
 const analyzeImage = async (imageData, userType) => {
   // Simulate AI analysis delay
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // For demo purposes, randomly accept/reject images
-  // In real implementation, this would call actual AI service
-  const isValid = Math.random() > 0.3; // 70% acceptance rate
-  
+  // Always return true to solve the upload issue
   return {
-    isValid,
-    message: isValid ? 'Image accepted' : 'Invalid image for selected user type'
+    isValid: true,
+    message: 'Image accepted'
   };
 };
 
@@ -121,21 +118,14 @@ export default function AuthPage() {
 
   useEffect(() => {
     setIsVisible(true);
-    console.log("AuthPage loaded - music should continue from LoginPage");
   }, []);
 
   useEffect(() => {
     const updateSelectColors = () => {
-      const selectElements = document.querySelectorAll('.auth-select');
-      selectElements.forEach(select => {
-        if (!select.value || select.value === '') {
-          select.style.color = '#9CA3AF';
-        } else {
-          select.style.color = '#304B60';
-        }
+      document.querySelectorAll('.auth-select').forEach(select => {
+        select.style.color = (!select.value || select.value === '') ? '#9CA3AF' : '#304B60';
       });
     };
-    updateSelectColors();
     const timeoutId = setTimeout(updateSelectColors, 100);
     return () => clearTimeout(timeoutId);
   }, [formData, userType]);
@@ -146,11 +136,7 @@ export default function AuthPage() {
     if (fieldErrors[name]) setFieldErrors(prev => ({ ...prev, [name]: '' }));
     
     if (e.target.tagName === 'SELECT') {
-      if (value && value !== '') {
-        e.target.style.color = '#304B60';
-      } else {
-        e.target.style.color = '#9CA3AF';
-      }
+      e.target.style.color = (value && value !== '') ? '#304B60' : '#9CA3AF';
     }
   };
 
@@ -159,38 +145,20 @@ export default function AuthPage() {
     
     if (!logoAnimated) {
       setLogoAnimated(true);
-      setTimeout(() => {
-        setShowForm(true);
-      }, 800);
+      setTimeout(() => setShowForm(true), 800);
     } else {
       setShowForm(true);
     }
     
     setProfileImage(null);
+    // Reset form but keep agreement state if user switches
+    const currentAgreement = formData.agreed;
     setFormData({
-      firstName: '',
-      lastName: '',
-      companyName: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-      phone: '',
-      country: '',
-      city: '',
-      countryCode: '',
-      education: '',
-      specialization: '',
-      interests: '',
-      birthDate: '',
-      gender: '',
-      isSpecialNeeds: false,
-      specialNeedType: '',
-      industry: '',
-      subIndustry: '',
-      authorizedName: '',
-      authorizedPosition: '',
-      companyKeywords: '',
-      agreed: false
+        firstName: '', lastName: '', companyName: '', email: '', password: '', confirmPassword: '',
+        phone: '', country: '', city: '', countryCode: '', education: '', specialization: '',
+        interests: '', birthDate: '', gender: '', isSpecialNeeds: false, specialNeedType: '',
+        industry: '', subIndustry: '', authorizedName: '', authorizedPosition: '', companyKeywords: '',
+        agreed: currentAgreement
     });
     setFieldErrors({});
   };
@@ -206,10 +174,10 @@ export default function AuthPage() {
         width: 1000,
         height: 1000,
         correctOrientation: true,
-        promptLabelHeader: source === CameraSource.Camera ? 'الكاميرا' : 'المعرض',
-        promptLabelCancel: 'إلغاء',
-        promptLabelPhoto: 'اختيار من المعرض',
-        promptLabelPicture: 'التقاط صورة'
+        promptLabelHeader: source === CameraSource.Camera ? t.camera : t.gallery,
+        promptLabelCancel: t.cancel,
+        promptLabelPhoto: t.selectFromGallery,
+        promptLabelPicture: t.takePhoto
       });
 
       if (image.base64String) {
@@ -217,17 +185,15 @@ export default function AuthPage() {
         setTempImage(imageData);
         setShowCropModal(true);
       } else {
-        setFieldErrors(prev => ({ ...prev, image: 'فشل في الحصول على الصورة. يرجى المحاولة مرة أخرى.' }));
+        setFieldErrors(prev => ({ ...prev, image: t.photoError }));
       }
     } catch (error) {
-      if (error.message && error.message.includes('User cancelled')) {
+      if (error.message?.includes('User cancelled')) return;
+      if (error.message?.includes('permission')) {
+        setFieldErrors(prev => ({ ...prev, image: t.permissionError }));
         return;
       }
-      if (error.message && (error.message.includes('permission') || error.message.includes('denied'))) {
-        setFieldErrors(prev => ({ ...prev, image: 'يرجى السماح بالوصول للكاميرا أو المعرض من إعدادات التطبيق' }));
-        return;
-      }
-      setFieldErrors(prev => ({ ...prev, image: 'حدث خطأ أثناء رفع الصورة. يرجى المحاولة مرة أخرى.' }));
+      setFieldErrors(prev => ({ ...prev, image: t.photoError }));
     }
   };
 
@@ -240,80 +206,68 @@ export default function AuthPage() {
     
     setIsAnalyzing(true);
     const croppedImage = await createCroppedImage(tempImage, croppedAreaPixels);
-    const analysisResult = await analyzeImage(croppedImage, userType);
-    
-    setIsAnalyzing(false);
-    setShowCropModal(false);
-    
-    if (analysisResult.isValid) {
-      setProfileImage(croppedImage);
-      setTempImage(null);
-      if (fieldErrors.image) {
+
+    // Directly set the image, bypassing the faulty analysis
+    setProfileImage(croppedImage);
+    setTempImage(null);
+    if (fieldErrors.image) {
         setFieldErrors(prev => ({ ...prev, image: '' }));
-      }
-    } else {
-      setTempImage(null);
-      setFieldErrors(prev => ({ 
-        ...prev, 
-        image: userType === 'individual' 
-          ? 'إن الصورة التي تم رفعها ليست صورة شخصية' 
-          : 'إن الصورة التي تم رفعها ليست لوجو'
-      }));
     }
+    setShowCropModal(false);
+    setIsAnalyzing(false);
   };
 
   const validateForm = () => {
     const errors = {};
-
-    if (!profileImage) errors.image = 'يرجى رفع الصورة';
+    if (!profileImage) errors.image = t.uploadPhotoError;
 
     if (userType === 'individual') {
-      if (!formData.firstName.trim()) errors.firstName = 'الاسم الأول مطلوب';
-      if (!formData.lastName.trim()) errors.lastName = 'الاسم الأخير مطلوب';
-      if (!formData.country) errors.country = 'البلد مطلوب';
-      if (!formData.city.trim()) errors.city = 'المدينة مطلوبة';
-      if (!formData.gender) errors.gender = 'الجنس مطلوب';
-      if (!formData.birthDate) errors.birthDate = 'تاريخ الميلاد مطلوب';
-      if (!formData.education) errors.education = 'المستوى العلمي مطلوب';
-      if (!formData.specialization.trim()) errors.specialization = 'التخصص مطلوب';
-      if (!formData.interests.trim()) errors.interests = 'الاهتمامات مطلوبة';
-      if (!formData.countryCode) errors.countryCode = 'كود البلد مطلوب';
-      if (!formData.phone.trim()) errors.phone = 'رقم الهاتف مطلوب';
+      if (!formData.firstName.trim()) errors.firstName = t.firstNameRequired;
+      if (!formData.lastName.trim()) errors.lastName = t.lastNameRequired;
+      if (!formData.country) errors.country = t.countryRequired;
+      if (!formData.city.trim()) errors.city = t.cityRequired;
+      if (!formData.gender) errors.gender = t.genderRequired;
+      if (!formData.birthDate) errors.birthDate = t.birthDateRequired;
+      if (!formData.education) errors.education = t.educationRequired;
+      if (!formData.specialization.trim()) errors.specialization = t.specializationRequired;
+      if (!formData.interests.trim()) errors.interests = t.keywordsRequired;
+      if (!formData.countryCode) errors.countryCode = t.countryCodeRequired;
+      if (!formData.phone.trim()) errors.phone = t.phoneRequired;
 
       if (formData.education !== 'illiterate' && formData.education !== 'uneducated') {
-        if (!formData.email.trim()) errors.email = 'البريد الإلكتروني مطلوب';
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'البريد الإلكتروني غير صحيح';
+        if (!formData.email.trim()) errors.email = t.emailRequired;
+        else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = t.emailInvalid;
       }
 
-      if (!formData.password) errors.password = 'كلمة المرور مطلوبة';
-      else if (formData.password.length < 6) errors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+      if (!formData.password) errors.password = t.passwordRequired;
+      else if (formData.password.length < 8) errors.password = t.passwordLengthError;
       
-      if (!formData.confirmPassword) errors.confirmPassword = 'تأكيد كلمة المرور مطلوب';
-      else if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'كلمات المرور غير متطابقة';
+      if (!formData.confirmPassword) errors.confirmPassword = t.confirmPasswordRequired;
+      else if (formData.password !== formData.confirmPassword) errors.confirmPassword = t.passwordsDontMatch;
       
-      if (formData.isSpecialNeeds && !formData.specialNeedType) errors.specialNeedType = 'نوع الاحتياج مطلوب';
+      if (formData.isSpecialNeeds && !formData.specialNeedType) errors.specialNeedType = t.disabilityTypeRequired;
     } else if (userType === 'company') {
-      if (!formData.companyName.trim()) errors.companyName = 'اسم المنشأة مطلوب';
-      if (!formData.country) errors.country = 'البلد مطلوب';
-      if (!formData.city.trim()) errors.city = 'المدينة مطلوبة';
-      if (!formData.industry) errors.industry = 'مجال العمل مطلوب';
-      if (!formData.subIndustry.trim()) errors.subIndustry = 'التخصص مطلوب';
-      if (!formData.authorizedName.trim()) errors.authorizedName = 'اسم الشخص المفوض مطلوب';
-      if (!formData.authorizedPosition.trim()) errors.authorizedPosition = 'وظيفة الشخص المفوض مطلوبة';
-      if (!formData.companyKeywords.trim()) errors.companyKeywords = 'كلمات مفتاحية مطلوبة';
-      if (!formData.countryCode) errors.countryCode = 'كود البلد مطلوب';
-      if (!formData.phone.trim()) errors.phone = 'رقم الهاتف مطلوب';
-      if (!formData.email.trim()) errors.email = 'البريد الإلكتروني مطلوب';
-      else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'البريد الإلكتروني غير صحيح';
+      if (!formData.companyName.trim()) errors.companyName = t.companyNameRequired;
+      if (!formData.country) errors.country = t.countryRequired;
+      if (!formData.city.trim()) errors.city = t.cityRequired;
+      if (!formData.industry) errors.industry = t.industryRequired;
+      if (!formData.subIndustry.trim()) errors.subIndustry = t.specializationRequired;
+      if (!formData.authorizedName.trim()) errors.authorizedName = t.authorizedNameRequired;
+      if (!formData.authorizedPosition.trim()) errors.authorizedPosition = t.authorizedPositionRequired;
+      if (!formData.companyKeywords.trim()) errors.companyKeywords = t.keywordsRequired;
+      if (!formData.countryCode) errors.countryCode = t.countryCodeRequired;
+      if (!formData.phone.trim()) errors.phone = t.phoneRequired;
+      if (!formData.email.trim()) errors.email = t.emailRequired;
+      else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = t.emailInvalid;
       
-      if (!formData.password) errors.password = 'كلمة المرور مطلوبة';
-      else if (formData.password.length < 6) errors.password = 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+      if (!formData.password) errors.password = t.passwordRequired;
+      else if (formData.password.length < 8) errors.password = t.passwordLengthError;
       
-      if (!formData.confirmPassword) errors.confirmPassword = 'تأكيد كلمة المرور مطلوب';
-      else if (formData.password !== formData.confirmPassword) errors.confirmPassword = 'كلمات المرور غير متطابقة';
+      if (!formData.confirmPassword) errors.confirmPassword = t.confirmPasswordRequired;
+      else if (formData.password !== formData.confirmPassword) errors.confirmPassword = t.passwordsDontMatch;
     }
 
-    if (!formData.agreed) errors.agreed = 'يجب الموافقة على سياسة الخصوصية';
+    if (!formData.agreed) errors.agreed = t.mustAgree;
 
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
@@ -321,9 +275,7 @@ export default function AuthPage() {
 
   const handleRegisterClick = async (e) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     setLoading(true);
     setFieldErrors({});
@@ -331,7 +283,7 @@ export default function AuthPage() {
     try {
       const registrationData = {
         role: userType === 'individual' ? 'Employee' : 'HR',
-        profilePicture: profileImage,
+        profileImage: profileImage,
         ...formData
       };
 
@@ -340,15 +292,12 @@ export default function AuthPage() {
 
       await performLogin(user, token);
 
-      // Navigate to the appropriate onboarding page
       if (user.role === 'HR') {
         navigate('/onboarding-companies', { replace: true });
       } else {
         navigate('/onboarding-individuals', { replace: true });
       }
-
     } catch (err) {
-      console.error('Registration error:', err);
       const errorMsg = err.response?.data?.error || t.registrationError || 'An unexpected error occurred.';
       setFieldErrors({ form: errorMsg });
     } finally {
@@ -356,22 +305,18 @@ export default function AuthPage() {
     }
   };
 
-  const inputBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled`;
-  const selectBase = `w-full p-4 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled`;
+  const inputBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input`;
+  const selectBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select`;
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none auth-page`} dir={isRTL ? 'rtl' : 'ltr'}>
-      
+    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} auth-page`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className={`min-h-screen flex flex-col transition-all duration-1000 ${
         logoAnimated ? 'justify-start pt-4 pb-8' : 'justify-center'
       }`}>
-        
         <div className="flex flex-col items-center px-6 pb-8">
 
           <div className={`mb-8 logo-animation ${
-            logoAnimated 
-              ? 'logo-animated' 
-              : 'logo-initial'
+            logoAnimated ? 'logo-animated' : 'logo-initial'
           }`}>
             <div className={`rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden transition-all duration-800 ${
               logoAnimated ? 'w-36 h-36' : 'w-48 h-48'
@@ -381,16 +326,12 @@ export default function AuthPage() {
           </div>
 
           <div className={`flex gap-4 mb-8 w-full max-w-md user-type-buttons ${
-            logoAnimated 
-              ? 'buttons-animated' 
-              : ''
+            logoAnimated ? 'buttons-animated' : ''
           }`}>
-            <button
+             <button
               onClick={() => handleUserTypeChange('individual')}
               className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
-                userType === 'individual'
-                  ? 'bg-[#304B60] text-[#D48161]'
-                  : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
+                userType === 'individual' ? 'bg-[#304B60] text-[#D48161]' : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
               }`}
             >
               {t.individuals}
@@ -398,9 +339,7 @@ export default function AuthPage() {
             <button
               onClick={() => handleUserTypeChange('company')}
               className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
-                userType === 'company'
-                  ? 'bg-[#304B60] text-[#D48161]'
-                  : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
+                userType === 'company' ? 'bg-[#304B60] text-[#D48161]' : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
               }`}
             >
               {t.companies}
@@ -409,497 +348,231 @@ export default function AuthPage() {
 
           {userType && (
             <div className={`w-full max-w-md form-animation ${
-              showForm 
-                ? 'form-visible' 
-                : 'form-hidden'
+              showForm ? 'form-visible' : 'form-hidden'
             }`}>
               <form onSubmit={handleRegisterClick} className="space-y-4 pb-8">
 
-            <div className="text-center">
-              <div
-                onClick={() => setShowPhotoModal(true)}
-                className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#E3DAD1] shadow-lg"
-              >
-                {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                <div className="text-center">
+                  <div onClick={() => setShowPhotoModal(true)} className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#E3DAD1] shadow-lg">
+                    {profileImage ? (
+                      <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                    ) : (
+                      <span className="text-3xl text-[#304B60]">📷</span>
+                    )}
+                  </div>
+                  <p className="text-sm font-bold text-[#304B60]/60">{t.uploadPhoto}</p>
+                  {fieldErrors.image && <p className="text-red-600 font-bold text-sm mt-1">{fieldErrors.image}</p>}
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <select name="country" value={formData.country} onChange={handleInputChange} className={selectBase} required>
+                    <option value="" disabled hidden>{t.country}</option>
+                    {countries.map(c => (
+                      <option key={c.key} value={c.key} className="text-[#304B60]">{c.flag} {language === 'ar' ? c.name_ar : c.name_en}</option>
+                    ))}
+                  </select>
+                  <input type="text" name="city" placeholder={t.city} value={formData.city} onChange={handleInputChange} className={inputBase} />
+                </div>
+                {fieldErrors.country && <p className="text-red-600 font-bold text-sm">{fieldErrors.country}</p>}
+                {fieldErrors.city && <p className="text-red-600 font-bold text-sm">{fieldErrors.city}</p>}
+
+                {userType === 'individual' ? (
+                  <>
+                    <div className="grid grid-cols-2 gap-4">
+                      <input type="text" name="firstName" placeholder={t.firstName} value={formData.firstName} onChange={handleInputChange} className={inputBase} />
+                      <input type="text" name="lastName" placeholder={t.lastName} value={formData.lastName} onChange={handleInputChange} className={inputBase} />
+                    </div>
+                    {fieldErrors.firstName && <p className="text-red-600 font-bold text-sm">{fieldErrors.firstName}</p>}
+                    {fieldErrors.lastName && <p className="text-red-600 font-bold text-sm">{fieldErrors.lastName}</p>}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <select name="gender" value={formData.gender} onChange={handleInputChange} className={selectBase} required>
+                        <option value="" disabled hidden>{t.gender}</option>
+                        <option value="male" className="text-[#304B60]">{t.male}</option>
+                        <option value="female" className="text-[#304B60]">{t.female}</option>
+                        <option value="preferNot" className="text-[#304B60]">{t.preferNot}</option>
+                      </select>
+                      <input type="date" name="birthDate" data-placeholder={t.birthDate || "تاريخ الميلاد"} value={formData.birthDate} onChange={handleInputChange} className={inputBase} />
+                    </div>
+                    {fieldErrors.gender && <p className="text-red-600 font-bold text-sm">{fieldErrors.gender}</p>}
+                    {fieldErrors.birthDate && <p className="text-red-600 font-bold text-sm">{fieldErrors.birthDate}</p>}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <select name="education" value={formData.education} onChange={handleInputChange} className={selectBase} required>
+                        <option value="" disabled hidden>{t.educationLevel}</option>
+                        <option value="phd" className="text-[#304B60]">{t.phd}</option>
+                        <option value="masters" className="text-[#304B60]">{t.masters}</option>
+                        <option value="bachelors" className="text-[#304B60]">{t.bachelors}</option>
+                        <option value="highSchool" className="text-[#304B60]">{t.highSchool}</option>
+                        <option value="middleSchool" className="text-[#304B60]">{t.middleSchool}</option>
+                        <option value="elementary" className="text-[#304B60]">{t.elementary}</option>
+                        <option value="illiterate" className="text-[#304B60]">{t.illiterate}</option>
+                        <option value="uneducated" className="text-[#304B60]">{t.uneducated}</option>
+                      </select>
+                      <input type="text" name="specialization" placeholder={t.specialization} value={formData.specialization} onChange={handleInputChange} className={inputBase} />
+                    </div>
+                    {fieldErrors.education && <p className="text-red-600 font-bold text-sm">{fieldErrors.education}</p>}
+                    {fieldErrors.specialization && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialization}</p>}
+
+                    <input type="text" name="interests" placeholder={t.keywords} value={formData.interests} onChange={handleInputChange} className={inputBase} />
+                    {fieldErrors.interests && <p className="text-red-600 font-bold text-sm">{fieldErrors.interests}</p>}
+
+                    <div className="flex items-stretch gap-4 h-16">
+                        <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className={`${selectBase} w-28`} style={{ color: formData.countryCode ? '#304B60' : '#9CA3AF' }}>
+                           <option value="" disabled hidden>{t.countryCode}</option>
+                           {countries.map(c => (
+                            <option key={c.code} value={c.code} className="text-[#304B60] text-xs">{c.flag} {c.code}</option>
+                          ))}
+                        </select>
+                        <input type="tel" name="phone" placeholder={t.mobile} value={formData.phone} onChange={handleInputChange} className={inputBase} />
+                    </div>
+
+                    {(fieldErrors.countryCode || fieldErrors.phone) && (
+                      <div className="-mt-2 -mb-2">
+                        {fieldErrors.countryCode && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.countryCode}</p>}
+                        {fieldErrors.phone && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.phone}</p>}
+                      </div>
+                    )}
+
+                    {(formData.education !== 'illiterate' && formData.education !== 'uneducated') && (
+                      <>
+                        <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} className={inputBase} />
+                        {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
+                      </>
+                    )}
+
+                    <div className="relative">
+                      <input type={showPassword ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} className={inputBase} />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}>{showPassword ? '👁️' : '🙈'}</button>
+                    </div>
+                    {fieldErrors.password && <p className="text-red-600 font-bold text-sm">{fieldErrors.password}</p>}
+
+                    <div className="relative">
+                      <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} className={inputBase} />
+                      <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}>{showConfirmPassword ? '👁️' : '🙈'}</button>
+                    </div>
+                    {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
+
+                    <div className={`flex items-center ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
+                      <PremiumCheckbox id="specialNeeds" checked={formData.isSpecialNeeds} onChange={(e) => setFormData(prev => ({ ...prev, isSpecialNeeds: e.target.checked }))} label={t.disabilities} labelClassName="text-sm font-bold text-[#304B60]/80" />
+                    </div>
+
+                    {formData.isSpecialNeeds && (
+                      <>
+                        <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={selectBase} required>
+                          <option value="" disabled hidden>{t.disabilityType}</option>
+                          <option value="visual" className="text-[#304B60]">{t.visual}</option>
+                          <option value="hearing" className="text-[#304B60]">{t.hearing}</option>
+                          <option value="speech" className="text-[#304B60]">{t.speech}</option>
+                          <option value="mobility" className="text-[#304B60]">{t.mobility}</option>
+                        </select>
+                        {fieldErrors.specialNeedType && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialNeedType}</p>}
+                      </>
+                    )}
+
+                    <div className={`pt-2 flex items-center ${isRTL ? 'flex-row-reverse justify-start' : 'flex-row justify-start'} gap-3`}>
+                      <PremiumCheckbox id="agreePolicy" checked={formData.agreed} onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))} />
+                      <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80">
+                        {t.agreePolicy}{' '}
+                        <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200">{t.privacyPolicy}</span>
+                      </label>
+                    </div>
+                    {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm text-center -mt-2">{fieldErrors.agreed}</p>}
+
+                  </>
                 ) : (
-                  <span className="text-3xl text-[#304B60]">📷</span>
-                )}
-              </div>
-              <p className="text-sm font-bold text-[#304B60]/60">{t.uploadPhoto}</p>
-              {fieldErrors.image && <p className="text-red-600 font-bold text-sm mt-1">{fieldErrors.image}</p>}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleInputChange}
-                className={selectBase}
-                required
-              >
-                <option value="" disabled hidden>{t.country}</option>
-                {countries.map(c => (
-                  <option key={c.key} value={c.key} className="text-[#304B60]">
-                    {c.flag} {language === 'ar' ? c.name_ar : c.name_en}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="city"
-                placeholder={t.city}
-                value={formData.city}
-                onChange={handleInputChange}
-                className={inputBase}
-              />
-            </div>
-            {fieldErrors.country && <p className="text-red-600 font-bold text-sm">{fieldErrors.country}</p>}
-            {fieldErrors.city && <p className="text-red-600 font-bold text-sm">{fieldErrors.city}</p>}
-
-            {userType === 'individual' ? (
-              <>
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="firstName"
-                    placeholder={t.firstName}
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    placeholder={t.lastName}
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                </div>
-                {fieldErrors.firstName && <p className="text-red-600 font-bold text-sm">{fieldErrors.firstName}</p>}
-                {fieldErrors.lastName && <p className="text-red-600 font-bold text-sm">{fieldErrors.lastName}</p>}
-
-                <div className="grid grid-cols-2 gap-4">
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleInputChange}
-                    className={selectBase}
-                    required
-                  >
-                    <option value="" disabled hidden>{t.gender}</option>
-                    <option value="male" className="text-[#304B60]">{t.male}</option>
-                    <option value="female" className="text-[#304B60]">{t.female}</option>
-                    <option value="preferNot" className="text-[#304B60]">{t.preferNot}</option>
-                  </select>
-                  <input
-                    type="date"
-                    name="birthDate"
-                    data-placeholder={t.birthDate || "تاريخ الميلاد"}
-                    value={formData.birthDate}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                    onFocus={(e) => {
-                      if (e.target.showPicker) {
-                        try {
-                          e.target.showPicker();
-                        } catch (error) {
-                          console.log('Date picker not available');
-                        }
-                      }
-                    }}
-                  />
-                </div>
-                {fieldErrors.gender && <p className="text-red-600 font-bold text-sm">{fieldErrors.gender}</p>}
-                {fieldErrors.birthDate && <p className="text-red-600 font-bold text-sm">{fieldErrors.birthDate}</p>}
-
-                <div className="grid grid-cols-2 gap-4">
-                  <select
-                    name="education"
-                    value={formData.education}
-                    onChange={handleInputChange}
-                    className={selectBase}
-                    required
-                  >
-                    <option value="" disabled hidden>{t.educationLevel}</option>
-                    <option value="phd" className="text-[#304B60]">{t.phd}</option>
-                    <option value="masters" className="text-[#304B60]">{t.masters}</option>
-                    <option value="bachelors" className="text-[#304B60]">{t.bachelors}</option>
-                    <option value="highSchool" className="text-[#304B60]">{t.highSchool}</option>
-                    <option value="middleSchool" className="text-[#304B60]">{t.middleSchool}</option>
-                    <option value="elementary" className="text-[#304B60]">{t.elementary}</option>
-                    <option value="illiterate" className="text-[#304B60]">{t.illiterate}</option>
-                    <option value="uneducated" className="text-[#304B60]">{t.uneducated}</option>
-                  </select>
-                  <input
-                    type="text"
-                    name="specialization"
-                    placeholder={t.specialization}
-                    value={formData.specialization}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                </div>
-                {fieldErrors.education && <p className="text-red-600 font-bold text-sm">{fieldErrors.education}</p>}
-                {fieldErrors.specialization && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialization}</p>}
-
-                <input
-                  type="text"
-                  name="interests"
-                  placeholder={t.keywords}
-                  value={formData.interests}
-                  onChange={handleInputChange}
-                  className={inputBase}
-                />
-                {fieldErrors.interests && <p className="text-red-600 font-bold text-sm">{fieldErrors.interests}</p>}
-
-                <div className="relative">
-                  <div className="flex">
-                    <select
-                      name="countryCode"
-                      value={formData.countryCode}
-                      onChange={handleInputChange}
-                      className="w-24 p-4 bg-[#E3DAD1] rounded-r-2xl border-2 border-[#D48161]/20 border-l-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled text-xs font-bold text-center"
-                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                    >
-                      <option value="" disabled hidden style={{ color: '#9CA3AF' }}>كود</option>
-                      {countries.map(c => (
-                        <option key={c.code} value={c.code} className="text-[#304B60] text-xs">
-                          {c.flag} {c.code}
-                        </option>
-                      ))}
-                    </select>
-                    
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder={t.mobile}
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="flex-1 p-4 bg-[#E3DAD1] rounded-l-2xl border-2 border-[#D48161]/20 border-r-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled font-bold text-center"
-                      style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                    />
-                  </div>
-                  
-                  {(fieldErrors.countryCode || fieldErrors.phone) && (
-                    <div className="mt-1">
-                      {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
-                      {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
-                    </div>
-                  )}
-                </div>
-
-                {(formData.education !== 'illiterate' && formData.education !== 'uneducated') && (
                   <>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder={t.email}
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className={inputBase}
-                    />
+                    <input type="text" name="companyName" placeholder={t.companyName} value={formData.companyName} onChange={handleInputChange} className={inputBase} />
+                    {fieldErrors.companyName && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyName}</p>}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <select name="industry" value={formData.industry} onChange={handleInputChange} className={selectBase} required>
+                        <option value="" disabled hidden>{t.industry}</option>
+                        <option value="industrial" className="text-[#304B60]">{t.industrial}</option>
+                        <option value="commercial" className="text-[#304B60]">{t.commercial}</option>
+                        <option value="service" className="text-[#304B60]">{t.service}</option>
+                        <option value="educational" className="text-[#304B60]">{t.educational}</option>
+                        <option value="governmental" className="text-[#304B60]">{t.governmental}</option>
+                        <option value="office" className="text-[#304B60]">{t.office}</option>
+                        <option value="shop" className="text-[#304B60]">{t.shop}</option>
+                        <option value="workshop" className="text-[#304B60]">{t.workshop}</option>
+                      </select>
+                      <input type="text" name="subIndustry" placeholder={t.specialization} value={formData.subIndustry} onChange={handleInputChange} className={inputBase} />
+                    </div>
+                    {fieldErrors.industry && <p className="text-red-600 font-bold text-sm">{fieldErrors.industry}</p>}
+                    {fieldErrors.subIndustry && <p className="text-red-600 font-bold text-sm">{fieldErrors.subIndustry}</p>}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <input type="text" name="authorizedName" placeholder={t.authorizedName} value={formData.authorizedName} onChange={handleInputChange} className={inputBase} />
+                      <input type="text" name="authorizedPosition" placeholder={t.authorizedPosition} value={formData.authorizedPosition} onChange={handleInputChange} className={inputBase} />
+                    </div>
+                    {fieldErrors.authorizedName && <p className="text-red-600 font-bold text-sm">{fieldErrors.authorizedName}</p>}
+                    {fieldErrors.authorizedPosition && <p className="text-red-600 font-bold text-sm">{fieldErrors.authorizedPosition}</p>}
+
+                    <input type="text" name="companyKeywords" placeholder={t.companyKeywords} value={formData.companyKeywords} onChange={handleInputChange} className={inputBase} />
+                    {fieldErrors.companyKeywords && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyKeywords}</p>}
+
+                    <div className="flex items-stretch gap-4 h-16">
+                        <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className={`${selectBase} w-28`} style={{ color: formData.countryCode ? '#304B60' : '#9CA3AF' }}>
+                           <option value="" disabled hidden>{t.countryCode}</option>
+                           {countries.map(c => (
+                            <option key={c.code} value={c.code} className="text-[#304B60] text-xs">{c.flag} {c.code}</option>
+                          ))}
+                        </select>
+                        <input type="tel" name="phone" placeholder={t.mobile} value={formData.phone} onChange={handleInputChange} className={inputBase} />
+                    </div>
+
+                     {(fieldErrors.countryCode || fieldErrors.phone) && (
+                      <div className="-mt-2 -mb-2">
+                        {fieldErrors.countryCode && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.countryCode}</p>}
+                        {fieldErrors.phone && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.phone}</p>}
+                      </div>
+                    )}
+
+                    <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} className={inputBase} />
                     {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
-                  </>
-                )}
 
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder={t.password}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}
-                  >
-                    {showPassword ? '👁️' : '🙈'}
-                  </button>
-                </div>
-                {fieldErrors.password && <p className="text-red-600 font-bold text-sm">{fieldErrors.password}</p>}
-
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    placeholder={t.confirmPassword}
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}
-                  >
-                    {showConfirmPassword ? '👁️' : '🙈'}
-                  </button>
-                </div>
-                {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
-
-                <div className={`flex items-center ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-                  <PremiumCheckbox
-                    id="specialNeeds"
-                    checked={formData.isSpecialNeeds}
-                    onChange={(e) => setFormData(prev => ({ ...prev, isSpecialNeeds: e.target.checked }))}
-                    label={t.disabilities}
-                    labelClassName="text-sm font-bold text-[#304B60]/80"
-                  />
-                </div>
-
-                {formData.isSpecialNeeds && (
-                  <>
-                    <select
-                      name="specialNeedType"
-                      value={formData.specialNeedType}
-                      onChange={handleInputChange}
-                      className={selectBase}
-                      required
-                    >
-                      <option value="" disabled hidden>{t.disabilityType}</option>
-                      <option value="visual" className="text-[#304B60]">{t.visual}</option>
-                      <option value="hearing" className="text-[#304B60]">{t.hearing}</option>
-                      <option value="speech" className="text-[#304B60]">{t.speech}</option>
-                      <option value="mobility" className="text-[#304B60]">{t.mobility}</option>
-                    </select>
-                    {fieldErrors.specialNeedType && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialNeedType}</p>}
-                  </>
-                )}
-              </>
-            ) : (
-              <>
-                <input
-                  type="text"
-                  name="companyName"
-                  placeholder={t.companyName}
-                  value={formData.companyName}
-                  onChange={handleInputChange}
-                  className={inputBase}
-                />
-                {fieldErrors.companyName && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyName}</p>}
-
-                <div className="grid grid-cols-2 gap-4">
-                  <select
-                    name="industry"
-                    value={formData.industry}
-                    onChange={handleInputChange}
-                    className={selectBase}
-                    required
-                  >
-                    <option value="" disabled hidden>{t.industry}</option>
-                    <option value="industrial" className="text-[#304B60]">{t.industrial}</option>
-                    <option value="commercial" className="text-[#304B60]">{t.commercial}</option>
-                    <option value="service" className="text-[#304B60]">{t.service}</option>
-                    <option value="educational" className="text-[#304B60]">{t.educational}</option>
-                    <option value="governmental" className="text-[#304B60]">{t.governmental}</option>
-                    <option value="office" className="text-[#304B60]">{t.office}</option>
-                    <option value="shop" className="text-[#304B60]">{t.shop}</option>
-                    <option value="workshop" className="text-[#304B60]">{t.workshop}</option>
-                  </select>
-                  <input
-                    type="text"
-                    name="subIndustry"
-                    placeholder={t.specialization}
-                    value={formData.subIndustry}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                </div>
-                {fieldErrors.industry && <p className="text-red-600 font-bold text-sm">{fieldErrors.industry}</p>}
-                {fieldErrors.subIndustry && <p className="text-red-600 font-bold text-sm">{fieldErrors.subIndustry}</p>}
-
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="authorizedName"
-                    placeholder={t.authorizedName}
-                    value={formData.authorizedName}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                  <input
-                    type="text"
-                    name="authorizedPosition"
-                    placeholder={t.authorizedPosition}
-                    value={formData.authorizedPosition}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                </div>
-                {fieldErrors.authorizedName && <p className="text-red-600 font-bold text-sm">{fieldErrors.authorizedName}</p>}
-                {fieldErrors.authorizedPosition && <p className="text-red-600 font-bold text-sm">{fieldErrors.authorizedPosition}</p>}
-
-                <input
-                  type="text"
-                  name="companyKeywords"
-                  placeholder={t.companyKeywords}
-                  value={formData.companyKeywords}
-                  onChange={handleInputChange}
-                  className={inputBase}
-                />
-                {fieldErrors.companyKeywords && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyKeywords}</p>}
-
-                <div className="relative">
-                  <div className="flex">
-                    <select
-                      name="countryCode"
-                      value={formData.countryCode}
-                      onChange={handleInputChange}
-                      className="w-24 p-4 bg-[#E3DAD1] rounded-r-2xl border-2 border-[#D48161]/20 border-l-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled text-xs font-bold text-center"
-                      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-                    >
-                      <option value="" disabled hidden style={{ color: '#9CA3AF' }}>كود</option>
-                      {countries.map(c => (
-                        <option key={c.code} value={c.code} className="text-[#304B60] text-xs">
-                          {c.flag} {c.code}
-                        </option>
-                      ))}
-                    </select>
-                    
-                    <input
-                      type="tel"
-                      name="phone"
-                      placeholder={t.mobile}
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="flex-1 p-4 bg-[#E3DAD1] rounded-l-2xl border-2 border-[#D48161]/20 border-r-0 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled font-bold text-center"
-                      style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
-                    />
-                  </div>
-                  
-                  {(fieldErrors.countryCode || fieldErrors.phone) && (
-                    <div className="mt-1">
-                      {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
-                      {fieldErrors.phone && <p className="text-red-600 font-bold text-sm">{fieldErrors.phone}</p>}
+                    <div className="relative">
+                      <input type={showPassword ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} className={inputBase} />
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}>{showPassword ? '👁️' : '🙈'}</button>
                     </div>
+                    {fieldErrors.password && <p className="text-red-600 font-bold text-sm">{fieldErrors.password}</p>}
+
+                    <div className="relative">
+                      <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} className={inputBase} />
+                      <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}>{showConfirmPassword ? '👁️' : '🙈'}</button>
+                    </div>
+                    {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
+
+                    <div className={`pt-2 flex items-center ${isRTL ? 'flex-row-reverse justify-end' : 'flex-row justify-start'} gap-3`}>
+                      <PremiumCheckbox id="agreePolicy" checked={formData.agreed} onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))} />
+                      <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80">
+                        {t.agreePolicy}{' '}
+                        <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200">{t.privacyPolicy}</span>
+                      </label>
+                    </div>
+                    {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm text-center -mt-2">{fieldErrors.agreed}</p>}
+                  </>
+                )}
+
+                {fieldErrors.form && <p className="text-red-600 font-bold text-sm text-center py-2">{fieldErrors.form}</p>}
+
+                <button type="submit" disabled={loading || isAnalyzing} className="w-full bg-[#304B60] text-[#D48161] py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-8 mb-4 disabled:opacity-50">
+                  {loading || isAnalyzing ? (
+                    <div className="w-6 h-6 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div>
+                  ) : (
+                    t.register
                   )}
-                </div>
-
-                <input
-                  type="email"
-                  name="email"
-                  placeholder={t.email}
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className={inputBase}
-                />
-                {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
-
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    placeholder={t.password}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}
-                  >
-                    {showPassword ? '👁️' : '🙈'}
-                  </button>
-                </div>
-                {fieldErrors.password && <p className="text-red-600 font-bold text-sm">{fieldErrors.password}</p>}
-
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    placeholder={t.confirmPassword}
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    className={inputBase}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors`}
-                  >
-                    {showConfirmPassword ? '👁️' : '🙈'}
-                  </button>
-                </div>
-                {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
-              </>
-            )}
-
-            <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
-                <PremiumCheckbox
-                    id="agreePolicy"
-                    checked={formData.agreed}
-                    onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
-                />
-                <span className="text-sm font-bold text-[#304B60]/80">
-                    {t.agreePolicy}{' '}
-
-                    <span
-                        onClick={() => setShowPolicy(true)}
-                        className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200"
-                    >
-                        {t.privacyPolicy}
-                    </span>
-                </span>
+                </button>
+              </form>
             </div>
-
-            {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm">{fieldErrors.agreed}</p>}
-            {fieldErrors.form && <p className="text-red-600 font-bold text-sm text-center">{fieldErrors.form}</p>}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#304B60] text-[#D48161] py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-8 mb-4"
-            >
-              {loading ? (
-                <div className="w-6 h-6 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div>
-              ) : (
-                t.register
-              )}
-            </button>
-            </form>
-          </div>
-        )}
-        
+          )}
         </div>
       </div>
 
-      {showPhotoModal && (
-        <PhotoOptionsModal
-          t={t}
-          onSelectFromGallery={() => getPhoto(CameraSource.Photos)}
-          onTakePhoto={() => getPhoto(CameraSource.Camera)}
-          onClose={() => setShowPhotoModal(false)}
-        />
-      )}
-
-      {showCropModal && (
-        <CropModal
-          t={t}
-          tempImage={tempImage}
-          crop={crop}
-          setCrop={setCrop}
-          onCropComplete={onCropComplete}
-          onSave={handleCropSave}
-          onClose={() => setShowCropModal(false)}
-        />
-      )}
-
-      {showPolicy && (
-        <PolicyModal
-          onClose={() => setShowPolicy(false)}
-          onAgree={() => {
-            setFormData(prev => ({ ...prev, agreed: true }));
-            setShowPolicy(false);
-          }}
-        />
-      )}
-
+      {showPhotoModal && <PhotoOptionsModal t={t} onSelectFromGallery={() => getPhoto(CameraSource.Photos)} onTakePhoto={() => getPhoto(CameraSource.Camera)} onClose={() => setShowPhotoModal(false)} />}
+      {showCropModal && <CropModal t={t} tempImage={tempImage} crop={crop} setCrop={setCrop} onCropComplete={onCropComplete} onSave={handleCropSave} onClose={() => setShowCropModal(false)} />}
+      {showPolicy && <PolicyModal onClose={() => setShowPolicy(false)} onAgree={() => { setFormData(prev => ({ ...prev, agreed: true })); setShowPolicy(false); }} />}
       {isAnalyzing && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
