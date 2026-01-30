@@ -7,8 +7,8 @@ echo.
 :: 1. Git Push Process
 echo [1/5] Preparing to push changes to GitHub...
 git add .
-set /p commit_msg="Enter commit message (or press Enter for default): "
-if "!commit_msg!"=="" set commit_msg="Reference Point 09: AI Individual Onboarding, Smart Profile, and New Navigation"
+set /p "commit_msg=Enter commit message (or press Enter for default): "
+if "!commit_msg!"=="" set "commit_msg=Reference Point 09: AI Individual Onboarding, Smart Profile, and New Navigation"
 
 git commit -m "!commit_msg!"
 git push origin main
@@ -25,6 +25,7 @@ cd frontend
 call npm run build
 if %errorlevel% neq 0 (
     echo Error in Frontend Build!
+    cd ..
     pause
     exit /b %errorlevel%
 )
@@ -35,6 +36,7 @@ echo [3/5] Syncing with Capacitor...
 call npx cap sync android
 if %errorlevel% neq 0 (
     echo Error in Capacitor Sync!
+    cd ..
     pause
     exit /b %errorlevel%
 )
@@ -46,6 +48,7 @@ cd android
 call gradlew clean
 if %errorlevel% neq 0 (
     echo Error in Gradlew Clean!
+    cd ..\..
     pause
     exit /b %errorlevel%
 )
@@ -56,13 +59,15 @@ echo [5/5] Assembling Debug APK...
 call gradlew assembleDebug
 if %errorlevel% neq 0 (
     echo Error in Gradlew Assemble!
+    cd ..\..
     pause
     exit /b %errorlevel%
 )
 
+cd ..\..
 echo.
 echo [Eng.AlaaUddien] SUCCESS!
 echo - Code pushed to GitHub.
-echo - APK is ready at: D:\Careerak\Careerak-vsc\frontend\android\app\build\outputs\apk\debug\careerak.apk
+echo - APK is ready at: %CD%\frontend\android\app\build\outputs\apk\debug\careerak.apk
 echo.
 pause

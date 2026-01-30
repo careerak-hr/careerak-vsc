@@ -26,9 +26,44 @@ export default function EntryPage() {
 
   const audioRef = useRef(null);
   const isMounted = useRef(true);
+  const timersRef = useRef([]);
+  const listenersRef = useRef([]);
+
+  // تنظيف شامل للموارد
+  const cleanupResources = () => {
+    // تنظيف الصوت
+    if (audioRef.current) {
+      try {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.src = '';
+        audioRef.current.load();
+      } catch (e) {
+        console.log('Audio cleanup error:', e);
+      }
+      audioRef.current = null;
+    }
+
+    // تنظيف المؤقتات
+    timersRef.current.forEach(timer => {
+      if (timer) clearTimeout(timer);
+    });
+    timersRef.current = [];
+
+    // تنظيف المستمعين
+    listenersRef.current.forEach(listener => {
+      if (listener && typeof listener.then === 'function') {
+        listener.then(l => l.remove()).catch(() => {});
+      }
+    });
+    listenersRef.current = [];
+
+    isMounted.current = false;
+  };
 
   useEffect(() => {
     isMounted.current = true;
+    
     const initServer = async () => {
       try {
         await discoverBestServer();
@@ -39,65 +74,95 @@ export default function EntryPage() {
     initServer();
 
     const SYSTEM_DELAY = 1000;
-    const timers = [
-      setTimeout(() => {
-        if (isMounted.current) {
-          setPhase(1);
-        }
-      }, SYSTEM_DELAY),
-      setTimeout(() => { if (isMounted.current) setPhase(2); }, SYSTEM_DELAY + 1500),
-      setTimeout(() => { if (isMounted.current) setPhase(3); }, SYSTEM_DELAY + 7000),
-      setTimeout(() => {
-        if (audioRef.current) { 
-          audioRef.current.pause(); 
-          audioRef.current.currentTime = 0;
-          audioRef.current = null; 
-        }
-        if (isMounted.current) navigate('/login', { replace: true });
-      }, SYSTEM_DELAY + 9000)
-    ];
+    
+    // إنشاء المؤقتات مع التنظيف الآمن
+    const timer1 = setTimeout(() => {
+      if (isMounted.current) {
+        setPhase(1);
+      }
+    }, SYSTEM_DELAY);
+
+    const timer2 = setTimeout(() => {
+      if (isMounted.current) {
+        setPhase(2);
+      }
+    }, SYSTEM_DELAY + 1500);
+
+    const timer3 = setTimeout(() => {
+      if (isMounted.current) {
+        setPhase(3);
+      }
+    }, SYSTEM_DELAY + 7000);
+
+    const timer4 = setTimeout(() => {
+      if (isMounted.current) {
+        cleanupResources();
+        // استخدام requestAnimationFrame لضمان التنقل السلس
+        requestAnimationFrame(() => {
+          navigate('/login', { replace: true });
+        });
+      }
+    }, SYSTEM_DELAY + 9000);
+
+    // حفظ المؤقتات للتنظيف
+    timersRef.current = [timer1, timer2, timer3, timer4];
 
     const handleAppState = (state) => {
       if (audioRef.current) {
-        if (state.isActive && audioEnabled) {
-          audioRef.current.play().catch(() => {});
-        } else {
-          audioRef.current.pause();
+        try {
+          if (state.isActive && audioEnabled) {
+            audioRef.current.play().catch(() => {});
+          } else {
+            audioRef.current.pause();
+          }
+        } catch (e) {
+          console.log('App state audio error:', e);
         }
       }
     };
-    const listener = App.addListener('appStateChange', handleAppState);
+
+    const appStateListener = App.addListener('appStateChange', handleAppState);
+    listenersRef.current.push(appStateListener);
 
     // إضافة مستمع للخروج من التطبيق
     const backButtonListener = App.addListener('backButton', () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current = null;
-      }
+      cleanupResources();
       App.exitApp();
     });
+    listenersRef.current.push(backButtonListener);
 
-    return () => {
-      isMounted.current = false;
-      timers.forEach(clearTimeout);
-      if (audioRef.current) { 
-        audioRef.current.pause(); 
-        audioRef.current.currentTime = 0;
-        audioRef.current = null; 
-      }
-      listener.then(l => l.remove());
-      backButtonListener.then(l => l.remove());
-    };
+    return cleanupResources;
   }, [navigate, audioEnabled]);
 
   // Separate useEffect for audio to handle audioEnabled changes
   useEffect(() => {
-    if (audioEnabled && phase === 1 && !audioRef.current) {
-      console.log("Playing intro.mp3");
-      audioRef.current = new Audio('/intro.mp3');
-      audioRef.current.volume = 0.6;
-      audioRef.current.play().catch((e) => console.log("Intro audio play failed:", e));
+    if (audioEnabled && phase === 1 && !audioRef.current && isMounted.current) {
+      try {
+        console.log("Playing intro.mp3");
+        audioRef.current = new Audio('/intro.mp3');
+        audioRef.current.volume = 0.6;
+        audioRef.current.preload = 'auto';
+        
+        // إضافة مستمعي أحداث للصوت
+        audioRef.current.addEventListener('ended', () => {
+          if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+          }
+        });
+
+        audioRef.current.addEventListener('error', (e) => {
+          console.log("Audio error:", e);
+          audioRef.current = null;
+        });
+
+        audioRef.current.play().catch((e) => {
+          console.log("Intro audio play failed:", e);
+          audioRef.current = null;
+        });
+      } catch (e) {
+        console.log("Audio initialization error:", e);
+        audioRef.current = null;
+      }
     }
   }, [audioEnabled, phase]);
 

@@ -25,6 +25,36 @@
   color-scheme: light !important;
 }
 
+/* إضافة الأنيميشن المفقود للدوران البطيء */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 8s linear infinite;
+}
+
+/* إضافة أنيميشن للتوسع مع التوهج */
+@keyframes expand-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.05;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
+}
+
+.animate-expand-glow {
+  animation: expand-glow 4s ease-in-out infinite;
+}
+
 /* القاعدة العامة - منع التحديد للعناصر غير التفاعلية فقط */
 *:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
   -webkit-tap-highlight-color: transparent !important;
