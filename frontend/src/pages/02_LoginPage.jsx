@@ -51,36 +51,31 @@ export default function LoginPage() {
     setError('');
 
     try {
-      // Admin login check
-      if (identifier.trim() === 'admin01' && password === 'admin123') {
-         console.log('Admin login detected, processing...');
-         
-         const adminUser = { _id: 'admin_master_01', firstName: 'Master', lastName: 'Admin', role: 'Admin', email: 'admin01' };
-         console.log('Admin user object:', adminUser);
-         await performLogin(adminUser, "OFFLINE_MASTER_ADMIN_TOKEN");
-         console.log('Admin login completed, navigating to dashboard...');
-         navigate('/admin-dashboard', { replace: true });
-         return;
+      // Remember user preference
+      if (rememberMe) {
+        localStorage.setItem('remembered_user', identifier);
+      } else {
+        localStorage.removeItem('remembered_user');
       }
 
-      // Remember user preference
-      if (rememberMe) localStorage.setItem('remembered_user', identifier);
-      else localStorage.removeItem('remembered_user');
-
-      // API login
+      // API login for all users (including admin)
       const response = await api.post('/users/login', { email: identifier, password });
-      await performLogin(response.data.user, response.data.token);
+      const { user, token } = response.data;
+      
+      await performLogin(user, token);
       
       // Navigate based on user role
-      const user = response.data.user;
-      
-      if (user.role === 'Admin') navigate('/admin-dashboard');
-      else if (user.role === 'HR') navigate(user.bio ? '/profile' : '/onboarding-companies');
-      else navigate(user.bio ? '/profile' : '/onboarding-individuals');
+      if (user.role === 'Admin') {
+        navigate('/admin-dashboard', { replace: true });
+      } else if (user.role === 'HR') {
+        navigate(user.bio ? '/profile' : '/onboarding-companies', { replace: true });
+      } else {
+        navigate(user.bio ? '/profile' : '/onboarding-individuals', { replace: true });
+      }
       
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.response?.data?.error || loginT.error);
+      setError(err.response?.data?.error || loginT.error || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }

@@ -261,7 +261,7 @@ export const runCVAnalysisTest = async () => {
       otherSkills: ['']
     };
     
-    const mergedData = testDataMerging(existingData, mockData);
+    const mergedData = testDataMerging(existingData, analysisResult.data.data);
     console.log('✅ النتيجة: تم دمج البيانات بنجاح');
     
     // اختبار 4: التحقق من اكتمال البيانات
@@ -317,7 +317,7 @@ export const testDifferentFileTypes = async () => {
   for (const file of fileTypes) {
     console.log(`📄 اختبار ملف ${file.type}: ${file.name}`);
     try {
-      const result = await simulateCVAnalysis(file.name);
+      await simulateCVAnalysis(file.name);
       console.log(`✅ نجح تحليل ${file.type}`);
     } catch (error) {
       console.error(`❌ فشل تحليل ${file.type}:`, error);

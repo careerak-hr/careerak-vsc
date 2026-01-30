@@ -72,9 +72,6 @@ export const testGoodbyePageCreation = () => {
   console.log('🧪 اختبار إنشاء صفحة الوداع...');
   
   try {
-    // حفظ المحتوى الحالي
-    const originalHTML = document.documentElement.outerHTML;
-    
     console.log('📄 إنشاء صفحة وداع تجريبية...');
     
     // إنشاء نافذة جديدة لاختبار صفحة الوداع

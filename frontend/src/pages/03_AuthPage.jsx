@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
 import { PremiumCheckbox } from '../components/LuxuryCheckbox';
@@ -14,10 +16,6 @@ import '../styles/authPageStyles.css';
 import PolicyModal from '../components/modals/PolicyModal';
 import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
 import CropModal from '../components/modals/CropModal';
-
-// Removed embedded PhotoOptionsModal - using separate component
-
-// Removed embedded CropModal - using separate component
 
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
@@ -66,16 +64,17 @@ const analyzeImage = async (imageData, userType) => {
 
 // Main Component
 export default function AuthPage() {
-  // eslint-disable-next-line no-unused-vars
-  const { language, startBgMusic } = useAuth();
+  const navigate = useNavigate();
+  const { language, login: performLogin } = useAuth();
   const t = useTranslate();
   const isRTL = language === 'ar';
 
   // UI States
   const [isVisible, setIsVisible] = useState(false);
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
-  const [showForm, setShowForm] = useState(false); // للتحكم في ظهور النموذج
-  const [logoAnimated, setLogoAnimated] = useState(false); // للتحكم في حركة اللوجو
+  const [showForm, setShowForm] = useState(false);
+  const [logoAnimated, setLogoAnimated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Form States
   const [formData, setFormData] = useState({
@@ -122,32 +121,22 @@ export default function AuthPage() {
 
   useEffect(() => {
     setIsVisible(true);
-    
-    // لا نحتاج لتشغيل الموسيقى هنا لأنها تستمر من صفحة تسجيل الدخول
-    // الموسيقى تدار بواسطة AuthContext وتستمر عبر الصفحات
     console.log("AuthPage loaded - music should continue from LoginPage");
-    
   }, []);
 
-  // تحديد لون القوائم المنسدلة عند التحميل - محسن
   useEffect(() => {
     const updateSelectColors = () => {
       const selectElements = document.querySelectorAll('.auth-select');
       selectElements.forEach(select => {
         if (!select.value || select.value === '') {
-          select.style.color = '#9CA3AF'; // لون الهينت
+          select.style.color = '#9CA3AF';
         } else {
-          select.style.color = '#304B60'; // اللون الأزرق
+          select.style.color = '#304B60';
         }
       });
     };
-
-    // تحديث الألوان عند التحميل
     updateSelectColors();
-    
-    // تحديث الألوان عند تغيير البيانات
     const timeoutId = setTimeout(updateSelectColors, 100);
-    
     return () => clearTimeout(timeoutId);
   }, [formData, userType]);
 
@@ -156,12 +145,11 @@ export default function AuthPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
     if (fieldErrors[name]) setFieldErrors(prev => ({ ...prev, [name]: '' }));
     
-    // تحديث لون القائمة المنسدلة عند اختيار قيمة - محسن
     if (e.target.tagName === 'SELECT') {
       if (value && value !== '') {
-        e.target.style.color = '#304B60'; // اللون الأزرق عند اختيار قيمة
+        e.target.style.color = '#304B60';
       } else {
-        e.target.style.color = '#9CA3AF'; // لون الهينت عند عدم اختيار قيمة
+        e.target.style.color = '#9CA3AF';
       }
     }
   };
@@ -169,15 +157,12 @@ export default function AuthPage() {
   const handleUserTypeChange = (type) => {
     setUserType(type);
     
-    // تشغيل الأنيميشن
     if (!logoAnimated) {
       setLogoAnimated(true);
-      // إظهار النموذج بعد انتهاء أنيميشن اللوجو
       setTimeout(() => {
         setShowForm(true);
-      }, 800); // مدة أنيميشن اللوجو
+      }, 800);
     } else {
-      // إذا كان اللوجو متحرك بالفعل، أظهر النموذج مباشرة
       setShowForm(true);
     }
     
@@ -212,17 +197,7 @@ export default function AuthPage() {
 
   const getPhoto = async (source) => {
     setShowPhotoModal(false);
-    
     try {
-      console.log('🔍 Attempting to get photo from source:', source);
-      
-      // طلب الأذونات أولاً
-      if (source === CameraSource.Camera) {
-        console.log('📷 Requesting camera permissions...');
-      } else {
-        console.log('🖼️ Requesting gallery permissions...');
-      }
-      
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
@@ -236,47 +211,23 @@ export default function AuthPage() {
         promptLabelPhoto: 'اختيار من المعرض',
         promptLabelPicture: 'التقاط صورة'
       });
-      
-      console.log('✅ Photo captured successfully');
-      
+
       if (image.base64String) {
         const imageData = `data:image/jpeg;base64,${image.base64String}`;
         setTempImage(imageData);
         setShowCropModal(true);
-        console.log('📸 Image data prepared for cropping');
       } else {
-        console.error('❌ No base64 data received');
-        // عرض رسالة خطأ للمستخدم
-        setFieldErrors(prev => ({ 
-          ...prev, 
-          image: 'فشل في الحصول على الصورة. يرجى المحاولة مرة أخرى.' 
-        }));
+        setFieldErrors(prev => ({ ...prev, image: 'فشل في الحصول على الصورة. يرجى المحاولة مرة أخرى.' }));
       }
     } catch (error) {
-      console.error('❌ Camera error:', error);
-      
-      // معالجة أنواع مختلفة من الأخطاء
       if (error.message && error.message.includes('User cancelled')) {
-        console.log('ℹ️ User cancelled photo selection');
-        return; // لا نظهر رسالة خطأ إذا ألغى المستخدم
-      }
-      
-      // معالجة أخطاء الأذونات
-      if (error.message && (error.message.includes('permission') || error.message.includes('denied'))) {
-        setFieldErrors(prev => ({ 
-          ...prev, 
-          image: 'يرجى السماح بالوصول للكاميرا أو المعرض من إعدادات التطبيق' 
-        }));
         return;
       }
-      
-      // معالجة الأخطاء العامة
-      setFieldErrors(prev => ({ 
-        ...prev, 
-        image: 'حدث خطأ أثناء رفع الصورة. يرجى المحاولة مرة أخرى.' 
-      }));
-      
-      console.log('ℹ️ Photo selection failed with error:', error.message);
+      if (error.message && (error.message.includes('permission') || error.message.includes('denied'))) {
+        setFieldErrors(prev => ({ ...prev, image: 'يرجى السماح بالوصول للكاميرا أو المعرض من إعدادات التطبيق' }));
+        return;
+      }
+      setFieldErrors(prev => ({ ...prev, image: 'حدث خطأ أثناء رفع الصورة. يرجى المحاولة مرة أخرى.' }));
     }
   };
 
@@ -289,8 +240,6 @@ export default function AuthPage() {
     
     setIsAnalyzing(true);
     const croppedImage = await createCroppedImage(tempImage, croppedAreaPixels);
-    
-    // Simulate AI analysis
     const analysisResult = await analyzeImage(croppedImage, userType);
     
     setIsAnalyzing(false);
@@ -331,7 +280,6 @@ export default function AuthPage() {
       if (!formData.countryCode) errors.countryCode = 'كود البلد مطلوب';
       if (!formData.phone.trim()) errors.phone = 'رقم الهاتف مطلوب';
 
-      // Email is required unless illiterate or uneducated
       if (formData.education !== 'illiterate' && formData.education !== 'uneducated') {
         if (!formData.email.trim()) errors.email = 'البريد الإلكتروني مطلوب';
         else if (!/\S+@\S+\.\S+/.test(formData.email)) errors.email = 'البريد الإلكتروني غير صحيح';
@@ -373,11 +321,38 @@ export default function AuthPage() {
 
   const handleRegisterClick = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      // Registration logic here
-      console.log('Registering user:', { userType, formData, profileImage });
-      // Navigate to appropriate page based on user type
-      alert('تم التسجيل بنجاح!');
+    if (!validateForm()) {
+      return;
+    }
+
+    setLoading(true);
+    setFieldErrors({});
+
+    try {
+      const registrationData = {
+        role: userType === 'individual' ? 'Employee' : 'HR',
+        profilePicture: profileImage,
+        ...formData
+      };
+
+      const response = await api.post('/users/register', registrationData);
+      const { user, token } = response.data;
+
+      await performLogin(user, token);
+
+      // Navigate to the appropriate onboarding page
+      if (user.role === 'HR') {
+        navigate('/onboarding-companies', { replace: true });
+      } else {
+        navigate('/onboarding-individuals', { replace: true });
+      }
+
+    } catch (err) {
+      console.error('Registration error:', err);
+      const errorMsg = err.response?.data?.error || t.registrationError || 'An unexpected error occurred.';
+      setFieldErrors({ form: errorMsg });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -387,14 +362,12 @@ export default function AuthPage() {
   return (
     <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none auth-page`} dir={isRTL ? 'rtl' : 'ltr'}>
       
-      {/* Container الرئيسي مع تخطيط مرن محسن */}
       <div className={`min-h-screen flex flex-col transition-all duration-1000 ${
         logoAnimated ? 'justify-start pt-4 pb-8' : 'justify-center'
       }`}>
         
         <div className="flex flex-col items-center px-6 pb-8">
 
-          {/* Logo - مع الأنيميشن المحسن */}
           <div className={`mb-8 logo-animation ${
             logoAnimated 
               ? 'logo-animated' 
@@ -407,7 +380,6 @@ export default function AuthPage() {
             </div>
           </div>
 
-          {/* User Type Selection - مع الأنيميشن المحسن */}
           <div className={`flex gap-4 mb-8 w-full max-w-md user-type-buttons ${
             logoAnimated 
               ? 'buttons-animated' 
@@ -435,7 +407,6 @@ export default function AuthPage() {
             </button>
           </div>
 
-          {/* Form - يظهر بأنيميشن احترافي محسن */}
           {userType && (
             <div className={`w-full max-w-md form-animation ${
               showForm 
@@ -444,7 +415,6 @@ export default function AuthPage() {
             }`}>
               <form onSubmit={handleRegisterClick} className="space-y-4 pb-8">
 
-            {/* Photo Upload */}
             <div className="text-center">
               <div
                 onClick={() => setShowPhotoModal(true)}
@@ -460,7 +430,6 @@ export default function AuthPage() {
               {fieldErrors.image && <p className="text-red-600 font-bold text-sm mt-1">{fieldErrors.image}</p>}
             </div>
 
-            {/* Country and City */}
             <div className="grid grid-cols-2 gap-4">
               <select
                 name="country"
@@ -490,7 +459,6 @@ export default function AuthPage() {
 
             {userType === 'individual' ? (
               <>
-                {/* Individual Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
@@ -533,7 +501,6 @@ export default function AuthPage() {
                     onChange={handleInputChange}
                     className={inputBase}
                     onFocus={(e) => {
-                      // محاولة فتح منتقي التاريخ
                       if (e.target.showPicker) {
                         try {
                           e.target.showPicker();
@@ -587,10 +554,8 @@ export default function AuthPage() {
                 />
                 {fieldErrors.interests && <p className="text-red-600 font-bold text-sm">{fieldErrors.interests}</p>}
 
-                {/* حقل الهاتف المدمج مع كود البلد - للأفراد */}
                 <div className="relative">
                   <div className="flex">
-                    {/* كود البلد على الجهة اليمنى (اليسار الحقيقي) */}
                     <select
                       name="countryCode"
                       value={formData.countryCode}
@@ -606,7 +571,6 @@ export default function AuthPage() {
                       ))}
                     </select>
                     
-                    {/* رقم الهاتف على الجهة اليسرى (اليمين الحقيقي) */}
                     <input
                       type="tel"
                       name="phone"
@@ -618,7 +582,6 @@ export default function AuthPage() {
                     />
                   </div>
                   
-                  {/* رسائل الخطأ */}
                   {(fieldErrors.countryCode || fieldErrors.phone) && (
                     <div className="mt-1">
                       {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
@@ -710,7 +673,6 @@ export default function AuthPage() {
               </>
             ) : (
               <>
-                {/* Company Fields */}
                 <input
                   type="text"
                   name="companyName"
@@ -782,10 +744,8 @@ export default function AuthPage() {
                 />
                 {fieldErrors.companyKeywords && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyKeywords}</p>}
 
-                {/* حقل الهاتف المدمج مع كود البلد - للشركات */}
                 <div className="relative">
                   <div className="flex">
-                    {/* كود البلد على الجهة اليمنى (اليسار الحقيقي) */}
                     <select
                       name="countryCode"
                       value={formData.countryCode}
@@ -801,7 +761,6 @@ export default function AuthPage() {
                       ))}
                     </select>
                     
-                    {/* رقم الهاتف على الجهة اليسرى (اليمين الحقيقي) */}
                     <input
                       type="tel"
                       name="phone"
@@ -813,7 +772,6 @@ export default function AuthPage() {
                     />
                   </div>
                   
-                  {/* رسائل الخطأ */}
                   {(fieldErrors.countryCode || fieldErrors.phone) && (
                     <div className="mt-1">
                       {fieldErrors.countryCode && <p className="text-red-600 font-bold text-sm">{fieldErrors.countryCode}</p>}
@@ -872,41 +830,37 @@ export default function AuthPage() {
               </>
             )}
 
-            {/* Privacy Policy Agreement - تحسين موضع checkbox حسب اللغة */}
-            <div className={`${
-              isRTL 
-                ? 'flex-row text-right' // العربية: checkbox على اليمين، النص على اليسار
-                : 'flex-row-reverse text-left' // الإنجليزية/الفرنسية: checkbox على اليسار، النص على اليمين
-            }`}>
-              <PremiumCheckbox
-                id="agreePolicy"
-                checked={formData.agreed}
-                onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
-                label={
-                  <span className="text-sm font-bold text-[#304B60]/80">
+            <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+                <PremiumCheckbox
+                    id="agreePolicy"
+                    checked={formData.agreed}
+                    onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
+                />
+                <span className="text-sm font-bold text-[#304B60]/80">
                     {t.agreePolicy}{' '}
+
                     <span
-                      onClick={() => setShowPolicy(true)}
-                      className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200"
+                        onClick={() => setShowPolicy(true)}
+                        className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200"
                     >
-                      {t.privacyPolicy}
+                        {t.privacyPolicy}
                     </span>
-                  </span>
-                }
-                className={`${
-                  isRTL 
-                    ? 'flex-row' // العربية: checkbox على اليمين، النص على اليسار
-                    : 'flex-row-reverse' // الإنجليزية/الفرنسية: checkbox على اليسار، النص على اليمين
-                }`}
-              />
+                </span>
             </div>
+
             {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm">{fieldErrors.agreed}</p>}
+            {fieldErrors.form && <p className="text-red-600 font-bold text-sm text-center">{fieldErrors.form}</p>}
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full bg-[#304B60] text-[#D48161] py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-8 mb-4"
             >
-              {t.register}
+              {loading ? (
+                <div className="w-6 h-6 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div>
+              ) : (
+                t.register
+              )}
             </button>
             </form>
           </div>
@@ -915,7 +869,6 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* Modals */}
       {showPhotoModal && (
         <PhotoOptionsModal
           t={t}
@@ -958,4 +911,3 @@ export default function AuthPage() {
     </div>
   );
 }
-

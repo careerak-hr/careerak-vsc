@@ -25,13 +25,13 @@ public class MainActivity extends BridgeActivity {
         super.onCreate(savedInstanceState);
 
         // منع أي قيود أمنية قد تعيق تجربة المستخدم في بعض الأجهزة
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        // getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
         // اختبار الاتصال بالسيرفر عند بدء التشغيل
         checkBackendConnection();
 
         // تعطيل جميع قوائم النظام المنبثقة بشكل كامل
-        disableSystemPopups();
+        // disableSystemPopups();
     }
 
     private void disableSystemPopups() {
