@@ -1,0 +1,254 @@
+/*
+ * الحل النهائي الجذري لمشكلة حقول الإدخال
+ * ULTIMATE RADICAL SOLUTION for Input Fields Issue
+ * 
+ * هذا الملف يحل المشكلة نهائياً ولا يمكن تجاوزه
+ */
+
+/* ===== إجبار جميع حقول الإدخال على العمل ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  /* إجبار التفاعل - أولوية قصوى */
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  
+  /* إجبار إمكانية الكتابة والتحديد */
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  user-select: text !important;
+  
+  /* ضمان الرؤية والوصول */
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  
+  /* طبقة عالية جداً */
+  z-index: 9999 !important;
+  position: relative !important;
+  isolation: isolate !important;
+  
+  /* ضمان المؤشر الصحيح */
+  cursor: text !important;
+  
+  /* إزالة أي تأثيرات قد تعيق التفاعل */
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  
+  /* ضمان عدم وجود حدود خفية */
+  border: inherit !important;
+  outline: none !important;
+  
+  /* ضمان التفاعل على جميع الأجهزة */
+  -webkit-user-modify: read-write !important;
+  -moz-user-modify: read-write !important;
+  
+  /* منع أي تداخل */
+  contain: none !important;
+  
+  /* ضمان الخط المناسب */
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  
+  /* منع التكبير في iOS */
+  -webkit-text-size-adjust: 100% !important;
+  text-size-adjust: 100% !important;
+}
+
+/* ===== إصلاح خاص للقوائم المنسدلة ===== */
+select {
+  cursor: pointer !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  
+  /* إجبار التفاعل */
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  z-index: 9999 !important;
+}
+
+/* ===== إصلاح خاص عند التركيز ===== */
+input:focus,
+textarea:focus,
+select:focus {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  z-index: 10000 !important;
+  outline: none !important;
+  
+  /* إزالة أي تأثيرات قد تعيق التفاعل */
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* ===== إصلاح خاص للكلاسات المستخدمة في التطبيق ===== */
+.auth-input,
+.auth-select,
+input.auth-input,
+select.auth-select {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  isolation: isolate !important;
+  
+  /* إزالة أي تأثيرات */
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+select.auth-select {
+  cursor: pointer !important;
+}
+
+/* ===== إصلاح خاص للحاويات ===== */
+.form-animation,
+.form-visible,
+.form-hidden,
+form {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  z-index: 100 !important;
+}
+
+/* ===== إصلاح خاص للصفحات ===== */
+.login-page,
+.auth-page {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+}
+
+.login-page input,
+.login-page select,
+.login-page textarea,
+.auth-page input,
+.auth-page select,
+.auth-page textarea {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 9999 !important;
+}
+
+.login-page select,
+.auth-page select {
+  cursor: pointer !important;
+}
+
+/* ===== إصلاح خاص للأجهزة المحمولة ===== */
+@media screen and (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    /* منع التكبير في iOS */
+    font-size: 16px !important;
+    
+    /* تحسين التفاعل اللمسي */
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    z-index: 9999 !important;
+    
+    /* تحسين الأداء */
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+  }
+  
+  select {
+    cursor: pointer !important;
+  }
+}
+
+/* ===== إصلاحات خاصة بـ iOS Safari ===== */
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea,
+  select {
+    -webkit-touch-callout: default !important;
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    z-index: 9999 !important;
+  }
+}
+
+/* ===== إصلاحات خاصة بـ Android Chrome ===== */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  input,
+  textarea,
+  select {
+    -webkit-user-select: text !important;
+    user-select: text !important;
+    -webkit-touch-callout: default !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    z-index: 9999 !important;
+  }
+}
+
+/* ===== إزالة أي طبقات قد تحجب الحقول ===== */
+*:not(input):not(textarea):not(select):not(button):not(label) {
+  /* التأكد من عدم حجب الحقول */
+  pointer-events: auto;
+}
+
+/* ===== إصلاح خاص للعناصر ذات الـ z-index المنخفض ===== */
+[style*="z-index: 1"],
+[style*="z-index: 2"],
+[style*="z-index: 5"],
+[style*="z-index: 10"],
+[style*="z-index: 50"] {
+  z-index: auto !important;
+}
+
+/* ===== ضمان عدم تداخل العناصر مع الحقول ===== */
+input,
+textarea,
+select {
+  /* إنشاء سياق تكديس جديد */
+  isolation: isolate !important;
+  
+  /* ضمان عدم التأثر بالعناصر الأخرى */
+  contain: layout style !important;
+}
+
+/* ===== إصلاح نهائي لجميع المشاكل المحتملة ===== */
+input:not([disabled]),
+textarea:not([disabled]),
+select:not([disabled]) {
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  isolation: isolate !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+select:not([disabled]) {
+  cursor: pointer !important;
+}

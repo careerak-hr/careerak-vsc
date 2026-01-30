@@ -59,38 +59,67 @@
   opacity: 1;
 }
 
-/* ===== تحسين لون النص المدخل ===== */
+/* ===== تحسين حقول الإدخال والقوائم المنسدلة ===== */
 .auth-input {
   color: #304B60 !important;
   text-align: center !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 100 !important;
+  position: relative !important;
+  isolation: isolate !important;
 }
 
 .auth-input:focus {
   color: #304B60 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  z-index: 200 !important;
 }
 
 /* ===== تحسين القوائم المنسدلة ===== */
 .auth-select {
   color: #9CA3AF !important;
   text-align: center !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+  z-index: 100 !important;
+  position: relative !important;
+  isolation: isolate !important;
 }
 
 .auth-select:not([value=""]),
 .auth-select:valid {
   color: #304B60 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 .auth-select[value=""],
 .auth-select:invalid {
   color: #9CA3AF !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 select[name="countryCode"] {
   color: #9CA3AF !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+  z-index: 100 !important;
 }
 
 select[name="countryCode"]:not([value=""]) {
   color: #304B60 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
 }
 
 .auth-select option[value=""][disabled] {
@@ -136,18 +165,25 @@ select[name="countryCode"]:not([value=""]) {
   will-change: opacity, transform, visibility;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  pointer-events: auto !important; /* وعد: إصلاح مشكلة قفل الحقول على WebView */
+  touch-action: auto !important;
+  z-index: 10 !important;
 }
 
 .form-visible {
+  pointer-events: auto !important;
   opacity: 1;
   transform: translateY(0);
   visibility: visible;
+  touch-action: auto !important;
+  z-index: 10 !important;
 }
 
 .form-hidden {
   opacity: 0;
-  transform: translateY(4rem);
-  visibility: hidden;
+  transform: translateY(20px);
+  pointer-events: auto !important; /* حتى عند الإخفاء، نبقي التفاعل متاحاً */
+  touch-action: auto !important;
 }
 
 /* ===== الاستجابة للشاشات المختلفة ===== */

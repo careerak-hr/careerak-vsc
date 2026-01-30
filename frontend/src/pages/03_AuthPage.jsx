@@ -17,6 +17,10 @@ import PolicyModal from '../components/modals/PolicyModal';
 import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
 import CropModal from '../components/modals/CropModal';
 
+// Input Fields Forcer
+import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
+import { printFieldsReport } from '../utils/inputFieldsTester';
+
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
   const image = new Image();
@@ -118,6 +122,20 @@ export default function AuthPage() {
 
   useEffect(() => {
     setIsVisible(true);
+    
+    // تشغيل مُجبر حقول الإدخال
+    const forcer = initializeInputFieldsForcer();
+    
+    // طباعة تقرير الحقول بعد ثانيتين
+    setTimeout(() => {
+      printFieldsReport();
+    }, 2000);
+    
+    return () => {
+      if (forcer && forcer.cleanup) {
+        forcer.cleanup();
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -305,11 +323,12 @@ export default function AuthPage() {
     }
   };
 
-  const inputBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input`;
-  const selectBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select`;
+  const inputBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled`;
+  const selectBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled`;
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} auth-page`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#E3DAD1] auth-page">
+     <div className={`transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className={`min-h-screen flex flex-col transition-all duration-1000 ${
         logoAnimated ? 'justify-start pt-4 pb-8' : 'justify-center'
       }`}>
@@ -581,6 +600,7 @@ export default function AuthPage() {
           </div>
         </div>
       )}
+     </div>
     </div>
   );
 }

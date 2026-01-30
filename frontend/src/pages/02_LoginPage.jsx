@@ -6,6 +6,9 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
 import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
+// Input Fields Forcer
+import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin } = useAuth();
@@ -40,8 +43,14 @@ export default function LoginPage() {
       App.exitApp();
     });
 
+    // تشغيل مُجبر حقول الإدخال
+    const forcer = initializeInputFieldsForcer();
+
     return () => {
       backButtonListener.then(l => l.remove());
+      if (forcer && forcer.cleanup) {
+        forcer.cleanup();
+      }
     };
   }, []);
 
@@ -82,7 +91,7 @@ export default function LoginPage() {
   };
 
   // تحسين classes للحقول مع ضمان إمكانية الكتابة
-  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
+  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm auth-input input-field-enabled";
   
   // تطبيق الخط المناسب حسب اللغة
   const fontStyle = {
@@ -92,7 +101,8 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} login-page`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen flex items-center justify-center bg-[#E3DAD1] login-page">
+     <div className={`transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
       <div className="w-full max-w-sm px-8 flex flex-col items-center">
         
         <div className="mb-8">
@@ -175,6 +185,7 @@ export default function LoginPage() {
           </p>
         </div>
       </div>
+     </div>
     </div>
   );
 }
