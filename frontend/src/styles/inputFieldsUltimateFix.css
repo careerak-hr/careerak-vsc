@@ -27,58 +27,13 @@ select {
   /* ضمان الرؤية والوصول */
   opacity: 1 !important;
   visibility: visible !important;
-  display: block !important;
-  
+
   /* طبقة عالية جداً - أعلى من جميع العناصر */
-  z-index: 999999 !important;
-  position: relative !important;
-  isolation: isolate !important;
+  z-index: 9999;
+  position: relative;
   
   /* ضمان المؤشر الصحيح */
   cursor: text !important;
-  
-  /* إزالة أي تأثيرات قد تعيق التفاعل */
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  
-  /* ضمان عدم وجود حدود خفية */
-  border: inherit !important;
-  outline: none !important;
-  
-  /* ضمان التفاعل على جميع الأجهزة */
-  -webkit-user-modify: read-write !important;
-  -moz-user-modify: read-write !important;
-  
-  /* منع أي تداخل */
-  contain: none !important;
-  
-  /* ضمان الخط المناسب */
-  font-size: 16px !important;
-  line-height: 1.4 !important;
-  
-  /* منع التكبير في iOS */
-  -webkit-text-size-adjust: 100% !important;
-  text-size-adjust: 100% !important;
-  
-  /* إجبار التفاعل حتى لو كان هناك عناصر فوقها */
-  pointer-events: auto !important;
-  -webkit-pointer-events: auto !important;
-  -moz-pointer-events: auto !important;
-  
-  /* ضمان عدم التأثر بالعناصر الأخرى */
-  mix-blend-mode: normal !important;
-  
-  /* إجبار الحقل على أن يكون في المقدمة */
-  will-change: auto !important;
-  
-  /* ضمان عدم حجب الحقل */
-  clip: auto !important;
-  clip-path: none !important;
-  
-  /* إزالة أي قناع قد يحجب الحقل */
-  mask: none !important;
-  -webkit-mask: none !important;
 }
 
 /* ===== إصلاح خاص للقوائم المنسدلة ===== */
@@ -87,12 +42,7 @@ select {
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
-  
-  /* إجبار التفاعل */
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  z-index: 999999 !important;
-  
+
   /* إضافة سهم مخصص للقائمة المنسدلة */
   background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23304B60' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e") !important;
   background-repeat: no-repeat !important;
@@ -105,97 +55,13 @@ select {
 input:focus,
 textarea:focus,
 select:focus {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  z-index: 9999999 !important;
   outline: none !important;
-  
-  /* إزالة أي تأثيرات قد تعيق التفاعل */
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  
+
   /* إضافة حدود واضحة عند التركيز */
   border: 2px solid #304B60 !important;
   box-shadow: 0 0 0 3px rgba(48, 75, 96, 0.1) !important;
 }
 
-/* ===== إصلاح خاص للكلاسات المستخدمة في التطبيق ===== */
-.auth-input,
-.auth-select,
-input.auth-input,
-select.auth-select,
-[class*="auth-input"],
-[class*="auth-select"] {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 999999 !important;
-  position: relative !important;
-  isolation: isolate !important;
-  
-  /* إزالة أي تأثيرات */
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  
-  /* ضمان عدم حجب الحقل */
-  clip: auto !important;
-  clip-path: none !important;
-  mask: none !important;
-  -webkit-mask: none !important;
-}
-
-select.auth-select,
-[class*="auth-select"] {
-  cursor: pointer !important;
-}
-
-/* ===== إصلاح خاص للحاويات ===== */
-.form-animation,
-.form-visible,
-.form-hidden,
-form,
-[class*="form"] {
-  pointer-events: auto !important;
-  touch-action: auto !important;
-  z-index: 100 !important;
-  
-  /* ضمان عدم حجب الحقول داخل الحاوية */
-  isolation: auto !important;
-  contain: none !important;
-}
-
-/* ===== إصلاح خاص للصفحات ===== */
-.login-page,
-.auth-page,
-[class*="page"] {
-  pointer-events: auto !important;
-  touch-action: auto !important;
-}
-
-.login-page input,
-.login-page select,
-.login-page textarea,
-.auth-page input,
-.auth-page select,
-.auth-page textarea {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 999999 !important;
-}
-
-.login-page select,
-.auth-page select {
-  cursor: pointer !important;
-}
 
 /* ===== إصلاح خاص للأجهزة المحمولة ===== */
 @media screen and (max-width: 768px) {
@@ -204,207 +70,5 @@ form,
   select {
     /* منع التكبير في iOS */
     font-size: 16px !important;
-    
-    /* تحسين التفاعل اللمسي */
-    -webkit-touch-callout: default !important;
-    -webkit-user-select: text !important;
-    user-select: text !important;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
-    z-index: 9999 !important;
-    
-    /* تحسين الأداء */
-    -webkit-transform: translateZ(0) !important;
-    transform: translateZ(0) !important;
   }
-  
-  select {
-    cursor: pointer !important;
-  }
-}
-
-/* ===== إصلاحات خاصة بـ iOS Safari ===== */
-@supports (-webkit-touch-callout: none) {
-  input,
-  textarea,
-  select {
-    -webkit-touch-callout: default !important;
-    -webkit-user-select: text !important;
-    user-select: text !important;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
-    z-index: 9999 !important;
-  }
-}
-
-/* ===== إصلاحات خاصة بـ Android Chrome ===== */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  input,
-  textarea,
-  select {
-    -webkit-user-select: text !important;
-    user-select: text !important;
-    -webkit-touch-callout: default !important;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
-    z-index: 9999 !important;
-  }
-}
-
-/* ===== إزالة أي طبقات قد تحجب الحقول - قواعد قوية ===== */
-*:not(input):not(textarea):not(select):not(button):not(label) {
-  /* التأكد من عدم حجب الحقول */
-  pointer-events: auto;
-}
-
-/* إزالة pointer-events: none من جميع العناصر التي قد تحجب الحقول */
-.language-overlay,
-[class*="overlay"],
-[class*="backdrop"],
-.fixed.inset-0,
-[style*="pointer-events: none"] {
-  pointer-events: none !important;
-  /* لكن السماح للحقول بالعمل داخلها */
-}
-
-.language-overlay input,
-.language-overlay textarea,
-.language-overlay select,
-[class*="overlay"] input,
-[class*="overlay"] textarea,
-[class*="overlay"] select,
-[class*="backdrop"] input,
-[class*="backdrop"] textarea,
-[class*="backdrop"] select,
-.fixed.inset-0 input,
-.fixed.inset-0 textarea,
-.fixed.inset-0 select {
-  pointer-events: auto !important;
-  z-index: 999999 !important;
-}
-
-/* ===== إصلاح خاص للعناصر ذات الـ z-index المنخفض ===== */
-[style*="z-index: 1"],
-[style*="z-index: 2"],
-[style*="z-index: 5"],
-[style*="z-index: 10"],
-[style*="z-index: 50"],
-[style*="z-index: 100"],
-[style*="z-index: 1000"],
-[style*="z-index: 5000"],
-[style*="z-index: 10000"] {
-  /* لا نغير z-index للعناصر الأخرى، فقط نضمن أن الحقول أعلى */
-}
-
-/* ===== ضمان عدم تداخل العناصر مع الحقول ===== */
-input,
-textarea,
-select {
-  /* إنشاء سياق تكديس جديد */
-  isolation: isolate !important;
-  
-  /* ضمان عدم التأثر بالعناصر الأخرى */
-  contain: layout style !important;
-  
-  /* ضمان أن الحقل في المقدمة دائماً */
-  z-index: 999999 !important;
-}
-
-/* ===== إصلاح نهائي لجميع المشاكل المحتملة ===== */
-input:not([disabled]),
-textarea:not([disabled]),
-select:not([disabled]) {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 999999 !important;
-  position: relative !important;
-  isolation: isolate !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: block !important;
-  
-  /* إجبار الحقل على أن يكون قابلاً للتفاعل حتى لو كان داخل عنصر محجوب */
-  -webkit-pointer-events: auto !important;
-  -moz-pointer-events: auto !important;
-  
-  /* ضمان عدم حجب الحقل بأي طريقة */
-  clip: auto !important;
-  clip-path: none !important;
-  mask: none !important;
-  -webkit-mask: none !important;
-  overflow: visible !important;
-}
-
-select:not([disabled]) {
-  cursor: pointer !important;
-}
-
-/* ===== إصلاح خاص للحقول داخل العناصر المتحركة ===== */
-[class*="transition"] input,
-[class*="transition"] textarea,
-[class*="transition"] select,
-[class*="animate"] input,
-[class*="animate"] textarea,
-[class*="animate"] select,
-[class*="duration"] input,
-[class*="duration"] textarea,
-[class*="duration"] select {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  z-index: 999999 !important;
-}
-
-/* ===== إصلاح خاص للحقول داخل المودالات ===== */
-.modal input,
-.modal textarea,
-.modal select,
-[role="dialog"] input,
-[role="dialog"] textarea,
-[role="dialog"] select,
-.fixed.inset-0 input,
-.fixed.inset-0 textarea,
-.fixed.inset-0 select {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  z-index: 999999 !important;
-}
-
-/* ===== إصلاح خاص للحقول مع backdrop-blur ===== */
-[class*="backdrop-blur"] input,
-[class*="backdrop-blur"] textarea,
-[class*="backdrop-blur"] select {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  z-index: 999999 !important;
-  backdrop-filter: none !important;
-}
-
-/* ===== إجبار مطلق - قاعدة نهائية ===== */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-input[type="date"],
-input[type="number"],
-textarea,
-select {
-  /* هذه القاعدة تتجاوز جميع القواعد الأخرى */
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  z-index: 999999 !important;
-  position: relative !important;
-  isolation: isolate !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: block !important;
-  cursor: text !important;
-}
-
-select {
-  cursor: pointer !important;
 }
