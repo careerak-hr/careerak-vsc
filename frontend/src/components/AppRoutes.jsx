@@ -64,7 +64,11 @@ function AppRoutes() {
         <Route path="/" element={<SmartHomeRoute />} />
         
         {/* Public Routes - Guest Only */}
-        <Route path="/language" element={<SmartHomeRoute />} />
+        <Route path="/language" element={
+          <GuestRoute>
+            <SuspenseWrapper><LanguagePage /></SuspenseWrapper>
+          </GuestRoute>
+        } />
         <Route path="/entry" element={
           <GuestRoute>
             <SuspenseWrapper><EntryPage /></SuspenseWrapper>
