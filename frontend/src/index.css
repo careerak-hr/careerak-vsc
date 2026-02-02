@@ -5,14 +5,11 @@
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
-/* استيراد ملف إصلاح حقول الإدخال الوحيد */
-@import url('./styles/inputFieldsGlobalFix.css');
+/* تم تعطيل ملفات الإصلاح لأنها لم تعد ضرورية بعد تصحيح السبب الجذري */
+/* @import url('./styles/inputFieldsGlobalFix.css'); */
+/* @import url('./styles/inputFieldsUltimateFix.css'); */
+/* @import url('./styles/inputFieldsEmergencyFix.css'); */
 
-/* استيراد الحل النهائي لحقول الإدخال */
-@import url('./styles/inputFieldsUltimateFix.css');
-
-/* استيراد الإصلاح الطارئ لحقول الإدخال */
-@import url('./styles/inputFieldsEmergencyFix.css');
 
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
@@ -55,8 +52,8 @@
   animation: expand-glow 4s ease-in-out infinite;
 }
 
-/* القاعدة العامة - منع التحديد للعناصر غير التفاعلية فقط */
-*:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
+/* القاعدة العامة - تم تعطيل منع التحديد لأنه يؤثر على التفاعل */
+/* *:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
@@ -67,7 +64,8 @@
   outline: none !important;
   -webkit-context-menu: none !important;
   context-menu: none !important;
-}
+} */
+
 
 /* تعطيل التحديد للعناصر غير التفاعلية */
 *:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::selection {

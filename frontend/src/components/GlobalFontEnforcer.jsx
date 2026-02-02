@@ -75,75 +75,12 @@ const GlobalFontEnforcer = () => {
       }
     `;
     
-    // تطبيق مباشر على العناصر الموجودة مع حماية حقول الإدخال
-    const applyFontToElements = () => {
-      const allElements = document.querySelectorAll('*');
-      allElements.forEach(element => {
-        element.style.setProperty('font-family', fontFamily, 'important');
-        
-        // ضمان عمل حقول الإدخال
-        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-          element.style.setProperty('-webkit-user-select', 'text', 'important');
-          element.style.setProperty('-moz-user-select', 'text', 'important');
-          element.style.setProperty('-ms-user-select', 'text', 'important');
-          element.style.setProperty('user-select', 'text', 'important');
-          element.style.setProperty('pointer-events', 'auto', 'important');
-          element.style.setProperty('touch-action', 'manipulation', 'important');
-        }
-      });
-    };
-    
-    // تطبيق فوري
-    applyFontToElements();
-    
-    // مراقب للعناصر الجديدة
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === Node.ELEMENT_NODE) {
-            // تطبيق على العنصر الجديد
-            node.style.setProperty('font-family', fontFamily, 'important');
-            
-            // ضمان عمل حقول الإدخال الجديدة
-            if (node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') {
-              node.style.setProperty('-webkit-user-select', 'text', 'important');
-              node.style.setProperty('-moz-user-select', 'text', 'important');
-              node.style.setProperty('-ms-user-select', 'text', 'important');
-              node.style.setProperty('user-select', 'text', 'important');
-              node.style.setProperty('pointer-events', 'auto', 'important');
-              node.style.setProperty('touch-action', 'manipulation', 'important');
-            }
-            
-            // تطبيق على جميع العناصر الفرعية
-            const childElements = node.querySelectorAll('*');
-            childElements.forEach(child => {
-              child.style.setProperty('font-family', fontFamily, 'important');
-              
-              // ضمان عمل حقول الإدخال الفرعية
-              if (child.tagName === 'INPUT' || child.tagName === 'TEXTAREA') {
-                child.style.setProperty('-webkit-user-select', 'text', 'important');
-                child.style.setProperty('-moz-user-select', 'text', 'important');
-                child.style.setProperty('-ms-user-select', 'text', 'important');
-                child.style.setProperty('user-select', 'text', 'important');
-                child.style.setProperty('pointer-events', 'auto', 'important');
-                child.style.setProperty('touch-action', 'manipulation', 'important');
-              }
-            });
-          }
-        });
-      });
-    });
-    
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['style', 'class']
-    });
-    
     // تنظيف عند تغيير اللغة
     return () => {
-      observer.disconnect();
+      // observer.disconnect();
+      if (styleElement) {
+        styleElement.remove();
+      }
     };
     
   }, [language]);

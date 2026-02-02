@@ -6,10 +6,6 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
 import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
-// Input Fields Forcer
-import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
-import { initializeEmergencySystem } from '../utils/inputFieldsEmergencyForcer';
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin } = useAuth();

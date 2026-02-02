@@ -17,11 +17,6 @@ import PolicyModal from '../components/modals/PolicyModal';
 import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
 import CropModal from '../components/modals/CropModal';
 
-// Input Fields Forcer
-import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
-import { printFieldsReport } from '../utils/inputFieldsTester';
-import { initializeEmergencySystem } from '../utils/inputFieldsEmergencyForcer';
-
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
   const image = new Image();
@@ -124,24 +119,7 @@ export default function AuthPage() {
   useEffect(() => {
     setIsVisible(true);
     
-    // تشغيل مُجبر حقول الإدخال
-    const forcer = initializeInputFieldsForcer();
-    
-    // تشغيل النظام الطارئ
-    const emergency = initializeEmergencySystem();
-    
-    // طباعة تقرير الحقول بعد ثانيتين
-    setTimeout(() => {
-      printFieldsReport();
-    }, 2000);
-    
     return () => {
-      if (forcer && forcer.cleanup) {
-        forcer.cleanup();
-      }
-      if (emergency && emergency.cleanup) {
-        emergency.cleanup();
-      }
     };
   }, []);
 
