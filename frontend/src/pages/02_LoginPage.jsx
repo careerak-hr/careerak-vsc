@@ -6,6 +6,9 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
 import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
+// Input Fields Fix
+import { initializeDirectFix } from '../utils/inputFieldsDirectFix';
+
 export default function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin } = useAuth();
@@ -27,6 +30,9 @@ export default function LoginPage() {
     
     setIsVisible(true);
 
+    // تطبيق إصلاح حقول الإدخال
+    const fixCleanup = initializeDirectFix();
+
     const loadRememberedData = async () => {
       const savedId = localStorage.getItem('remembered_user');
       if (savedId) {
@@ -42,6 +48,9 @@ export default function LoginPage() {
 
     return () => {
       backButtonListener.then(l => l.remove());
+      if (fixCleanup && fixCleanup.cleanup) {
+        fixCleanup.cleanup();
+      }
     };
   }, []);
 

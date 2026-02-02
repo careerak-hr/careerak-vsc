@@ -17,6 +17,9 @@ import PolicyModal from '../components/modals/PolicyModal';
 import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
 import CropModal from '../components/modals/CropModal';
 
+// Input Fields Fix
+import { initializeDirectFix } from '../utils/inputFieldsDirectFix';
+
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
   const image = new Image();
@@ -119,7 +122,13 @@ export default function AuthPage() {
   useEffect(() => {
     setIsVisible(true);
     
+    // تطبيق إصلاح حقول الإدخال
+    const fixCleanup = initializeDirectFix();
+    
     return () => {
+      if (fixCleanup && fixCleanup.cleanup) {
+        fixCleanup.cleanup();
+      }
     };
   }, []);
 
