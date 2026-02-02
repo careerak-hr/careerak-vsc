@@ -1,330 +1,44 @@
 /*
- * الحل الجذري النهائي لمشكلة حقول الإدخال
- * ULTIMATE FINAL SOLUTION for Input Fields Interaction
- * 
- * هذا هو الملف الوحيد المسؤول عن إصلاح حقول الإدخال
+ * إصلاحات عالمية لحقول الإدخال
+ * Global Fixes for Input Fields
  */
 
-/* ===== إجبار حقول الإدخال على العمل بشكل كامل ===== */
-input,
-textarea,
-select,
-[contenteditable="true"],
-[contenteditable],
-[role="textbox"],
-[role="combobox"],
-[role="searchbox"] {
-  /* إجبار التفاعل الكامل - أولوية قصوى */
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  
-  /* إجبار إمكانية التحديد والكتابة */
-  -webkit-user-select: text !important;
-  -khtml-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
-  
-  /* إزالة جميع القيود */
-  -webkit-touch-callout: default !important;
-  -webkit-tap-highlight-color: rgba(212, 129, 97, 0.3) !important;
-  
-  /* ضمان الرؤية والوصول */
-  opacity: 1 !important;
-  visibility: visible !important;
-  display: block !important;
-  
-  /* ضمان الطبقة الصحيحة - طبقة عالية */
-  z-index: 100 !important;
-  position: relative !important;
-  
-  /* ضمان الخط المناسب للأجهزة المحمولة */
-  font-size: 16px !important;
-  line-height: 1.4 !important;
-  
-  /* منع التكبير التلقائي في iOS */
-  -webkit-text-size-adjust: 100% !important;
-  text-size-adjust: 100% !important;
-  
-  /* ضمان المؤشر الصحيح */
-  cursor: text !important;
-  
-  /* إزالة أي تأثيرات قد تمنع التفاعل */
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-  
-  /* ضمان عدم وجود حدود خفية */
-  border: inherit !important;
-  outline: none !important;
-  
-  /* ضمان التفاعل على جميع الأجهزة */
-  -webkit-user-modify: read-write !important;
-  -moz-user-modify: read-write !important;
-  user-modify: read-write !important;
-}
-
-/* إزالة المظهر الافتراضي فقط للحقول النصية */
-input:not([type="checkbox"]):not([type="radio"]),
+/* ===== إعدادات أساسية للحقول ===== */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
 textarea,
 select {
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  appearance: none !important;
+  /* منع التكبير التلقائي في متصفحات iOS عند التركيز */
+  font-size: 16px;
   
-  /* ضمان التفاعل الكامل للحقول النصية */
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 100 !important;
+  /* إزالة المظهر الافتراضي للمتصفح للحصول على تصميم متناسق */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-/* الحفاظ على المظهر الطبيعي لمربعات التشيك */
+/* ===== تحسين تجربة اللمس ===== */
+input, textarea, select, button {
+  /* تحسين استجابة اللمس */
+  touch-action: manipulation;
+}
+
+/* ===== الحفاظ على مظهر مربعات الاختيار والـ Radio Buttons الأصلي ===== */
 input[type="checkbox"],
 input[type="radio"] {
-  -webkit-appearance: auto !important;
-  -moz-appearance: auto !important;
-  appearance: auto !important;
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  z-index: 100 !important;
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
 }
 
-/* ===== قواعد خاصة للأزرار ===== */
-button,
-[role="button"],
-[type="button"],
-[type="submit"] {
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-  z-index: 50 !important;
+/* ===== لون التحديد المخصص ===== */
+::selection {
+  background: rgba(212, 129, 97, 0.3);
 }
-
-/* ===== تأكيد إضافي عند التركيز ===== */
-input:focus,
-textarea:focus,
-select:focus,
-[contenteditable="true"]:focus,
-[contenteditable]:focus {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-  user-select: text !important;
-  outline: none !important;
-  z-index: 200 !important;
-  
-  /* إزالة أي تأثيرات قد تعيق التفاعل */
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-}
-
-/* ===== إصلاح تحديد النص ===== */
-input::selection,
-textarea::selection,
-select::selection,
-[contenteditable="true"]::selection,
-[contenteditable]::selection {
-  background: rgba(212, 129, 97, 0.3) !important;
-  color: inherit !important;
-}
-
-input::-moz-selection,
-textarea::-moz-selection,
-select::-moz-selection,
-[contenteditable="true"]::-moz-selection,
-[contenteditable]::-moz-selection {
-  background: rgba(212, 129, 97, 0.3) !important;
-  color: inherit !important;
-}
-
-/* ===== إصلاحات للأجهزة المحمولة ===== */
-@media screen and (max-width: 768px) {
-  input,
-  textarea,
-  select {
-    /* منع التكبير في iOS */
-    font-size: 16px !important;
-    
-    /* تحسين التفاعل اللمسي */
-    -webkit-touch-callout: default !important;
-    -webkit-user-select: text !important;
-    user-select: text !important;
-    
-    /* تحسين الأداء */
-    -webkit-transform: translateZ(0) !important;
-    transform: translateZ(0) !important;
-  }
-}
-
-/* ===== إصلاحات خاصة بـ iOS Safari ===== */
-@supports (-webkit-touch-callout: none) {
-  input,
-  textarea,
-  select {
-    -webkit-touch-callout: default !important;
-    -webkit-user-select: text !important;
-    user-select: text !important;
-  }
-}
-
-/* ===== إصلاحات خاصة بـ Android Chrome ===== */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  input,
-  textarea,
-  select {
-    -webkit-user-select: text !important;
-    user-select: text !important;
-    -webkit-touch-callout: default !important;
-    pointer-events: auto !important;
-  }
-}
-
-/* ===== إصلاح الحقول المعطلة ===== */
-input[disabled],
-textarea[disabled],
-select[disabled] {
-  pointer-events: none !important;
-  opacity: 0.6 !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-}
-
-/* ===== إصلاحات خاصة بالمكتبات الخارجية والكلاسات المخصصة ===== */
-.auth-input,
-.auth-select,
-.input-field-enabled,
-[class*="input"],
-[class*="field"],
-[class*="form"],
-[class*="auth"] {
-  pointer-events: auto !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  touch-action: manipulation !important;
-  z-index: 100 !important;
-  cursor: text !important;
-  
-  /* إزالة أي تأثيرات قد تمنع التفاعل */
-  transform: none !important;
-  filter: none !important;
-  backdrop-filter: none !important;
-}
-
-/* ===== إصلاح خاص لصفحات محددة ===== */
-.login-page input,
-.login-page textarea,
-.login-page select,
-.auth-page input,
-.auth-page textarea,
-.auth-page select {
-  pointer-events: auto !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  touch-action: manipulation !important;
-  z-index: 100 !important;
-  cursor: text !important;
-  
-  /* ضمان عدم وجود طبقات تحجب التفاعل */
-  position: relative !important;
-  isolation: isolate !important;
-}
-
-/* ===== إصلاح خاص لمربعات التشيك المخصصة ===== */
-.luxury-checkbox,
-.premium-checkbox,
-[class*="checkbox"] {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  z-index: 100 !important;
-}
-
-.luxury-checkbox input[type="checkbox"],
-.premium-checkbox input[type="checkbox"],
-[class*="checkbox"] input[type="checkbox"] {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-  cursor: pointer !important;
-  z-index: 100 !important;
-}
-
-/* ===== إصلاح labels ===== */
-label {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-  cursor: pointer !important;
-  z-index: 50 !important;
-}
-
-/* ===== إصلاح خاص للحاويات والنماذج ===== */
-form,
-.form-animation,
-.form-visible,
-.form-hidden,
-[class*="form"] {
-  pointer-events: auto !important;
-  touch-action: auto !important;
-  z-index: 10 !important;
-}
-
-/* ===== إصلاح خاص للعناصر المتحركة ===== */
-[class*="transition"],
-[class*="animate"],
-[class*="duration"] {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-/* ===== إصلاح خاص للعناصر ذات الـ z-index المنخفض ===== */
-[style*="z-index: 1"],
-[style*="z-index: 2"],
-[style*="z-index: 5"],
-[style*="z-index: 10"] {
-  z-index: 100 !important;
-}
-
-/* ===== حماية مكونات sr-only ===== */
-.sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-  pointer-events: none !important;
-}
-
-.sr-only + label {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-}
-
-/* ===== ضمان ظهور رسائل الخطأ باللون الأحمر ===== */
-.text-red-600,
-[class*="text-red"],
-p[class*="text-red"],
-span[class*="text-red"],
-div[class*="text-red"] {
-  color: #dc2626 !important;
-  font-weight: bold !important;
+::-moz-selection {
+  background: rgba(212, 129, 97, 0.3);
 }

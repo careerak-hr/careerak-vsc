@@ -1,42 +1,34 @@
 /* AuthPage Styles - قواعد خاصة بصفحة AuthPage فقط */
 
 /* ===== تحسين ظهور النصوص التوضيحية ===== */
-.auth-input::placeholder,
-.auth-input::-moz-placeholder,
-.auth-input::-webkit-input-placeholder,
-.auth-input::-ms-input-placeholder {
-  color: #9CA3AF !important;
-  opacity: 1 !important;
-  font-weight: 600 !important;
-  text-align: center !important;
+.auth-input::placeholder {
+  color: #9CA3AF;
+  opacity: 1;
+  font-weight: 600;
+  text-align: center;
 }
 
 /* ===== تحسين عرض حقل التاريخ ===== */
 .auth-input[type="date"] {
   position: relative;
-  color: #9CA3AF !important;
-}
-
-.auth-input[type="date"]:invalid {
-  color: #9CA3AF !important;
+  color: #9CA3AF;
 }
 
 .auth-input[type="date"]:valid {
-  color: #304B60 !important;
+  color: #304B60;
 }
 
 .auth-input[type="date"]:invalid::before {
   content: attr(data-placeholder);
-  color: #9CA3AF !important;
+  color: #9CA3AF;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  pointer-events: none; /* Keep this to hide placeholder on click */
   font-weight: 600;
   text-align: center;
   width: 100%;
-  z-index: 1;
 }
 
 .auth-input[type="date"]:valid::before,
@@ -48,7 +40,7 @@
 .auth-input[type="date"]::-webkit-datetime-edit-month-field,
 .auth-input[type="date"]::-webkit-datetime-edit-day-field,
 .auth-input[type="date"]::-webkit-datetime-edit-year-field {
-  color: #304B60 !important;
+  color: #304B60;
 }
 
 .auth-input[type="date"]:invalid::-webkit-calendar-picker-indicator {
@@ -61,83 +53,32 @@
 
 /* ===== تحسين حقول الإدخال والقوائم المنسدلة ===== */
 .auth-input {
-  color: #304B60 !important;
-  text-align: center !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 100 !important;
-  position: relative !important;
-  isolation: isolate !important;
+  color: #304B60;
+  text-align: center;
 }
 
-.auth-input:focus {
-  color: #304B60 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  z-index: 200 !important;
-}
-
-/* ===== تحسين القوائم المنسدلة ===== */
 .auth-select {
-  color: #9CA3AF !important;
-  text-align: center !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-  z-index: 100 !important;
-  position: relative !important;
-  isolation: isolate !important;
+  color: #9CA3AF;
+  text-align: center;
 }
 
-.auth-select:not([value=""]),
 .auth-select:valid {
-  color: #304B60 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-.auth-select[value=""],
-.auth-select:invalid {
-  color: #9CA3AF !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-
-select[name="countryCode"] {
-  color: #9CA3AF !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-  z-index: 100 !important;
-}
-
-select[name="countryCode"]:not([value=""]) {
-  color: #304B60 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
+  color: #304B60;
 }
 
 .auth-select option[value=""][disabled] {
-  display: none !important;
+  display: none;
 }
 
 .auth-select option:not([value=""]) {
-  color: #304B60 !important;
-  background-color: #E3DAD1 !important;
+  color: #304B60;
+  background-color: #E3DAD1;
 }
 
 /* ===== تحسين الأنيميشن ===== */
 .logo-animation {
   transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
   transform-origin: center center;
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .logo-initial {
@@ -150,9 +91,6 @@ select[name="countryCode"]:not([value=""]) {
 
 .user-type-buttons {
   transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
-  will-change: transform;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
 }
 
 .buttons-animated {
@@ -162,60 +100,24 @@ select[name="countryCode"]:not([value=""]) {
 .form-animation {
   transition: all 1.5s cubic-bezier(0.23, 1, 0.32, 1);
   transition-delay: 0.6s;
-  will-change: opacity, transform, visibility;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  pointer-events: auto !important; /* وعد: إصلاح مشكلة قفل الحقول على WebView */
-  touch-action: auto !important;
-  z-index: 10 !important;
 }
 
 .form-visible {
-  pointer-events: auto !important;
   opacity: 1;
   transform: translateY(0);
   visibility: visible;
-  touch-action: auto !important;
-  z-index: 10 !important;
 }
 
 .form-hidden {
   opacity: 0;
   transform: translateY(20px);
-  pointer-events: auto !important; /* حتى عند الإخفاء، نبقي التفاعل متاحاً */
-  touch-action: auto !important;
+  visibility: hidden;
 }
 
 /* ===== الاستجابة للشاشات المختلفة ===== */
 @media (max-height: 800px) {
   .logo-animated { transform: translateY(-1vh) scale(0.7); }
   .buttons-animated { transform: translateY(-1vh); }
-}
-
-@media (max-height: 700px) {
-  .logo-animated { transform: translateY(0) scale(0.65); }
-  .buttons-animated { transform: translateY(0); }
-  .min-h-screen {
-    min-height: 100vh;
-    padding-bottom: env(safe-area-inset-bottom, 20px);
-  }
-}
-
-@media (max-height: 600px) {
-  .logo-animated { transform: translateY(0) scale(0.6); }
-  .buttons-animated { transform: translateY(0); }
-}
-
-@media (max-height: 500px) {
-  .logo-animated { transform: translateY(0) scale(0.5); }
-  .buttons-animated { transform: translateY(0); }
-  .form-animation { margin-top: 0.5rem; }
-}
-
-@supports (padding: max(0px)) {
-  .min-h-screen {
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
-  }
 }
 
 /* ===== تحسين شريط التمرير ===== */
@@ -243,84 +145,40 @@ select[name="countryCode"]:not([value=""]) {
   background: #D48161;
 }
 
-@media (max-width: 768px) {
-  .scrollbar-thin {
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-  }
-}
-
 /* ===== إصلاح موضع أيقونة العين ===== */
-.relative {
-  position: relative !important;
-}
 
 [dir="rtl"] .relative input[type="password"],
 [dir="rtl"] .relative input[type="text"] {
-  padding-right: 16px !important;
-  padding-left: 60px !important;
+  padding-right: 16px;
+  padding-left: 50px;
 }
 
 [dir="ltr"] .relative input[type="password"],
 [dir="ltr"] .relative input[type="text"] {
-  padding-right: 60px !important;
-  padding-left: 16px !important;
+  padding-right: 50px;
+  padding-left: 16px;
 }
 
 .relative button[type="button"] {
-  position: absolute !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  z-index: 10 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 40px !important;
-  height: 40px !important;
-  border: none !important;
-  background: transparent !important;
-  font-size: 18px !important;
-  outline: none !important;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 [dir="rtl"] .relative button[type="button"] {
-  left: 10px !important;
-  right: auto !important;
+  left: 10px;
 }
 
 [dir="ltr"] .relative button[type="button"] {
-  right: 10px !important;
-  left: auto !important;
+  right: 10px;
 }
 
-/* إصلاح خاص لصفحة تسجيل الدخول */
 .login-page[dir="rtl"] .relative input[type="password"],
 .login-page[dir="rtl"] .relative input[type="text"] {
-  padding-right: 24px !important;
-  padding-left: 70px !important;
+    padding-left: 60px;
 }
 
 .login-page[dir="ltr"] .relative input[type="password"],
 .login-page[dir="ltr"] .relative input[type="text"] {
-  padding-right: 70px !important;
-  padding-left: 24px !important;
-}
-
-.login-page .relative button[type="button"] {
-  width: 50px !important;
-  height: 50px !important;
-  font-size: 20px !important;
-}
-
-.login-page[dir="rtl"] .relative button[type="button"] {
-  left: 15px !important;
-  right: auto !important;
-}
-
-.login-page[dir="ltr"] .relative button[type="button"] {
-  right: 15px !important;
-  left: auto !important;
+    padding-right: 60px;
 }

@@ -40,20 +40,8 @@ export default function LoginPage() {
       App.exitApp();
     });
 
-    // تشغيل مُجبر حقول الإدخال
-    // const forcer = initializeInputFieldsForcer();
-    
-    // تشغيل النظام الطارئ
-    // const emergency = initializeEmergencySystem();
-
     return () => {
       backButtonListener.then(l => l.remove());
-      // if (forcer && forcer.cleanup) {
-      //   forcer.cleanup();
-      // }
-      // if (emergency && emergency.cleanup) {
-      //   emergency.cleanup();
-      // }
     };
   }, []);
 
@@ -109,7 +97,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm px-8 flex flex-col items-center">
         
         <div className="mb-8">
-          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
+          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden bg-[#E3DAD1]">
              <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
