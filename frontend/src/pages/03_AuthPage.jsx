@@ -17,9 +17,6 @@ import PolicyModal from '../components/modals/PolicyModal';
 import PhotoOptionsModal from '../components/modals/PhotoOptionsModal';
 import CropModal from '../components/modals/CropModal';
 
-// Input Fields Fix
-import { initializeDirectFix } from '../utils/inputFieldsDirectFix';
-
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
   const image = new Image();
@@ -122,13 +119,7 @@ export default function AuthPage() {
   useEffect(() => {
     setIsVisible(true);
     
-    // تطبيق إصلاح حقول الإدخال
-    const fixCleanup = initializeDirectFix();
-    
     return () => {
-      if (fixCleanup && fixCleanup.cleanup) {
-        fixCleanup.cleanup();
-      }
     };
   }, []);
 
@@ -317,8 +308,8 @@ export default function AuthPage() {
     }
   };
 
-  const inputBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled`;
-  const selectBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled`;
+  const inputBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all`;
+  const selectBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all`;
 
   return (
     <div className="min-h-screen bg-[#E3DAD1] auth-page">

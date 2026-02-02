@@ -5,10 +5,7 @@
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
-/* إعادة تفعيل إصلاحات حقول الإدخال */
-@import url('./styles/inputFieldsGlobalFix.css');
-@import url('./styles/inputFieldsUltimateFix.css');
-@import url('./styles/inputFieldsEmergencyFix.css');
+/* تم حل المشكلة الجذرية في authPageStyles.css */
 
 
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */

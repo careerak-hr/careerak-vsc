@@ -6,9 +6,6 @@ import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
 import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
-// Input Fields Fix
-import { initializeDirectFix } from '../utils/inputFieldsDirectFix';
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const { language, login: performLogin } = useAuth();
@@ -30,9 +27,6 @@ export default function LoginPage() {
     
     setIsVisible(true);
 
-    // تطبيق إصلاح حقول الإدخال
-    const fixCleanup = initializeDirectFix();
-
     const loadRememberedData = async () => {
       const savedId = localStorage.getItem('remembered_user');
       if (savedId) {
@@ -48,9 +42,6 @@ export default function LoginPage() {
 
     return () => {
       backButtonListener.then(l => l.remove());
-      if (fixCleanup && fixCleanup.cleanup) {
-        fixCleanup.cleanup();
-      }
     };
   }, []);
 
@@ -91,7 +82,7 @@ export default function LoginPage() {
   };
 
   // تحسين classes للحقول مع ضمان إمكانية الكتابة
-  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm auth-input input-field-enabled";
+  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
   
   // تطبيق الخط المناسب حسب اللغة
   const fontStyle = {

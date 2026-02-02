@@ -8,9 +8,6 @@ import AppRoutes from "./AppRoutes";
 import AppAudioPlayer from "./AppAudioPlayer";
 import ErrorBoundary from "./ErrorBoundary";
 
-// Input Fields Fix
-import { initializeDirectFix } from '../utils/inputFieldsDirectFix';
-
 /**
  * Application Shell - الهيكل الأساسي للتطبيق
  * Application Shell Pattern
@@ -22,17 +19,6 @@ import { initializeDirectFix } from '../utils/inputFieldsDirectFix';
  * - المكونات العامة
  */
 const ApplicationShell = () => {
-  useEffect(() => {
-    // تطبيق إصلاح حقول الإدخال على مستوى التطبيق
-    const fixCleanup = initializeDirectFix();
-    
-    return () => {
-      if (fixCleanup && fixCleanup.cleanup) {
-        fixCleanup.cleanup();
-      }
-    };
-  }, []);
-
   return (
     <ErrorBoundary>
       <AppSettingsProvider>
