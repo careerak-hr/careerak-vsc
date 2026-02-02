@@ -114,6 +114,70 @@
   /* إزالة visibility: hidden لأنه يمنع التفاعل مع الحقول */
 }
 
+/* إصلاح مباشر لحقول الإدخال في صفحة AuthPage */
+.auth-page input,
+.auth-page textarea,
+.auth-page select {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 1000 !important;
+  position: relative !important;
+  touch-action: manipulation !important;
+}
+
+.auth-page select {
+  cursor: pointer !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  user-select: none !important;
+}
+
+/* إصلاح مباشر لحقول الإدخال في صفحة تسجيل الدخول */
+.login-page input,
+.login-page textarea,
+.login-page select {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  cursor: text !important;
+  z-index: 1000 !important;
+  position: relative !important;
+  touch-action: manipulation !important;
+}
+
+.login-page select {
+  cursor: pointer !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  user-select: none !important;
+}
+
+/* إصلاح شامل لجميع الحقول */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  pointer-events: auto !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  touch-action: manipulation !important;
+}
+
+select {
+  cursor: pointer !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  user-select: none !important;
+}
+
+input:not([type="checkbox"]):not([type="radio"]) {
+  cursor: text !important;
+}
+
 /* ===== الاستجابة للشاشات المختلفة ===== */
 @media (max-height: 800px) {
   .logo-animated { transform: translateY(-1vh) scale(0.7); }
