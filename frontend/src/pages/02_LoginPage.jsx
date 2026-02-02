@@ -41,19 +41,19 @@ export default function LoginPage() {
     });
 
     // تشغيل مُجبر حقول الإدخال
-    const forcer = initializeInputFieldsForcer();
+    // const forcer = initializeInputFieldsForcer();
     
     // تشغيل النظام الطارئ
-    const emergency = initializeEmergencySystem();
+    // const emergency = initializeEmergencySystem();
 
     return () => {
       backButtonListener.then(l => l.remove());
-      if (forcer && forcer.cleanup) {
-        forcer.cleanup();
-      }
-      if (emergency && emergency.cleanup) {
-        emergency.cleanup();
-      }
+      // if (forcer && forcer.cleanup) {
+      //   forcer.cleanup();
+      // }
+      // if (emergency && emergency.cleanup) {
+      //   emergency.cleanup();
+      // }
     };
   }, []);
 
