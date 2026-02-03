@@ -1,147 +1,148 @@
 /**
- * إصلاحات خاصة بـ Android WebView لحقول الإدخال
- * Android WebView Input Fields Fix
+ * إصلاح جذري لمشكلة حقول الإدخال على Android
+ * Radical fix for Android input fields issue
  */
 
 export const initAndroidInputFix = () => {
-  // التحقق من أننا في بيئة Capacitor على Android
-  if (typeof window !== 'undefined' && window.Capacitor && window.Capacitor.getPlatform() === 'android') {
-    console.log('🤖 Android detected - applying input fixes');
+  console.log('🤖 Initializing Android input fix...');
+  
+  // إصلاح جذري: إعادة إنشاء الحقول بـ vanilla JavaScript
+  const replaceInputs = () => {
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"]');
     
-    // منع سحب التركيز من الحقول
-    let focusedElement = null;
-    
-    // إصلاح حقول الإدخال
-    const fixInputs = () => {
-      const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="tel"], select');
+    inputs.forEach(originalInput => {
+      // إنشاء حقل جديد
+      const newInput = document.createElement('input');
       
-      inputs.forEach(input => {
-        // إزالة أي قيود
-        input.style.pointerEvents = 'auto';
-        input.style.webkitUserSelect = 'text';
-        input.style.userSelect = 'text';
-        input.style.webkitTouchCallout = 'default';
-        input.style.webkitTapHighlightColor = 'rgba(0,0,0,0.1)';
-        input.style.touchAction = 'manipulation';
-        input.style.zIndex = '9999';
-        input.style.position = 'relative';
-        
-        if (input.tagName === 'SELECT') {
-          input.style.cursor = 'pointer';
-          input.style.webkitUserSelect = 'none';
-          input.style.userSelect = 'none';
-        } else {
-          input.style.cursor = 'text';
+      // نسخ جميع الخصائص
+      newInput.type = originalInput.type;
+      newInput.name = originalInput.name;
+      newInput.placeholder = originalInput.placeholder;
+      newInput.value = originalInput.value;
+      newInput.className = originalInput.className;
+      newInput.style.cssText = originalInput.style.cssText;
+      
+      // إضافة خصائص Android
+      newInput.style.pointerEvents = 'auto';
+      newInput.style.webkitUserSelect = 'text';
+      newInput.style.userSelect = 'text';
+      newInput.style.webkitTouchCallout = 'default';
+      newInput.style.touchAction = 'manipulation';
+      newInput.style.webkitAppearance = 'none';
+      newInput.style.appearance = 'none';
+      
+      // إضافة event listeners مباشرة
+      newInput.addEventListener('input', (e) => {
+        console.log('📝 Input changed:', e.target.value);
+        // تحديث React state إذا وُجد
+        const reactProps = originalInput._valueTracker;
+        if (reactProps) {
+          reactProps.setValue(e.target.value);
         }
         
-        // منع فقدان التركيز
-        input.addEventListener('focus', (e) => {
-          console.log('🎯 Input focused:', input.type, input.name);
-          focusedElement = input;
-          document.body.classList.add('input-focused');
-          
-          // منع أي محاولة لسحب التركيز
-          setTimeout(() => {
-            if (document.activeElement !== input) {
-              console.log('🔄 Re-focusing input');
-              input.focus();
-            }
-          }, 50);
-        });
-        
-        input.addEventListener('blur', (e) => {
-          console.log('😵 Input blurred:', input.type, input.name);
-          
-          // إزالة class بعد تأخير قصير
-          setTimeout(() => {
-            if (document.activeElement !== input) {
-              document.body.classList.remove('input-focused');
-              focusedElement = null;
-            }
-          }, 200);
-          
-          // إذا فقد التركيز بسرعة، أعد التركيز
-          setTimeout(() => {
-            if (focusedElement === input && document.activeElement !== input) {
-              console.log('🔄 Restoring focus to input');
-              input.focus();
-              document.body.classList.add('input-focused');
-            }
-          }, 100);
-        });
-        
-        // إضافة event listeners خاصة بـ Android
-        input.addEventListener('touchstart', (e) => {
-          console.log('👆 Touch start on input');
-          e.stopPropagation();
-          focusedElement = input;
-        }, { passive: false });
-        
-        input.addEventListener('touchend', (e) => {
-          console.log('👆 Touch end on input');
-          e.stopPropagation();
-          e.preventDefault();
-          
-          // التركيز على الحقل مع تأخير
-          setTimeout(() => {
-            input.focus();
-            focusedElement = input;
-          }, 150);
-        }, { passive: false });
-        
-        // إصلاح خاص للقوائم المنسدلة
-        if (input.tagName === 'SELECT') {
-          input.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            
-            // فتح القائمة المنسدلة
-            setTimeout(() => {
-              input.click();
-              input.focus();
-            }, 150);
-          }, { passive: false });
-        }
+        // إطلاق حدث React
+        const event = new Event('input', { bubbles: true });
+        Object.defineProperty(event, 'target', { writable: false, value: newInput });
+        originalInput.dispatchEvent(event);
       });
-    };
-    
-    // منع أي عنصر آخر من سحب التركيز
-    document.addEventListener('touchstart', (e) => {
-      const target = e.target;
-      if (focusedElement && 
-          target !== focusedElement && 
-          !target.matches('input, select, textarea, button, a, [role="button"]')) {
-        console.log('🚫 Preventing focus loss');
-        e.preventDefault();
+      
+      newInput.addEventListener('change', (e) => {
+        console.log('🔄 Input change:', e.target.value);
+        const event = new Event('change', { bubbles: true });
+        Object.defineProperty(event, 'target', { writable: false, value: newInput });
+        originalInput.dispatchEvent(event);
+      });
+      
+      newInput.addEventListener('focus', (e) => {
+        console.log('🎯 New input focused');
         e.stopPropagation();
-      }
-    }, { passive: false, capture: true });
-    
-    // تطبيق الإصلاح فوراً
-    fixInputs();
-    
-    // تطبيق الإصلاح عند تغيير المحتوى
-    const observer = new MutationObserver(fixInputs);
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
+      });
+      
+      newInput.addEventListener('blur', (e) => {
+        console.log('😵 New input blurred');
+      });
+      
+      // استبدال الحقل الأصلي
+      originalInput.parentNode.replaceChild(newInput, originalInput);
+      
+      console.log('✅ Replaced input:', newInput.type, newInput.name);
     });
+  };
+  
+  // إصلاح القوائم المنسدلة
+  const replaceSelects = () => {
+    const selects = document.querySelectorAll('select');
     
-    // تطبيق الإصلاح عند تحميل الصفحة
-    document.addEventListener('DOMContentLoaded', fixInputs);
-    
-    // تطبيق الإصلاح عند ظهور لوحة المفاتيح
-    window.addEventListener('keyboardWillShow', fixInputs);
-    window.addEventListener('keyboardDidShow', fixInputs);
-    
-    return {
-      cleanup: () => {
-        observer.disconnect();
-      }
-    };
+    selects.forEach(originalSelect => {
+      const newSelect = document.createElement('select');
+      
+      // نسخ الخصائص
+      newSelect.name = originalSelect.name;
+      newSelect.className = originalSelect.className;
+      newSelect.style.cssText = originalSelect.style.cssText;
+      newSelect.innerHTML = originalSelect.innerHTML;
+      newSelect.value = originalSelect.value;
+      
+      // إضافة خصائص Android
+      newSelect.style.pointerEvents = 'auto';
+      newSelect.style.cursor = 'pointer';
+      newSelect.style.webkitAppearance = 'menulist';
+      newSelect.style.appearance = 'menulist';
+      
+      // إضافة event listeners
+      newSelect.addEventListener('change', (e) => {
+        console.log('📋 Select changed:', e.target.value);
+        const event = new Event('change', { bubbles: true });
+        Object.defineProperty(event, 'target', { writable: false, value: newSelect });
+        originalSelect.dispatchEvent(event);
+      });
+      
+      newSelect.addEventListener('focus', (e) => {
+        console.log('🎯 New select focused');
+      });
+      
+      // استبدال القائمة الأصلية
+      originalSelect.parentNode.replaceChild(newSelect, originalSelect);
+      
+      console.log('✅ Replaced select:', newSelect.name);
+    });
+  };
+  
+  // تطبيق الإصلاح بعد تحميل الصفحة
+  const applyFix = () => {
+    console.log('� Applying Android input fix...');
+    setTimeout(() => {
+      replaceInputs();
+      replaceSelects();
+    }, 1000);
+  };
+  
+  // تطبيق الإصلاح عند تحميل الصفحة
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', applyFix);
+  } else {
+    applyFix();
   }
   
-  return { cleanup: () => {} };
+  // تطبيق الإصلاح عند تغيير المسار (React Router)
+  let currentPath = window.location.pathname;
+  const checkPathChange = () => {
+    if (window.location.pathname !== currentPath) {
+      currentPath = window.location.pathname;
+      console.log('🛣️ Path changed, reapplying fix...');
+      setTimeout(applyFix, 500);
+    }
+  };
+  
+  setInterval(checkPathChange, 1000);
+  
+  return {
+    cleanup: () => {
+      console.log('🧹 Cleaning up Android input fix');
+    }
+  };
 };
+
+export default initAndroidInputFix;
 
 export default initAndroidInputFix;
