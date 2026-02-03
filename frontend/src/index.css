@@ -5,7 +5,42 @@
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
-/* تم إزالة جميع الحلول المعقدة للبدء من الصفر */
+/* إصلاح قوي يتجاوز Tailwind */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select {
+  pointer-events: auto !important;
+  cursor: text !important;
+  -webkit-user-select: text !important;
+  user-select: text !important;
+  touch-action: manipulation !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+select {
+  cursor: pointer !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-appearance: menulist !important;
+  appearance: menulist !important;
+}
+
+/* إجبار Tailwind على عدم التدخل */
+.w-full input,
+.w-full select,
+input.w-full,
+select.w-full {
+  pointer-events: auto !important;
+  cursor: text !important;
+}
+
+.w-full select,
+select.w-full {
+  cursor: pointer !important;
+}
 
 
 /* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
