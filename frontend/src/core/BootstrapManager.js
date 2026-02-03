@@ -173,23 +173,8 @@ class BootstrapManager {
    * تهيئة أدوات التطوير (حسب البيئة)
    */
   async _initDevTools() {
-    // تحميل أدوات التطوير فقط في بيئة التطوير
-    if (process.env.NODE_ENV === 'development' || process.env.REACT_APP_DEBUG_MODE === 'true') {
-      console.log('🛠️ Loading development tools...');
-      
-      try {
-        // تحميل أدوات التطوير بشكل ديناميكي
-        const devToolsModule = await import('../utils/devToolsImplementation');
-        if (devToolsModule.default) {
-          this.services.set('devTools', devToolsModule.default);
-          console.log('✅ Development tools loaded');
-        }
-      } catch (error) {
-        console.warn('⚠️ Development tools not available:', error.message);
-      }
-    } else {
-      console.log('🏭 Production mode: Development tools skipped');
-    }
+    // أدوات التطوير محذوفة - لا حاجة لها في الإنتاج
+    console.log('🏭 Production mode: Development tools skipped');
   }
 
   /**

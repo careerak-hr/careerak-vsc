@@ -19,7 +19,6 @@ import CropModal from '../components/modals/CropModal';
 
 // Input Fields Forcer
 import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
-import { printFieldsReport } from '../utils/inputFieldsTester';
 import { initializeEmergencySystem } from '../utils/inputFieldsEmergencyForcer';
 
 // Create cropped image utility
@@ -129,11 +128,6 @@ export default function AuthPage() {
     
     // تشغيل النظام الطارئ
     const emergency = initializeEmergencySystem();
-    
-    // طباعة تقرير الحقول بعد ثانيتين
-    setTimeout(() => {
-      printFieldsReport();
-    }, 2000);
     
     return () => {
       if (forcer && forcer.cleanup) {
