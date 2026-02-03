@@ -9,49 +9,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
-
-/* إجبار Tailwind على عدم التدخل */
-.w-full input,
-.w-full select,
-input.w-full,
-select.w-full {
-  pointer-events: auto !important;
-  cursor: text !important;
-  -webkit-user-modify: read-write !important;
-}
-
-.w-full select,
-select.w-full {
-  cursor: pointer !important;
-}
-
-/* إصلاحات خاصة بـ Capacitor */
-.capacitor-keyboard-open input,
-.capacitor-keyboard-open select {
-  pointer-events: auto !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-}
-
-/* منع العناصر الأخرى من سحب التركيز */
-body.input-focused *:not(input):not(select):not(textarea):not(button):not(a):not([role="button"]) {
-  pointer-events: none !important;
-}
-
-body.input-focused input,
-body.input-focused select,
-body.input-focused textarea,
-body.input-focused button,
-body.input-focused a,
-body.input-focused [role="button"] {
-  pointer-events: auto !important;
-}
-
-
-/* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 /* حماية الهوية البصرية ومنع الوضع الداكن التلقائي */
@@ -89,28 +46,18 @@ body.input-focused [role="button"] {
   animation: expand-glow 4s ease-in-out infinite;
 }
 
-/* القاعدة العامة - تم تعطيل منع التحديد لأنه يؤثر على التفاعل */
-/* *:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"]) {
-  -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none !important;
-  -webkit-user-select: none !important;
-  -khtml-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
-  user-select: none !important;
-  outline: none !important;
-  -webkit-context-menu: none !important;
-  context-menu: none !important;
-} */
-
-
-/* تعطيل التحديد للعناصر غير التفاعلية */
-*:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::selection {
-  background: transparent !important;
+/* CRITICAL: Ensure all inputs are interactive */
+input, select, textarea {
+  pointer-events: auto !important;
+  cursor: text !important;
+  -webkit-user-modify: read-write !important;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  touch-action: manipulation !important;
 }
 
-*:not(input):not(textarea):not(select):not(button):not([contenteditable]):not([role="textbox"]):not([role="combobox"]):not([role="searchbox"])::-moz-selection {
-  background: transparent !important;
+select {
+  cursor: pointer !important;
 }
 
 body {
@@ -123,7 +70,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  -webkit-context-menu: none !important;
 }
 
 /* إجبار رسائل الخطأ على اللون الأحمر */

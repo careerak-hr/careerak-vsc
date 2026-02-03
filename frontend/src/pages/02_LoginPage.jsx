@@ -19,13 +19,10 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
   
   useEffect(() => {
     // Set audio consent on component mount
     localStorage.setItem('audioConsent', 'true');
-    
-    setIsVisible(true);
 
     const loadRememberedData = async () => {
       const savedId = localStorage.getItem('remembered_user');
@@ -81,50 +78,69 @@ export default function LoginPage() {
     }
   };
 
-  // تحسين classes للحقول مع ضمان إمكانية الكتابة
-  const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
-  
-  // تطبيق الخط المناسب حسب اللغة
-  const fontStyle = {
+  // Simple input styles without complex CSS
+  const inputStyle = {
+    width: '100%',
+    padding: '24px',
+    backgroundColor: '#E3DAD1',
+    color: '#304B60',
+    borderRadius: '40px',
+    border: '2px solid rgba(212, 129, 97, 0.2)',
+    outline: 'none',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: '16px',
+    fontFamily: language === 'ar' ? "'Amiri', serif" : 
+                language === 'en' ? "'Cormorant Garamond', serif" : 
+                "'EB Garamond', serif"
+  };
+
+  const buttonStyle = {
+    width: '100%',
+    backgroundColor: '#304B60',
+    color: '#D48161',
+    padding: '28px',
+    borderRadius: '48px',
+    fontWeight: 'bold',
+    fontSize: '24px',
+    border: 'none',
+    cursor: 'pointer',
     fontFamily: language === 'ar' ? "'Amiri', serif" : 
                 language === 'en' ? "'Cormorant Garamond', serif" : 
                 "'EB Garamond', serif"
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#E3DAD1] login-page">
-     <div className={`transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="w-full max-w-sm px-8 flex flex-col items-center">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#E3DAD1', padding: '20px' }}>
+      <div style={{ width: '100%', maxWidth: '400px' }}>
         
-        <div className="mb-8">
-          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden bg-[#E3DAD1]">
-             <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+        <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+          <div style={{ width: '160px', height: '160px', borderRadius: '50%', border: '4px solid #304B60', margin: '0 auto', overflow: 'hidden', backgroundColor: '#E3DAD1' }}>
+             <img src="/logo.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         </div>
 
-        <div className="text-center mb-10">
-          <h1 className="text-5xl font-black text-[#304B60] italic" style={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>Careerak</h1>
-          <p className="text-[#304B60]/50 font-bold text-lg mt-3" style={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>{loginT.subtitle}</p>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <h1 style={{ fontSize: '48px', fontWeight: 'bold', color: '#304B60', fontStyle: 'italic', margin: '0', fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>Careerak</h1>
+          <p style={{ color: 'rgba(48, 75, 96, 0.5)', fontWeight: 'bold', fontSize: '18px', marginTop: '12px', fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>{loginT.subtitle}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="w-full space-y-5">
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <input
             type="text"
             placeholder={loginT.userPlaceholder}
-            className={inputCls}
-            style={fontStyle}
+            style={inputStyle}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             autoComplete="username"
             required
           />
 
-          <div className="relative w-full">
+          <div style={{ position: 'relative' }}>
             <input
               type={showPassword ? "text" : "password"}
               placeholder={loginT.passPlaceholder}
-              className={inputCls}
-              style={fontStyle}
+              style={inputStyle}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
@@ -133,50 +149,58 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors z-10 w-10 h-10 flex items-center justify-center`}
+              style={{
+                position: 'absolute',
+                [isRTL ? 'left' : 'right']: '24px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                fontSize: '20px',
+                cursor: 'pointer',
+                zIndex: 10
+              }}
             >
               {showPassword ? '👁️' : '🙈'}
             </button>
           </div>
 
           {error && (
-            <div className="px-6 text-center animate-shake">
-              <p className="font-black text-[12px] text-red-600">
+            <div style={{ padding: '0 24px', textAlign: 'center' }}>
+              <p style={{ fontWeight: 'bold', fontSize: '12px', color: '#dc2626', margin: 0 }}>
                 {error}
               </p>
             </div>
           )}
 
-          <div className={`flex items-center justify-center px-6 py-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 24px', flexDirection: isRTL ? 'row' : 'row-reverse' }}>
             <PremiumCheckbox
               id="remember"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
               label={loginT.rememberMe}
               labelClassName="text-sm font-bold text-[#304B60]/60"
-              labelStyle={fontStyle}
+              labelStyle={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#304B60] text-[#D48161] p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4"
-            style={fontStyle}
+            style={buttonStyle}
           >
-            {loading ? <div className="w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto"></div> : loginT.loginBtn}
+            {loading ? '⏳' : loginT.loginBtn}
           </button>
         </form>
 
-        <div className="mt-12 text-center">
-          <p className="text-sm font-bold text-[#304B60]/40" style={fontStyle}>
+        <div style={{ marginTop: '48px', textAlign: 'center' }}>
+          <p style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgba(48, 75, 96, 0.4)', fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>
             {loginT.noAccount} <span onClick={() => {
               navigate('/auth');
-            }} className="text-[#304B60] cursor-pointer hover:underline font-black">{loginT.createAccount}</span>
+            }} style={{ color: '#304B60', cursor: 'pointer', textDecoration: 'underline', fontWeight: 'bold' }}>{loginT.createAccount}</span>
           </p>
         </div>
       </div>
-     </div>
     </div>
   );
 }
