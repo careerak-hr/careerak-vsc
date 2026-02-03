@@ -5,48 +5,10 @@
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
-/* إصلاحات خاصة بـ Android WebView و Capacitor */
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"],
-select {
-  pointer-events: auto !important;
-  cursor: text !important;
-  -webkit-user-select: text !important;
-  user-select: text !important;
-  touch-action: manipulation !important;
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  
-  /* إصلاحات خاصة بـ Android WebView */
-  -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
-  -webkit-touch-callout: default !important;
-  -webkit-user-modify: read-write !important;
-  
-  /* منع فقدان التركيز */
-  outline: none !important;
-  border: 2px solid transparent !important;
-  transition: border-color 0.2s !important;
-}
-
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="tel"]:focus,
-select:focus {
-  border-color: #304B60 !important;
-  outline: none !important;
-  -webkit-tap-highlight-color: rgba(48, 75, 96, 0.2) !important;
-}
-
-select {
-  cursor: pointer !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-  -webkit-appearance: menulist !important;
-  appearance: menulist !important;
-}
+/* احتياطي: استيراد من Google Fonts في حالة فشل تحميل الخطوط المحلية */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 /* إجبار Tailwind على عدم التدخل */
 .w-full input,

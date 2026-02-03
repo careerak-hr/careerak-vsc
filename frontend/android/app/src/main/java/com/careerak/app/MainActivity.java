@@ -2,8 +2,6 @@ package com.careerak.app;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.careerak.app.models.HealthResponse;
@@ -20,45 +18,8 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // إعدادات WebView لحل مشكلة حقول الإدخال
-        configureWebView();
-
         // اختبار الاتصال بالسيرفر عند بدء التشغيل
         checkBackendConnection();
-    }
-
-    private void configureWebView() {
-        try {
-            WebView webView = getBridge().getWebView();
-            WebSettings webSettings = webView.getSettings();
-            
-            // تفعيل JavaScript
-            webSettings.setJavaScriptEnabled(true);
-            
-            // تفعيل DOM Storage
-            webSettings.setDomStorageEnabled(true);
-            
-            // تفعيل Database Storage
-            webSettings.setDatabaseEnabled(true);
-            
-            // تحسين إعدادات اللمس
-            webSettings.setBuiltInZoomControls(false);
-            webSettings.setDisplayZoomControls(false);
-            webSettings.setSupportZoom(false);
-            
-            // إعدادات خاصة بحقول الإدخال
-            webSettings.setTextZoom(100);
-            webSettings.setUseWideViewPort(true);
-            webSettings.setLoadWithOverviewMode(true);
-            
-            // تفعيل Mixed Content
-            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
-            
-            Log.d("Careerak_WebView", "WebView configured for input fields");
-            
-        } catch (Exception e) {
-            Log.e("Careerak_WebView", "Error configuring WebView: " + e.getMessage());
-        }
     }
 
     private void checkBackendConnection() {

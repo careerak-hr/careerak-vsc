@@ -11,8 +11,7 @@ export const ROUTE_PERMISSIONS = {
     '/entry',
     '/login',
     '/auth',
-    '/otp-verify',
-    '/test-input'
+    '/otp-verify'
   ],
   
   // مسارات محمية - تحتاج تسجيل دخول

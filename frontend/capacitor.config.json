@@ -15,34 +15,6 @@
     },
     "Microphone": {
       "permissions": ["microphone"]
-    },
-    "Keyboard": {
-      "resize": "body",
-      "style": "dark",
-      "resizeOnFullScreen": true
-    }
-  },
-  "android": {
-    "webContentsDebuggingEnabled": true,
-    "allowMixedContent": true,
-    "captureInput": true,
-    "overrideUserAgent": "Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36",
-    "appendUserAgent": "Careerak/1.0",
-    "backgroundColor": "#E3DAD1",
-    "webViewPreferences": {
-      "allowFileAccess": true,
-      "allowFileAccessFromFileURLs": true,
-      "allowUniversalAccessFromFileURLs": true,
-      "javaScriptEnabled": true,
-      "domStorageEnabled": true,
-      "databaseEnabled": true,
-      "textZoom": 100,
-      "builtInZoomControls": false,
-      "displayZoomControls": false,
-      "supportZoom": false,
-      "loadWithOverviewMode": true,
-      "useWideViewPort": true,
-      "mixedContentMode": 0
     }
   }
 }

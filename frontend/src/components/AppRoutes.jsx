@@ -17,7 +17,6 @@ const LanguagePage = React.lazy(() => import('../pages/00_LanguagePage'));
 const EntryPage = React.lazy(() => import('../pages/01_EntryPage'));
 const LoginPage = React.lazy(() => import('../pages/02_LoginPage'));
 const AuthPage = React.lazy(() => import('../pages/03_AuthPage'));
-const TestInputPage = React.lazy(() => import('../pages/TestInputPage'));
 const OTPVerification = React.lazy(() => import('../pages/04_OTPVerification'));
 const OnboardingIndividuals = React.lazy(() => import('../pages/05_OnboardingIndividuals'));
 const OnboardingCompanies = React.lazy(() => import('../pages/06_OnboardingCompanies'));
@@ -85,9 +84,6 @@ function AppRoutes() {
           <GuestRoute>
             <SuspenseWrapper><AuthPage /></SuspenseWrapper>
           </GuestRoute>
-        } />
-        <Route path="/test-input" element={
-          <SuspenseWrapper><TestInputPage /></SuspenseWrapper>
         } />
         <Route path="/otp-verify" element={
           <GuestRoute>
