@@ -77,6 +77,12 @@ public class MainActivity extends BridgeActivity {
                 webSettings.setAllowFileAccess(true);
                 webSettings.setAllowContentAccess(true);
                 
+                // إعدادات تحميل الصور المحلية
+                webSettings.setLoadsImagesAutomatically(true);
+                webSettings.setBlockNetworkImage(false);
+                webSettings.setAllowFileAccessFromFileURLs(true);
+                webSettings.setAllowUniversalAccessFromFileURLs(true);
+                
                 Log.d("Careerak_WebView", "WebView configured successfully for input interaction");
             } else {
                 Log.e("Careerak_WebView", "WebView is null - cannot configure");

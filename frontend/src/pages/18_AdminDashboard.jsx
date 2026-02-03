@@ -146,7 +146,7 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="w-full max-w-6xl flex items-center justify-between mb-8 bg-[#304B60]/5 p-4 rounded-3xl border border-[#D48161]/10 shadow-sm">
         <div className="flex items-center gap-3">
-          <img src="/logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border-2 border-[#304B60]" />
+          <img src="./logo.jpg" alt="Logo" className="w-12 h-12 rounded-full border-2 border-[#304B60]" />
           <div>
             <h2 className="text-[#304B60] font-black text-lg italic">Careerak Admin</h2>
             <p className="text-[10px] text-[#304B60]/60 font-bold uppercase tracking-wider">Master Control</p>

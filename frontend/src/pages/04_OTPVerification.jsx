@@ -116,7 +116,7 @@ export default function OTPVerification() {
         <div className="relative flex flex-col items-center">
             <div className="relative p-4 mb-8">
                 <div className="absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow"></div>
-                <img src="/logo.jpg" alt="Logo" className="relative h-48 w-48 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover" />
+                <img src="./logo.jpg" alt="Logo" className="relative h-48 w-48 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover" />
             </div>
             <h2 className="text-6xl font-black text-[#304B60] animate-bounce italic">{t.congrats}</h2>
         </div>

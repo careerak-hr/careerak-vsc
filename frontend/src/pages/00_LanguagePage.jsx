@@ -12,6 +12,7 @@ import { useAppSettings } from "../context/AppSettingsContext";
 import { useTranslate } from "../hooks/useTranslate";
 import { markOnboardingComplete } from "../utils/onboardingUtils";
 import "./00_LanguagePage.css";
+import "../styles/imageLoader.css";
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
 import NotificationSettingsModal from "../components/modals/NotificationSettingsModal";
@@ -149,8 +150,19 @@ export default function LanguagePage() {
 
       <div className="relative z-10 flex flex-col items-center">
         <div className="mb-8">
-          <div className="w-60 h-60 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
-            <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+          <div className="logo-container w-60 h-60 border-4 border-[#304B60] shadow-2xl pointer-events-none bg-[#E3DAD1]">
+            <img 
+              src="./logo.jpg" 
+              alt="Logo" 
+              className="w-full h-full object-cover rounded-full"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div className="logo-fallback" style={{display: 'none'}}>
+              🌐
+            </div>
           </div>
         </div>
 

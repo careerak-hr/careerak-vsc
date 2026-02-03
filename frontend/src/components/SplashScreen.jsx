@@ -6,7 +6,7 @@ export const SplashScreen = ({ onFinish }) => {
 
   useEffect(() => {
     // 1. تشغيل ملف intro.mp3
-    const audio = new Audio('/intro.mp3');
+    const audio = new Audio('./intro.mp3');
     audio.volume = 0.8;
     
     const playIntro = () => {
@@ -60,7 +60,7 @@ export const SplashScreen = ({ onFinish }) => {
           }`}>
             <div className="relative p-2 md:p-4">
               <div className="absolute inset-0 border-2 border-[#1A365D]/10 rounded-full animate-spin-slow"></div>
-              <img src="/logo.jpg" alt="Logo" className="relative h-32 w-32 md:h-48 md:w-48 rounded-full border-[4px] border-white shadow-2xl object-cover" />
+              <img src="./logo.jpg" alt="Logo" className="relative h-32 w-32 md:h-48 md:w-48 rounded-full border-[4px] border-white shadow-2xl object-cover" />
             </div>
           </div>
         </div>

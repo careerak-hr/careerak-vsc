@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { discoverBestServer } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { App } from '@capacitor/app';
+import '../styles/imageLoader.css';
 
 const entryTranslations = {
   ar: { slogan: "مستقبل الموارد البشرية" },
@@ -139,7 +140,7 @@ export default function EntryPage() {
     if (audioEnabled && phase === 1 && !audioRef.current && isMounted.current) {
       try {
         console.log("Playing intro.mp3");
-        audioRef.current = new Audio('/intro.mp3');
+        audioRef.current = new Audio('./intro.mp3');
         audioRef.current.volume = 0.6;
         audioRef.current.preload = 'auto';
         
@@ -182,7 +183,20 @@ export default function EntryPage() {
           }`}>
             <div className="relative p-2 md:p-4">
               <div className="absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow"></div>
-              <img src="./logo.jpg" alt="Logo" className="relative h-64 w-64 md:h-96 md:w-96 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover" />
+              <div className="logo-container relative h-64 w-64 md:h-96 md:w-96 border-[4px] border-[#304B60] shadow-2xl">
+                <img 
+                  src="./logo.jpg" 
+                  alt="Logo" 
+                  className="w-full h-full object-cover rounded-full"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.nextSibling.style.display = 'flex';
+                  }}
+                />
+                <div className="logo-fallback" style={{display: 'none'}}>
+                  🏢
+                </div>
+              </div>
             </div>
           </div>
         </div>

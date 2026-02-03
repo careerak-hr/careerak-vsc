@@ -1,0 +1,55 @@
+/* إعدادات خاصة لضمان تحميل الصور في Android */
+
+/* ضمان تحميل جميع الصور */
+img {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* إعدادات خاصة للشعار */
+img[alt="Logo"] {
+  background-color: #E3DAD1 !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
+
+/* في حالة فشل تحميل الصور، عرض placeholder */
+img[alt="Logo"]:before {
+  content: "📷";
+  font-size: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: #E3DAD1;
+  color: #304B60;
+  border-radius: 50%;
+}
+
+/* إعدادات لضمان عرض الصور في WebView */
+.logo-container {
+  background-color: #E3DAD1 !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* إعدادات احتياطية للصور */
+.logo-fallback {
+  width: 100%;
+  height: 100%;
+  background-color: #E3DAD1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: #304B60;
+}

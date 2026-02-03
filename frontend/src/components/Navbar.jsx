@@ -23,7 +23,7 @@ export const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-[5000] bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-gray-100 shadow-sm" dir="rtl">
         <div className="flex items-center gap-3">
-           <img src="/logo.jpg" alt="Logo" className="w-10 h-10 rounded-full border-2 border-[#1A365D]" />
+           <img src="./logo.jpg" alt="Logo" className="w-10 h-10 rounded-full border-2 border-[#1A365D]" />
            <span className="font-black text-[#1A365D] italic text-xl">Careerak</span>
         </div>
 

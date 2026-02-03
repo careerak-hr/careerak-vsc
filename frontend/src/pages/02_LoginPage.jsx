@@ -98,7 +98,7 @@ export default function LoginPage() {
         
         <div className="mb-8">
           <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden bg-[#E3DAD1]">
-             <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+             <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
