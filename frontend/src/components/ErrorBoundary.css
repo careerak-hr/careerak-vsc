@@ -1,0 +1,39 @@
+.error-boundary-container {
+  @apply min-h-screen bg-secondary flex items-center justify-center p-4;
+}
+
+.error-boundary-card {
+  @apply bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center;
+}
+
+.error-boundary-icon {
+  @apply text-6xl mb-4;
+}
+
+.error-boundary-title {
+  @apply text-2xl font-bold text-primary mb-4;
+}
+
+.error-boundary-message {
+  @apply text-hint mb-6;
+}
+
+.error-boundary-actions {
+    @apply space-y-3;
+}
+
+.error-boundary-action-btn {
+    @apply w-full py-3 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition-colors;
+}
+
+.error-boundary-details summary {
+  @apply cursor-pointer text-danger font-semibold;
+}
+
+.error-boundary-details-content {
+  @apply mt-2 p-4 bg-danger/10 rounded border text-sm;
+}
+
+.error-boundary-stack {
+  @apply mt-2 text-xs overflow-auto;
+}

@@ -1,5 +1,5 @@
 .navbar-container {
-  @apply fixed top-0 left-0 right-0 z-[5000] bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-gray-100 shadow-sm;
+  @apply fixed top-0 left-0 right-0 z-[5000] bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-primary/5 shadow-sm;
 }
 
 .navbar-logo-container {
@@ -27,11 +27,11 @@
 }
 
 .navbar-notifications-dropdown {
-  @apply absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50;
+  @apply absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-secondary-dark z-50;
 }
 
 .navbar-notifications-header {
-  @apply p-4 border-b border-gray-200;
+  @apply p-4 border-b border-secondary-dark;
 }
 
 .navbar-notifications-title {
@@ -43,7 +43,7 @@
 }
 
 .navbar-notification-item {
-  @apply p-4 border-b border-gray-100 hover:bg-gray-50;
+  @apply p-4 border-b border-secondary-light hover:bg-secondary-light;
 }
 
 .navbar-settings-btn {
@@ -75,7 +75,7 @@
 }
 
 .settings-panel-item {
-  @apply flex justify-between items-center p-4 bg-gray-50 rounded-2xl;
+  @apply flex justify-between items-center p-4 bg-secondary-light rounded-2xl;
 }
 
 .settings-panel-item-label {
@@ -87,7 +87,7 @@
 }
 
 .settings-panel-btn {
-  @apply w-full p-4 bg-gray-50 rounded-2xl flex justify-between items-center hover:bg-gray-100 transition-all;
+  @apply w-full p-4 bg-secondary-light rounded-2xl flex justify-between items-center hover:bg-secondary transition-all;
 }
 
 .settings-panel-logout-btn {
@@ -107,7 +107,7 @@
 }
 
 .search-bar-container {
-    @apply absolute top-full left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 p-4;
+    @apply absolute top-full left-0 right-0 bg-white border-t border-secondary-dark shadow-lg z-40 p-4;
 }
 
 .search-bar-content {
@@ -119,7 +119,7 @@
 }
 
 .search-bar-input {
-    @apply w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent;
+    @apply w-full pl-10 pr-4 py-2 border border-secondary-dark rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent;
 }
 
 .search-bar-icon {
@@ -131,7 +131,7 @@
 }
 
 .search-result-item {
-    @apply p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer;
+    @apply p-3 border border-secondary-dark rounded-lg hover:bg-secondary-light cursor-pointer;
 }
 
 .search-result-title {
@@ -139,5 +139,5 @@
 }
 
 .search-result-subtitle {
-    @apply text-sm text-gray-600;
+    @apply text-sm text-hint;
 }

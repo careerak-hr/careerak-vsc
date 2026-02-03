@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
+import './ImageCropper.css';
 
 export const ImageCropper = ({ image, onCropComplete, onCancel, lang }) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -14,13 +15,12 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, lang }) => {
   }, []);
 
   const handleSave = async () => {
-    // هنا نقوم بإنشاء الصورة المقصوصة وإعادتها
     onCropComplete(croppedAreaPixels);
   };
 
   return (
-    <div className="fixed inset-0 z-[2000] bg-black flex flex-col">
-      <div className="relative flex-grow">
+    <div className="image-cropper-container">
+      <div className="image-cropper-cropper-wrapper">
         <Cropper
           image={image}
           crop={crop}
@@ -31,9 +31,9 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, lang }) => {
           onZoomChange={onZoomChange}
         />
       </div>
-      <div className="p-6 bg-white rounded-t-[2.5rem] flex flex-col gap-4">
-        <div className="flex items-center justify-between px-4">
-          <span className="font-bold text-gray-500">{lang === 'ar' ? 'تكبير' : 'Zoom'}</span>
+      <div className="image-cropper-controls-container">
+        <div className="image-cropper-zoom-container">
+          <span className="image-cropper-zoom-label">{lang === 'ar' ? 'تكبير' : 'Zoom'}</span>
           <input
             type="range"
             value={zoom}
@@ -42,19 +42,19 @@ export const ImageCropper = ({ image, onCropComplete, onCancel, lang }) => {
             step={0.1}
             aria-labelledby="Zoom"
             onChange={(e) => setZoom(e.target.value)}
-            className="w-2/3 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[#1A365D]"
+            className="image-cropper-zoom-slider"
           />
         </div>
-        <div className="flex gap-4">
+        <div className="image-cropper-buttons-container">
           <button
             onClick={onCancel}
-            className="flex-1 py-4 rounded-2xl font-bold text-gray-500 bg-gray-100 active:scale-95 transition-all"
+            className="image-cropper-btn image-cropper-btn-secondary"
           >
             {lang === 'ar' ? 'إلغاء' : 'Cancel'}
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 py-4 rounded-2xl font-black text-white bg-[#1A365D] active:scale-95 transition-all"
+            className="image-cropper-btn image-cropper-btn-primary"
           >
             {lang === 'ar' ? 'تم، حفظ' : 'Done, Save'}
           </button>

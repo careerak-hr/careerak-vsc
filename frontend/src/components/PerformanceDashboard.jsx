@@ -57,7 +57,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
 
   const getMetricColor = (value, thresholds) => {
     if (value <= thresholds.good) return 'text-success';
-    if (value <= thresholds.needs_improvement) return 'text-yellow-600'; // Assuming yellow is not in the palette, will fallback
+    if (value <= thresholds.needs_improvement) return 'text-accent'; // Changed to accent
     return 'text-danger';
   };
 
@@ -96,7 +96,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                     <div className="performance-dashboard-metric-label">{key}</div>
                     <div className={`performance-dashboard-metric-value ${
                       metric.rating === 'good' ? 'text-success' :
-                      metric.rating === 'needs-improvement' ? 'text-yellow-600' : // fallback
+                      metric.rating === 'needs-improvement' ? 'text-accent' :
                       'text-danger'
                     }`}>
                       {key === 'CLS' ? metric.value.toFixed(3) : Math.round(metric.value)}

@@ -1,0 +1,99 @@
+.loading-screen-container {
+  @apply min-h-screen bg-secondary flex items-center justify-center p-4;
+}
+
+.loading-content-container {
+  @apply text-center;
+}
+
+.loading-logo {
+  @apply w-24 h-24 mx-auto mb-6 bg-primary rounded-full flex items-center justify-center;
+}
+
+.loading-logo-text {
+  @apply text-accent text-2xl font-bold;
+}
+
+.loading-title {
+  @apply text-3xl font-bold text-primary mb-4;
+}
+
+.loading-subtitle {
+  @apply text-primary mb-8;
+}
+
+.loading-dots-container {
+  @apply flex items-center justify-center space-x-2 rtl:space-x-reverse;
+}
+
+.loading-dot {
+  @apply w-3 h-3 bg-primary rounded-full animate-bounce;
+}
+
+.loading-message {
+  @apply text-primary mt-4 text-sm;
+}
+
+.error-screen-container {
+  @apply min-h-screen bg-secondary flex items-center justify-center p-4;
+}
+
+.error-card {
+  @apply bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center;
+}
+
+.error-icon {
+  @apply text-6xl mb-4;
+}
+
+.error-title {
+  @apply text-2xl font-bold text-primary mb-4;
+}
+
+.error-message {
+  @apply text-hint mb-6;
+}
+
+.error-details summary {
+  @apply cursor-pointer text-danger font-semibold mb-2;
+}
+
+.error-details-content {
+  @apply bg-danger/10 p-4 rounded border text-sm;
+}
+
+.error-stack {
+  @apply mt-2 text-xs overflow-auto whitespace-pre-wrap;
+}
+
+.error-actions {
+    @apply space-y-3;
+}
+
+.error-action-btn {
+    @apply w-full py-3 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition-colors;
+}
+
+.simple-loader-container {
+    @apply flex items-center justify-center p-8;
+}
+
+.simple-loader-spinner {
+    @apply inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4;
+}
+
+.progress-loader-container {
+    @apply min-h-screen bg-secondary flex items-center justify-center;
+}
+
+.progress-loader-content {
+    @apply text-center max-w-md w-full px-4;
+}
+
+.progress-bar-container {
+    @apply w-full bg-secondary-dark rounded-full h-2 mb-4;
+}
+
+.progress-bar-fill {
+    @apply bg-primary h-2 rounded-full transition-all duration-300;
+}

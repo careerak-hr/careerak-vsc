@@ -1,0 +1,39 @@
+.image-cropper-container {
+  @apply fixed inset-0 z-[2000] bg-black flex flex-col;
+}
+
+.image-cropper-cropper-wrapper {
+  @apply relative flex-grow;
+}
+
+.image-cropper-controls-container {
+  @apply p-6 bg-white rounded-t-[2.5rem] flex flex-col gap-4;
+}
+
+.image-cropper-zoom-container {
+  @apply flex items-center justify-between px-4;
+}
+
+.image-cropper-zoom-label {
+  @apply font-bold text-hint;
+}
+
+.image-cropper-zoom-slider {
+  @apply w-2/3 h-2 bg-secondary-dark rounded-lg appearance-none cursor-pointer;
+}
+
+.image-cropper-buttons-container {
+  @apply flex gap-4;
+}
+
+.image-cropper-btn {
+  @apply flex-1 py-4 rounded-2xl font-bold active:scale-95 transition-all;
+}
+
+.image-cropper-btn-primary {
+  @apply text-white bg-primary;
+}
+
+.image-cropper-btn-secondary {
+  @apply text-hint bg-secondary-light;
+}
