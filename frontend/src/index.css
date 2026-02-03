@@ -5,25 +5,33 @@
 /* استيراد الخطوط المحلية */
 @import url('./assets/fonts/fonts.css');
 
-/* تم حل المشكلة الجذرية - إصلاح شامل لحقول الإدخال */
-input:not([type="checkbox"]):not([type="radio"]),
-textarea,
-select {
+/* حل جذري نهائي - إزالة أي عوائق */
+* {
+  /* السماح للحقول بالتفاعل */
+}
+
+/* إجبار جميع العناصر على عدم التداخل مع الحقول */
+*:not(input):not(textarea):not(select):not(button):not(a):not([role="button"]):not([onclick]):not(.cursor-pointer) {
+  pointer-events: none !important;
+}
+
+/* إجبار الحقول والعناصر التفاعلية على العمل */
+input, textarea, select, button, a, [role="button"], [onclick], .cursor-pointer {
   pointer-events: auto !important;
+  z-index: 999999 !important;
+  position: relative !important;
+}
+
+/* إصلاح خاص للحقول */
+input:not([type="checkbox"]):not([type="radio"]) {
+  cursor: text !important;
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
   user-select: text !important;
-  touch-action: manipulation !important;
-  cursor: text !important;
-  z-index: 99999 !important;
-  position: relative !important;
 }
 
 select {
   cursor: pointer !important;
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  user-select: none !important;
 }
 
 

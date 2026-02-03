@@ -114,57 +114,20 @@
   /* إزالة visibility: hidden لأنه يمنع التفاعل مع الحقول */
 }
 
-/* إصلاح مباشر لحقول الإدخال في صفحة AuthPage */
-.auth-page input,
-.auth-page textarea,
-.auth-page select {
-  pointer-events: auto !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 1000 !important;
-  position: relative !important;
-  touch-action: manipulation !important;
-}
-
-.auth-page select {
-  cursor: pointer !important;
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  user-select: none !important;
-}
-
-/* إصلاح مباشر لحقول الإدخال في صفحة تسجيل الدخول */
-.login-page input,
-.login-page textarea,
-.login-page select {
-  pointer-events: auto !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  user-select: text !important;
-  cursor: text !important;
-  z-index: 1000 !important;
-  position: relative !important;
-  touch-action: manipulation !important;
-}
-
-.login-page select {
-  cursor: pointer !important;
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  user-select: none !important;
-}
-
-/* إصلاح شامل لجميع الحقول */
-input:not([type="checkbox"]):not([type="radio"]),
+/* إصلاح مباشر وقوي لحقول الإدخال */
+input[type="text"],
+input[type="email"], 
+input[type="password"],
+input[type="tel"],
 textarea,
 select {
   pointer-events: auto !important;
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
   user-select: text !important;
+  cursor: text !important;
   touch-action: manipulation !important;
+  -webkit-touch-callout: default !important;
 }
 
 select {
@@ -174,8 +137,22 @@ select {
   user-select: none !important;
 }
 
-input:not([type="checkbox"]):not([type="radio"]) {
+/* إزالة أي تداخل محتمل */
+.login-page input,
+.auth-page input,
+.login-page select,
+.auth-page select,
+.login-page textarea,
+.auth-page textarea {
+  pointer-events: auto !important;
   cursor: text !important;
+  z-index: 9999 !important;
+  position: relative !important;
+}
+
+.login-page select,
+.auth-page select {
+  cursor: pointer !important;
 }
 
 /* ===== الاستجابة للشاشات المختلفة ===== */
