@@ -23,6 +23,21 @@ select {
   -webkit-tap-highlight-color: rgba(0,0,0,0.1) !important;
   -webkit-touch-callout: default !important;
   -webkit-user-modify: read-write !important;
+  
+  /* منع فقدان التركيز */
+  outline: none !important;
+  border: 2px solid transparent !important;
+  transition: border-color 0.2s !important;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+select:focus {
+  border-color: #304B60 !important;
+  outline: none !important;
+  -webkit-tap-highlight-color: rgba(48, 75, 96, 0.2) !important;
 }
 
 select {
@@ -54,6 +69,20 @@ select.w-full {
   pointer-events: auto !important;
   -webkit-user-select: text !important;
   user-select: text !important;
+}
+
+/* منع العناصر الأخرى من سحب التركيز */
+body.input-focused *:not(input):not(select):not(textarea):not(button):not(a):not([role="button"]) {
+  pointer-events: none !important;
+}
+
+body.input-focused input,
+body.input-focused select,
+body.input-focused textarea,
+body.input-focused button,
+body.input-focused a,
+body.input-focused [role="button"] {
+  pointer-events: auto !important;
 }
 
 
