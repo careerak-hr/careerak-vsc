@@ -24,11 +24,8 @@ export const initAndroidInputFix = () => {
       
       // إضافة خصائص Android
       newInput.style.pointerEvents = 'auto';
-      newInput.style.webkitUserSelect = 'text';
       newInput.style.userSelect = 'text';
-      newInput.style.webkitTouchCallout = 'default';
       newInput.style.touchAction = 'manipulation';
-      newInput.style.webkitAppearance = 'none';
       newInput.style.appearance = 'none';
       
       // إضافة event listeners مباشرة
@@ -53,12 +50,11 @@ export const initAndroidInputFix = () => {
         originalInput.dispatchEvent(event);
       });
       
-      newInput.addEventListener('focus', (e) => {
+      newInput.addEventListener('focus', () => {
         console.log('🎯 New input focused');
-        e.stopPropagation();
       });
       
-      newInput.addEventListener('blur', (e) => {
+      newInput.addEventListener('blur', () => {
         console.log('😵 New input blurred');
       });
       
@@ -86,7 +82,6 @@ export const initAndroidInputFix = () => {
       // إضافة خصائص Android
       newSelect.style.pointerEvents = 'auto';
       newSelect.style.cursor = 'pointer';
-      newSelect.style.webkitAppearance = 'menulist';
       newSelect.style.appearance = 'menulist';
       
       // إضافة event listeners
@@ -97,7 +92,7 @@ export const initAndroidInputFix = () => {
         originalSelect.dispatchEvent(event);
       });
       
-      newSelect.addEventListener('focus', (e) => {
+      newSelect.addEventListener('focus', () => {
         console.log('🎯 New select focused');
       });
       
@@ -142,7 +137,5 @@ export const initAndroidInputFix = () => {
     }
   };
 };
-
-export default initAndroidInputFix;
 
 export default initAndroidInputFix;
