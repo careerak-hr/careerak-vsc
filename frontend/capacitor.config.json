@@ -16,5 +16,17 @@
     "Microphone": {
       "permissions": ["microphone"]
     }
+  },
+  "android": {
+    "webContentsDebuggingEnabled": true,
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webViewPreferences": {
+      "allowFileAccess": true,
+      "allowFileAccessFromFileURLs": true,
+      "allowUniversalAccessFromFileURLs": true,
+      "javaScriptEnabled": true,
+      "domStorageEnabled": true
+    }
   }
 }
