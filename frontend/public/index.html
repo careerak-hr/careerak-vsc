@@ -38,65 +38,40 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     
+    <!-- سكريبت إصلاح الحقول المقفولة -->
+    <script src="%PUBLIC_URL%/input-fix.js"></script>
+    
     <script>
-      // تعطيل جميع قوائم النظام المنبثقة بشكل كامل
+      // تعطيل قوائم النظام مع السماح للحقول بالعمل
       document.addEventListener('DOMContentLoaded', function() {
-        // تعطيل قائمة السياق (Right Click Menu)
+        // تعطيل قائمة السياق فقط على العناصر غير التفاعلية
         document.addEventListener('contextmenu', function(e) {
-          e.preventDefault();
-          return false;
-        });
-        
-        // تعطيل تحديد النص
-        document.addEventListener('selectstart', function(e) {
-          e.preventDefault();
-          return false;
-        });
-        
-        // تعطيل السحب والإفلات
-        document.addEventListener('dragstart', function(e) {
-          e.preventDefault();
-          return false;
-        });
-        
-        // تعطيل قوائم النظام عند الضغط المطول
-        document.addEventListener('touchstart', function(e) {
-          if (e.touches.length > 1) {
-            e.preventDefault();
-          }
-        });
-        
-        // تعطيل قوائم النظام للنصوص المحددة
-        document.addEventListener('selectionchange', function() {
-          if (window.getSelection) {
-            window.getSelection().removeAllRanges();
-          }
-        });
-        
-        // تعطيل اختصارات لوحة المفاتيح للنسخ واللصق
-        document.addEventListener('keydown', function(e) {
-          // تعطيل Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-          if (e.ctrlKey && (e.key === 'a' || e.key === 'c' || e.key === 'v' || e.key === 'x')) {
+          if (!e.target.matches('input, select, textarea')) {
             e.preventDefault();
             return false;
           }
-          // تعطيل F12 (Developer Tools)
-          if (e.key === 'F12') {
+        });
+        
+        // تعطيل تحديد النص فقط على العناصر غير التفاعلية
+        document.addEventListener('selectstart', function(e) {
+          if (!e.target.matches('input, select, textarea')) {
+            e.preventDefault();
+            return false;
+          }
+        });
+        
+        // تعطيل السحب والإفلات فقط على العناصر غير التفاعلية
+        document.addEventListener('dragstart', function(e) {
+          if (!e.target.matches('input, select, textarea')) {
             e.preventDefault();
             return false;
           }
         });
       });
       
-      // تعطيل إضافي للتأكد من عدم ظهور قوائم النظام
+      // تطبيق قواعد منع التحديد فقط على العناصر غير التفاعلية
       window.addEventListener('load', function() {
-        // إزالة جميع event listeners المتعلقة بالتحديد
-        document.onselectstart = function() { return false; };
-        document.onmousedown = function() { return false; };
-        document.ondragstart = function() { return false; };
-        
-        // تعطيل قوائم النظام على جميع العناصر
-        const allElements = document.querySelectorAll('*');
+        const allElements = document.querySelectorAll('*:not(input):not(select):not(textarea)');
         allElements.forEach(function(element) {
           element.style.webkitUserSelect = 'none';
           element.style.mozUserSelect = 'none';
@@ -106,6 +81,21 @@
           element.oncontextmenu = function() { return false; };
           element.onselectstart = function() { return false; };
           element.ondragstart = function() { return false; };
+        });
+        
+        // التأكد من أن الحقول قابلة للتفاعل
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(function(input) {
+          input.style.webkitUserSelect = 'text';
+          input.style.mozUserSelect = 'text';
+          input.style.msUserSelect = 'text';
+          input.style.userSelect = 'text';
+          input.style.webkitTouchCallout = 'default';
+          input.style.pointerEvents = 'auto';
+          input.style.cursor = input.tagName === 'SELECT' ? 'pointer' : 'text';
+          input.oncontextmenu = null;
+          input.onselectstart = null;
+          input.ondragstart = null;
         });
       });
     </script>

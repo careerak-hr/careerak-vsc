@@ -2,6 +2,8 @@ package com.careerak.app;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.careerak.app.models.HealthResponse;
@@ -18,8 +20,63 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // إعدادات WebView الضرورية لحل مشكلة الحقول المقفولة
+        configureWebView();
+
         // اختبار الاتصال بالسيرفر عند بدء التشغيل
         checkBackendConnection();
+    }
+
+    private void configureWebView() {
+        try {
+            WebView webView = getBridge().getWebView();
+            if (webView != null) {
+                WebSettings webSettings = webView.getSettings();
+                
+                // تفعيل JavaScript (ضروري)
+                webSettings.setJavaScriptEnabled(true);
+                
+                // تفعيل DOM Storage (ضروري للتطبيقات الحديثة)
+                webSettings.setDomStorageEnabled(true);
+                
+                // تفعيل Database Storage
+                webSettings.setDatabaseEnabled(true);
+                
+                // تحسين الأداء
+                webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+                webSettings.setAppCacheEnabled(true);
+                
+                // إعدادات التفاعل مع الحقول
+                webSettings.setBuiltInZoomControls(false);
+                webSettings.setDisplayZoomControls(false);
+                webSettings.setSupportZoom(false);
+                
+                // تفعيل التفاعل مع النماذج
+                webSettings.setSaveFormData(true);
+                webSettings.setSavePassword(false); // لأسباب أمنية
+                
+                // إعدادات الخط والنص
+                webSettings.setTextZoom(100);
+                webSettings.setDefaultTextEncodingName("UTF-8");
+                
+                // تفعيل Mixed Content (إذا كان مطلوباً)
+                webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+                
+                // إعدادات إضافية لضمان التفاعل
+                webView.setFocusable(true);
+                webView.setFocusableInTouchMode(true);
+                webView.requestFocus();
+                
+                // تفعيل Hardware Acceleration
+                webView.setLayerType(WebView.LAYER_TYPE_HARDWARE, null);
+                
+                Log.d("Careerak_WebView", "WebView configured successfully for input interaction");
+            } else {
+                Log.e("Careerak_WebView", "WebView is null - cannot configure");
+            }
+        } catch (Exception e) {
+            Log.e("Careerak_WebView", "Error configuring WebView: " + e.getMessage());
+        }
     }
 
     private void checkBackendConnection() {
