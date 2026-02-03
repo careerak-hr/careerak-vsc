@@ -43,10 +43,15 @@ module.exports = {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(0)' },
         },
+        'expand-glow': {
+            '0%': { transform: 'scale(1)', opacity: '0.05' },
+            '100%': { transform: 'scale(100)', opacity: '0' },
+        }
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',
         'slide-in-right': 'slide-in-right 0.5s ease-out forwards',
+        'expand-glow': 'expand-glow 4s ease-out infinite',
       },
       fontFamily: {
         arabic: ['Amiri', 'Cairo', 'serif'],
@@ -61,7 +66,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('tailwindcss-animate'),
-  ],
+  plugins: [],
 }
