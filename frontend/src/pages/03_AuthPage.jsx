@@ -201,95 +201,47 @@ export default function AuthPage() {
     }
   };
 
-  // Simple inline styles to avoid CSS conflicts
-  const containerStyle = {
-    minHeight: '100vh',
-    backgroundColor: '#E3DAD1',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  };
-
-  const inputStyle = {
-    width: '100%',
-    padding: '16px',
-    backgroundColor: '#E3DAD1',
-    color: '#304B60',
-    borderRadius: '16px',
-    border: '2px solid rgba(212, 129, 97, 0.2)',
-    outline: 'none',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '16px',
-    fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif",
-    pointerEvents: 'auto',
-    cursor: 'text',
-    userSelect: 'text',
-    WebkitUserSelect: 'text',
-    touchAction: 'manipulation'
-  };
-
-  const selectStyle = {
-    ...inputStyle,
-    cursor: 'pointer',
-    color: '#9CA3AF'
-  };
-
-  const buttonStyle = {
-    width: '100%',
-    backgroundColor: '#304B60',
-    color: '#D48161',
-    padding: '24px',
-    borderRadius: '48px',
-    fontWeight: 'bold',
-    fontSize: '20px',
-    border: 'none',
-    cursor: 'pointer',
-    marginTop: '32px',
-    fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif"
+  // Tailwind classes for consistent styling with input field fixes preserved
+  const inputCls = "w-full p-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-bold text-center transition-all placeholder:text-gray-400 shadow-sm";
+  const selectCls = "w-full p-4 bg-[#E3DAD1] text-gray-400 rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-bold text-center transition-all cursor-pointer shadow-sm";
+  
+  // Font style based on language
+  const fontStyle = {
+    fontFamily: language === 'ar' ? "'Amiri', serif" : 
+                language === 'en' ? "'Cormorant Garamond', serif" : 
+                "'EB Garamond', serif"
   };
 
   return (
-    <div style={containerStyle}>
+    <div className="min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center p-5">
       {/* Logo */}
-      <div style={{ marginBottom: '32px' }}>
-        <div style={{ width: '144px', height: '144px', borderRadius: '50%', border: '4px solid #304B60', overflow: 'hidden' }}>
-          <img src="/logo.jpg" alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div className="mb-8">
+        <div className="w-36 h-36 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden bg-[#E3DAD1]">
+          <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
         </div>
       </div>
 
       {/* User Type Buttons */}
-      <div style={{ display: 'flex', gap: '16px', marginBottom: '32px', width: '100%', maxWidth: '400px' }}>
+      <div className="flex gap-4 mb-8 w-full max-w-sm">
         <button
           onClick={() => handleUserTypeChange('individual')}
-          style={{
-            flex: 1,
-            padding: '16px',
-            borderRadius: '16px',
-            fontWeight: 'bold',
-            fontSize: '18px',
-            border: userType === 'individual' ? 'none' : '2px solid rgba(212, 129, 97, 0.2)',
-            backgroundColor: userType === 'individual' ? '#304B60' : '#E3DAD1',
-            color: userType === 'individual' ? '#D48161' : '#304B60',
-            cursor: 'pointer'
-          }}
+          className={`flex-1 p-4 rounded-2xl font-bold text-lg transition-all ${
+            userType === 'individual' 
+              ? 'bg-[#304B60] text-[#D48161] shadow-lg' 
+              : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20 hover:border-[#D48161]/40'
+          }`}
+          style={fontStyle}
         >
           {t.individuals}
         </button>
         <button
           onClick={() => handleUserTypeChange('company')}
-          style={{
-            flex: 1,
-            padding: '16px',
-            borderRadius: '16px',
-            fontWeight: 'bold',
-            fontSize: '18px',
-            border: userType === 'company' ? 'none' : '2px solid rgba(212, 129, 97, 0.2)',
-            backgroundColor: userType === 'company' ? '#304B60' : '#E3DAD1',
-            color: userType === 'company' ? '#D48161' : '#304B60',
-            cursor: 'pointer'
-          }}
+          className={`flex-1 p-4 rounded-2xl font-bold text-lg transition-all ${
+            userType === 'company' 
+              ? 'bg-[#304B60] text-[#D48161] shadow-lg' 
+              : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20 hover:border-[#D48161]/40'
+          }`}
+          style={fontStyle}
         >
           {t.companies}
         </button>
@@ -297,232 +249,221 @@ export default function AuthPage() {
 
       {/* Form */}
       {userType && (
-        <div style={{ width: '100%', maxWidth: '400px' }}>
-          <form onSubmit={handleRegisterClick} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="w-full max-w-sm">
+          <form onSubmit={handleRegisterClick} className="space-y-4">
             
             {/* Profile Image */}
-            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+            <div className="text-center mb-4">
               <div 
                 onClick={() => setShowPhotoModal(true)} 
-                style={{ 
-                  width: '96px', 
-                  height: '96px', 
-                  borderRadius: '50%', 
-                  border: '4px solid #304B60', 
-                  margin: '0 auto 8px', 
-                  cursor: 'pointer', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  backgroundColor: '#E3DAD1' 
-                }}
+                className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer flex items-center justify-center bg-[#E3DAD1] hover:shadow-lg transition-shadow"
               >
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
                 ) : (
-                  <span style={{ fontSize: '32px', color: '#304B60' }}>📷</span>
+                  <span className="text-3xl text-[#304B60]">📷</span>
                 )}
               </div>
-              <p style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgba(48, 75, 96, 0.6)', margin: 0 }}>{t.uploadPhoto}</p>
-              {fieldErrors.image && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px', marginTop: '4px' }}>{fieldErrors.image}</p>}
+              <p className="text-sm font-bold text-[#304B60]/60" style={fontStyle}>{t.uploadPhoto}</p>
+              {fieldErrors.image && <p className="text-red-600 font-bold text-sm mt-1">{fieldErrors.image}</p>}
             </div>
 
             {/* Country and City */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              <select name="country" value={formData.country} onChange={handleInputChange} style={selectStyle} required>
+            <div className="grid grid-cols-2 gap-4">
+              <select name="country" value={formData.country} onChange={handleInputChange} className={selectCls} style={fontStyle} required>
                 <option value="" disabled hidden>{t.country}</option>
                 {countries.map(c => (
-                  <option key={c.key} value={c.key} style={{ color: '#304B60' }}>{c.flag} {language === 'ar' ? c.name_ar : c.name_en}</option>
+                  <option key={c.key} value={c.key} className="text-[#304B60]">{c.flag} {language === 'ar' ? c.name_ar : c.name_en}</option>
                 ))}
               </select>
-              <input type="text" name="city" placeholder={t.city} value={formData.city} onChange={handleInputChange} style={inputStyle} />
+              <input type="text" name="city" placeholder={t.city} value={formData.city} onChange={handleInputChange} className={inputCls} style={fontStyle} />
             </div>
-            {fieldErrors.country && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.country}</p>}
-            {fieldErrors.city && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.city}</p>}
+            {fieldErrors.country && <p className="text-red-600 font-bold text-sm">{fieldErrors.country}</p>}
+            {fieldErrors.city && <p className="text-red-600 font-bold text-sm">{fieldErrors.city}</p>}
 
             {/* Individual Fields */}
             {userType === 'individual' && (
               <>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <input type="text" name="firstName" placeholder={t.firstName} value={formData.firstName} onChange={handleInputChange} style={inputStyle} />
-                  <input type="text" name="lastName" placeholder={t.lastName} value={formData.lastName} onChange={handleInputChange} style={inputStyle} />
+                <div className="grid grid-cols-2 gap-4">
+                  <input type="text" name="firstName" placeholder={t.firstName} value={formData.firstName} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                  <input type="text" name="lastName" placeholder={t.lastName} value={formData.lastName} onChange={handleInputChange} className={inputCls} style={fontStyle} />
                 </div>
-                {fieldErrors.firstName && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.firstName}</p>}
-                {fieldErrors.lastName && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.lastName}</p>}
+                {fieldErrors.firstName && <p className="text-red-600 font-bold text-sm">{fieldErrors.firstName}</p>}
+                {fieldErrors.lastName && <p className="text-red-600 font-bold text-sm">{fieldErrors.lastName}</p>}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <select name="gender" value={formData.gender} onChange={handleInputChange} style={selectStyle} required>
+                <div className="grid grid-cols-2 gap-4">
+                  <select name="gender" value={formData.gender} onChange={handleInputChange} className={selectCls} style={fontStyle} required>
                     <option value="" disabled hidden>{t.gender}</option>
-                    <option value="male" style={{ color: '#304B60' }}>{t.male}</option>
-                    <option value="female" style={{ color: '#304B60' }}>{t.female}</option>
-                    <option value="preferNot" style={{ color: '#304B60' }}>{t.preferNot}</option>
+                    <option value="male" className="text-[#304B60]">{t.male}</option>
+                    <option value="female" className="text-[#304B60]">{t.female}</option>
+                    <option value="preferNot" className="text-[#304B60]">{t.preferNot}</option>
                   </select>
-                  <input type="date" name="birthDate" value={formData.birthDate} onChange={handleInputChange} style={inputStyle} />
+                  <input type="date" name="birthDate" value={formData.birthDate} onChange={handleInputChange} className={inputCls} style={fontStyle} />
                 </div>
-                {fieldErrors.gender && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.gender}</p>}
-                {fieldErrors.birthDate && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.birthDate}</p>}
+                {fieldErrors.gender && <p className="text-red-600 font-bold text-sm">{fieldErrors.gender}</p>}
+                {fieldErrors.birthDate && <p className="text-red-600 font-bold text-sm">{fieldErrors.birthDate}</p>}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <select name="education" value={formData.education} onChange={handleInputChange} style={selectStyle} required>
+                <div className="grid grid-cols-2 gap-4">
+                  <select name="education" value={formData.education} onChange={handleInputChange} className={selectCls} style={fontStyle} required>
                     <option value="" disabled hidden>{t.educationLevel}</option>
-                    <option value="phd" style={{ color: '#304B60' }}>{t.phd}</option>
-                    <option value="masters" style={{ color: '#304B60' }}>{t.masters}</option>
-                    <option value="bachelors" style={{ color: '#304B60' }}>{t.bachelors}</option>
-                    <option value="highSchool" style={{ color: '#304B60' }}>{t.highSchool}</option>
-                    <option value="middleSchool" style={{ color: '#304B60' }}>{t.middleSchool}</option>
-                    <option value="elementary" style={{ color: '#304B60' }}>{t.elementary}</option>
-                    <option value="illiterate" style={{ color: '#304B60' }}>{t.illiterate}</option>
-                    <option value="uneducated" style={{ color: '#304B60' }}>{t.uneducated}</option>
+                    <option value="phd" className="text-[#304B60]">{t.phd}</option>
+                    <option value="masters" className="text-[#304B60]">{t.masters}</option>
+                    <option value="bachelors" className="text-[#304B60]">{t.bachelors}</option>
+                    <option value="highSchool" className="text-[#304B60]">{t.highSchool}</option>
+                    <option value="middleSchool" className="text-[#304B60]">{t.middleSchool}</option>
+                    <option value="elementary" className="text-[#304B60]">{t.elementary}</option>
+                    <option value="illiterate" className="text-[#304B60]">{t.illiterate}</option>
+                    <option value="uneducated" className="text-[#304B60]">{t.uneducated}</option>
                   </select>
-                  <input type="text" name="specialization" placeholder={t.specialization} value={formData.specialization} onChange={handleInputChange} style={inputStyle} />
+                  <input type="text" name="specialization" placeholder={t.specialization} value={formData.specialization} onChange={handleInputChange} className={inputCls} style={fontStyle} />
                 </div>
-                {fieldErrors.education && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.education}</p>}
-                {fieldErrors.specialization && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.specialization}</p>}
+                {fieldErrors.education && <p className="text-red-600 font-bold text-sm">{fieldErrors.education}</p>}
+                {fieldErrors.specialization && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialization}</p>}
 
-                <input type="text" name="interests" placeholder={t.keywords} value={formData.interests} onChange={handleInputChange} style={inputStyle} />
-                {fieldErrors.interests && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.interests}</p>}
+                <input type="text" name="interests" placeholder={t.keywords} value={formData.interests} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                {fieldErrors.interests && <p className="text-red-600 font-bold text-sm">{fieldErrors.interests}</p>}
 
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} style={{ ...selectStyle, width: '112px' }}>
+                <div className="flex gap-4">
+                  <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className={`${selectCls} w-28`} style={fontStyle}>
                     <option value="" disabled hidden>{t.countryCode}</option>
                     {countries.map(c => (
-                      <option key={c.code} value={c.code} style={{ color: '#304B60', fontSize: '12px' }}>{c.flag} {c.code}</option>
+                      <option key={c.code} value={c.code} className="text-[#304B60] text-xs">{c.flag} {c.code}</option>
                     ))}
                   </select>
-                  <input type="tel" name="phone" placeholder={t.mobile} value={formData.phone} onChange={handleInputChange} style={{ ...inputStyle, flex: 1 }} />
+                  <input type="tel" name="phone" placeholder={t.mobile} value={formData.phone} onChange={handleInputChange} className={`${inputCls} flex-1`} style={fontStyle} />
                 </div>
                 {(fieldErrors.countryCode || fieldErrors.phone) && (
                   <div>
-                    {fieldErrors.countryCode && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '12px', textAlign: 'center' }}>{fieldErrors.countryCode}</p>}
-                    {fieldErrors.phone && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '12px', textAlign: 'center' }}>{fieldErrors.phone}</p>}
+                    {fieldErrors.countryCode && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.countryCode}</p>}
+                    {fieldErrors.phone && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.phone}</p>}
                   </div>
                 )}
 
                 {(formData.education !== 'illiterate' && formData.education !== 'uneducated') && (
                   <>
-                    <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} style={inputStyle} />
-                    {fieldErrors.email && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.email}</p>}
+                    <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                    {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
                   </>
                 )}
 
-                <div style={{ position: 'relative' }}>
-                  <input type={showPassword ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} style={inputStyle} />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', [isRTL ? 'left' : 'right']: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer' }}>{showPassword ? '👁️' : '🙈'}</button>
+                <div className="relative">
+                  <input type={showPassword ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}>{showPassword ? '👁️' : '🙈'}</button>
                 </div>
-                {fieldErrors.password && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.password}</p>}
+                {fieldErrors.password && <p className="text-red-600 font-bold text-sm">{fieldErrors.password}</p>}
 
-                <div style={{ position: 'relative' }}>
-                  <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} style={inputStyle} />
-                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{ position: 'absolute', [isRTL ? 'left' : 'right']: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer' }}>{showConfirmPassword ? '👁️' : '🙈'}</button>
+                <div className="relative">
+                  <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}>{showConfirmPassword ? '👁️' : '🙈'}</button>
                 </div>
-                {fieldErrors.confirmPassword && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.confirmPassword}</p>}
+                {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
 
-                <div style={{ display: 'flex', alignItems: 'center', flexDirection: isRTL ? 'row' : 'row-reverse' }}>
+                <div className={`flex items-center ${isRTL ? 'flex-row' : 'flex-row-reverse'} justify-center`}>
                   <PremiumCheckbox id="specialNeeds" checked={formData.isSpecialNeeds} onChange={(e) => setFormData(prev => ({ ...prev, isSpecialNeeds: e.target.checked }))} label={t.disabilities} labelClassName="text-sm font-bold text-[#304B60]/80" />
                 </div>
 
                 {formData.isSpecialNeeds && (
                   <>
-                    <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} style={selectStyle} required>
+                    <select name="specialNeedType" value={formData.specialNeedType} onChange={handleInputChange} className={selectCls} style={fontStyle} required>
                       <option value="" disabled hidden>{t.disabilityType}</option>
-                      <option value="visual" style={{ color: '#304B60' }}>{t.visual}</option>
-                      <option value="hearing" style={{ color: '#304B60' }}>{t.hearing}</option>
-                      <option value="speech" style={{ color: '#304B60' }}>{t.speech}</option>
-                      <option value="mobility" style={{ color: '#304B60' }}>{t.mobility}</option>
+                      <option value="visual" className="text-[#304B60]">{t.visual}</option>
+                      <option value="hearing" className="text-[#304B60]">{t.hearing}</option>
+                      <option value="speech" className="text-[#304B60]">{t.speech}</option>
+                      <option value="mobility" className="text-[#304B60]">{t.mobility}</option>
                     </select>
-                    {fieldErrors.specialNeedType && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.specialNeedType}</p>}
+                    {fieldErrors.specialNeedType && <p className="text-red-600 font-bold text-sm">{fieldErrors.specialNeedType}</p>}
                   </>
                 )}
 
-                <div style={{ paddingTop: '8px', display: 'flex', alignItems: 'center', flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'flex-start', gap: '12px' }}>
+                <div className={`pt-2 flex items-center ${isRTL ? 'flex-row-reverse' : 'flex-row'} justify-start gap-3`}>
                   <PremiumCheckbox id="agreePolicy" checked={formData.agreed} onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))} />
-                  <label htmlFor="agreePolicy" style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgba(48, 75, 96, 0.8)' }}>
+                  <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80" style={fontStyle}>
                     {t.agreePolicy}{' '}
-                    <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} style={{ color: '#304B60', fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }}>{t.privacyPolicy}</span>
+                    <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} className="text-[#304B60] font-bold underline cursor-pointer hover:text-[#304B60]/80">{t.privacyPolicy}</span>
                   </label>
                 </div>
-                {fieldErrors.agreed && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px', textAlign: 'center', marginTop: '-8px' }}>{fieldErrors.agreed}</p>}
+                {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm text-center -mt-2">{fieldErrors.agreed}</p>}
               </>
             )}
 
             {/* Company Fields */}
             {userType === 'company' && (
               <>
-                <input type="text" name="companyName" placeholder={t.companyName} value={formData.companyName} onChange={handleInputChange} style={inputStyle} />
-                {fieldErrors.companyName && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.companyName}</p>}
+                <input type="text" name="companyName" placeholder={t.companyName} value={formData.companyName} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                {fieldErrors.companyName && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyName}</p>}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <select name="industry" value={formData.industry} onChange={handleInputChange} style={selectStyle} required>
+                <div className="grid grid-cols-2 gap-4">
+                  <select name="industry" value={formData.industry} onChange={handleInputChange} className={selectCls} style={fontStyle} required>
                     <option value="" disabled hidden>{t.industry}</option>
-                    <option value="industrial" style={{ color: '#304B60' }}>{t.industrial}</option>
-                    <option value="commercial" style={{ color: '#304B60' }}>{t.commercial}</option>
-                    <option value="service" style={{ color: '#304B60' }}>{t.service}</option>
-                    <option value="educational" style={{ color: '#304B60' }}>{t.educational}</option>
-                    <option value="governmental" style={{ color: '#304B60' }}>{t.governmental}</option>
-                    <option value="office" style={{ color: '#304B60' }}>{t.office}</option>
-                    <option value="shop" style={{ color: '#304B60' }}>{t.shop}</option>
-                    <option value="workshop" style={{ color: '#304B60' }}>{t.workshop}</option>
+                    <option value="industrial" className="text-[#304B60]">{t.industrial}</option>
+                    <option value="commercial" className="text-[#304B60]">{t.commercial}</option>
+                    <option value="service" className="text-[#304B60]">{t.service}</option>
+                    <option value="educational" className="text-[#304B60]">{t.educational}</option>
+                    <option value="governmental" className="text-[#304B60]">{t.governmental}</option>
+                    <option value="office" className="text-[#304B60]">{t.office}</option>
+                    <option value="shop" className="text-[#304B60]">{t.shop}</option>
+                    <option value="workshop" className="text-[#304B60]">{t.workshop}</option>
                   </select>
-                  <input type="text" name="subIndustry" placeholder={t.specialization} value={formData.subIndustry} onChange={handleInputChange} style={inputStyle} />
+                  <input type="text" name="subIndustry" placeholder={t.specialization} value={formData.subIndustry} onChange={handleInputChange} className={inputCls} style={fontStyle} />
                 </div>
-                {fieldErrors.industry && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.industry}</p>}
-                {fieldErrors.subIndustry && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.subIndustry}</p>}
+                {fieldErrors.industry && <p className="text-red-600 font-bold text-sm">{fieldErrors.industry}</p>}
+                {fieldErrors.subIndustry && <p className="text-red-600 font-bold text-sm">{fieldErrors.subIndustry}</p>}
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <input type="text" name="authorizedName" placeholder={t.authorizedName} value={formData.authorizedName} onChange={handleInputChange} style={inputStyle} />
-                  <input type="text" name="authorizedPosition" placeholder={t.authorizedPosition} value={formData.authorizedPosition} onChange={handleInputChange} style={inputStyle} />
+                <div className="grid grid-cols-2 gap-4">
+                  <input type="text" name="authorizedName" placeholder={t.authorizedName} value={formData.authorizedName} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                  <input type="text" name="authorizedPosition" placeholder={t.authorizedPosition} value={formData.authorizedPosition} onChange={handleInputChange} className={inputCls} style={fontStyle} />
                 </div>
-                {fieldErrors.authorizedName && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.authorizedName}</p>}
-                {fieldErrors.authorizedPosition && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.authorizedPosition}</p>}
+                {fieldErrors.authorizedName && <p className="text-red-600 font-bold text-sm">{fieldErrors.authorizedName}</p>}
+                {fieldErrors.authorizedPosition && <p className="text-red-600 font-bold text-sm">{fieldErrors.authorizedPosition}</p>}
 
-                <input type="text" name="companyKeywords" placeholder={t.companyKeywords} value={formData.companyKeywords} onChange={handleInputChange} style={inputStyle} />
-                {fieldErrors.companyKeywords && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.companyKeywords}</p>}
+                <input type="text" name="companyKeywords" placeholder={t.companyKeywords} value={formData.companyKeywords} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                {fieldErrors.companyKeywords && <p className="text-red-600 font-bold text-sm">{fieldErrors.companyKeywords}</p>}
 
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} style={{ ...selectStyle, width: '112px' }}>
+                <div className="flex gap-4">
+                  <select name="countryCode" value={formData.countryCode} onChange={handleInputChange} className={`${selectCls} w-28`} style={fontStyle}>
                     <option value="" disabled hidden>{t.countryCode}</option>
                     {countries.map(c => (
-                      <option key={c.code} value={c.code} style={{ color: '#304B60', fontSize: '12px' }}>{c.flag} {c.code}</option>
+                      <option key={c.code} value={c.code} className="text-[#304B60] text-xs">{c.flag} {c.code}</option>
                     ))}
                   </select>
-                  <input type="tel" name="phone" placeholder={t.mobile} value={formData.phone} onChange={handleInputChange} style={{ ...inputStyle, flex: 1 }} />
+                  <input type="tel" name="phone" placeholder={t.mobile} value={formData.phone} onChange={handleInputChange} className={`${inputCls} flex-1`} style={fontStyle} />
                 </div>
                 {(fieldErrors.countryCode || fieldErrors.phone) && (
                   <div>
-                    {fieldErrors.countryCode && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '12px', textAlign: 'center' }}>{fieldErrors.countryCode}</p>}
-                    {fieldErrors.phone && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '12px', textAlign: 'center' }}>{fieldErrors.phone}</p>}
+                    {fieldErrors.countryCode && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.countryCode}</p>}
+                    {fieldErrors.phone && <p className="text-red-600 font-bold text-xs text-center">{fieldErrors.phone}</p>}
                   </div>
                 )}
 
-                <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} style={inputStyle} />
-                {fieldErrors.email && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.email}</p>}
+                <input type="email" name="email" placeholder={t.email} value={formData.email} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                {fieldErrors.email && <p className="text-red-600 font-bold text-sm">{fieldErrors.email}</p>}
 
-                <div style={{ position: 'relative' }}>
-                  <input type={showPassword ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} style={inputStyle} />
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', [isRTL ? 'left' : 'right']: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer' }}>{showPassword ? '👁️' : '🙈'}</button>
+                <div className="relative">
+                  <input type={showPassword ? "text" : "password"} name="password" placeholder={t.password} value={formData.password} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}>{showPassword ? '👁️' : '🙈'}</button>
                 </div>
-                {fieldErrors.password && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.password}</p>}
+                {fieldErrors.password && <p className="text-red-600 font-bold text-sm">{fieldErrors.password}</p>}
 
-                <div style={{ position: 'relative' }}>
-                  <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} style={inputStyle} />
-                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} style={{ position: 'absolute', [isRTL ? 'left' : 'right']: '16px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', fontSize: '16px', cursor: 'pointer' }}>{showConfirmPassword ? '👁️' : '🙈'}</button>
+                <div className="relative">
+                  <input type={showConfirmPassword ? "text" : "password"} name="confirmPassword" placeholder={t.confirmPassword} value={formData.confirmPassword} onChange={handleInputChange} className={inputCls} style={fontStyle} />
+                  <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className={`absolute ${isRTL ? 'left-4' : 'right-4'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}>{showConfirmPassword ? '👁️' : '🙈'}</button>
                 </div>
-                {fieldErrors.confirmPassword && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px' }}>{fieldErrors.confirmPassword}</p>}
+                {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
 
-                <div style={{ paddingTop: '8px', display: 'flex', alignItems: 'center', flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'flex-end', gap: '12px' }}>
+                <div className={`pt-2 flex items-center ${isRTL ? 'flex-row-reverse' : 'flex-row'} justify-end gap-3`}>
                   <PremiumCheckbox id="agreePolicy" checked={formData.agreed} onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))} />
-                  <label htmlFor="agreePolicy" style={{ fontSize: '14px', fontWeight: 'bold', color: 'rgba(48, 75, 96, 0.8)' }}>
+                  <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80" style={fontStyle}>
                     {t.agreePolicy}{' '}
-                    <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} style={{ color: '#304B60', fontWeight: 'bold', textDecoration: 'underline', cursor: 'pointer' }}>{t.privacyPolicy}</span>
+                    <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} className="text-[#304B60] font-bold underline cursor-pointer hover:text-[#304B60]/80">{t.privacyPolicy}</span>
                   </label>
                 </div>
-                {fieldErrors.agreed && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px', textAlign: 'center', marginTop: '-8px' }}>{fieldErrors.agreed}</p>}
+                {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm text-center -mt-2">{fieldErrors.agreed}</p>}
               </>
             )}
 
-            {fieldErrors.form && <p style={{ color: '#dc2626', fontWeight: 'bold', fontSize: '14px', textAlign: 'center', padding: '8px' }}>{fieldErrors.form}</p>}
+            {fieldErrors.form && <p className="text-red-600 font-bold text-sm text-center p-2">{fieldErrors.form}</p>}
 
-            <button type="submit" disabled={loading || isAnalyzing} style={{ ...buttonStyle, opacity: (loading || isAnalyzing) ? 0.5 : 1 }}>
+            <button type="submit" disabled={loading || isAnalyzing} className={`w-full bg-[#304B60] text-[#D48161] p-6 rounded-[3rem] font-bold text-xl shadow-lg transition-all mt-8 ${(loading || isAnalyzing) ? 'opacity-50' : 'hover:shadow-xl active:scale-95'}`} style={fontStyle}>
               {loading || isAnalyzing ? '⏳' : t.register}
             </button>
           </form>
@@ -534,10 +475,10 @@ export default function AuthPage() {
       {showCropModal && <CropModal t={t} tempImage={tempImage} crop={crop} setCrop={setCrop} onCropComplete={onCropComplete} onSave={handleCropSave} onClose={() => setShowCropModal(false)} />}
       {showPolicy && <PolicyModal onClose={() => setShowPolicy(false)} onAgree={() => { setFormData(prev => ({ ...prev, agreed: true })); setShowPolicy(false); }} />}
       {isAnalyzing && (
-        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '16px' }}>
-          <div style={{ backgroundColor: '#E3DAD1', borderRadius: '48px', padding: '32px', maxWidth: '384px', width: '100%', textAlign: 'center', border: '2px solid rgba(212, 129, 97, 0.2)' }}>
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', color: '#304B60', marginBottom: '16px' }}>{t.aiAnalyzing}</h3>
-            <div style={{ width: '96px', height: '96px', borderRadius: '50%', border: '4px solid #304B60', borderTop: '4px solid #D48161', margin: '0 auto 24px', animation: 'spin 1s linear infinite' }}></div>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#E3DAD1] rounded-[3rem] p-8 max-w-sm w-full text-center border-2 border-[#D48161]/20">
+            <h3 className="text-xl font-bold text-[#304B60] mb-4" style={fontStyle}>{t.aiAnalyzing}</h3>
+            <div className="w-24 h-24 rounded-full border-4 border-[#304B60] border-t-[#D48161] mx-auto mb-6 animate-spin"></div>
           </div>
         </div>
       )}
