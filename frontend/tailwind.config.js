@@ -6,50 +6,47 @@ module.exports = {
   ],
   theme: {
     colors: {
-      // الألوان الأساسية المستخرجة من اللوجو
       primary: {
         DEFAULT: '#1A365D',
         light: '#274C7A',
         dark: '#102A4C',
       },
-
       secondary: {
         DEFAULT: '#E3DAD0',
         light: '#EFE9E3',
         dark: '#CFC5BA',
       },
-
       accent: {
         DEFAULT: '#C97A3D',
         light: '#E2A36F',
         dark: '#A8612E',
       },
-
-      // ألوان دلالية
       danger: {
-        DEFAULT: '#D32F2F', // A suitable red color
+        DEFAULT: '#D32F2F',
         light: '#E57373',
         dark: '#B71C1C',
       },
-
       success: {
-        DEFAULT: '#388E3C', // A suitable green color
+        DEFAULT: '#388E3C',
         light: '#81C784',
         dark: '#1B5E20',
       },
-
-      // رمادي محايد — استخدام إرشادي فقط
-      hint: '#9CA3AF', // Light Neutral Gray (placeholders & hints)
-
-      // ألوان حيادية تقنية
+      hint: '#9CA3AF',
       white: '#FFFFFF',
       black: '#000000',
       transparent: 'transparent',
     },
 
     extend: {
+      keyframes: {
+        'slide-in-right': {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+      },
       animation: {
         'spin-slow': 'spin 8s linear infinite',
+        'slide-in-right': 'slide-in-right 0.5s ease-out forwards',
       },
       fontFamily: {
         arabic: ['Amiri', 'Cairo', 'serif'],
@@ -64,5 +61,7 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-animate'),
+  ],
 }
