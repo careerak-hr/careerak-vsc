@@ -1,0 +1,31 @@
+.crop-modal-backdrop {
+  @apply fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4;
+}
+
+.crop-modal-content {
+  @apply bg-[#E3DAD1] p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-[#304B60];
+}
+
+.crop-modal-title {
+  @apply text-2xl font-black text-[#304B60] mb-4;
+}
+
+.crop-modal-image-container {
+  @apply flex justify-center mb-4;
+}
+
+.crop-modal-buttons-container {
+  @apply flex gap-4;
+}
+
+.crop-modal-btn {
+  @apply flex-1 py-3 rounded-xl font-black;
+}
+
+.crop-modal-btn-primary {
+  @apply bg-[#304B60] text-[#D48161];
+}
+
+.crop-modal-btn-secondary {
+  @apply border-2 border-red-500 text-red-500;
+}

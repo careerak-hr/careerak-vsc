@@ -1,0 +1,50 @@
+{
+  "ar": {
+    "welcome": "مرحباً، {companyName}!",
+    "sub": "إدارة ورشتك والبحث عن الحرفيين والمهنيين المناسبين",
+    "browseJobs": "تصفح الوظائف",
+    "postJob": "نشر وظيفة",
+    "manageWorkers": "إدارة العمال",
+    "myProfile": "ملف الورشة",
+    "settings": "الإعدادات",
+    "applications": "الطلبات المستلمة",
+    "jobsDesc": "اكتشف الحرفيين والمهنيين المناسبين لورشك",
+    "postDesc": "أعلن عن وظائف شاغرة في ورشتك",
+    "workersDesc": "إدارة عمال الورشة والمشاريع",
+    "profileDesc": "إدارة ملف ورشتك وبياناتها",
+    "settingsDesc": "تخصيص إعدادات التطبيق",
+    "appsDesc": "مراجعة طلبات التوظيف المستلمة"
+  },
+  "en": {
+    "welcome": "Welcome, {companyName}!",
+    "sub": "Manage your workshop and find suitable craftsmen and professionals",
+    "browseJobs": "Browse Jobs",
+    "postJob": "Post Job",
+    "manageWorkers": "Manage Workers",
+    "myProfile": "Workshop Profile",
+    "settings": "Settings",
+    "applications": "Received Applications",
+    "jobsDesc": "Discover suitable craftsmen and professionals for your workshop",
+    "postDesc": "Advertise vacant positions in your workshop",
+    "workersDesc": "Manage workshop workers and projects",
+    "profileDesc": "Manage your workshop profile and data",
+    "settingsDesc": "Customize app settings",
+    "appsDesc": "Review received job applications"
+  },
+  "fr": {
+    "welcome": "Bienvenue, {companyName} !",
+    "sub": "Gérez votre atelier et trouvez des artisans et professionnels appropriés",
+    "browseJobs": "Parcourir les emplois",
+    "postJob": "Publier un emploi",
+    "manageWorkers": "Gérer les travailleurs",
+    "myProfile": "Profil de l'atelier",
+    "settings": "Paramètres",
+    "applications": "Candidatures reçues",
+    "jobsDesc": "Découvrez les artisans et professionnels appropriés pour votre atelier",
+    "postDesc": "Annoncez les postes vacants dans votre atelier",
+    "workersDesc": "Gérez les travailleurs de l'atelier et les projets",
+    "profileDesc": "Gérez le profil de votre atelier et ses données",
+    "settingsDesc": "Personnalisez les paramètres de l'application",
+    "appsDesc": "Examinez les candidatures d'emploi reçues"
+  }
+}

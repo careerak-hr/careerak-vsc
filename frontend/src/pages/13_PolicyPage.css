@@ -1,0 +1,35 @@
+.policy-page-container {
+  @apply min-h-screen bg-[#E3DAD1] p-6 transition-opacity duration-1000;
+}
+
+.policy-card {
+  @apply max-w-4xl mx-auto bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 md:p-20 text-right border-2 border-[#304B60]/5;
+}
+
+.policy-title {
+  @apply text-4xl font-black text-[#304B60] mb-12 border-r-8 border-[#D48161] pr-6 leading-tight;
+}
+
+.policy-content-container {
+  @apply space-y-8 text-[#304B60] font-bold leading-relaxed text-lg text-justify;
+}
+
+.policy-content-container h3 {
+  @apply text-2xl font-black mb-4 text-[#304B60];
+}
+
+.policy-content-container h4 {
+  @apply font-black text-xl mb-2 text-[#304B60];
+}
+
+.policy-list {
+  @apply list-disc pr-8 space-y-2 mt-2;
+}
+
+.policy-contact-section {
+  @apply pt-10 border-t border-[#304B60]/10;
+}
+
+.policy-contact-email {
+    @apply underline text-[#D48161];
+}

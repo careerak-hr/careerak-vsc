@@ -1,0 +1,43 @@
+.onboarding-ultimate-container {
+  @apply fixed inset-0 bg-[#304B60] flex flex-col items-center justify-center transition-opacity duration-1000 cursor-pointer;
+}
+
+.onboarding-ultimate-mic-wrapper {
+  @apply relative;
+}
+
+.onboarding-ultimate-mic-container {
+  @apply w-80 h-80 rounded-full border-[15px] border-[#D48161]/10 flex items-center justify-center transition-all duration-700;
+}
+
+.onboarding-ultimate-mic-container-active {
+  @apply scale-125 border-[#D48161] shadow-[0_0_150px_rgba(212,129,97,0.4)];
+}
+
+.onboarding-ultimate-mic-icon {
+  @apply text-[10rem] transition-all duration-500;
+}
+
+.onboarding-ultimate-mic-icon-active {
+  @apply opacity-100 rotate-12;
+}
+
+.onboarding-ultimate-mic-icon-inactive {
+  @apply opacity-20 rotate-0;
+}
+
+.onboarding-ultimate-ping-effect {
+  @apply absolute inset-0 bg-[#D48161]/20 rounded-full animate-ping;
+}
+
+.onboarding-ultimate-footer {
+  @apply mt-20 text-center px-10;
+}
+
+.onboarding-ultimate-title {
+  @apply text-[#E3DAD1] text-3xl font-black opacity-20 uppercase tracking-[0.5em] mb-4;
+}
+
+.onboarding-ultimate-status-text {
+  @apply text-[#E3DAD1] text-xl font-bold animate-pulse;
+}

@@ -1,0 +1,39 @@
+.post-course-page-container {
+  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000;
+}
+
+.post-course-page-main {
+  @apply max-w-4xl mx-auto px-4 py-24 pb-32;
+}
+
+.post-course-card {
+  @apply bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 md:p-16 border-2 border-[#304B60]/5;
+}
+
+.post-course-title {
+  @apply text-3xl font-black text-[#304B60] mb-10;
+}
+
+.post-course-form {
+  @apply space-y-6;
+}
+
+.post-course-grid-container {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.post-course-grid-container-3-col {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-6;
+}
+
+.post-course-input {
+  @apply w-full p-5 bg-[#E3DAD1] rounded-[2rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-[#304B60] placeholder:text-gray-400 shadow-sm transition-all;
+}
+
+.post-course-textarea {
+    @apply h-48 resize-none;
+}
+
+.post-course-submit-btn {
+  @apply w-full bg-[#304B60] text-[#D48161] py-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-8;
+}

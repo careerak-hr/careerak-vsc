@@ -1,0 +1,41 @@
+{
+  "ar": {
+    "title": "تأكيد الرمز",
+    "sub": "أدخل الرمز المكون من 4 أرقام المرسل إليك عبر",
+    "whatsapp": "واتساب",
+    "email": "البريد الإلكتروني",
+    "btn": "تأكيد المتابعة",
+    "resend": "إعادة إرسال الكود عبر:",
+    "congrats": "تهانينا",
+    "error": "رمز التحقق غير صحيح، يرجى المحاولة مجدداً",
+    "sent": "تم إرسال الكود بنجاح",
+    "resendIn": "إعادة الإرسال خلال",
+    "seconds": "ثانية"
+  },
+  "en": {
+    "title": "Verify Code",
+    "sub": "Enter the 4-digit code sent to you via",
+    "whatsapp": "WhatsApp",
+    "email": "Email",
+    "btn": "Confirm & Continue",
+    "resend": "Resend code via:",
+    "congrats": "Congratulations",
+    "error": "Invalid verification code, please try again",
+    "sent": "Code sent successfully",
+    "resendIn": "Resend in",
+    "seconds": "seconds"
+  },
+  "fr": {
+    "title": "Vérifier le code",
+    "sub": "Entrez le code à 4 chiffres envoyé via",
+    "whatsapp": "WhatsApp",
+    "email": "E-mail",
+    "btn": "Confirmer et continuer",
+    "resend": "Renvoyer le code via :",
+    "congrats": "Félicitations",
+    "error": "Code de vérification invalide, veuillez réessayer",
+    "sent": "Code envoyé avec succès",
+    "resendIn": "Renvoyer dans",
+    "seconds": "secondes"
+  }
+}

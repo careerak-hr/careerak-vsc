@@ -1,0 +1,159 @@
+.admin-dashboard-container {
+  @apply min-h-screen bg-[#E3DAD1] p-6 flex flex-col items-center font-sans;
+}
+
+.admin-header {
+  @apply w-full max-w-6xl flex items-center justify-between mb-8 bg-[#304B60]/5 p-4 rounded-3xl border border-[#D48161]/10 shadow-sm;
+}
+
+.admin-header-logo-container {
+  @apply flex items-center gap-3;
+}
+
+.admin-header-logo {
+  @apply w-12 h-12 rounded-full border-2 border-[#304B60];
+}
+
+.admin-header-title {
+  @apply text-[#304B60] font-black text-lg italic;
+}
+
+.admin-header-subtitle {
+  @apply text-[10px] text-[#304B60]/60 font-bold uppercase tracking-wider;
+}
+
+.admin-logout-btn {
+  @apply p-3 bg-red-600 text-white rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all;
+}
+
+.admin-tabs-container {
+  @apply w-full max-w-6xl mb-8;
+}
+
+.admin-tabs {
+  @apply flex gap-2 bg-[#304B60]/5 p-2 rounded-2xl;
+}
+
+.admin-tab-btn {
+  @apply flex-1 py-3 px-4 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2;
+}
+
+.admin-tab-btn-active {
+  @apply bg-[#304B60] text-[#D48161] shadow-md;
+}
+
+.admin-tab-btn-inactive {
+  @apply text-[#304B60]/60;
+}
+
+.admin-tab-content {
+  @apply w-full max-w-6xl space-y-8;
+}
+
+.admin-welcome-card {
+  @apply w-full bg-[#304B60] text-[#E3DAD1] p-8 rounded-[3rem] shadow-2xl relative overflow-hidden;
+}
+
+.admin-welcome-card-content {
+    @apply relative z-10;
+}
+
+.admin-welcome-title {
+    @apply text-3xl font-black mb-2;
+}
+
+.admin-welcome-subtitle {
+    @apply text-[#E3DAD1]/60 font-bold text-sm;
+}
+
+.admin-welcome-bg-element {
+    @apply absolute -right-10 -bottom-10 w-40 h-40 bg-[#D48161]/10 rounded-full blur-3xl;
+}
+
+.admin-stats-grid {
+  @apply grid grid-cols-2 md:grid-cols-4 gap-6;
+}
+
+.admin-stat-card {
+  @apply bg-[#304B60]/5 p-6 rounded-[2rem] text-center shadow-sm border border-[#D48161]/10;
+}
+
+.admin-stat-card-title {
+  @apply text-[#304B60]/40 font-black text-sm mb-2 uppercase;
+}
+
+.admin-stat-card-value {
+  @apply text-[#304B60] font-black text-3xl;
+}
+
+.admin-quick-nav-card {
+  @apply bg-[#304B60]/5 p-8 rounded-[3rem] shadow-xl border border-[#D48161]/10;
+}
+
+.admin-quick-nav-header {
+    @apply flex items-center gap-3 mb-6;
+}
+
+.admin-quick-nav-icon {
+    @apply text-2xl;
+}
+
+.admin-quick-nav-title {
+    @apply text-[#304B60] font-black text-xl;
+}
+
+.admin-quick-nav-controls {
+  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.admin-quick-nav-select {
+  @apply w-full p-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-sm;
+}
+
+.admin-quick-nav-btn {
+  @apply py-4 bg-[#304B60] text-[#D48161] rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all disabled:opacity-30;
+}
+
+.admin-users-list {
+    @apply space-y-4;
+}
+
+.admin-user-card {
+    @apply flex items-center justify-between p-4 bg-[#E3DAD1] rounded-2xl;
+}
+
+.admin-user-card-name {
+    @apply font-black text-[#304B60];
+}
+
+.admin-user-card-details {
+    @apply text-sm text-[#304B60]/60;
+}
+
+.admin-user-card-actions {
+    @apply flex gap-2;
+}
+
+.admin-user-card-edit-btn {
+    @apply px-4 py-2 bg-[#304B60] text-[#D48161] rounded-xl font-black text-sm;
+}
+
+.admin-user-card-delete-btn {
+    @apply px-4 py-2 bg-red-600 text-white rounded-xl font-black text-sm;
+}
+
+.admin-content-management-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+}
+
+.admin-content-management-btn {
+    @apply p-6 bg-[#E3DAD1] rounded-2xl text-[#304B60] font-black text-lg hover:bg-[#304B60] hover:text-[#D48161] transition-all;
+}
+
+.admin-system-settings-list {
+    @apply space-y-4;
+}
+
+.admin-system-settings-btn {
+    @apply w-full p-4 bg-[#E3DAD1] rounded-2xl text-[#304B60] font-black text-lg hover:bg-[#304B60] hover:text-[#D48161] transition-all;
+}

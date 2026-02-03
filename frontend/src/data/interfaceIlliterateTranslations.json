@@ -1,0 +1,44 @@
+{
+  "ar": {
+    "welcome": "مرحباً، {firstName}!",
+    "sub": "استكشف فرص العمل البسيطة والمناسبة لك",
+    "browseJobs": "تصفح الوظائف البسيطة",
+    "voiceJobs": "الاستماع للوظائف",
+    "myProfile": "ملفي الشخصي",
+    "settings": "الإعدادات",
+    "applyHistory": "تاريخ التقديمات",
+    "jobsDesc": "اكتشف الفرص الوظيفية البسيطة المناسبة لك",
+    "voiceDesc": "استمع للوظائف المتاحة بصوت عالي",
+    "profileDesc": "إدارة ملفك الشخصي والبيانات",
+    "settingsDesc": "تخصيص إعدادات التطبيق",
+    "historyDesc": "تتبع طلباتك الوظيفية"
+  },
+  "en": {
+    "welcome": "Welcome, {firstName}!",
+    "sub": "Explore simple job opportunities suitable for you",
+    "browseJobs": "Browse Simple Jobs",
+    "voiceJobs": "Listen to Jobs",
+    "myProfile": "My Profile",
+    "settings": "Settings",
+    "applyHistory": "Application History",
+    "jobsDesc": "Discover simple job opportunities suitable for you",
+    "voiceDesc": "Listen to available jobs with voice",
+    "profileDesc": "Manage your personal profile and data",
+    "settingsDesc": "Customize app settings",
+    "historyDesc": "Track your job applications"
+  },
+  "fr": {
+    "welcome": "Bienvenue, {firstName} !",
+    "sub": "Explorez les opportunités d'emploi simples adaptées à vous",
+    "browseJobs": "Parcourir les emplois simples",
+    "voiceJobs": "Écouter les emplois",
+    "myProfile": "Mon profil",
+    "settings": "Paramètres",
+    "applyHistory": "Historique des candidatures",
+    "jobsDesc": "Découvrez les opportunités d'emploi simples adaptées à vous",
+    "voiceDesc": "Écoutez les emplois disponibles avec la voix",
+    "profileDesc": "Gérez votre profil personnel et vos données",
+    "settingsDesc": "Personnalisez les paramètres de l'application",
+    "historyDesc": "Suivez vos candidatures d'emploi"
+  }
+}

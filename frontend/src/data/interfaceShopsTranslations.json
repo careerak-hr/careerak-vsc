@@ -1,0 +1,50 @@
+{
+  "ar": {
+    "welcome": "مرحباً، {companyName}!",
+    "sub": "إدارة محلك التجاري والبحث عن الموظفين المناسبين",
+    "browseJobs": "تصفح الوظائف",
+    "postJob": "نشر وظيفة",
+    "manageStaff": "إدارة الموظفين",
+    "myProfile": "ملف الشركة",
+    "settings": "الإعدادات",
+    "applications": "الطلبات المستلمة",
+    "jobsDesc": "اكتشف المرشحين المناسبين لمتجرك",
+    "postDesc": "أعلن عن وظائف شاغرة في متجرك",
+    "staffDesc": "إدارة موظفي المتجر والمهام",
+    "profileDesc": "إدارة ملف شركتك وبياناتها",
+    "settingsDesc": "تخصيص إعدادات التطبيق",
+    "appsDesc": "مراجعة طلبات التوظيف المستلمة"
+  },
+  "en": {
+    "welcome": "Welcome, {companyName}!",
+    "sub": "Manage your shop and find suitable employees",
+    "browseJobs": "Browse Jobs",
+    "postJob": "Post Job",
+    "manageStaff": "Manage Staff",
+    "myProfile": "Company Profile",
+    "settings": "Settings",
+    "applications": "Received Applications",
+    "jobsDesc": "Discover suitable candidates for your shop",
+    "postDesc": "Advertise vacant positions in your shop",
+    "staffDesc": "Manage shop staff and tasks",
+    "profileDesc": "Manage your company profile and data",
+    "settingsDesc": "Customize app settings",
+    "appsDesc": "Review received job applications"
+  },
+  "fr": {
+    "welcome": "Bienvenue, {companyName} !",
+    "sub": "Gérez votre boutique et trouvez des employés appropriés",
+    "browseJobs": "Parcourir les emplois",
+    "postJob": "Publier un emploi",
+    "manageStaff": "Gérer le personnel",
+    "myProfile": "Profil de l'entreprise",
+    "settings": "Paramètres",
+    "applications": "Candidatures reçues",
+    "jobsDesc": "Découvrez les candidats appropriés pour votre boutique",
+    "postDesc": "Annoncez les postes vacants dans votre boutique",
+    "staffDesc": "Gérez le personnel de la boutique et les tâches",
+    "profileDesc": "Gérez le profil de votre entreprise et ses données",
+    "settingsDesc": "Personnalisez les paramètres de l'application",
+    "appsDesc": "Examinez les candidatures d'emploi reçues"
+  }
+}

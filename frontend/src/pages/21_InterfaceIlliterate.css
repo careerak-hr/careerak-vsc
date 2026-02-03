@@ -1,0 +1,39 @@
+.interface-illiterate-container {
+  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000;
+}
+
+.interface-illiterate-main {
+  @apply max-w-6xl mx-auto px-4 py-24 pb-32;
+}
+
+.interface-illiterate-header {
+  @apply text-center mb-12;
+}
+
+.interface-illiterate-title {
+  @apply text-4xl font-black text-[#304B60] mb-4 italic;
+}
+
+.interface-illiterate-subtitle {
+  @apply text-[#304B60]/40 font-bold text-lg;
+}
+
+.interface-illiterate-grid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+}
+
+.interface-illiterate-card {
+  @apply bg-[#E3DAD1] rounded-[3rem] shadow-xl border border-[#304B60]/10 p-8 text-center hover:scale-[1.02] transition-all cursor-pointer;
+}
+
+.interface-illiterate-card-icon {
+  @apply text-6xl mb-4 opacity-20;
+}
+
+.interface-illiterate-card-title {
+  @apply text-2xl font-black text-[#304B60] mb-4;
+}
+
+.interface-illiterate-card-description {
+  @apply text-[#304B60]/60 font-bold;
+}

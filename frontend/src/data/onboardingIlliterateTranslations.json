@@ -1,0 +1,14 @@
+{
+  "ar": {
+    "listening": "جاري الاستماع... تحدّث الآن",
+    "tapSpeak": "اضغط وتحدث"
+  },
+  "en": {
+    "listening": "Listening... Speak now",
+    "tapSpeak": "Tap and speak"
+  },
+  "fr": {
+    "listening": "Écoute en cours... Parlez maintenant",
+    "tapSpeak": "Appuyez et parlez"
+  }
+}

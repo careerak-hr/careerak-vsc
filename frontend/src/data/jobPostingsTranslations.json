@@ -1,0 +1,23 @@
+{
+  "ar": {
+    "title": "الفرص المهنية المتاحة",
+    "sub": "اكتشف أفضل الوظائف التي تناسب مهاراتك",
+    "apply": "عرض التفاصيل / تقديم",
+    "noJobs": "لا توجد وظائف متاحة حالياً",
+    "report_job": "الإبلاغ عن وظيفة"
+  },
+  "en": {
+    "title": "Available Job Opportunities",
+    "sub": "Discover the best jobs that match your skills",
+    "apply": "View Details / Apply",
+    "noJobs": "No jobs available currently",
+    "report_job": "Report Job"
+  },
+  "fr": {
+    "title": "Opportunités d'emploi disponibles",
+    "sub": "Découvrez les meilleurs emplois qui correspondent à vos compétences",
+    "apply": "Voir les détails / Postuler",
+    "noJobs": "Aucun emploi disponible actuellement",
+    "report_job": "Signaler un emploi"
+  }
+}

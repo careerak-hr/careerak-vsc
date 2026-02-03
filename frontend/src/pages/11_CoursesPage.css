@@ -1,0 +1,87 @@
+.courses-page-container {
+  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000;
+}
+
+.courses-page-main {
+  @apply max-w-6xl mx-auto px-4 py-24 pb-32;
+}
+
+.courses-header {
+  @apply mb-12 text-center;
+}
+
+.courses-title {
+  @apply text-4xl font-black text-[#304B60] mb-2 italic;
+}
+
+.courses-subtitle {
+  @apply text-[#304B60]/40 font-bold;
+}
+
+.courses-loading-container {
+  @apply flex justify-center items-center py-20;
+}
+
+.courses-loading-spinner {
+  @apply w-12 h-12 border-4 border-[#304B60]/30 border-t-[#304B60] rounded-full animate-spin;
+}
+
+.courses-no-courses-container {
+  @apply bg-[#E3DAD1] rounded-[3rem] p-20 text-center shadow-xl border-2 border-[#304B60]/5;
+}
+
+.courses-no-courses-icon {
+  @apply text-6xl mb-6 block opacity-20;
+}
+
+.courses-no-courses-text {
+  @apply text-[#304B60] font-black text-xl;
+}
+
+.courses-grid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+}
+
+.course-card {
+  @apply bg-[#304B60]/5 rounded-[3.5rem] shadow-xl border border-[#D48161]/10 overflow-hidden flex flex-col hover:scale-[1.02] transition-all group;
+}
+
+.course-card-header {
+  @apply h-48 bg-[#304B60] relative flex items-center justify-center;
+}
+
+.course-card-icon {
+  @apply text-5xl opacity-20 text-[#E3DAD1];
+}
+
+.course-card-category-badge {
+  @apply absolute top-4 right-4 px-4 py-2 bg-[#E3DAD1]/10 backdrop-blur-md rounded-xl text-[#E3DAD1] text-[10px] font-black uppercase;
+}
+
+.course-card-body {
+  @apply p-8 flex-1 flex flex-col;
+}
+
+.course-card-title {
+  @apply text-xl font-black text-[#304B60] mb-4 h-14 overflow-hidden;
+}
+
+.course-card-details {
+  @apply space-y-3 mb-8;
+}
+
+.course-card-detail-item {
+  @apply flex justify-between items-center text-xs font-bold text-[#304B60]/40;
+}
+
+.course-card-detail-value {
+  @apply text-[#304B60];
+}
+
+.course-card-price {
+  @apply text-[#D48161] font-black;
+}
+
+.course-card-enroll-btn {
+  @apply w-full bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-all mt-auto;
+}

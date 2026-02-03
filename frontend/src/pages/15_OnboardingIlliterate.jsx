@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
+import onboardingIlliterateTranslations from '../data/onboardingIlliterateTranslations.json';
+import './15_OnboardingIlliterate.css';
 
 export default function OnboardingIlliterate() {
   const navigate = useNavigate();
@@ -12,20 +14,7 @@ export default function OnboardingIlliterate() {
 
   const audioRef = useRef(null);
 
-  const t = {
-    ar: {
-      listening: 'جاري الاستماع... تحدّث الآن',
-      tapSpeak: 'اضغط وتحدث'
-    },
-    en: {
-      listening: 'Listening... Speak now',
-      tapSpeak: 'Tap and speak'
-    },
-    fr: {
-      listening: 'Écoute en cours... Parlez maintenant',
-      tapSpeak: 'Appuyez et parlez'
-    }
-  }[language || 'ar'];
+  const t = onboardingIlliterateTranslations[language || 'ar'];
 
   const steps = useMemo(() => [
     { id: 'bio', icon: '👤', voice: '/voices/tell_us_about_you.mp3', color: 'bg-[#304B60]' },
@@ -43,7 +32,6 @@ export default function OnboardingIlliterate() {
   useEffect(() => {
     setIsVisible(true);
     
-    // تشغيل الموسيقى الخلفية
     const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
     if (audioEnabled && startBgMusic) {
       startBgMusic();
@@ -79,28 +67,28 @@ export default function OnboardingIlliterate() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center p-6 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <div className="w-full max-w-lg bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-12 text-center border-2 border-[#304B60]/5">
-        <div className={`w-32 h-32 ${steps[step].color} rounded-full flex items-center justify-center mx-auto mb-10 shadow-xl transition-all duration-500 border-4 border-[#E3DAD1]`}>
-          <span className="text-6xl">{steps[step].icon}</span>
+    <div className={`onboarding-illiterate-container ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+      <div className="onboarding-illiterate-card">
+        <div className={`onboarding-illiterate-icon-container ${steps[step].color}`}>
+          <span className="onboarding-illiterate-icon">{steps[step].icon}</span>
         </div>
 
-        <div className="mb-12">
-          <div className="flex justify-center gap-2 mb-4">
+        <div className="onboarding-illiterate-progress-container">
+          <div className="onboarding-illiterate-progress-dots">
             {steps.map((_, i) => (
-              <div key={i} className={`w-3 h-3 rounded-full ${i === step ? 'bg-[#304B60] w-8' : 'bg-[#304B60]/10'} transition-all duration-300`}></div>
+              <div key={i} className={`onboarding-illiterate-progress-dot ${i === step ? 'bg-[#304B60] w-8' : 'bg-[#304B60]/10'}`}></div>
             ))}
           </div>
         </div>
 
         <button
           onClick={handleMicClick}
-          className={`w-32 h-32 rounded-full flex items-center justify-center mx-auto transition-all duration-300 active:scale-90 shadow-2xl ${isRecording ? 'bg-red-600 animate-ping' : 'bg-[#304B60]'}`}
+          className={`onboarding-illiterate-mic-btn ${isRecording ? 'bg-red-600 animate-ping' : 'bg-[#304B60]'}`}
         >
-          <span className="text-5xl text-[#D48161]">{isRecording ? '⏹️' : '🎤'}</span>
+          <span className="onboarding-illiterate-mic-icon">{isRecording ? '⏹️' : '🎤'}</span>
         </button>
 
-        <p className="mt-8 text-[#304B60] font-black text-xl">
+        <p className="onboarding-illiterate-status-text">
           {isRecording ? t.listening : t.tapSpeak}
         </p>
       </div>

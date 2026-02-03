@@ -1,0 +1,92 @@
+.otp-page-container {
+  @apply min-h-screen flex flex-col items-center justify-center p-6 bg-[#E3DAD1] transition-opacity duration-1000;
+}
+
+.otp-card {
+  @apply w-full max-w-md bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 text-center border-2 border-[#304B60]/10;
+}
+
+.otp-icon-container {
+  @apply w-24 h-24 bg-[#304B60]/5 text-[#304B60] rounded-full flex items-center justify-center mx-auto mb-6 border-2 border-[#304B60]/10;
+}
+
+.otp-icon {
+  @apply text-4xl;
+}
+
+.otp-title {
+  @apply text-3xl font-black text-[#304B60] mb-3;
+}
+
+.otp-subtitle {
+  @apply text-[#304B60]/40 font-bold text-sm;
+}
+
+.otp-subtitle-method {
+  @apply text-[#304B60];
+}
+
+.otp-method-switcher {
+  @apply flex gap-2 mb-8 bg-[#304B60]/5 p-1 rounded-2xl;
+}
+
+.otp-method-btn {
+  @apply flex-1 py-3 rounded-xl text-xs font-black transition-all;
+}
+
+.otp-method-btn-active {
+  @apply bg-[#304B60] text-[#D48161] shadow-md;
+}
+
+.otp-method-btn-inactive {
+  @apply text-[#304B60]/40;
+}
+
+.otp-countdown {
+  @apply text-xs font-bold text-[#304B60]/60 mb-4;
+}
+
+.otp-notification {
+  @apply text-xs font-bold text-green-600 mb-4 animate-fade-in;
+}
+
+.otp-form {
+  @apply space-y-8;
+}
+
+.otp-input {
+  @apply w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/30 focus:border-[#D48161] outline-none font-black text-4xl text-center tracking-[1.2rem] transition-all shadow-inner;
+}
+
+.otp-error {
+  @apply text-xs font-black text-red-600 animate-shake;
+}
+
+.otp-submit-btn {
+  @apply w-full py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl text-xl active:scale-95 transition-all;
+}
+
+/* Success Screen */
+.otp-success-container {
+  @apply fixed inset-0 z-[20000] flex flex-col items-center justify-center bg-[#E3DAD1] overflow-hidden;
+}
+
+.otp-success-content {
+    @apply relative flex flex-col items-center;
+}
+
+.otp-success-logo-wrapper {
+    @apply relative p-4 mb-8;
+}
+
+.otp-success-spinning-border {
+    @apply absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow;
+}
+
+.otp-success-logo {
+    @apply relative h-48 w-48 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover;
+}
+
+.otp-success-title {
+    @apply text-6xl font-black text-[#304B60] animate-bounce italic;
+}

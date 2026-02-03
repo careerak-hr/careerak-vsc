@@ -1,0 +1,50 @@
+{
+  "ar": {
+    "title": "الإعدادات العامة",
+    "lang": "لغة التطبيق",
+    "audio": "المؤثرات الصوتية",
+    "music": "الموسيقى الخلفية",
+    "notifications": "الإشعارات",
+    "save": "حفظ التغييرات",
+    "account": "إعدادات الحساب",
+    "dangerZone": "منطقة الخطر",
+    "deleteAccount": "حذف الحساب نهائياً",
+    "logout": "تسجيل الخروج من كافة الأجهزة",
+    "langDesc": "اختر اللغة التي تفضل استخدامها في الواجهات",
+    "audioDesc": "التحكم في تشغيل المؤثرات الصوتية",
+    "musicDesc": "التحكم في تشغيل الموسيقى الخلفية",
+    "notificationsDesc": "التحكم في إشعارات التطبيق والأصوات"
+  },
+  "en": {
+    "title": "General Settings",
+    "lang": "App Language",
+    "audio": "Sound Effects",
+    "music": "Background Music",
+    "notifications": "Notifications",
+    "save": "Save Changes",
+    "account": "Account Settings",
+    "dangerZone": "Danger Zone",
+    "deleteAccount": "Permanently Delete Account",
+    "logout": "Logout from All Devices",
+    "langDesc": "Choose the language you prefer for the interfaces",
+    "audioDesc": "Control sound effects playback",
+    "musicDesc": "Control background music playback",
+    "notificationsDesc": "Control app notifications and sounds"
+  },
+  "fr": {
+    "title": "Paramètres généraux",
+    "lang": "Langue de l\"application",
+    "audio": "Effets sonores",
+    "music": "Musique de fond",
+    "notifications": "Notifications",
+    "save": "Enregistrer les modifications",
+    "account": "Paramètres du compte",
+    "dangerZone": "Zone de danger",
+    "deleteAccount": "Supprimer définitivement le compte",
+    "logout": "Déconnexion de tous les appareils",
+    "langDesc": "Choisissez la langue que vous préférez pour les interfaces",
+    "audioDesc": "Contrôler la lecture des effets sonores",
+    "musicDesc": "Contrôler la lecture de la musique de fond",
+    "notificationsDesc": "Contrôler les notifications et les sons de l\"application"
+  }
+}

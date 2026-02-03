@@ -1,0 +1,115 @@
+.onboarding-page-container {
+  @apply min-h-screen p-4 md:p-8 bg-[#E3DAD1] pb-24 transition-opacity duration-1000;
+}
+
+.onboarding-card {
+  @apply max-w-4xl mx-auto bg-[#E3DAD1] rounded-[3rem] shadow-2xl p-6 md:p-12 border-2 border-[#304B60]/5;
+}
+
+.onboarding-header {
+  @apply text-center mb-10;
+}
+
+.onboarding-title {
+  @apply text-3xl font-black text-[#304B60] mb-4;
+}
+
+.onboarding-cv-upload-box {
+  @apply bg-[#304B60]/5 p-6 rounded-3xl border-2 border-dashed border-[#D48161]/30;
+}
+
+.onboarding-cv-upload-label {
+  @apply cursor-pointer block;
+}
+
+.onboarding-cv-icon {
+  @apply text-4xl mb-2;
+}
+
+.onboarding-cv-text {
+  @apply font-black text-[#304B60] text-sm mb-2;
+}
+
+.onboarding-cv-help-text {
+  @apply text-[10px] text-[#304B60]/60 font-bold;
+}
+
+.onboarding-parsing-text {
+  @apply mt-4 animate-pulse text-[#304B60] font-black text-xs;
+}
+
+.onboarding-form {
+  @apply space-y-10;
+}
+
+.onboarding-summary-section {
+  @apply grid grid-cols-2 md:grid-cols-4 gap-4 p-6 bg-[#304B60]/5 rounded-3xl border border-[#D48161]/10;
+}
+
+.onboarding-summary-item p {
+    @apply font-black text-[#304B60];
+}
+
+.onboarding-section {
+  @apply space-y-4;
+}
+
+.onboarding-section-title {
+  @apply text-lg font-black text-[#304B60] border-r-4 border-[#D48161] pr-3;
+}
+
+.onboarding-subsection-title {
+    @apply text-md font-black text-[#304B60] border-r-2 border-[#D48161] pr-2;
+}
+
+.onboarding-input-base {
+  @apply w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all placeholder:text-gray-400 shadow-sm;
+}
+
+.onboarding-label-base {
+  @apply block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2;
+}
+
+.onboarding-list-item {
+    @apply p-4 bg-[#304B60]/5 rounded-3xl border border-[#D48161]/10 relative;
+}
+
+.onboarding-list-item-grid {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-3;
+}
+
+.onboarding-list-item-remove-btn {
+    @apply absolute top-2 right-2 text-red-500 hover:text-red-700 font-black text-sm;
+}
+
+.onboarding-add-btn {
+    @apply text-[#304B60] font-black text-xs hover:text-[#D48161] transition-colors;
+}
+
+.onboarding-checkbox-container {
+  @apply flex items-center gap-4 px-4 bg-[#304B60]/5 rounded-2xl border-2 border-[#D48161]/10 h-[56px];
+}
+
+.onboarding-checkbox-label {
+    @apply text-xs font-black text-[#304B60];
+}
+
+.onboarding-checkbox {
+    @apply w-5 h-5 rounded accent-[#304B60];
+}
+
+.onboarding-textarea {
+    @apply h-24 text-right;
+}
+
+.onboarding-agreement-container {
+    @apply flex items-center gap-3 px-4;
+}
+
+.onboarding-agreement-text {
+    @apply text-[10px] font-black text-[#304B60]/50;
+}
+
+.onboarding-submit-btn {
+  @apply w-full py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl text-xl active:scale-95 transition-all;
+}

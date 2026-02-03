@@ -1,0 +1,99 @@
+.auth-page-container {
+  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 select-none;
+}
+
+.auth-page-content {
+  @apply flex flex-col items-center p-6 pt-12;
+}
+
+.auth-logo-container {
+  @apply mb-8;
+}
+
+.auth-logo {
+  @apply w-32 h-32 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden;
+}
+
+.auth-user-type-selector {
+  @apply flex gap-4 mb-8 w-full max-w-md;
+}
+
+.auth-user-type-btn {
+  @apply flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all;
+}
+
+.auth-user-type-btn-active {
+  @apply bg-[#304B60] text-[#D48161];
+}
+
+.auth-user-type-btn-inactive {
+  @apply bg-[#F5F5F5] text-[#304B60] border-2 border-[#D48161]/20;
+}
+
+.auth-form {
+  @apply w-full max-w-md space-y-4;
+}
+
+.auth-photo-upload-container {
+  @apply text-center;
+}
+
+.auth-photo-upload-box {
+  @apply w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#F5F5F5];
+}
+
+.auth-photo-upload-img {
+  @apply w-full h-full rounded-full object-cover;
+}
+
+.auth-photo-upload-placeholder {
+  @apply text-3xl text-[#304B60];
+}
+
+.auth-photo-upload-label {
+  @apply text-sm font-bold text-[#304B60]/60;
+}
+
+.auth-input-error {
+  @apply text-red-600 font-bold text-sm mt-1;
+}
+
+.auth-input-base {
+  @apply w-full p-4 bg-[#F5F5F5] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] placeholder-gray-400 transition-all;
+}
+
+.auth-select-base {
+  @apply w-full p-4 bg-[#F5F5F5] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all;
+}
+
+.auth-textarea {
+  @apply h-20;
+}
+
+.auth-password-wrapper {
+    @apply relative;
+}
+
+.auth-password-toggle {
+    @apply absolute top-1/2 -translate-y-1/2 text-[#304B60]/40 hover:text-[#304B60] transition-colors;
+}
+
+.auth-checkbox-container {
+  @apply flex items-center gap-3;
+}
+
+.auth-checkbox {
+  @apply w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#F5F5F5];
+}
+
+.auth-checkbox-label {
+  @apply text-sm font-bold text-[#304B60]/80 cursor-pointer;
+}
+
+.auth-policy-link {
+  @apply text-[#304B60] underline cursor-pointer ml-1;
+}
+
+.auth-submit-btn {
+  @apply w-full bg-[#304B60] text-[#D48161] py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-6;
+}

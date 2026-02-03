@@ -1,0 +1,32 @@
+{
+  "ar": {
+    "subtitle": "تسجيل الدخول",
+    "userPlaceholder": "البريد الإلكتروني أو رقم الهاتف",
+    "passPlaceholder": "كلمة المرور",
+    "loginBtn": "دخول",
+    "noAccount": "ليس لديك حساب؟",
+    "createAccount": "أنشئ حساباً الآن",
+    "error": "فشل الدخول، تحقق من البيانات",
+    "rememberMe": "تذكرني"
+  },
+  "en": {
+    "subtitle": "Login",
+    "userPlaceholder": "Email or Phone Number",
+    "passPlaceholder": "Password",
+    "loginBtn": "Login",
+    "noAccount": "Don't have an account?",
+    "createAccount": "Create account now",
+    "error": "Login failed, check your credentials",
+    "rememberMe": "Remember me"
+  },
+  "fr": {
+    "subtitle": "Connexion",
+    "userPlaceholder": "E-mail ou numéro de téléphone",
+    "passPlaceholder": "Mot de passe",
+    "loginBtn": "Se connecter",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "createAccount": "Créer un compte maintenant",
+    "error": "Échec de la connexion, vérifiez vos identifiants",
+    "rememberMe": "Se souvenir de moi"
+  }
+}

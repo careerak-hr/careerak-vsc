@@ -1,194 +1,115 @@
-/**
- * 🔒 LOCKED FILE — DO NOT MODIFY
- * This file is production-stable.
- * Any change must be approved by Alaa.
- * Last locked by: Eng. Alaa
- * Date: 2026-01-28
- */
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { useTranslate } from "../hooks/useTranslate";
-import { markOnboardingComplete } from "../utils/onboardingUtils";
 import "./00_LanguagePage.css";
-import "../styles/imageLoader.css";
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
-import NotificationSettingsModal from "../components/modals/NotificationSettingsModal";
+import languagePageTranslations from "../data/languagePage.json";
 
 export default function LanguagePage() {
   const { saveLanguage, saveAudio, saveMusic } = useAppSettings();
   const navigate = useNavigate();
-  const t = useTranslate();
 
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // صفحة اللغات تظهر فقط عندما يتم توجيه المستخدم إليها
-    // لا نحتاج للتحقق من الإعداد الأولي هنا لأن التوجيه يتم في App.jsx
-    console.log("📱 Language page loaded");
-    setLoading(false);
-  }, []);
+    const checkOnboarding = async () => {
+      try {
+        const { value } = await localStorage.getItem({ key: 'onboardingComplete' });
+        if (value === 'true') {
+          navigate('/entry', { replace: true });
+        } else {
+          setLoading(false);
+        }
+      } catch (err) {
+        const value = localStorage.getItem("onboardingComplete");
+        if (value === 'true') {
+          navigate('/entry', { replace: true });
+        } else {
+          setLoading(false);
+        }
+      }
+    };
+    checkOnboarding();
+  }, [navigate]);
 
   const handleLangPick = (lang) => {
-    console.log("🌍 Language selected:", lang);
     setSelectedLang(lang);
     setIsConfirmModalOpen(true);
   };
 
   const handleConfirmLanguage = () => {
-    console.log("✅ Language confirmed:", selectedLang);
     setIsConfirmModalOpen(false);
     setIsAudioModalOpen(true);
   };
 
   const handleCancelLanguage = () => {
-    console.log("❌ Language selection cancelled");
     setIsConfirmModalOpen(false);
     setSelectedLang(null);
   };
 
-  const handleAudioConfirm = (audioConsent) => {
-    console.log("🔊 Audio consent:", audioConsent);
+  const handleAudioConfirm = (consent) => {
+    finalize(consent);
+  };
+
+  const finalize = async (audioConsent) => {
     setIsAudioModalOpen(false);
-    setIsNotificationModalOpen(true);
-  };
-
-  const handleNotificationConfirm = (notificationConsent) => {
-    console.log("🔔 Notification consent:", notificationConsent);
-    finalize(true, notificationConsent); // نمرر audioConsent كـ true لأن المستخدم وصل لهذه المرحلة
-  };
-
-  const finalize = async (audioConsent, notificationConsent) => {
-    console.log("🎯 Finalizing setup with lang:", selectedLang, "audio:", audioConsent, "notifications:", notificationConsent);
-    setIsNotificationModalOpen(false);
-    
     try {
-      // حفظ اللغة المختارة
-      if (saveLanguage) {
+      if (saveLanguage && saveAudio && saveMusic) {
         await saveLanguage(selectedLang);
-        console.log("✅ Language saved:", selectedLang);
-      }
-      
-      // حفظ إعدادات الصوت والموسيقى
-      if (saveAudio && saveMusic) {
         await saveAudio(audioConsent);
         await saveMusic(audioConsent);
-        console.log("✅ Audio settings saved:", audioConsent);
       }
-      
-      // استخدام الأداة المساعدة لحفظ الإعدادات وتحديد اكتمال الإعداد الأولي
-      const success = markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
-      
-      if (!success) {
-        throw new Error("Failed to save onboarding settings");
-      }
-      
-      // طلب إذن الإشعارات من النظام إذا وافق المستخدم
-      if (notificationConsent && 'Notification' in window) {
-        try {
-          const permission = await Notification.requestPermission();
-          console.log("📱 System notification permission:", permission);
-        } catch (error) {
-          console.warn("⚠️ Failed to request notification permission:", error);
-        }
-      }
-      
-      // الانتقال لصفحة الدخول
-      console.log("🚀 Navigating to entry page");
-      navigate("/entry", { replace: true });
-      
+      await localStorage.setItem('onboardingComplete', 'true');
     } catch (err) {
-      console.error("❌ Error saving settings:", err);
-      // حتى لو فشل الحفظ، حاول حفظ الإعدادات الأساسية والانتقال
-      markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
-      navigate("/entry", { replace: true });
+      localStorage.setItem("onboardingComplete", 'true');
     }
+    navigate("/entry", { replace: true });
   };
 
-  // Get translations for the selected language (for language page content)
-  const langTranslations = {
-    ar: t.languagePage,
-    en: { 
-      confirmLang: "Are you sure about the selected language? The app will work entirely in this language, and you can change it anytime from the dashboard.",
-      audioTitle: "Do you agree to play music and audio in the app? You can control audio and music from the dashboard whenever you want.",
-      notificationTitle: "Do you agree to enable app notifications on your phone?",
-      notificationDesc: "You'll receive important notifications about jobs, courses, and updates. You can control them from settings.",
-      yes: "Yes", no: "No", ok: "Confirm", title: "Choose Language"
-    },
-    fr: {
-      confirmLang: "Êtes-vous sûr de la langue sélectionnée ? L'application fonctionnera entièrement dans cette langue et vous pourrez la modifier à tout moment depuis le tableau de bord.",
-      audioTitle: "Acceptez-vous de jouer de la musique et de l'audio dans l'application ? Vous pouvez contrôler l'audio et la musique depuis le tableau de bord quand vous le souhaitez.",
-      notificationTitle: "Acceptez-vous d'activer les notifications de l'application sur votre téléphone ?",
-      notificationDesc: "Vous recevrez des notifications importantes sur les emplois, les cours et les mises à jour. Vous pouvez les contrôler depuis les paramètres.",
-      yes: "Oui", no: "Non", ok: "Confirmer", title: "Choisir la langue"
-    }
-  };
-  const langT = langTranslations[selectedLang] || langTranslations.ar;
-
-  // استخدام التصميم الأصلي للأزرار
-  const langBtnCls = "py-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-lg border-4 border-[#304B60] hover:scale-105 transition-all text-xl";
+  const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
 
   if (loading) {
-    return(
-      <div className="min-h-screen bg-[#E3DAD1] flex items-center justify-center text-[#304B60] font-bold">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60] mx-auto mb-4"></div>
-        <p>جاري التحميل...</p>
+    return (
+      <div className="lang-page-loading-container">
+        Loading...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center relative overflow-hidden p-4">
-      {/* التأثير البصري الأصلي - النقطة المتوهجة */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-        <div className="w-2 h-2 bg-[#304B60] rounded-full animate-expand-glow opacity-5"></div>
+    <div className="lang-page-container">
+      <div className="lang-page-glow-effect">
+        <div className="lang-page-glow-dot"></div>
       </div>
 
-      <div className="relative z-10 flex flex-col items-center">
-        {/* الشعار بالتصميم الأصلي */}
-        <div className="mb-8">
-          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
-            <img 
-              src="./logo.jpg" 
-              alt="Logo" 
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div className="logo-fallback" style={{display: 'none'}}>
-              🌐
-            </div>
+      <div className="lang-page-content">
+        <div className="lang-page-logo-container">
+          <div className="lang-page-logo">
+            <img src="/logo.jpg" alt="Logo" className="lang-page-logo-img" />
           </div>
         </div>
 
-        {/* العنوان بالتصميم الأصلي */}
-        <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm">
+        <h1 className="lang-page-title">
           Choose Language / Choisir la langue / اختر اللغة
         </h1>
 
-        {/* الأزرار بالتصميم الأصلي */}
-        <div className="flex flex-col gap-4 w-full max-w-xs">
-          <button onClick={() => handleLangPick("ar")} className={langBtnCls}>
+        <div className="lang-page-buttons-container">
+          <button onClick={() => handleLangPick("ar")} className="lang-page-btn">
             العربية
           </button>
-          <button onClick={() => handleLangPick("en")} className={langBtnCls}>
+          <button onClick={() => handleLangPick("en")} className="lang-page-btn">
             English
           </button>
-          <button onClick={() => handleLangPick("fr")} className={langBtnCls}>
+          <button onClick={() => handleLangPick("fr")} className="lang-page-btn">
             Français
           </button>
         </div>
       </div>
 
-      {/* Modal تأكيد اللغة */}
       {isConfirmModalOpen && (
         <LanguageConfirmModal
           isOpen={isConfirmModalOpen}
@@ -196,29 +117,17 @@ export default function LanguagePage() {
           onConfirm={handleConfirmLanguage}
           onCancel={handleCancelLanguage}
           language={selectedLang}
-          t={langT}
+          t={t}
         />
       )}
 
-      {/* Modal إعدادات الصوت */}
       {isAudioModalOpen && (
         <AudioSettingsModal
           isOpen={isAudioModalOpen}
           onClose={() => setIsAudioModalOpen(false)}
           onConfirm={handleAudioConfirm}
           language={selectedLang}
-          t={langT}
-        />
-      )}
-
-      {/* Modal إعدادات الإشعارات */}
-      {isNotificationModalOpen && (
-        <NotificationSettingsModal
-          isOpen={isNotificationModalOpen}
-          onClose={() => setIsNotificationModalOpen(false)}
-          onConfirm={handleNotificationConfirm}
-          language={selectedLang}
-          t={langT}
+          t={t}
         />
       )}
     </div>

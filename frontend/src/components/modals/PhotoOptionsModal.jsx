@@ -1,4 +1,5 @@
 import React from 'react';
+import './PhotoOptionsModal.css';
 
 const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose }) => {
   const handleGalleryClick = () => {
@@ -12,27 +13,27 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[#E3DAD1] p-6 rounded-[2rem] shadow-2xl w-full max-w-xs border-4 border-[#304B60]">
-        <h3 className="text-lg font-black text-[#304B60] text-center mb-4">
+    <div className="photo-options-backdrop">
+      <div className="photo-options-content">
+        <h3 className="photo-options-title">
           {t.uploadPhoto || 'رفع الصورة'}
         </h3>
-        <div className="flex flex-col gap-4">
+        <div className="photo-options-buttons-container">
           <button 
             onClick={handleGalleryClick} 
-            className="py-4 bg-[#304B60] text-[#D48161] rounded-xl font-black hover:bg-[#1A365D] transition-colors"
+            className="photo-options-btn"
           >
             🖼️ {t.selectFromGallery || 'اختر من المعرض'}
           </button>
           <button 
             onClick={handleCameraClick} 
-            className="py-4 bg-[#304B60] text-[#D48161] rounded-xl font-black hover:bg-[#1A365D] transition-colors"
+            className="photo-options-btn"
           >
             📷 {t.takePhoto || 'التقط صورة'}
           </button>
           <button 
             onClick={onClose} 
-            className="mt-2 py-2 text-xs text-red-500 hover:text-red-700 transition-colors"
+            className="photo-options-cancel-btn"
           >
             {t.cancel || 'إلغاء'}
           </button>

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
+import onboardingUltimateTranslations from '../data/onboardingUltimateTranslations.json';
+import './17_OnboardingUltimate.css';
 
 export default function OnboardingUltimate() {
   const navigate = useNavigate();
@@ -13,44 +15,7 @@ export default function OnboardingUltimate() {
 
   const recognitionRef = useRef(null);
 
-  const t = {
-    ar: {
-      welcome: "مرحباً بك في نظام نبراس للمساعدة الشاملة من كاريرك. لقد تم تفعيل هذا النظام لأنك مسجل ككفيف ولا تجيد القراءة. سأتحدث معك الآن وأقوم بجمع بياناتك صوتياً. المس الشاشة في أي مكان عندما تسمع الإشارة لتبدأ الحديث.",
-      steps: [
-        { key: 'name', prompt: "أولاً، من فضلك قل اسمك بالكامل بعد سماع الإشارة." },
-        { key: 'skills', prompt: "جميل. الآن أخبرني، ما هي المهارات أو الحرف التي تجيدها؟" },
-        { key: 'bio', prompt: "أخيراً، هل تود إخباري بأي شيء آخر عن نفسك أو عن الوظائف التي تبحث عنها؟" },
-        { key: 'finish', prompt: "رائع جداً. لقد انتهينا من إعداد ملفك الشخصي بالكامل. سأقوم الآن بنقلك إلى لوحة التحكم الصوتية الخاصة بك." }
-      ],
-      listening: "أنا أسمعك الآن، تفضل بالتحدث...",
-      error: "عذراً، لم أستطع سماعك بوضوح. من فضلك المس الشاشة وحاول مرة أخرى.",
-      tapToTalk: "المس الشاشة للتحدث"
-    },
-    en: {
-      welcome: "Welcome to Careerak's comprehensive assistance system 'Nabras'. This system has been activated because you are registered as visually impaired and illiterate. I will speak with you now and collect your data vocally. Touch the screen anywhere when you hear the signal to start speaking.",
-      steps: [
-        { key: 'name', prompt: "First, please say your full name after hearing the signal." },
-        { key: 'skills', prompt: "Great. Now tell me, what skills or crafts do you excel at?" },
-        { key: 'bio', prompt: "Finally, would you like to tell me anything else about yourself or the jobs you are looking for?" },
-        { key: 'finish', prompt: "Excellent. We have completed setting up your profile completely. I will now transfer you to your personal voice control panel." }
-      ],
-      listening: "I am listening to you now, please speak...",
-      error: "Sorry, I couldn't hear you clearly. Please touch the screen and try again.",
-      tapToTalk: "Touch the screen to speak"
-    },
-    fr: {
-      welcome: "Bienvenue dans le système d'assistance complet 'Nabras' de Careerak. Ce système a été activé parce que vous êtes enregistré comme malvoyant et analphabète. Je vais parler avec vous maintenant et collecter vos données vocalement. Touchez l'écran n'importe où lorsque vous entendez le signal pour commencer à parler.",
-      steps: [
-        { key: 'name', prompt: "D'abord, veuillez dire votre nom complet après avoir entendu le signal." },
-        { key: 'skills', prompt: "Super. Maintenant dites-moi, quelles compétences ou métiers maîtrisez-vous ?" },
-        { key: 'bio', prompt: "Enfin, aimeriez-vous me dire autre chose sur vous ou les emplois que vous recherchez ?" },
-        { key: 'finish', prompt: "Excellent. Nous avons terminé la configuration complète de votre profil. Je vais maintenant vous transférer vers votre panneau de contrôle vocal personnel." }
-      ],
-      listening: "Je vous écoute maintenant, veuillez parler...",
-      error: "Désolé, je n'ai pas pu vous entendre clairement. Veuillez toucher l'écran et essayer à nouveau.",
-      tapToTalk: "Touchez l'écran pour parler"
-    }
-  }[language || 'ar'];
+  const t = onboardingUltimateTranslations[language || 'ar'];
 
   const speak = useCallback((text) => {
     window.speechSynthesis.cancel();
@@ -81,7 +46,6 @@ export default function OnboardingUltimate() {
   useEffect(() => {
     setIsVisible(true);
     
-    // تشغيل الموسيقى الخلفية
     const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
     if (audioEnabled && startBgMusic) {
       startBgMusic();
@@ -106,16 +70,16 @@ export default function OnboardingUltimate() {
   };
 
   return (
-    <div className={`fixed inset-0 bg-[#304B60] flex flex-col items-center justify-center transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} cursor-pointer`} onClick={handleScreenTouch}>
-      <div className="relative">
-        <div className={`w-80 h-80 rounded-full border-[15px] border-[#D48161]/10 flex items-center justify-center transition-all duration-700 ${isListening ? 'scale-125 border-[#D48161] shadow-[0_0_150px_rgba(212,129,97,0.4)]' : 'scale-100'}`}>
-          <div className={`text-[10rem] transition-all duration-500 ${isListening ? 'opacity-100 rotate-12' : 'opacity-20 rotate-0'}`}>🎙️</div>
+    <div className={`onboarding-ultimate-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} onClick={handleScreenTouch}>
+      <div className="onboarding-ultimate-mic-wrapper">
+        <div className={`onboarding-ultimate-mic-container ${isListening ? 'onboarding-ultimate-mic-container-active' : ''}`}>
+          <div className={`onboarding-ultimate-mic-icon ${isListening ? 'onboarding-ultimate-mic-icon-active' : 'onboarding-ultimate-mic-icon-inactive'}`}>🎙️</div>
         </div>
-        {isListening && <div className="absolute inset-0 bg-[#D48161]/20 rounded-full animate-ping"></div>}
+        {isListening && <div className="onboarding-ultimate-ping-effect"></div>}
       </div>
-      <div className="mt-20 text-center px-10">
-        <h1 className="text-[#E3DAD1] text-3xl font-black opacity-20 uppercase tracking-[0.5em] mb-4">Ultimate Assist</h1>
-        <p className="text-[#E3DAD1] text-xl font-bold animate-pulse">{isListening ? t.listening : t.tapToTalk}</p>
+      <div className="onboarding-ultimate-footer">
+        <h1 className="onboarding-ultimate-title">Ultimate Assist</h1>
+        <p className="onboarding-ultimate-status-text">{isListening ? t.listening : t.tapToTalk}</p>
       </div>
     </div>
   );

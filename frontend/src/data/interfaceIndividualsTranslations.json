@@ -1,0 +1,44 @@
+{
+  "ar": {
+    "welcome": "مرحباً، {firstName}!",
+    "sub": "استكشف فرص العمل والدورات التدريبية المثالية لك",
+    "browseJobs": "تصفح الوظائف",
+    "browseCourses": "تصفح الدورات",
+    "myProfile": "ملفي الشخصي",
+    "settings": "الإعدادات",
+    "applyHistory": "تاريخ التقديمات",
+    "jobsDesc": "اكتشف الفرص الوظيفية المناسبة لمهاراتك",
+    "coursesDesc": "طور مهاراتك مع أفضل الدورات التدريبية",
+    "profileDesc": "إدارة ملفك الشخصي والبيانات",
+    "settingsDesc": "تخصيص إعدادات التطبيق",
+    "historyDesc": "تتبع طلباتك الوظيفية"
+  },
+  "en": {
+    "welcome": "Welcome, {firstName}!",
+    "sub": "Explore the perfect job opportunities and training courses for you",
+    "browseJobs": "Browse Jobs",
+    "browseCourses": "Browse Courses",
+    "myProfile": "My Profile",
+    "settings": "Settings",
+    "applyHistory": "Application History",
+    "jobsDesc": "Discover job opportunities suitable for your skills",
+    "coursesDesc": "Develop your skills with the best training courses",
+    "profileDesc": "Manage your personal profile and data",
+    "settingsDesc": "Customize app settings",
+    "historyDesc": "Track your job applications"
+  },
+  "fr": {
+    "welcome": "Bienvenue, {firstName} !",
+    "sub": "Explorez les opportunités d'emploi et les cours de formation parfaits pour vous",
+    "browseJobs": "Parcourir les emplois",
+    "browseCourses": "Parcourir les cours",
+    "myProfile": "Mon profil",
+    "settings": "Paramètres",
+    "applyHistory": "Historique des candidatures",
+    "jobsDesc": "Découvrez les opportunités d'emploi adaptées à vos compétences",
+    "coursesDesc": "Développez vos compétences avec les meilleurs cours de formation",
+    "profileDesc": "Gérez votre profil personnel et vos données",
+    "settingsDesc": "Personnalisez les paramètres de l'application",
+    "historyDesc": "Suivez vos candidatures d'emploi"
+  }
+}

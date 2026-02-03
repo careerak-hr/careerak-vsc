@@ -1,0 +1,50 @@
+{
+  "ar": {
+    "welcome": "مرحباً، {firstName}!",
+    "sub": "إدارة موارد بشرية الشركة ونشر الفرص الوظيفية والدورات",
+    "postJob": "نشر وظيفة جديدة",
+    "postCourse": "نشر دورة تدريبية",
+    "manageJobs": "إدارة الوظائف المنشورة",
+    "manageCourses": "إدارة الدورات المنشورة",
+    "companyProfile": "ملف الشركة",
+    "analytics": "الإحصائيات والتقارير",
+    "jobDesc": "أضف فرصة وظيفية جديدة لجذب الكفاءات",
+    "courseDesc": "انشر دورات تدريبية لتطوير الموظفين",
+    "manageJobsDesc": "عرض وتعديل الوظائف المنشورة",
+    "manageCoursesDesc": "إدارة الدورات التدريبية المتاحة",
+    "profileDesc": "تحديث بيانات الشركة والمعلومات",
+    "analyticsDesc": "متابعة الإحصائيات والأداء"
+  },
+  "en": {
+    "welcome": "Welcome, {firstName}!",
+    "sub": "Manage company HR resources and post job opportunities and courses",
+    "postJob": "Post New Job",
+    "postCourse": "Post Training Course",
+    "manageJobs": "Manage Posted Jobs",
+    "manageCourses": "Manage Posted Courses",
+    "companyProfile": "Company Profile",
+    "analytics": "Analytics & Reports",
+    "jobDesc": "Add a new job opportunity to attract talents",
+    "courseDesc": "Publish training courses to develop employees",
+    "manageJobsDesc": "View and edit posted jobs",
+    "manageCoursesDesc": "Manage available training courses",
+    "profileDesc": "Update company data and information",
+    "analyticsDesc": "Track statistics and performance"
+  },
+  "fr": {
+    "welcome": "Bienvenue, {firstName} !",
+    "sub": "Gérez les ressources humaines de l'entreprise et publiez des opportunités d'emploi et des cours",
+    "postJob": "Publier un nouvel emploi",
+    "postCourse": "Publier un cours de formation",
+    "manageJobs": "Gérer les emplois publiés",
+    "manageCourses": "Gérer les cours publiés",
+    "companyProfile": "Profil de l'entreprise",
+    "analytics": "Analyses et rapports",
+    "jobDesc": "Ajoutez une nouvelle opportunité d'emploi pour attirer les talents",
+    "courseDesc": "Publiez des cours de formation pour développer les employés",
+    "manageJobsDesc": "Voir et modifier les emplois publiés",
+    "manageCoursesDesc": "Gérer les cours de formation disponibles",
+    "profileDesc": "Mettre à jour les données et informations de l'entreprise",
+    "analyticsDesc": "Suivre les statistiques et les performances"
+  }
+}

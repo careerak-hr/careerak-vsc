@@ -1,0 +1,56 @@
+{
+  "ar": {
+    "title": "نشر وظيفة جديدة",
+    "sub": "أضف تفاصيل الوظيفة لجذب أفضل الكفاءات",
+    "btn": "نشر الفرصة الآن",
+    "placeholders": {
+      "title": "عنوان الوظيفة",
+      "description": "الوصف الوظيفي",
+      "requirements": "المتطلبات",
+      "location": "الموقع"
+    },
+    "options": {
+      "fullTime": "دوام كامل",
+      "partTime": "دوام جزئي",
+      "remote": "عن بعد",
+      "contract": "عقد"
+    },
+    "loading": "جاري النشر..."
+  },
+  "en": {
+    "title": "Post a New Job",
+    "sub": "Add job details to attract the best talents",
+    "btn": "Post Opportunity Now",
+    "placeholders": {
+      "title": "Job Title",
+      "description": "Job Description",
+      "requirements": "Requirements",
+      "location": "Location"
+    },
+    "options": {
+      "fullTime": "Full Time",
+      "partTime": "Part Time",
+      "remote": "Remote",
+      "contract": "Contract"
+    },
+    "loading": "Publishing..."
+  },
+  "fr": {
+    "title": "Publier un nouvel emploi",
+    "sub": "Ajoutez les détails de l'emploi pour attirer les meilleurs talents",
+    "btn": "Publier l'opportunité maintenant",
+    "placeholders": {
+      "title": "Titre du poste",
+      "description": "Description du poste",
+      "requirements": "Exigences",
+      "location": "Emplacement"
+    },
+    "options": {
+      "fullTime": "Temps plein",
+      "partTime": "Temps partiel",
+      "remote": "Télétravail",
+      "contract": "Contrat"
+    },
+    "loading": "Publication en cours..."
+  }
+}

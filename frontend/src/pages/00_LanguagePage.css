@@ -1,37 +1,43 @@
-/**
- * 🔒 LOCKED FILE — DO NOT MODIFY
- * This file is production-stable.
- * Any change must be approved by Alaa.
- * Last locked by: Eng. Alaa
- * Date: 2026-01-28
- */
-
-@keyframes expandingGlow {
-  0% {
-    opacity: 0;
-  }
-  
-  10% {
-    opacity: 0.3;
-  }
-  90% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: scale(100);
-    opacity: 0;
-  }
+.lang-page-container {
+  @apply min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center relative overflow-hidden p-4;
 }
 
-.animate-expand-glow {
-  animation: expandingGlow 10s ease-in-out infinite;
+.lang-page-glow-effect {
+  @apply absolute inset-0 flex items-center justify-center pointer-events-none z-0;
 }
 
-.logo-border {
-  border: 4px solid #1A365D;
-  padding: 0;
-  border-radius: 9999px;
-  background-color: transparent;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  overflow: hidden;
+.lang-page-glow-dot {
+  @apply w-2 h-2 bg-[#304B60] rounded-full animate-expand-glow opacity-5;
+}
+
+.lang-page-content {
+  @apply relative z-10 flex flex-col items-center;
+}
+
+.lang-page-logo-container {
+  @apply mb-8;
+}
+
+.lang-page-logo {
+  @apply w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1];
+}
+
+.lang-page-logo-img {
+  @apply w-full h-full object-cover;
+}
+
+.lang-page-title {
+  @apply text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm;
+}
+
+.lang-page-buttons-container {
+  @apply flex flex-col gap-4 w-full max-w-xs;
+}
+
+.lang-page-btn {
+  @apply py-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-lg border-4 border-[#304B60] hover:scale-105 transition-all text-xl;
+}
+
+.lang-page-loading-container {
+    @apply min-h-screen bg-[#E3DAD1] flex items-center justify-center text-[#304B60] font-bold;
 }

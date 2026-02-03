@@ -1,0 +1,38 @@
+{
+  "ar": {
+    "title": "إضافة دورة تعليمية جديدة",
+    "courseTitle": "عنوان الدورة",
+    "desc": "وصف الدورة والمخرجات التعليمية",
+    "instructor": "اسم المحاضر / المدرب",
+    "category": "تصنيف الدورة",
+    "level": "مستوى الدورة",
+    "price": "سعر الدورة (0 للمجانية)",
+    "btn": "نشر الدورة التعليمية",
+    "success": "تم نشر الدورة بنجاح في الأكاديمية!",
+    "loading": "..."
+  },
+  "en": {
+    "title": "Add New Educational Course",
+    "courseTitle": "Course Title",
+    "desc": "Course Description and Learning Outcomes",
+    "instructor": "Instructor / Trainer Name",
+    "category": "Course Category",
+    "level": "Course Level",
+    "price": "Course Price (0 for free)",
+    "btn": "Publish Educational Course",
+    "success": "Course published successfully in the Academy!",
+    "loading": "Publishing..."
+  },
+  "fr": {
+    "title": "Ajouter un nouveau cours éducatif",
+    "courseTitle": "Titre du cours",
+    "desc": "Description du cours et résultats d'apprentissage",
+    "instructor": "Nom de l'instructeur / formateur",
+    "category": "Catégorie du cours",
+    "level": "Niveau du cours",
+    "price": "Prix du cours (0 pour gratuit)",
+    "btn": "Publier le cours éducatif",
+    "success": "Cours publié avec succès dans l'Académie !",
+    "loading": "Publication..."
+  }
+}

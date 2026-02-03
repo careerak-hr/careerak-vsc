@@ -1,0 +1,63 @@
+.entry-page-container {
+  @apply fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-[#E3DAD1] select-none;
+}
+
+.entry-page-gradient {
+  @apply absolute inset-0 bg-gradient-to-b from-[#304B60]/10 to-transparent transition-opacity duration-1000;
+}
+
+.entry-page-main-content {
+  @apply relative flex flex-col items-center justify-center w-full h-full;
+}
+
+.entry-page-logo-wrapper {
+  @apply relative flex items-center justify-center;
+}
+
+.entry-page-glowing-circle {
+  @apply absolute w-[150vw] h-[150vw] max-w-[800px] max-h-[800px] bg-[#304B60] opacity-[0.03] rounded-full transition-transform duration-[7000ms] ease-out;
+}
+
+.entry-page-logo-animation-wrapper {
+  @apply relative transition-all duration-1000 ease-out transform;
+}
+
+.entry-page-logo-inner-wrapper {
+  @apply relative p-2 md:p-4;
+}
+
+.entry-page-spinning-border {
+  @apply absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow;
+}
+
+.entry-page-logo {
+  @apply relative h-64 w-64 md:h-96 md:w-96 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover;
+}
+
+.entry-page-text-container {
+  @apply mt-6 md:mt-12 text-center transition-all duration-1000 delay-300 transform;
+}
+
+.entry-page-title {
+  @apply text-5xl md:text-7xl font-black text-[#304B60] tracking-tight mb-4 italic;
+}
+
+.entry-page-slogan-container {
+  @apply flex items-center justify-center gap-4;
+}
+
+.entry-page-slogan-line {
+  @apply h-[1.5px] w-10 md:w-16 bg-[#D48161]/30;
+}
+
+.entry-page-slogan-text {
+  @apply text-[#304B60]/80 font-black text-[13px] md:text-lg uppercase tracking-[0.2em];
+}
+
+.entry-page-progress-bar-container {
+  @apply absolute bottom-10 md:bottom-20 w-48 md:w-64 h-[2px] bg-[#304B60]/10 rounded-full overflow-hidden;
+}
+
+.entry-page-progress-bar {
+  @apply h-full bg-[#D48161] transition-all ease-linear;
+}

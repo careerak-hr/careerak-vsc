@@ -1,0 +1,43 @@
+.post-job-page-container {
+  @apply min-h-screen bg-[#E3DAD1] py-24 pb-32 transition-opacity duration-1000;
+}
+
+.post-job-page-main {
+  @apply max-w-3xl mx-auto px-4;
+}
+
+.post-job-card {
+  @apply bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 border-2 border-[#304B60]/5;
+}
+
+.post-job-header {
+  @apply text-center mb-10;
+}
+
+.post-job-title {
+  @apply text-3xl font-black text-[#304B60] mb-2 italic;
+}
+
+.post-job-subtitle {
+  @apply text-[#304B60]/40 font-bold;
+}
+
+.post-job-form {
+  @apply space-y-6;
+}
+
+.post-job-input {
+  @apply w-full p-5 bg-[#E3DAD1] rounded-[2rem] outline-none font-black text-[#304B60] placeholder:text-gray-400 border-2 border-[#D48161]/20 focus:border-[#D48161] shadow-sm;
+}
+
+.post-job-textarea {
+  @apply h-32 resize-none;
+}
+
+.post-job-grid {
+    @apply grid grid-cols-2 gap-4;
+}
+
+.post-job-submit-btn {
+  @apply w-full py-6 bg-[#304B60] text-[#D48161] rounded-[2.5rem] font-black shadow-2xl active:scale-95 transition-all text-xl mt-4;
+}

@@ -1,0 +1,44 @@
+{
+  "ar": {
+    "welcome": "مرحباً، {firstName}!",
+    "sub": "لوحة تحكم محدودة المسؤوليات",
+    "manageUsers": "إدارة المستخدمين",
+    "manageJobs": "إدارة الوظائف",
+    "manageCourses": "إدارة الدورات",
+    "viewReports": "عرض التقارير",
+    "settings": "الإعدادات",
+    "usersDesc": "إدارة حسابات المستخدمين",
+    "jobsDesc": "إدارة الوظائف المنشورة",
+    "coursesDesc": "إدارة الدورات التدريبية",
+    "reportsDesc": "عرض الإحصائيات والتقارير",
+    "settingsDesc": "إعدادات النظام"
+  },
+  "en": {
+    "welcome": "Welcome, {firstName}!",
+    "sub": "Limited Responsibility Control Panel",
+    "manageUsers": "Manage Users",
+    "manageJobs": "Manage Jobs",
+    "manageCourses": "Manage Courses",
+    "viewReports": "View Reports",
+    "settings": "Settings",
+    "usersDesc": "Manage user accounts",
+    "jobsDesc": "Manage posted jobs",
+    "coursesDesc": "Manage training courses",
+    "reportsDesc": "View statistics and reports",
+    "settingsDesc": "System settings"
+  },
+  "fr": {
+    "welcome": "Bienvenue, {firstName} !",
+    "sub": "Panneau de contrôle à responsabilité limitée",
+    "manageUsers": "Gérer les utilisateurs",
+    "manageJobs": "Gérer les emplois",
+    "manageCourses": "Gérer les cours",
+    "viewReports": "Voir les rapports",
+    "settings": "Paramètres",
+    "usersDesc": "Gérer les comptes utilisateurs",
+    "jobsDesc": "Gérer les emplois publiés",
+    "coursesDesc": "Gérer les cours de formation",
+    "reportsDesc": "Voir les statistiques et rapports",
+    "settingsDesc": "Paramètres système"
+  }
+}

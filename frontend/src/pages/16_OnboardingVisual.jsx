@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import userService from '../services/userService';
+import onboardingVisualTranslations from '../data/onboardingVisualTranslations.json';
+import './16_OnboardingVisual.css';
 
 export default function OnboardingVisual() {
   const navigate = useNavigate();
@@ -13,44 +15,7 @@ export default function OnboardingVisual() {
 
   const recognitionRef = useRef(null);
 
-  const t = {
-    ar: {
-      welcome: "مرحباً بك في واجهة كاريرك الصوتية. سنقوم الآن بإعداد ملفك الشخصي عن طريق الصوت. اضغط في أي مكان على الشاشة للتحدث عند سماع الإشارة.",
-      steps: [
-        { key: 'name', prompt: "من فضلك، قل اسمك بالكامل بعد سماع الإشارة." },
-        { key: 'profession', prompt: "ما هو تخصصك أو مهنتك الحالية؟" },
-        { key: 'experience', prompt: "أخبرنا عن خبراتك السابقة باختصار." },
-        { key: 'finish', prompt: "تم حفظ بياناتك بنجاح. سننتقل الآن إلى صفحتك الشخصية." }
-      ],
-      listening: "جاري الاستماع...",
-      tapToTalk: "المس الشاشة للتحدث",
-      error: "عذراً، لم أسمعك جيداً. المس الشاشة وحاول مرة أخرى."
-    },
-    en: {
-      welcome: "Welcome to Careerak's voice interface. We will now set up your profile via voice. Tap anywhere on the screen to speak when you hear the signal.",
-      steps: [
-        { key: 'name', prompt: "Please say your full name after hearing the signal." },
-        { key: 'profession', prompt: "What is your specialty or current profession?" },
-        { key: 'experience', prompt: "Tell us about your previous experiences briefly." },
-        { key: 'finish', prompt: "Your data has been saved successfully. We will now go to your personal page." }
-      ],
-      listening: "Listening...",
-      tapToTalk: "Tap the screen to speak",
-      error: "Sorry, I didn't hear you well. Tap the screen and try again."
-    },
-    fr: {
-      welcome: "Bienvenue dans l'interface vocale de Careerak. Nous allons maintenant configurer votre profil via la voix. Appuyez n'importe où sur l'écran pour parler lorsque vous entendez le signal.",
-      steps: [
-        { key: 'name', prompt: "Veuillez dire votre nom complet après avoir entendu le signal." },
-        { key: 'profession', prompt: "Quelle est votre spécialité ou profession actuelle ?" },
-        { key: 'experience', prompt: "Parlez-nous brièvement de vos expériences précédentes." },
-        { key: 'finish', prompt: "Vos données ont été enregistrées avec succès. Nous allons maintenant accéder à votre page personnelle." }
-      ],
-      listening: "Écoute en cours...",
-      tapToTalk: "Appuyez sur l'écran pour parler",
-      error: "Désolé, je ne vous ai pas bien entendu. Appuyez sur l'écran et essayez à nouveau."
-    }
-  }[language || 'ar'];
+  const t = onboardingVisualTranslations[language || 'ar'];
 
   const speak = useCallback((text) => {
     window.speechSynthesis.cancel();
@@ -85,7 +50,6 @@ export default function OnboardingVisual() {
   useEffect(() => {
     setIsVisible(true);
     
-    // تشغيل الموسيقى الخلفية
     const audioEnabled = localStorage.getItem('audioConsent') === 'true' || localStorage.getItem('audio_enabled') === 'true';
     if (audioEnabled && startBgMusic) {
       startBgMusic();
@@ -110,22 +74,22 @@ export default function OnboardingVisual() {
   };
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center p-6 transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} cursor-pointer`} onClick={handleScreenTap}>
-      <div className="text-center space-y-16">
-        <div className={`w-72 h-72 rounded-full border-[12px] border-[#304B60]/10 flex items-center justify-center mx-auto transition-all duration-700 ${isListening ? 'scale-110 border-[#304B60] bg-[#304B60]/5 shadow-2xl' : 'scale-100'}`}>
-          <div className={`text-9xl transition-all duration-500 ${isListening ? 'opacity-100' : 'opacity-20'}`}>🎙️</div>
+    <div className={`onboarding-visual-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} onClick={handleScreenTap}>
+      <div className="onboarding-visual-content">
+        <div className={`onboarding-visual-mic-container ${isListening ? 'onboarding-visual-mic-container-active' : ''}`}>
+          <div className={`onboarding-visual-mic-icon ${isListening ? 'opacity-100' : 'opacity-20'}`}>🎙️</div>
         </div>
-        <div className="space-y-6">
-          <h2 className="text-[#304B60] text-4xl font-black tracking-tight animate-pulse">
+        <div className="onboarding-visual-status-container">
+          <h2 className="onboarding-visual-status-text">
             {isListening ? t.listening : t.tapToTalk}
           </h2>
-          <div className="flex justify-center gap-6">
+          <div className="onboarding-visual-progress-dots">
             {t.steps.map((_, i) => (
-              <div key={i} className={`w-4 h-4 rounded-full transition-all duration-500 ${i === step ? 'bg-[#D48161] scale-150' : 'bg-[#304B60]/10'}`}></div>
+              <div key={i} className={`onboarding-visual-progress-dot ${i === step ? 'onboarding-visual-progress-dot-active' : 'onboarding-visual-progress-dot-inactive'}`}></div>
             ))}
           </div>
         </div>
-        <div className="absolute bottom-12 text-[#304B60]/20 font-black text-sm uppercase tracking-[0.3em] italic">Careerak Voice Assist</div>
+        <div className="onboarding-visual-footer-text">Careerak Voice Assist</div>
       </div>
     </div>
   );
