@@ -20,6 +20,9 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // تسجيل البلاجين المخصص
+        registerPlugin(WebViewConfigPlugin.class);
+
         // إعدادات WebView الضرورية لحل مشكلة الحقول المقفولة
         configureWebView();
 
@@ -44,7 +47,6 @@ public class MainActivity extends BridgeActivity {
                 
                 // تحسين الأداء
                 webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-                webSettings.setAppCacheEnabled(true);
                 
                 // إعدادات التفاعل مع الحقول
                 webSettings.setBuiltInZoomControls(false);
@@ -69,6 +71,11 @@ public class MainActivity extends BridgeActivity {
                 
                 // تفعيل Hardware Acceleration
                 webView.setLayerType(WebView.LAYER_TYPE_HARDWARE, null);
+                
+                // إعدادات إضافية للتفاعل مع الحقول
+                webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+                webSettings.setAllowFileAccess(true);
+                webSettings.setAllowContentAccess(true);
                 
                 Log.d("Careerak_WebView", "WebView configured successfully for input interaction");
             } else {

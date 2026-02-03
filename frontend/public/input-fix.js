@@ -2,6 +2,33 @@
 (function() {
     console.log('🔧 Input Fix Script Loading...');
     
+    // استخدام البلاجين المخصص إذا كان متاحاً
+    function useNativePlugin() {
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.WebViewConfig) {
+            console.log('🔧 Using native WebView plugin');
+            window.Capacitor.Plugins.WebViewConfig.configureForInputs()
+                .then(() => {
+                    console.log('🔧 Native WebView configuration successful');
+                    return window.Capacitor.Plugins.WebViewConfig.forceEnableInputs();
+                })
+                .then(() => {
+                    console.log('🔧 Native input force enable successful');
+                })
+                .catch(err => {
+                    console.error('🔧 Native plugin error:', err);
+                    fallbackToJavaScript();
+                });
+        } else {
+            console.log('🔧 Native plugin not available, using JavaScript fallback');
+            fallbackToJavaScript();
+        }
+    }
+    
+    // الحل الاحتياطي بـ JavaScript
+    function fallbackToJavaScript() {
+        forceEnableInputs();
+    }
+    
     // إجبار تفعيل جميع الحقول
     function forceEnableInputs() {
         const inputs = document.querySelectorAll('input, select, textarea');
@@ -51,13 +78,13 @@
     
     // تشغيل الإصلاح عند تحميل الصفحة
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', forceEnableInputs);
+        document.addEventListener('DOMContentLoaded', useNativePlugin);
     } else {
-        forceEnableInputs();
+        useNativePlugin();
     }
     
-    // تشغيل الإصلاح كل ثانية للتأكد
-    setInterval(forceEnableInputs, 1000);
+    // تشغيل الإصلاح كل ثانيتين للتأكد
+    setInterval(forceEnableInputs, 2000);
     
     // تشغيل الإصلاح عند أي تغيير في DOM
     const observer = new MutationObserver(function(mutations) {
