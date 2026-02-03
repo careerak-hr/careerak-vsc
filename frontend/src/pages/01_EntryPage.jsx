@@ -76,7 +76,7 @@ export default function EntryPage() {
 
     const SYSTEM_DELAY = 1000;
     
-    // إنشاء المؤقتات مع التنظيف الآمن
+    // إنشاء المؤقتات مع التنظيف الآمن - استخدام التوقيتات الأصلية
     const timer1 = setTimeout(() => {
       if (isMounted.current) {
         setPhase(1);
@@ -169,12 +169,15 @@ export default function EntryPage() {
 
   return (
     <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center overflow-hidden bg-[#E3DAD1] select-none">
+      {/* التدرج الأصلي */}
       <div className={`absolute inset-0 bg-gradient-to-b from-[#304B60]/10 to-transparent transition-opacity duration-1000 ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`}></div>
 
       <div className="relative flex flex-col items-center justify-center w-full h-full">
         <div className="relative flex items-center justify-center">
+          {/* الدائرة المتوسعة الأصلية */}
           <div className={`absolute w-[150vw] h-[150vw] max-w-[800px] max-h-[800px] bg-[#304B60] opacity-[0.03] rounded-full transition-transform duration-[7000ms] ease-out ${phase >= 2 ? 'scale-150' : 'scale-0'}`}></div>
 
+          {/* الشعار بالتصميم الأصلي */}
           <div className={`relative transition-all duration-1000 ease-out transform ${
             phase === 0 ? 'scale-75 opacity-0' :
             phase === 1 ? 'scale-110 opacity-100' :
@@ -182,25 +185,26 @@ export default function EntryPage() {
             'scale-90 opacity-0'
           }`}>
             <div className="relative p-2 md:p-4">
+              {/* الحدود الدوارة الأصلية */}
               <div className="absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow"></div>
-              <div className="logo-container relative h-64 w-64 md:h-96 md:w-96 border-[4px] border-[#304B60] shadow-2xl">
-                <img 
-                  src="./logo.jpg" 
-                  alt="Logo" 
-                  className="w-full h-full object-cover rounded-full"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                    e.target.nextSibling.style.display = 'flex';
-                  }}
-                />
-                <div className="logo-fallback" style={{display: 'none'}}>
-                  🏢
-                </div>
+              {/* الشعار بالحجم الأصلي */}
+              <img 
+                src="./logo.jpg" 
+                alt="Logo" 
+                className="relative h-64 w-64 md:h-96 md:w-96 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.nextSibling.style.display = 'flex';
+                }}
+              />
+              <div className="logo-fallback" style={{display: 'none'}}>
+                🏢
               </div>
             </div>
           </div>
         </div>
 
+        {/* النص والشعار بالتصميم الأصلي */}
         <div className={`mt-6 md:mt-12 text-center transition-all duration-1000 delay-300 transform ${phase >= 1 && phase < 3 ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           <h1 className="text-5xl md:text-7xl font-black text-[#304B60] tracking-tight mb-4 italic" style={{ fontFamily: 'serif' }}>Careerak</h1>
           <div className="flex items-center justify-center gap-4">
@@ -211,6 +215,7 @@ export default function EntryPage() {
         </div>
       </div>
 
+      {/* شريط التقدم الأصلي */}
       <div className="absolute bottom-10 md:bottom-20 w-48 md:w-64 h-[2px] bg-[#304B60]/10 rounded-full overflow-hidden">
         <div
           className="h-full bg-[#D48161] transition-all ease-linear"

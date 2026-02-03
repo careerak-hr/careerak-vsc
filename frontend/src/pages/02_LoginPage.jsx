@@ -81,7 +81,7 @@ export default function LoginPage() {
     }
   };
 
-  // تحسين classes للحقول مع ضمان إمكانية الكتابة
+  // استخدام التصميم الأصلي للحقول
   const inputCls = "w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm";
   
   // تطبيق الخط المناسب حسب اللغة
@@ -92,21 +92,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#E3DAD1] login-page">
-     <div className={`transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-sm px-8 flex flex-col items-center">
         
+        {/* الشعار بالتصميم الأصلي */}
         <div className="mb-8">
-          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden bg-[#E3DAD1]">
-             <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
+            <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
+        {/* العنوان بالتصميم الأصلي */}
         <div className="text-center mb-10">
-          <h1 className="text-5xl font-black text-[#304B60] italic" style={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>Careerak</h1>
-          <p className="text-[#304B60]/50 font-bold text-lg mt-3" style={{ fontFamily: language === 'ar' ? "'Amiri', serif" : language === 'en' ? "'Cormorant Garamond', serif" : "'EB Garamond', serif" }}>{loginT.subtitle}</p>
+          <h1 className="text-5xl font-black text-[#304B60] italic" style={{ fontFamily: 'serif' }}>Careerak</h1>
+          <p className="text-[#304B60]/50 font-bold text-lg mt-3" style={fontStyle}>{loginT.subtitle}</p>
         </div>
 
+        {/* النموذج بالتصميم الأصلي */}
         <form onSubmit={handleSubmit} className="w-full space-y-5">
           <input
             type="text"
@@ -133,7 +135,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors z-10 w-10 h-10 flex items-center justify-center`}
+              className={`absolute ${isRTL ? 'left-6' : 'right-6'} top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors`}
             >
               {showPassword ? '👁️' : '🙈'}
             </button>
@@ -147,17 +149,21 @@ export default function LoginPage() {
             </div>
           )}
 
-          <div className={`flex items-center justify-center px-6 py-2 ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-            <PremiumCheckbox
+          {/* مربع الاختيار بالتصميم الأصلي */}
+          <div className="flex items-center justify-center gap-3 px-6 py-2">
+            <input
+              type="checkbox"
               id="remember"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              label={loginT.rememberMe}
-              labelClassName="text-sm font-bold text-[#304B60]/60"
-              labelStyle={fontStyle}
+              className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1]"
             />
+            <label htmlFor="remember" className="text-sm font-bold text-[#304B60]/60 cursor-pointer" style={fontStyle}>
+              {loginT.rememberMe}
+            </label>
           </div>
 
+          {/* زر الدخول بالتصميم الأصلي */}
           <button
             type="submit"
             disabled={loading}
@@ -168,15 +174,13 @@ export default function LoginPage() {
           </button>
         </form>
 
+        {/* رابط إنشاء الحساب بالتصميم الأصلي */}
         <div className="mt-12 text-center">
           <p className="text-sm font-bold text-[#304B60]/40" style={fontStyle}>
-            {loginT.noAccount} <span onClick={() => {
-              navigate('/auth');
-            }} className="text-[#304B60] cursor-pointer hover:underline font-black">{loginT.createAccount}</span>
+            {loginT.noAccount} <span onClick={() => navigate('/auth')} className="text-[#304B60] cursor-pointer hover:underline font-black">{loginT.createAccount}</span>
           </p>
         </div>
       </div>
-     </div>
     </div>
   );
 }

@@ -131,6 +131,7 @@ export default function LanguagePage() {
   };
   const langT = langTranslations[selectedLang] || langTranslations.ar;
 
+  // استخدام التصميم الأصلي للأزرار
   const langBtnCls = "py-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-lg border-4 border-[#304B60] hover:scale-105 transition-all text-xl";
 
   if (loading) {
@@ -144,17 +145,19 @@ export default function LanguagePage() {
 
   return (
     <div className="min-h-screen bg-[#E3DAD1] flex flex-col items-center justify-center relative overflow-hidden p-4">
+      {/* التأثير البصري الأصلي - النقطة المتوهجة */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
         <div className="w-2 h-2 bg-[#304B60] rounded-full animate-expand-glow opacity-5"></div>
       </div>
 
       <div className="relative z-10 flex flex-col items-center">
+        {/* الشعار بالتصميم الأصلي */}
         <div className="mb-8">
-          <div className="logo-container w-60 h-60 border-4 border-[#304B60] shadow-2xl pointer-events-none bg-[#E3DAD1]">
+          <div className="w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
             <img 
               src="./logo.jpg" 
               alt="Logo" 
-              className="w-full h-full object-cover rounded-full"
+              className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';
@@ -166,18 +169,20 @@ export default function LanguagePage() {
           </div>
         </div>
 
-        <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm" style={{ fontFamily: "'Amiri', 'Cormorant Garamond', 'EB Garamond', serif" }}>
+        {/* العنوان بالتصميم الأصلي */}
+        <h1 className="text-[#304B60] font-black text-2xl text-center mb-10 drop-shadow-sm">
           Choose Language / Choisir la langue / اختر اللغة
         </h1>
 
+        {/* الأزرار بالتصميم الأصلي */}
         <div className="flex flex-col gap-4 w-full max-w-xs">
-          <button onClick={() => handleLangPick("ar")} className={`${langBtnCls} font-arabic`} style={{ fontFamily: "'Amiri', serif" }}>
+          <button onClick={() => handleLangPick("ar")} className={langBtnCls}>
             العربية
           </button>
-          <button onClick={() => handleLangPick("en")} className={`${langBtnCls} font-english`} style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+          <button onClick={() => handleLangPick("en")} className={langBtnCls}>
             English
           </button>
-          <button onClick={() => handleLangPick("fr")} className={`${langBtnCls} font-french`} style={{ fontFamily: "'EB Garamond', serif" }}>
+          <button onClick={() => handleLangPick("fr")} className={langBtnCls}>
             Français
           </button>
         </div>

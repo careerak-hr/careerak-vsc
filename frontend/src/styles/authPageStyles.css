@@ -32,3 +32,55 @@ body {
 .no-interaction-block * {
   pointer-events: auto !important;
 }
+
+/* تحريكات التصميم الأصلي */
+.logo-animation {
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-initial {
+  transform: scale(1);
+}
+
+.logo-animated {
+  transform: scale(0.67);
+}
+
+.user-type-buttons {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease-out;
+}
+
+.buttons-animated {
+  transform: translateY(-10px);
+}
+
+.form-animation {
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  max-height: 0;
+  overflow: hidden;
+}
+
+.form-visible {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: none;
+  overflow: visible;
+}
+
+/* تحسين مظهر حقول الإدخال */
+.auth-input:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(48, 75, 96, 0.15);
+}
+
+.auth-select:focus {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(48, 75, 96, 0.15);
+}

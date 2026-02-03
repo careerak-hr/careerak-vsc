@@ -4,7 +4,6 @@ import { Camera, CameraSource, CameraResultType } from '@capacitor/camera';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
-import { PremiumCheckbox } from '../components/LuxuryCheckbox';
 
 // Context & Services
 import countries from '../data/countries.json';
@@ -20,6 +19,49 @@ import CropModal from '../components/modals/CropModal';
 // Input Fields Forcer
 import { initializeInputFieldsForcer } from '../utils/inputFieldsForcer';
 import { initializeEmergencySystem } from '../utils/inputFieldsEmergencyForcer';
+
+// Age Check Modal Component - من التصميم الأصلي
+const AgeCheckModal = ({ t, onResponse }) => {
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
+        <h2 className="text-2xl font-black text-[#304B60] mb-6">{t.ageCheckTitle}</h2>
+        <p className="text-lg font-bold text-[#304B60]/80 mb-8">{t.ageCheckMessage}</p>
+        <div className="flex gap-4">
+          <button
+            onClick={() => onResponse(true)}
+            className="flex-1 bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
+          >
+            {t.above18}
+          </button>
+          <button
+            onClick={() => onResponse(false)}
+            className="flex-1 bg-red-600 text-white py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
+          >
+            {t.below18}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Goodbye Modal Component - من التصميم الأصلي
+const GoodbyeModal = ({ t, onConfirm }) => {
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-[#E3DAD1] rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-[#D48161]/20">
+        <p className="text-lg font-bold text-[#304B60]/80 mb-8">{t.sorryMessage}</p>
+        <button
+          onClick={onConfirm}
+          className="bg-[#304B60] text-[#D48161] py-4 px-8 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all"
+        >
+          {t.goodbye}
+        </button>
+      </div>
+    </div>
+  );
+};
 
 // Create cropped image utility
 const createCroppedImage = async (imageSrc, pixelCrop) => {
@@ -70,8 +112,10 @@ export default function AuthPage() {
   const t = useTranslate();
   const isRTL = language === 'ar';
 
-  // UI States
+  // UI States - إضافة حالات التصميم الأصلي
   const [isVisible, setIsVisible] = useState(false);
+  const [showAgeCheck, setShowAgeCheck] = useState(true);
+  const [showGoodbyeModal, setShowGoodbyeModal] = useState(false);
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
   const [showForm, setShowForm] = useState(false);
   const [logoAnimated, setLogoAnimated] = useState(false);
@@ -148,6 +192,19 @@ export default function AuthPage() {
     const timeoutId = setTimeout(updateSelectColors, 100);
     return () => clearTimeout(timeoutId);
   }, [formData, userType]);
+
+  // وظائف التصميم الأصلي
+  const handleAgeResponse = (isAbove18) => {
+    if (isAbove18) {
+      setShowAgeCheck(false);
+    } else {
+      setShowGoodbyeModal(true);
+    }
+  };
+
+  const handleGoodbyeConfirm = () => {
+    window.location.href = '/';
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -324,34 +381,47 @@ export default function AuthPage() {
     }
   };
 
-  const inputBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-input input-field-enabled`;
-  const selectBase = `w-full p-4 h-16 bg-[#E3DAD1] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled`;
+  // التصميم الأصلي للحقول
+  const inputBase = `w-full p-4 bg-[#F5F5F5] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] placeholder-gray-400 transition-all auth-input input-field-enabled`;
+  const selectBase = `w-full p-4 bg-[#F5F5F5] rounded-2xl font-bold text-center shadow-lg border-2 border-[#D48161]/20 focus:border-[#304B60] outline-none text-[#304B60] transition-all auth-select input-field-enabled`;
+
+  // التحقق من العمر أولاً - من التصميم الأصلي
+  if (showAgeCheck) {
+    return <AgeCheckModal t={t} onResponse={handleAgeResponse} />;
+  }
+
+  if (showGoodbyeModal) {
+    return <GoodbyeModal t={t} onConfirm={handleGoodbyeConfirm} />;
+  }
 
   return (
-    <div className="min-h-screen bg-[#E3DAD1] auth-page">
-     <div className={`transition-opacity duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'} select-none`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className={`min-h-screen flex flex-col transition-all duration-1000 ${
         logoAnimated ? 'justify-start pt-4 pb-8' : 'justify-center'
       }`}>
         <div className="flex flex-col items-center px-6 pb-8">
 
+          {/* الشعار بالتصميم الأصلي */}
           <div className={`mb-8 logo-animation ${
             logoAnimated ? 'logo-animated' : 'logo-initial'
           }`}>
             <div className={`rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden transition-all duration-800 ${
-              logoAnimated ? 'w-36 h-36' : 'w-48 h-48'
+              logoAnimated ? 'w-32 h-32' : 'w-48 h-48'
             }`}>
               <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
             </div>
           </div>
 
+          {/* أزرار اختيار نوع المستخدم بالتصميم الأصلي */}
           <div className={`flex gap-4 mb-8 w-full max-w-md user-type-buttons ${
             logoAnimated ? 'buttons-animated' : ''
           }`}>
              <button
               onClick={() => handleUserTypeChange('individual')}
               className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
-                userType === 'individual' ? 'bg-[#304B60] text-[#D48161]' : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
+                userType === 'individual' 
+                  ? 'bg-[#304B60] text-[#D48161]' 
+                  : 'bg-[#F5F5F5] text-[#304B60] border-2 border-[#D48161]/20'
               }`}
             >
               {t.individuals}
@@ -359,7 +429,9 @@ export default function AuthPage() {
             <button
               onClick={() => handleUserTypeChange('company')}
               className={`flex-1 py-4 rounded-2xl font-black text-lg shadow-lg transition-all ${
-                userType === 'company' ? 'bg-[#304B60] text-[#D48161]' : 'bg-[#E3DAD1] text-[#304B60] border-2 border-[#D48161]/20'
+                userType === 'company' 
+                  ? 'bg-[#304B60] text-[#D48161]' 
+                  : 'bg-[#F5F5F5] text-[#304B60] border-2 border-[#D48161]/20'
               }`}
             >
               {t.companies}
@@ -372,8 +444,9 @@ export default function AuthPage() {
             }`}>
               <form onSubmit={handleRegisterClick} className="space-y-4 pb-8">
 
+                {/* رفع الصورة بالتصميم الأصلي */}
                 <div className="text-center">
-                  <div onClick={() => setShowPhotoModal(true)} className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#E3DAD1] shadow-lg">
+                  <div onClick={() => setShowPhotoModal(true)} className="w-24 h-24 rounded-full border-4 border-[#304B60] mx-auto mb-2 cursor-pointer hover:scale-105 transition-all flex items-center justify-center bg-[#F5F5F5] shadow-lg">
                     {profileImage ? (
                       <img src={profileImage} alt="Profile" className="w-full h-full rounded-full object-cover" />
                     ) : (
@@ -384,6 +457,7 @@ export default function AuthPage() {
                   {fieldErrors.image && <p className="text-red-600 font-bold text-sm mt-1">{fieldErrors.image}</p>}
                 </div>
 
+                {/* البلد والمدينة */}
                 <div className="grid grid-cols-2 gap-4">
                   <select name="country" value={formData.country} onChange={handleInputChange} className={selectBase} required>
                     <option value="" disabled hidden>{t.country}</option>
@@ -473,8 +547,18 @@ export default function AuthPage() {
                     </div>
                     {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
 
-                    <div className={`flex items-center ${isRTL ? 'flex-row' : 'flex-row-reverse'}`}>
-                      <PremiumCheckbox id="specialNeeds" checked={formData.isSpecialNeeds} onChange={(e) => setFormData(prev => ({ ...prev, isSpecialNeeds: e.target.checked }))} label={t.disabilities} labelClassName="text-sm font-bold text-[#304B60]/80" />
+                    {/* مربع اختيار ذوي الهمم بالتصميم الأصلي */}
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        id="specialNeeds"
+                        checked={formData.isSpecialNeeds}
+                        onChange={(e) => setFormData(prev => ({ ...prev, isSpecialNeeds: e.target.checked }))}
+                        className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#F5F5F5]"
+                      />
+                      <label htmlFor="specialNeeds" className="text-sm font-bold text-[#304B60]/80 cursor-pointer">
+                        {t.disabilities}
+                      </label>
                     </div>
 
                     {formData.isSpecialNeeds && (
@@ -490,11 +574,23 @@ export default function AuthPage() {
                       </>
                     )}
 
-                    <div className={`pt-2 flex items-center ${isRTL ? 'flex-row-reverse justify-start' : 'flex-row justify-start'} gap-3`}>
-                      <PremiumCheckbox id="agreePolicy" checked={formData.agreed} onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))} />
-                      <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80">
+                    {/* الموافقة على السياسة بالتصميم الأصلي */}
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        id="agreePolicy"
+                        checked={formData.agreed}
+                        onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
+                        className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#F5F5F5]"
+                      />
+                      <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80 cursor-pointer">
                         {t.agreePolicy}{' '}
-                        <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200">{t.privacyPolicy}</span>
+                        <span 
+                          onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} 
+                          className="text-[#304B60] underline cursor-pointer ml-1"
+                        >
+                          (سياسة الخصوصية)
+                        </span>
                       </label>
                     </div>
                     {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm text-center -mt-2">{fieldErrors.agreed}</p>}
@@ -564,11 +660,23 @@ export default function AuthPage() {
                     </div>
                     {fieldErrors.confirmPassword && <p className="text-red-600 font-bold text-sm">{fieldErrors.confirmPassword}</p>}
 
-                    <div className={`pt-2 flex items-center ${isRTL ? 'flex-row-reverse justify-end' : 'flex-row justify-start'} gap-3`}>
-                      <PremiumCheckbox id="agreePolicy" checked={formData.agreed} onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))} />
-                      <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80">
+                    {/* الموافقة على السياسة بالتصميم الأصلي */}
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        id="agreePolicy"
+                        checked={formData.agreed}
+                        onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
+                        className="w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#F5F5F5]"
+                      />
+                      <label htmlFor="agreePolicy" className="text-sm font-bold text-[#304B60]/80 cursor-pointer">
                         {t.agreePolicy}{' '}
-                        <span onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} className="text-[#304B60] font-black underline cursor-pointer hover:text-[#D48161] transition-colors duration-200">{t.privacyPolicy}</span>
+                        <span 
+                          onClick={(e) => { e.preventDefault(); setShowPolicy(true); }} 
+                          className="text-[#304B60] underline cursor-pointer ml-1"
+                        >
+                          (سياسة الخصوصية)
+                        </span>
                       </label>
                     </div>
                     {fieldErrors.agreed && <p className="text-red-600 font-bold text-sm text-center -mt-2">{fieldErrors.agreed}</p>}
@@ -601,7 +709,6 @@ export default function AuthPage() {
           </div>
         </div>
       )}
-     </div>
     </div>
   );
 }
