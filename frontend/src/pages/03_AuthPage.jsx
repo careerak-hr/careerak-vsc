@@ -216,119 +216,181 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#E3DAD1] via-[#F5F1EC] to-[#E8DDD4] relative overflow-hidden">
-      {/* Background Animation */}
+      {/* Enhanced Background Animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#D48161]/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#304B60]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        {/* Multiple animated background elements */}
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-[#D48161]/15 to-[#C67A5A]/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-[#304B60]/15 to-[#2A4154]/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gradient-to-bl from-[#D48161]/8 to-transparent rounded-full blur-2xl animate-pulse delay-500"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-gradient-to-tr from-[#304B60]/8 to-transparent rounded-full blur-2xl animate-pulse delay-700"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-radial from-[#D48161]/5 to-transparent rounded-full animate-spin-slow"></div>
+        
+        {/* Floating particles */}
+        <div className="absolute top-20 left-20 w-2 h-2 bg-[#D48161]/30 rounded-full animate-pulse delay-300"></div>
+        <div className="absolute top-40 right-32 w-1 h-1 bg-[#304B60]/40 rounded-full animate-pulse delay-600"></div>
+        <div className="absolute bottom-32 left-40 w-1.5 h-1.5 bg-[#D48161]/25 rounded-full animate-pulse delay-900"></div>
+        <div className="absolute bottom-20 right-20 w-1 h-1 bg-[#304B60]/35 rounded-full animate-pulse delay-1200"></div>
       </div>
+
+      {/* Overlay gradient for depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F5F1EC]/20 to-transparent pointer-events-none"></div>
 
       {/* Content */}
       <div className={`relative z-10 min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         
-        {/* Logo */}
-        <div className="mb-8 transform hover:scale-105 transition-transform duration-300">
+        {/* Enhanced Logo with multiple glow effects */}
+        <div className="mb-8 transform hover:scale-105 transition-transform duration-500">
           <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-lg opacity-20 animate-pulse"></div>
-            <div className="relative w-32 h-32 rounded-full border-4 border-gradient-to-r from-[#304B60] to-[#D48161] shadow-2xl overflow-hidden bg-white">
-              <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            {/* Multiple glow layers */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-2xl opacity-30 animate-pulse scale-110"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#D48161] to-[#304B60] rounded-full blur-xl opacity-20 animate-pulse delay-500 scale-105"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-lg opacity-15 animate-pulse delay-1000"></div>
+            
+            {/* Logo container with enhanced styling */}
+            <div className="relative w-36 h-36 rounded-full border-4 border-transparent bg-gradient-to-r from-[#304B60] via-[#D48161] to-[#304B60] p-1 shadow-2xl">
+              <div className="w-full h-full rounded-full overflow-hidden bg-white shadow-inner">
+                <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+              </div>
             </div>
+            
+            {/* Rotating ring */}
+            <div className="absolute inset-0 border-2 border-transparent bg-gradient-to-r from-[#D48161]/50 via-transparent to-[#304B60]/50 rounded-full animate-spin-slow"></div>
           </div>
         </div>
 
-        {/* Title */}
+        {/* Enhanced Title with gradient text and glow */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#304B60] to-[#D48161] mb-2" style={fontStyle}>
-            {t.createAccount}
-          </h1>
-          <p className="text-[#304B60]/60 font-semibold" style={fontStyle}>{t.joinCommunity}</p>
+          <div className="relative">
+            <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#304B60] via-[#D48161] to-[#304B60] mb-3 drop-shadow-lg" style={fontStyle}>
+              {t.createAccount}
+            </h1>
+            {/* Text glow effect */}
+            <div className="absolute inset-0 text-5xl font-black text-[#D48161]/20 blur-sm mb-3" style={fontStyle}>
+              {t.createAccount}
+            </div>
+          </div>
+          <p className="text-[#304B60]/70 font-bold text-lg drop-shadow-sm" style={fontStyle}>{t.joinCommunity}</p>
         </div>
 
-        {/* User Type Selection */}
+        {/* Enhanced User Type Selection */}
         <div className="flex gap-4 mb-8 w-full max-w-md">
           <button
             onClick={() => handleUserTypeChange('individual')}
-            className={`flex-1 py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+            className={`flex-1 py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${
               userType === 'individual' 
-                ? 'bg-gradient-to-r from-[#304B60] to-[#2A4154] text-[#D48161] shadow-xl border-2 border-[#D48161]/30' 
-                : 'bg-white/80 backdrop-blur-sm text-[#304B60] border-2 border-[#304B60]/20 hover:border-[#304B60]/40 hover:shadow-lg'
+                ? 'bg-gradient-to-r from-[#304B60] via-[#2A4154] to-[#304B60] text-[#D48161] shadow-2xl border-2 border-[#D48161]/40' 
+                : 'bg-white/90 backdrop-blur-lg text-[#304B60] border-2 border-[#304B60]/30 hover:border-[#304B60]/50 hover:shadow-xl hover:bg-white/95'
             }`}
             style={fontStyle}
           >
-            <span className="block text-sm opacity-75 mb-1">{t.forIndividuals}</span>
-            {t.individuals}
+            {/* Button glow effect when selected */}
+            {userType === 'individual' && (
+              <div className="absolute inset-0 bg-gradient-to-r from-[#D48161]/20 to-[#304B60]/20 blur-xl"></div>
+            )}
+            <div className="relative">
+              <span className="block text-sm opacity-80 mb-1">{t.forIndividuals}</span>
+              <span className="text-xl font-black">{t.individuals}</span>
+            </div>
           </button>
           <button
             onClick={() => handleUserTypeChange('company')}
-            className={`flex-1 py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+            className={`flex-1 py-5 px-6 rounded-2xl font-bold text-lg transition-all duration-500 transform hover:scale-105 relative overflow-hidden ${
               userType === 'company' 
-                ? 'bg-gradient-to-r from-[#304B60] to-[#2A4154] text-[#D48161] shadow-xl border-2 border-[#D48161]/30' 
-                : 'bg-white/80 backdrop-blur-sm text-[#304B60] border-2 border-[#304B60]/20 hover:border-[#304B60]/40 hover:shadow-lg'
+                ? 'bg-gradient-to-r from-[#304B60] via-[#2A4154] to-[#304B60] text-[#D48161] shadow-2xl border-2 border-[#D48161]/40' 
+                : 'bg-white/90 backdrop-blur-lg text-[#304B60] border-2 border-[#304B60]/30 hover:border-[#304B60]/50 hover:shadow-xl hover:bg-white/95'
             }`}
             style={fontStyle}
           >
-            <span className="block text-sm opacity-75 mb-1">{t.forCompanies}</span>
-            {t.companies}
+            {/* Button glow effect when selected */}
+            {userType === 'company' && (
+              <div className="absolute inset-0 bg-gradient-to-r from-[#D48161]/20 to-[#304B60]/20 blur-xl"></div>
+            )}
+            <div className="relative">
+              <span className="block text-sm opacity-80 mb-1">{t.forCompanies}</span>
+              <span className="text-xl font-black">{t.companies}</span>
+            </div>
           </button>
         </div>
 
-        {/* Form Container */}
+        {/* Enhanced Form Container */}
         {userType && (
-          <div className={`w-full max-w-md transition-all duration-500 transform ${userType ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <div className="bg-white/90 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
-              <form onSubmit={handleRegisterClick} className="space-y-6">
+          <div className={`w-full max-w-md transition-all duration-700 transform ${userType ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
+            <div className="relative">
+              {/* Form background with multiple layers */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-white/85 backdrop-blur-2xl rounded-3xl shadow-2xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#D48161]/5 via-transparent to-[#304B60]/5 rounded-3xl"></div>
+              <div className="absolute inset-0 border border-white/30 rounded-3xl"></div>
+              
+              {/* Glow effects around form */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#304B60]/20 via-[#D48161]/20 to-[#304B60]/20 rounded-3xl blur-lg opacity-50"></div>
+              
+              <div className="relative p-8">
+                <form onSubmit={handleRegisterClick} className="space-y-6">
                 
-                {/* Profile Image */}
+                {/* Enhanced Profile Image */}
                 <div className="text-center mb-6">
                   <div 
                     onClick={() => setShowPhotoModal(true)} 
-                    className="relative w-24 h-24 mx-auto mb-3 cursor-pointer group"
+                    className="relative w-28 h-28 mx-auto mb-4 cursor-pointer group"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                    <div className="relative w-full h-full rounded-full border-4 border-gradient-to-r from-[#304B60] to-[#D48161] overflow-hidden bg-white shadow-xl group-hover:scale-105 transition-transform">
-                      {profileImage ? (
-                        <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#F5F1EC] to-[#E8DDD4]">
-                          <span className="text-3xl text-[#304B60]/60">📷</span>
-                        </div>
-                      )}
+                    {/* Multiple glow layers */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-opacity duration-500 scale-110"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D48161] to-[#304B60] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-105"></div>
+                    
+                    {/* Main image container */}
+                    <div className="relative w-full h-full rounded-full border-4 border-transparent bg-gradient-to-r from-[#304B60] via-[#D48161] to-[#304B60] p-1 shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                      <div className="w-full h-full rounded-full overflow-hidden bg-white shadow-inner">
+                        {profileImage ? (
+                          <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#F5F1EC] via-[#E8DDD4] to-[#E3DAD1]">
+                            <span className="text-4xl text-[#304B60]/60">📷</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-gradient-to-r from-[#D48161] to-[#C67A5A] rounded-full flex items-center justify-center shadow-lg">
-                      <span className="text-white text-sm">+</span>
+                    
+                    {/* Enhanced add button */}
+                    <div className="absolute -bottom-1 -right-1 w-10 h-10 bg-gradient-to-r from-[#D48161] via-[#C67A5A] to-[#D48161] rounded-full flex items-center justify-center shadow-xl border-2 border-white group-hover:scale-110 transition-transform duration-300">
+                      <span className="text-white text-lg font-bold">+</span>
                     </div>
+                    
+                    {/* Rotating ring */}
+                    <div className="absolute inset-0 border-2 border-transparent bg-gradient-to-r from-[#D48161]/30 via-transparent to-[#304B60]/30 rounded-full animate-spin-slow opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   </div>
-                  <p className="text-sm font-semibold text-[#304B60]/70" style={fontStyle}>{t.uploadPhoto}</p>
-                  {fieldErrors.image && <p className="text-red-500 font-semibold text-sm mt-2">{fieldErrors.image}</p>}
+                  <p className="text-sm font-bold text-[#304B60]/80 drop-shadow-sm" style={fontStyle}>{t.uploadPhoto}</p>
+                  {fieldErrors.image && <p className="text-red-500 font-semibold text-sm mt-2 drop-shadow-sm">{fieldErrors.image}</p>}
                 </div>
 
-                {/* Location Fields */}
+                {/* Enhanced Location Fields */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="relative">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#304B60]/10 to-[#D48161]/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <select 
                       name="country" 
                       value={formData.country} 
                       onChange={handleInputChange} 
-                      className="w-full p-4 bg-gradient-to-r from-white to-[#F8F6F3] text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-2 focus:ring-[#D48161]/20 outline-none font-semibold transition-all shadow-sm"
+                      className="relative w-full p-4 bg-gradient-to-r from-white via-[#F8F6F3] to-white text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-4 focus:ring-[#D48161]/20 outline-none font-bold transition-all duration-300 shadow-lg hover:shadow-xl focus:shadow-2xl"
                       style={fontStyle}
                       required
                     >
                       <option value="" disabled hidden>{t.country}</option>
                       {countries.map(c => (
-                        <option key={c.key} value={c.key} className="text-[#304B60]">
+                        <option key={c.key} value={c.key} className="text-[#304B60] font-semibold">
                           {c.flag} {language === 'ar' ? c.name_ar : c.name_en}
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className="relative">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#304B60]/10 to-[#D48161]/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <input 
                       type="text" 
                       name="city" 
                       placeholder={t.city} 
                       value={formData.city} 
                       onChange={handleInputChange} 
-                      className="w-full p-4 bg-gradient-to-r from-white to-[#F8F6F3] text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-2 focus:ring-[#D48161]/20 outline-none font-semibold text-center transition-all shadow-sm placeholder:text-[#304B60]/50"
+                      className="relative w-full p-4 bg-gradient-to-r from-white via-[#F8F6F3] to-white text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-4 focus:ring-[#D48161]/20 outline-none font-bold text-center transition-all duration-300 shadow-lg hover:shadow-xl focus:shadow-2xl placeholder:text-[#304B60]/50"
                       style={fontStyle}
                     />
                   </div>
@@ -343,26 +405,32 @@ export default function AuthPage() {
                 {/* Individual Fields */}
                 {userType === 'individual' && (
                   <>
-                    {/* Name Fields */}
+                    {/* Enhanced Name Fields */}
                     <div className="grid grid-cols-2 gap-4">
-                      <input 
-                        type="text" 
-                        name="firstName" 
-                        placeholder={t.firstName} 
-                        value={formData.firstName} 
-                        onChange={handleInputChange} 
-                        className="w-full p-4 bg-gradient-to-r from-white to-[#F8F6F3] text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-2 focus:ring-[#D48161]/20 outline-none font-semibold text-center transition-all shadow-sm placeholder:text-[#304B60]/50"
-                        style={fontStyle}
-                      />
-                      <input 
-                        type="text" 
-                        name="lastName" 
-                        placeholder={t.lastName} 
-                        value={formData.lastName} 
-                        onChange={handleInputChange} 
-                        className="w-full p-4 bg-gradient-to-r from-white to-[#F8F6F3] text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-2 focus:ring-[#D48161]/20 outline-none font-semibold text-center transition-all shadow-sm placeholder:text-[#304B60]/50"
-                        style={fontStyle}
-                      />
+                      <div className="relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#304B60]/10 to-[#D48161]/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <input 
+                          type="text" 
+                          name="firstName" 
+                          placeholder={t.firstName} 
+                          value={formData.firstName} 
+                          onChange={handleInputChange} 
+                          className="relative w-full p-4 bg-gradient-to-r from-white via-[#F8F6F3] to-white text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-4 focus:ring-[#D48161]/20 outline-none font-bold text-center transition-all duration-300 shadow-lg hover:shadow-xl focus:shadow-2xl placeholder:text-[#304B60]/50"
+                          style={fontStyle}
+                        />
+                      </div>
+                      <div className="relative group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#304B60]/10 to-[#D48161]/10 rounded-xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <input 
+                          type="text" 
+                          name="lastName" 
+                          placeholder={t.lastName} 
+                          value={formData.lastName} 
+                          onChange={handleInputChange} 
+                          className="relative w-full p-4 bg-gradient-to-r from-white via-[#F8F6F3] to-white text-[#304B60] rounded-xl border-2 border-[#E3DAD1] focus:border-[#D48161] focus:ring-4 focus:ring-[#D48161]/20 outline-none font-bold text-center transition-all duration-300 shadow-lg hover:shadow-xl focus:shadow-2xl placeholder:text-[#304B60]/50"
+                          style={fontStyle}
+                        />
+                      </div>
                     </div>
                     {(fieldErrors.firstName || fieldErrors.lastName) && (
                       <div className="text-red-500 font-semibold text-sm">
@@ -799,30 +867,46 @@ export default function AuthPage() {
                   </div>
                 )}
 
-                {/* Submit Button */}
-                <button 
-                  type="submit" 
-                  disabled={loading || isAnalyzing} 
-                  className={`w-full py-5 px-8 bg-gradient-to-r from-[#304B60] to-[#2A4154] text-[#D48161] rounded-2xl font-bold text-xl shadow-2xl transition-all duration-300 transform ${
-                    (loading || isAnalyzing) 
-                      ? 'opacity-50 cursor-not-allowed' 
-                      : 'hover:scale-105 hover:shadow-3xl active:scale-95'
-                  } border-2 border-[#D48161]/20`}
-                  style={fontStyle}
-                >
-                  {loading || isAnalyzing ? (
-                    <div className="flex items-center justify-center gap-3">
-                      <div className="w-6 h-6 border-3 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin"></div>
-                      <span>{isAnalyzing ? t.aiAnalyzing : t.processing}</span>
+                {/* Enhanced Submit Button */}
+                <div className="relative group">
+                  {/* Button glow effects */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] via-[#D48161] to-[#304B60] rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-105"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#D48161] via-[#304B60] to-[#D48161] rounded-2xl blur-lg opacity-20 group-hover:opacity-40 transition-opacity duration-500"></div>
+                  
+                  <button 
+                    type="submit" 
+                    disabled={loading || isAnalyzing} 
+                    className={`relative w-full py-6 px-8 bg-gradient-to-r from-[#304B60] via-[#2A4154] to-[#304B60] text-[#D48161] rounded-2xl font-black text-xl shadow-2xl transition-all duration-500 transform border-2 border-[#D48161]/30 overflow-hidden ${
+                      (loading || isAnalyzing) 
+                        ? 'opacity-60 cursor-not-allowed scale-95' 
+                        : 'hover:scale-105 hover:shadow-3xl active:scale-95 group-hover:border-[#D48161]/50'
+                    }`}
+                    style={fontStyle}
+                  >
+                    {/* Button inner glow */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#D48161]/10 via-transparent to-[#D48161]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <div className="relative">
+                      {loading || isAnalyzing ? (
+                        <div className="flex items-center justify-center gap-3">
+                          <div className="w-7 h-7 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin"></div>
+                          <span className="font-black">{isAnalyzing ? t.aiAnalyzing : t.processing}</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-3">
+                          <span className="text-2xl animate-pulse">✨</span>
+                          <span className="font-black text-2xl">{t.register}</span>
+                          <span className="text-2xl animate-pulse delay-500">✨</span>
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <span className="flex items-center justify-center gap-2">
-                      <span>✨</span>
-                      {t.register}
-                      <span>✨</span>
-                    </span>
-                  )}
-                </button>
+                    
+                    {/* Shine effect */}
+                    {!loading && !isAnalyzing && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                    )}
+                  </button>
+                </div>
               </form>
             </div>
           </div>
@@ -861,21 +945,50 @@ export default function AuthPage() {
         />
       )}
       
+      {/* Enhanced AI Analyzing Modal */}
       {isAnalyzing && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-6">
-          <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-white/20">
-            <div className="relative mb-6">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-lg opacity-30 animate-pulse"></div>
-              <div className="relative w-20 h-20 mx-auto bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full flex items-center justify-center">
-                <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-lg flex items-center justify-center z-50 p-6">
+          <div className="relative">
+            {/* Multiple glow layers */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-3xl blur-2xl opacity-40 animate-pulse scale-110"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#D48161] to-[#304B60] rounded-3xl blur-xl opacity-30 animate-pulse delay-500 scale-105"></div>
+            
+            <div className="relative bg-white/95 backdrop-blur-2xl rounded-3xl p-10 max-w-sm w-full text-center shadow-2xl border border-white/30">
+              {/* Enhanced loading animation */}
+              <div className="relative mb-8">
+                {/* Multiple rotating rings */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#304B60] to-[#D48161] rounded-full blur-2xl opacity-40 animate-pulse scale-125"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#D48161] to-[#304B60] rounded-full blur-xl opacity-30 animate-pulse delay-300 scale-110"></div>
+                
+                <div className="relative w-24 h-24 mx-auto bg-gradient-to-r from-[#304B60] via-[#D48161] to-[#304B60] rounded-full flex items-center justify-center shadow-2xl">
+                  <div className="w-16 h-16 border-4 border-white/40 border-t-white rounded-full animate-spin"></div>
+                </div>
+                
+                {/* Orbiting particles */}
+                <div className="absolute inset-0 animate-spin-slow">
+                  <div className="absolute top-0 left-1/2 w-2 h-2 bg-[#D48161] rounded-full transform -translate-x-1/2 -translate-y-1"></div>
+                  <div className="absolute bottom-0 left-1/2 w-2 h-2 bg-[#304B60] rounded-full transform -translate-x-1/2 translate-y-1"></div>
+                  <div className="absolute left-0 top-1/2 w-1.5 h-1.5 bg-[#D48161] rounded-full transform -translate-x-1 -translate-y-1/2"></div>
+                  <div className="absolute right-0 top-1/2 w-1.5 h-1.5 bg-[#304B60] rounded-full transform translate-x-1 -translate-y-1/2"></div>
+                </div>
+              </div>
+              
+              <div className="relative">
+                <h3 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#304B60] to-[#D48161] mb-3 drop-shadow-sm" style={fontStyle}>
+                  {t.aiAnalyzing}
+                </h3>
+                <p className="text-[#304B60]/80 text-base font-semibold drop-shadow-sm" style={fontStyle}>
+                  {t.pleaseWait}
+                </p>
+                
+                {/* Animated dots */}
+                <div className="flex justify-center gap-1 mt-4">
+                  <div className="w-2 h-2 bg-[#D48161] rounded-full animate-pulse"></div>
+                  <div className="w-2 h-2 bg-[#304B60] rounded-full animate-pulse delay-200"></div>
+                  <div className="w-2 h-2 bg-[#D48161] rounded-full animate-pulse delay-400"></div>
+                </div>
               </div>
             </div>
-            <h3 className="text-xl font-bold text-[#304B60] mb-2" style={fontStyle}>
-              {t.aiAnalyzing}
-            </h3>
-            <p className="text-[#304B60]/70 text-sm" style={fontStyle}>
-              {t.pleaseWait}
-            </p>
           </div>
         </div>
       )}
