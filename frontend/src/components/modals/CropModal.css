@@ -3,11 +3,11 @@
 }
 
 .crop-modal-content {
-  @apply bg-[#E3DAD1] p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-[#304B60];
+  @apply bg-secondary p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-primary;
 }
 
 .crop-modal-title {
-  @apply text-2xl font-black text-[#304B60] mb-4;
+  @apply text-2xl font-black text-primary mb-4;
 }
 
 .crop-modal-image-container {
@@ -23,9 +23,9 @@
 }
 
 .crop-modal-btn-primary {
-  @apply bg-[#304B60] text-[#D48161];
+  @apply bg-primary text-secondary;
 }
 
 .crop-modal-btn-secondary {
-  @apply border-2 border-red-500 text-red-500;
+  @apply border-2 border-danger text-danger;
 }

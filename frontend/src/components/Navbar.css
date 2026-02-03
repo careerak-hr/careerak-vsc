@@ -1,0 +1,143 @@
+.navbar-container {
+  @apply fixed top-0 left-0 right-0 z-[5000] bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-gray-100 shadow-sm;
+}
+
+.navbar-logo-container {
+  @apply flex items-center gap-3;
+}
+
+.navbar-logo {
+  @apply w-10 h-10 rounded-full border-2 border-primary;
+}
+
+.navbar-logo-text {
+  @apply font-black text-primary italic text-xl;
+}
+
+.navbar-actions-container {
+  @apply flex items-center space-x-4;
+}
+
+.navbar-action-btn {
+  @apply p-2 text-hint hover:text-primary transition-colors;
+}
+
+.navbar-notifications-badge {
+  @apply absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full h-5 w-5 flex items-center justify-center;
+}
+
+.navbar-notifications-dropdown {
+  @apply absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50;
+}
+
+.navbar-notifications-header {
+  @apply p-4 border-b border-gray-200;
+}
+
+.navbar-notifications-title {
+  @apply text-lg font-semibold text-primary;
+}
+
+.navbar-notifications-list {
+  @apply max-h-96 overflow-y-auto;
+}
+
+.navbar-notification-item {
+  @apply p-4 border-b border-gray-100 hover:bg-gray-50;
+}
+
+.navbar-settings-btn {
+  @apply w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-2xl hover:bg-primary/10 transition-all;
+}
+
+.settings-panel-backdrop {
+  @apply fixed inset-0 z-[10000] bg-black/40 backdrop-blur-sm flex justify-end;
+}
+
+.settings-panel {
+  @apply w-80 h-full bg-white shadow-2xl p-8 flex flex-col animate-slide-in-right;
+}
+
+.settings-panel-header {
+  @apply flex justify-between items-center mb-10;
+}
+
+.settings-panel-title {
+  @apply text-xl font-black text-primary;
+}
+
+.settings-panel-close-btn {
+  @apply text-2xl;
+}
+
+.settings-panel-content {
+  @apply space-y-6 flex-1 overflow-y-auto;
+}
+
+.settings-panel-item {
+  @apply flex justify-between items-center p-4 bg-gray-50 rounded-2xl;
+}
+
+.settings-panel-item-label {
+  @apply font-bold text-sm text-primary;
+}
+
+.settings-panel-item-toggle {
+  @apply w-6 h-6;
+}
+
+.settings-panel-btn {
+  @apply w-full p-4 bg-gray-50 rounded-2xl flex justify-between items-center hover:bg-gray-100 transition-all;
+}
+
+.settings-panel-logout-btn {
+    @apply w-full p-4 bg-danger/10 text-danger rounded-2xl font-black text-sm text-right flex justify-between items-center;
+}
+
+.settings-panel-delete-btn {
+    @apply w-full p-4 bg-danger text-white rounded-2xl font-black text-sm text-right flex justify-between items-center shadow-lg;
+}
+
+.settings-panel-footer {
+    @apply mt-auto;
+}
+
+.settings-panel-exit-btn {
+    @apply w-full py-5 bg-primary text-white rounded-2xl font-black text-sm;
+}
+
+.search-bar-container {
+    @apply absolute top-full left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40 p-4;
+}
+
+.search-bar-content {
+    @apply max-w-md mx-auto;
+}
+
+.search-bar-input-wrapper {
+    @apply relative;
+}
+
+.search-bar-input {
+    @apply w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent;
+}
+
+.search-bar-icon {
+    @apply absolute left-3 top-2.5 w-5 h-5 text-hint;
+}
+
+.search-results-container {
+    @apply mt-4 space-y-2;
+}
+
+.search-result-item {
+    @apply p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer;
+}
+
+.search-result-title {
+    @apply font-medium text-primary;
+}
+
+.search-result-subtitle {
+    @apply text-sm text-gray-600;
+}

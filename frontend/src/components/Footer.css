@@ -1,0 +1,55 @@
+.footer-container {
+  @apply fixed bottom-0 left-0 right-0 z-[5000] bg-white/90 backdrop-blur-lg border-t border-gray-100 px-2 pb-6 pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.05)];
+}
+
+.footer-content {
+  @apply max-w-lg mx-auto flex justify-between items-center relative;
+}
+
+.footer-btn {
+  @apply flex flex-col items-center gap-1 w-16 transition-all;
+}
+
+.footer-btn-active {
+  @apply text-primary;
+}
+
+.footer-btn-inactive {
+  @apply text-hint;
+}
+
+.footer-icon {
+  @apply text-2xl transition-transform;
+}
+
+.footer-icon-active {
+  @apply scale-110;
+}
+
+.footer-label {
+  @apply text-[9px] font-black uppercase;
+}
+
+.footer-center-btn-wrapper {
+  @apply relative -top-8;
+}
+
+.footer-center-btn {
+  @apply w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-2xl border-4 border-white active:scale-90 transition-all;
+}
+
+.footer-center-btn-icon {
+  @apply text-3xl text-white font-light;
+}
+
+.footer-center-label {
+  @apply absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-black text-primary w-max uppercase;
+}
+
+.footer-notification-badge-container {
+  @apply relative;
+}
+
+.footer-notification-badge {
+  @apply absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full border-2 border-white text-[8px] text-white flex items-center justify-center font-bold;
+}

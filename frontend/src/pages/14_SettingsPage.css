@@ -1,5 +1,5 @@
 .settings-page-container {
-  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000;
+  @apply min-h-screen bg-secondary transition-opacity duration-1000;
 }
 
 .settings-page-main {
@@ -7,11 +7,11 @@
 }
 
 .settings-card {
-  @apply bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-10 md:p-16 border-2 border-[#304B60]/5;
+  @apply bg-secondary rounded-[4rem] shadow-2xl p-10 md:p-16 border-2 border-primary/5;
 }
 
 .settings-title {
-  @apply text-3xl font-black text-[#304B60] mb-12;
+  @apply text-3xl font-black text-primary mb-12;
 }
 
 .settings-content {
@@ -19,7 +19,7 @@
 }
 
 .settings-section {
-  @apply p-8 bg-[#304B60]/5 rounded-[2.5rem] border border-[#D48161]/10 flex flex-col md:flex-row justify-between items-center gap-6;
+  @apply p-8 bg-primary/5 rounded-[2.5rem] border border-accent/10 flex flex-col md:flex-row justify-between items-center gap-6;
 }
 
 .settings-section-text-content {
@@ -27,11 +27,11 @@
 }
 
 .settings-section-title {
-  @apply text-[#304B60] font-black text-lg;
+  @apply text-primary font-black text-lg;
 }
 
 .settings-section-description {
-  @apply text-xs text-[#304B60]/40 font-bold mt-1;
+  @apply text-xs text-primary/40 font-bold mt-1;
 }
 
 .settings-lang-buttons {
@@ -43,11 +43,11 @@
 }
 
 .settings-lang-btn-active {
-  @apply bg-[#304B60] text-[#D48161] shadow-lg;
+  @apply bg-primary text-accent shadow-lg;
 }
 
 .settings-lang-btn-inactive {
-  @apply bg-[#E3DAD1] text-[#304B60] border border-[#D48161]/20;
+  @apply bg-secondary text-primary border border-accent/20;
 }
 
 .settings-toggle-btn {
@@ -55,7 +55,7 @@
 }
 
 .settings-toggle-knob {
-  @apply absolute top-1 w-10 h-10 bg-[#D48161] rounded-full shadow-md transition-all duration-300;
+  @apply absolute top-1 w-10 h-10 bg-accent rounded-full shadow-md transition-all duration-300;
 }
 
 .settings-toggle-text {
@@ -63,11 +63,11 @@
 }
 
 .settings-danger-zone {
-    @apply pt-10 border-t border-[#304B60]/10;
+    @apply pt-10 border-t border-primary/10;
 }
 
 .settings-danger-zone-title {
-    @apply text-red-600 font-black text-sm uppercase tracking-widest mb-6 px-4;
+    @apply text-danger font-black text-sm uppercase tracking-widest mb-6 px-4;
 }
 
 .settings-danger-zone-buttons {
@@ -75,9 +75,9 @@
 }
 
 .settings-logout-btn {
-    @apply w-full p-6 bg-[#304B60]/5 rounded-[2rem] text-[#304B60] font-black text-sm flex justify-between items-center hover:bg-[#304B60]/10 transition-all border border-[#D48161]/10;
+    @apply w-full p-6 bg-primary/5 rounded-[2rem] text-primary font-black text-sm flex justify-between items-center hover:bg-primary/10 transition-all border border-accent/10;
 }
 
 .settings-delete-btn {
-    @apply w-full p-6 bg-red-600 text-white rounded-[2rem] font-black text-sm flex justify-between items-center shadow-lg shadow-red-200;
+    @apply w-full p-6 bg-danger text-white rounded-[2rem] font-black text-sm flex justify-between items-center shadow-lg;
 }

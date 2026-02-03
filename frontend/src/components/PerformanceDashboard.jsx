@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './PerformanceDashboard.css';
 
 // تحميل monitoring بشكل آمن
 let getPerformanceReport = null;
@@ -23,13 +24,9 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
 
   useEffect(() => {
     if (isVisible) {
-      // تحديث التقرير فوراً
       updateReport();
-      
-      // تحديث كل 5 ثوان
       const interval = setInterval(updateReport, 5000);
       setRefreshInterval(interval);
-      
       return () => {
         if (interval) clearInterval(interval);
       };
@@ -59,29 +56,27 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
   };
 
   const getMetricColor = (value, thresholds) => {
-    if (value <= thresholds.good) return 'text-green-600';
-    if (value <= thresholds.needs_improvement) return 'text-yellow-600';
-    return 'text-red-600';
+    if (value <= thresholds.good) return 'text-success';
+    if (value <= thresholds.needs_improvement) return 'text-yellow-600'; // Assuming yellow is not in the palette, will fallback
+    return 'text-danger';
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-[10000] flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="bg-[#304B60] text-white p-4 rounded-t-lg flex justify-between items-center">
-          <h2 className="text-xl font-bold">📊 لوحة مراقبة الأداء</h2>
+    <div className="performance-dashboard-backdrop">
+      <div className="performance-dashboard-container">
+        <div className="performance-dashboard-header">
+          <h2 className="performance-dashboard-title">📊 لوحة مراقبة الأداء</h2>
           <button
             onClick={onClose}
-            className="text-white hover:text-gray-300 text-2xl"
+            className="performance-dashboard-close-btn"
           >
             ×
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
-          {/* Session Info */}
-          <div className="bg-[#E3DAD1] p-4 rounded-lg">
-            <h3 className="font-bold text-[#304B60] mb-2">📱 معلومات الجلسة</h3>
+        <div className="performance-dashboard-body">
+          <div className="performance-dashboard-section">
+            <h3 className="performance-dashboard-section-title">📱 معلومات الجلسة</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="font-semibold">مدة الجلسة:</span> {formatDuration(report.session.duration)}
@@ -92,100 +87,96 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
             </div>
           </div>
 
-          {/* Web Vitals */}
           {Object.keys(report.metrics).length > 0 && (
-            <div className="bg-[#E3DAD1] p-4 rounded-lg">
-              <h3 className="font-bold text-[#304B60] mb-2">⚡ مقاييس الأداء الأساسية</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="performance-dashboard-section">
+              <h3 className="performance-dashboard-section-title">⚡ مقاييس الأداء الأساسية</h3>
+              <div className="performance-dashboard-grid">
                 {Object.entries(report.metrics).map(([key, metric]) => (
-                  <div key={key} className="text-center">
-                    <div className="text-sm font-semibold text-gray-600">{key}</div>
-                    <div className={`text-lg font-bold ${
-                      metric.rating === 'good' ? 'text-green-600' :
-                      metric.rating === 'needs-improvement' ? 'text-yellow-600' :
-                      'text-red-600'
+                  <div key={key} className="performance-dashboard-grid-item">
+                    <div className="performance-dashboard-metric-label">{key}</div>
+                    <div className={`performance-dashboard-metric-value ${
+                      metric.rating === 'good' ? 'text-success' :
+                      metric.rating === 'needs-improvement' ? 'text-yellow-600' : // fallback
+                      'text-danger'
                     }`}>
                       {key === 'CLS' ? metric.value.toFixed(3) : Math.round(metric.value)}
                       {key !== 'CLS' && 'ms'}
                     </div>
-                    <div className="text-xs text-gray-500">{metric.rating}</div>
+                    <div className="performance-dashboard-metric-rating">{metric.rating}</div>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {/* API Performance */}
-          <div className="bg-[#E3DAD1] p-4 rounded-lg">
-            <h3 className="font-bold text-[#304B60] mb-2">🌐 أداء API</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div className="text-center">
+          <div className="performance-dashboard-section">
+            <h3 className="performance-dashboard-section-title">🌐 أداء API</h3>
+            <div className="performance-dashboard-grid-4-col">
+              <div className="performance-dashboard-grid-item">
                 <div className="font-semibold">إجمالي الطلبات</div>
-                <div className="text-lg font-bold text-[#304B60]">{report.apiCalls.count}</div>
+                <div className="performance-dashboard-metric-value text-primary">{report.apiCalls.count}</div>
               </div>
-              <div className="text-center">
+              <div className="performance-dashboard-grid-item">
                 <div className="font-semibold">متوسط الوقت</div>
-                <div className={`text-lg font-bold ${getMetricColor(report.apiCalls.averageTime, { good: 1000, needs_improvement: 3000 })}`}>
+                <div className={`performance-dashboard-metric-value ${getMetricColor(report.apiCalls.averageTime, { good: 1000, needs_improvement: 3000 })}`}>
                   {report.apiCalls.averageTime}ms
                 </div>
               </div>
-              <div className="text-center">
+              <div className="performance-dashboard-grid-item">
                 <div className="font-semibold">معدل الأخطاء</div>
-                <div className={`text-lg font-bold ${getMetricColor(report.apiCalls.errorRate, { good: 5, needs_improvement: 15 })}`}>
+                <div className={`performance-dashboard-metric-value ${getMetricColor(report.apiCalls.errorRate, { good: 5, needs_improvement: 15 })}`}>
                   {report.apiCalls.errorRate}%
                 </div>
               </div>
-              <div className="text-center">
+              <div className="performance-dashboard-grid-item">
                 <div className="font-semibold">طلبات بطيئة</div>
-                <div className="text-lg font-bold text-red-600">{report.apiCalls.slowCalls.length}</div>
+                <div className="performance-dashboard-metric-value text-danger">{report.apiCalls.slowCalls.length}</div>
               </div>
             </div>
           </div>
 
-          {/* Memory Usage */}
           {report.memory && (
-            <div className="bg-[#E3DAD1] p-4 rounded-lg">
-              <h3 className="font-bold text-[#304B60] mb-2">💾 استخدام الذاكرة</h3>
-              <div className="grid grid-cols-3 gap-4 text-sm text-center">
-                <div>
+            <div className="performance-dashboard-section">
+              <h3 className="performance-dashboard-section-title">💾 استخدام الذاكرة</h3>
+              <div className="performance-dashboard-grid">
+                <div className="performance-dashboard-grid-item">
                   <div className="font-semibold">المستخدمة</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.memory.used}MB</div>
+                  <div className="performance-dashboard-metric-value text-primary">{report.memory.used}MB</div>
                 </div>
-                <div>
+                <div className="performance-dashboard-grid-item">
                   <div className="font-semibold">الإجمالية</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.memory.total}MB</div>
+                  <div className="performance-dashboard-metric-value text-primary">{report.memory.total}MB</div>
                 </div>
-                <div>
+                <div className="performance-dashboard-grid-item">
                   <div className="font-semibold">الحد الأقصى</div>
-                  <div className="text-lg font-bold text-[#304B60]">{report.memory.limit}MB</div>
+                  <div className="performance-dashboard-metric-value text-primary">{report.memory.limit}MB</div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Errors */}
-          <div className="bg-[#E3DAD1] p-4 rounded-lg">
-            <h3 className="font-bold text-[#304B60] mb-2">🚨 الأخطاء</h3>
+          <div className="performance-dashboard-section">
+            <h3 className="performance-dashboard-section-title">🚨 الأخطاء</h3>
             <div className="grid grid-cols-2 gap-4 text-sm text-center mb-4">
               <div>
                 <div className="font-semibold">إجمالي الأخطاء</div>
-                <div className="text-lg font-bold text-red-600">{report.errors.count}</div>
+                <div className="performance-dashboard-metric-value text-danger">{report.errors.count}</div>
               </div>
               <div>
                 <div className="font-semibold">أخطاء حرجة</div>
-                <div className="text-lg font-bold text-red-800">{report.errors.critical.length}</div>
+                <div className="performance-dashboard-metric-value text-danger-dark">{report.errors.critical.length}</div>
               </div>
             </div>
             
             {report.errors.recent.length > 0 && (
               <div>
-                <h4 className="font-semibold text-[#304B60] mb-2">آخر الأخطاء:</h4>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
+                <h4 className="font-semibold text-primary mb-2">آخر الأخطاء:</h4>
+                <div className="performance-dashboard-error-list">
                   {report.errors.recent.map((error, index) => (
-                    <div key={index} className="bg-red-50 p-2 rounded text-xs">
-                      <div className="font-semibold text-red-800">{error.type}</div>
-                      <div className="text-red-600 truncate">{error.message}</div>
-                      <div className="text-gray-500">{new Date(error.timestamp).toLocaleTimeString()}</div>
+                    <div key={index} className="performance-dashboard-error-item">
+                      <div className="performance-dashboard-error-title">{error.type}</div>
+                      <div className="performance-dashboard-error-message">{error.message}</div>
+                      <div className="performance-dashboard-error-timestamp">{new Date(error.timestamp).toLocaleTimeString()}</div>
                     </div>
                   ))}
                 </div>
@@ -193,11 +184,10 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
             )}
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-4 justify-center">
+          <div className="performance-dashboard-actions">
             <button
               onClick={updateReport}
-              className="bg-[#304B60] text-[#D48161] px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90"
+              className="performance-dashboard-action-btn performance-dashboard-action-btn-primary"
             >
               🔄 تحديث
             </button>
@@ -212,7 +202,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                 a.click();
                 URL.revokeObjectURL(url);
               }}
-              className="bg-[#D48161] text-[#304B60] px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90"
+              className="performance-dashboard-action-btn performance-dashboard-action-btn-secondary"
             >
               💾 تحميل التقرير
             </button>

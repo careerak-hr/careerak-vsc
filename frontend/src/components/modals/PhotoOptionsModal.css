@@ -3,11 +3,11 @@
 }
 
 .photo-options-content {
-  @apply bg-[#E3DAD1] p-6 rounded-[2rem] shadow-2xl w-full max-w-xs border-4 border-[#304B60];
+  @apply bg-secondary p-6 rounded-[2rem] shadow-2xl w-full max-w-xs border-4 border-primary;
 }
 
 .photo-options-title {
-  @apply text-lg font-black text-[#304B60] text-center mb-4;
+  @apply text-lg font-black text-primary text-center mb-4;
 }
 
 .photo-options-buttons-container {
@@ -15,9 +15,9 @@
 }
 
 .photo-options-btn {
-  @apply py-4 bg-[#304B60] text-[#D48161] rounded-xl font-black hover:bg-[#1A365D] transition-colors;
+  @apply py-4 bg-primary text-accent rounded-xl font-black hover:bg-primary-dark transition-colors;
 }
 
 .photo-options-cancel-btn {
-  @apply mt-2 py-2 text-xs text-red-500 hover:text-red-700 transition-colors;
+  @apply mt-2 py-2 text-xs text-danger hover:text-danger-dark transition-colors;
 }

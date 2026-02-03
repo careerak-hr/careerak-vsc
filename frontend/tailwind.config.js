@@ -25,6 +25,19 @@ module.exports = {
         dark: '#A8612E',
       },
 
+      // ألوان دلالية
+      danger: {
+        DEFAULT: '#D32F2F', // A suitable red color
+        light: '#E57373',
+        dark: '#B71C1C',
+      },
+
+      success: {
+        DEFAULT: '#388E3C', // A suitable green color
+        light: '#81C784',
+        dark: '#1B5E20',
+      },
+
       // رمادي محايد — استخدام إرشادي فقط
       hint: '#9CA3AF', // Light Neutral Gray (placeholders & hints)
 

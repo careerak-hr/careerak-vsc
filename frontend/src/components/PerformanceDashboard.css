@@ -1,0 +1,91 @@
+.performance-dashboard-backdrop {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-[10000] flex items-center justify-center p-4;
+}
+
+.performance-dashboard-container {
+  @apply bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto;
+}
+
+.performance-dashboard-header {
+  @apply bg-primary text-white p-4 rounded-t-lg flex justify-between items-center;
+}
+
+.performance-dashboard-title {
+  @apply text-xl font-bold;
+}
+
+.performance-dashboard-close-btn {
+  @apply text-white hover:text-hint text-2xl;
+}
+
+.performance-dashboard-body {
+  @apply p-6 space-y-6;
+}
+
+.performance-dashboard-section {
+  @apply bg-secondary p-4 rounded-lg;
+}
+
+.performance-dashboard-section-title {
+  @apply font-bold text-primary mb-2;
+}
+
+.performance-dashboard-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 gap-4;
+}
+
+.performance-dashboard-grid-4-col {
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4;
+}
+
+.performance-dashboard-grid-item {
+  @apply text-center;
+}
+
+.performance-dashboard-metric-label {
+  @apply text-sm font-semibold text-hint;
+}
+
+.performance-dashboard-metric-value {
+  @apply text-lg font-bold;
+}
+
+.performance-dashboard-metric-rating {
+  @apply text-xs text-hint;
+}
+
+.performance-dashboard-error-list {
+    @apply space-y-2 max-h-32 overflow-y-auto;
+}
+
+.performance-dashboard-error-item {
+    @apply bg-danger/10 p-2 rounded text-xs;
+}
+
+.performance-dashboard-error-title {
+    @apply font-semibold text-danger-dark;
+}
+
+.performance-dashboard-error-message {
+    @apply text-danger truncate;
+}
+
+.performance-dashboard-error-timestamp {
+    @apply text-hint;
+}
+
+.performance-dashboard-actions {
+    @apply flex gap-4 justify-center;
+}
+
+.performance-dashboard-action-btn {
+    @apply px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90;
+}
+
+.performance-dashboard-action-btn-primary {
+    @apply bg-primary text-accent;
+}
+
+.performance-dashboard-action-btn-secondary {
+    @apply bg-accent text-primary;
+}

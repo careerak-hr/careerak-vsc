@@ -1,5 +1,5 @@
 .profile-page-container {
-  @apply min-h-screen bg-[#E3DAD1] pb-20 transition-opacity duration-1000;
+  @apply min-h-screen bg-secondary pb-20 transition-opacity duration-1000;
 }
 
 .profile-page-main {
@@ -7,11 +7,11 @@
 }
 
 .profile-card {
-  @apply bg-[#E3DAD1] rounded-[4rem] shadow-2xl overflow-hidden border-2 border-[#304B60]/5;
+  @apply bg-secondary rounded-[4rem] shadow-2xl overflow-hidden border-2 border-primary/5;
 }
 
 .profile-header {
-  @apply h-48 bg-[#304B60] relative;
+  @apply h-48 bg-primary relative;
 }
 
 .profile-header-content {
@@ -19,7 +19,7 @@
 }
 
 .profile-image-container {
-  @apply w-40 h-40 rounded-full border-8 border-[#E3DAD1] shadow-2xl overflow-hidden bg-[#E3DAD1];
+  @apply w-40 h-40 rounded-full border-8 border-secondary shadow-2xl overflow-hidden bg-secondary;
 }
 
 .profile-image {
@@ -31,15 +31,15 @@
 }
 
 .profile-name {
-  @apply text-3xl font-black text-[#E3DAD1];
+  @apply text-3xl font-black text-secondary;
 }
 
 .profile-role {
-  @apply text-[#D48161] font-bold uppercase tracking-widest text-xs;
+  @apply text-accent font-bold uppercase tracking-widest text-xs;
 }
 
 .profile-edit-btn {
-  @apply absolute top-8 left-8 px-6 py-3 bg-[#E3DAD1]/20 hover:bg-[#E3DAD1]/30 text-[#E3DAD1] rounded-2xl font-black text-xs backdrop-blur-md;
+  @apply absolute top-8 left-8 px-6 py-3 bg-secondary/20 hover:bg-secondary/30 text-secondary rounded-2xl font-black text-xs backdrop-blur-md;
 }
 
 .profile-body {
@@ -55,7 +55,7 @@
 }
 
 .profile-section-title {
-  @apply text-xl font-black text-[#304B60] border-r-4 border-[#D48161] pr-4;
+  @apply text-xl font-black text-primary border-r-4 border-accent pr-4;
 }
 
 .profile-grid {
@@ -63,15 +63,15 @@
 }
 
 .profile-input-label {
-    @apply block text-[10px] font-black text-[#304B60]/60 mb-2 mr-2;
+    @apply block text-[10px] font-black text-primary/60 mb-2 mr-2;
 }
 
 .profile-input {
-    @apply w-full p-4 bg-[#E3DAD1] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-xs text-[#304B60] transition-all;
+    @apply w-full p-4 bg-secondary rounded-2xl border-2 border-accent/20 focus:border-accent outline-none font-black text-xs text-primary transition-all;
 }
 
 .profile-display-text {
-    @apply p-4 bg-[#304B60]/5 rounded-2xl font-bold text-[#304B60];
+    @apply p-4 bg-primary/5 rounded-2xl font-bold text-primary;
 }
 
 .profile-btn-group {
@@ -79,15 +79,15 @@
 }
 
 .profile-save-btn {
-    @apply flex-1 py-5 bg-[#304B60] text-[#D48161] rounded-[2rem] font-black shadow-xl disabled:opacity-50;
+    @apply flex-1 py-5 bg-primary text-accent rounded-[2rem] font-black shadow-xl disabled:opacity-50;
 }
 
 .profile-cancel-btn {
-    @apply flex-1 py-5 border-2 border-[#304B60] text-[#304B60] rounded-[2rem] font-black;
+    @apply flex-1 py-5 border-2 border-primary text-primary rounded-[2rem] font-black;
 }
 
 .profile-cv-section {
-    @apply p-10 bg-[#304B60] rounded-[4rem] text-[#E3DAD1] shadow-2xl relative overflow-hidden;
+    @apply p-10 bg-primary rounded-[4rem] text-secondary shadow-2xl relative overflow-hidden;
 }
 
 .profile-cv-content {
@@ -103,11 +103,11 @@
 }
 
 .profile-cv-subtitle {
-    @apply text-[#E3DAD1]/70 font-bold text-sm;
+    @apply text-secondary/70 font-bold text-sm;
 }
 
 .profile-cv-controls {
-    @apply bg-[#E3DAD1]/10 p-2 rounded-[2.5rem] flex flex-col gap-3 w-full max-w-xs;
+    @apply bg-secondary/10 p-2 rounded-[2.5rem] flex flex-col gap-3 w-full max-w-xs;
 }
 
 .profile-cv-level-selector {
@@ -119,15 +119,15 @@
 }
 
 .profile-cv-level-btn-active {
-    @apply bg-[#E3DAD1] text-[#304B60];
+    @apply bg-secondary text-primary;
 }
 
 .profile-cv-level-btn-inactive {
-    @apply text-[#E3DAD1]/40;
+    @apply text-secondary/40;
 }
 
 .profile-cv-generate-btn {
-    @apply w-full py-5 bg-[#E3DAD1] text-[#304B60] rounded-2xl font-black shadow-2xl active:scale-95;
+    @apply w-full py-5 bg-secondary text-primary rounded-2xl font-black shadow-2xl active:scale-95;
 }
 
 .profile-logout-section {
@@ -135,5 +135,5 @@
 }
 
 .profile-logout-btn {
-    @apply px-10 py-5 bg-red-600 text-white rounded-[2rem] font-black text-xs shadow-lg shadow-red-200;
+    @apply px-10 py-5 bg-danger text-white rounded-[2rem] font-black text-xs shadow-lg;
 }
