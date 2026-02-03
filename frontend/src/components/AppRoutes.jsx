@@ -15,8 +15,8 @@ import {
 // Lazy load all pages for better performance
 const LanguagePage = React.lazy(() => import('../pages/00_LanguagePage'));
 const EntryPage = React.lazy(() => import('../pages/01_EntryPage'));
-const LoginPage = React.lazy(() => import('../pages/02_LoginPage_Test'));
-const AuthPage = React.lazy(() => import('../pages/03_AuthPage_Test'));
+const LoginPage = React.lazy(() => import('../pages/02_LoginPage'));
+const AuthPage = React.lazy(() => import('../pages/03_AuthPage'));
 const OTPVerification = React.lazy(() => import('../pages/04_OTPVerification'));
 const OnboardingIndividuals = React.lazy(() => import('../pages/05_OnboardingIndividuals'));
 const OnboardingCompanies = React.lazy(() => import('../pages/06_OnboardingCompanies'));
