@@ -182,7 +182,7 @@ export default function EntryPage() {
           }`}>
             <div className="relative p-2 md:p-4">
               <div className="absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow"></div>
-              <img src="/logo.jpg" alt="Logo" className="relative h-64 w-64 md:h-96 md:w-96 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover" />
+              <img src="./logo.jpg" alt="Logo" className="relative h-64 w-64 md:h-96 md:w-96 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover" />
             </div>
           </div>
         </div>

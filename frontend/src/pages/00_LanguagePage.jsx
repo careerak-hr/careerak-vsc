@@ -150,7 +150,7 @@ export default function LanguagePage() {
       <div className="relative z-10 flex flex-col items-center">
         <div className="mb-8">
           <div className="w-60 h-60 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1]">
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img src="./logo.jpg" alt="Logo" className="w-full h-full object-cover" />
           </div>
         </div>
 
