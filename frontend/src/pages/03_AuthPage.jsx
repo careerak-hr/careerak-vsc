@@ -907,7 +907,8 @@ export default function AuthPage() {
                     )}
                   </button>
                 </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
         )}
