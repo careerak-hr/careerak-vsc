@@ -1,5 +1,5 @@
 .login-page-container {
-  @apply min-h-screen flex items-center justify-center bg-[#E3DAD1] transition-opacity duration-1000 select-none;
+  @apply min-h-screen flex items-center justify-center bg-secondary transition-opacity duration-1000 select-none;
 }
 
 .login-page-content {
@@ -11,7 +11,7 @@
 }
 
 .login-logo {
-  @apply w-40 h-40 rounded-full border-4 border-[#304B60] shadow-2xl overflow-hidden pointer-events-none bg-[#E3DAD1];
+  @apply w-40 h-40 rounded-full border-4 border-primary shadow-2xl overflow-hidden pointer-events-none bg-secondary;
 }
 
 .login-title-container {
@@ -19,11 +19,11 @@
 }
 
 .login-title {
-  @apply text-5xl font-black text-[#304B60] italic;
+  @apply text-5xl font-black text-primary italic;
 }
 
 .login-subtitle {
-  @apply text-[#304B60]/50 font-bold text-lg mt-3;
+  @apply text-primary/50 font-bold text-lg mt-3;
 }
 
 .login-form {
@@ -31,7 +31,7 @@
 }
 
 .login-input {
-  @apply w-full p-6 bg-[#E3DAD1] text-[#304B60] rounded-[2.5rem] border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-center transition-all placeholder:text-gray-400 shadow-sm;
+  @apply w-full p-6 bg-secondary text-primary rounded-[2.5rem] border-2 border-accent/20 focus:border-accent outline-none font-black text-center transition-all placeholder-hint shadow-sm;
 }
 
 .login-password-wrapper {
@@ -39,7 +39,7 @@
 }
 
 .login-password-toggle {
-  @apply absolute top-1/2 -translate-y-1/2 text-[#304B60]/30 hover:text-[#304B60] transition-colors;
+  @apply absolute top-1/2 -translate-y-1/2 text-primary/30 hover:text-primary transition-colors;
 }
 
 .login-error-message {
@@ -47,7 +47,7 @@
 }
 
 .login-error-text {
-  @apply font-black text-[12px] text-red-600;
+  @apply font-black text-[12px] text-danger;
 }
 
 .login-remember-me-container {
@@ -55,19 +55,19 @@
 }
 
 .login-remember-me-checkbox {
-  @apply w-5 h-5 rounded-lg border-[#D48161]/30 text-[#304B60] focus:ring-[#304B60]/20 bg-[#E3DAD1];
+  @apply w-5 h-5 rounded-lg border-accent/30 text-primary focus:ring-primary/20 bg-secondary;
 }
 
 .login-remember-me-label {
-  @apply text-sm font-bold text-[#304B60]/60 cursor-pointer;
+  @apply text-sm font-bold text-primary/60 cursor-pointer;
 }
 
 .login-submit-btn {
-  @apply w-full bg-[#304B60] text-[#D48161] p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4;
+  @apply w-full bg-primary text-accent p-7 rounded-[3rem] font-black text-2xl shadow-2xl active:scale-95 transition-all mt-4;
 }
 
 .login-loading-spinner {
-    @apply w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto;
+    @apply w-8 h-8 border-4 border-accent/30 border-t-accent rounded-full animate-spin mx-auto;
 }
 
 .login-no-account-container {
@@ -75,9 +75,9 @@
 }
 
 .login-no-account-text {
-  @apply text-sm font-bold text-[#304B60]/40;
+  @apply text-sm font-bold text-primary/40;
 }
 
 .login-create-account-link {
-  @apply text-[#304B60] cursor-pointer hover:underline font-black;
+  @apply text-primary cursor-pointer hover:underline font-black;
 }
