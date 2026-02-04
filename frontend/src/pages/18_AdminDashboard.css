@@ -1,9 +1,9 @@
 .admin-dashboard-container {
-  @apply min-h-screen bg-[#E3DAD1] p-6 flex flex-col items-center font-sans;
+  @apply min-h-screen bg-secondary p-6 flex flex-col items-center font-sans;
 }
 
 .admin-header {
-  @apply w-full max-w-6xl flex items-center justify-between mb-8 bg-[#304B60]/5 p-4 rounded-3xl border border-[#D48161]/10 shadow-sm;
+  @apply w-full max-w-6xl flex items-center justify-between mb-8 bg-primary/5 p-4 rounded-3xl border border-accent/10 shadow-sm;
 }
 
 .admin-header-logo-container {
@@ -11,19 +11,19 @@
 }
 
 .admin-header-logo {
-  @apply w-12 h-12 rounded-full border-2 border-[#304B60];
+  @apply w-12 h-12 rounded-full border-2 border-primary;
 }
 
 .admin-header-title {
-  @apply text-[#304B60] font-black text-lg italic;
+  @apply text-primary font-black text-lg italic;
 }
 
 .admin-header-subtitle {
-  @apply text-[10px] text-[#304B60]/60 font-bold uppercase tracking-wider;
+  @apply text-[10px] text-primary/60 font-bold uppercase tracking-wider;
 }
 
 .admin-logout-btn {
-  @apply p-3 bg-red-600 text-white rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all;
+  @apply p-3 bg-danger text-white rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all;
 }
 
 .admin-tabs-container {
@@ -31,7 +31,7 @@
 }
 
 .admin-tabs {
-  @apply flex gap-2 bg-[#304B60]/5 p-2 rounded-2xl;
+  @apply flex gap-2 bg-primary/5 p-2 rounded-2xl;
 }
 
 .admin-tab-btn {
@@ -39,11 +39,11 @@
 }
 
 .admin-tab-btn-active {
-  @apply bg-[#304B60] text-[#D48161] shadow-md;
+  @apply bg-primary text-accent shadow-md;
 }
 
 .admin-tab-btn-inactive {
-  @apply text-[#304B60]/60;
+  @apply text-primary/60;
 }
 
 .admin-tab-content {
@@ -51,7 +51,7 @@
 }
 
 .admin-welcome-card {
-  @apply w-full bg-[#304B60] text-[#E3DAD1] p-8 rounded-[3rem] shadow-2xl relative overflow-hidden;
+  @apply w-full bg-primary text-secondary p-8 rounded-[3rem] shadow-2xl relative overflow-hidden;
 }
 
 .admin-welcome-card-content {
@@ -63,11 +63,11 @@
 }
 
 .admin-welcome-subtitle {
-    @apply text-[#E3DAD1]/60 font-bold text-sm;
+    @apply text-secondary/60 font-bold text-sm;
 }
 
 .admin-welcome-bg-element {
-    @apply absolute -right-10 -bottom-10 w-40 h-40 bg-[#D48161]/10 rounded-full blur-3xl;
+    @apply absolute -right-10 -bottom-10 w-40 h-40 bg-accent/10 rounded-full blur-3xl;
 }
 
 .admin-stats-grid {
@@ -75,19 +75,19 @@
 }
 
 .admin-stat-card {
-  @apply bg-[#304B60]/5 p-6 rounded-[2rem] text-center shadow-sm border border-[#D48161]/10;
+  @apply bg-primary/5 p-6 rounded-[2rem] text-center shadow-sm border border-accent/10;
 }
 
 .admin-stat-card-title {
-  @apply text-[#304B60]/40 font-black text-sm mb-2 uppercase;
+  @apply text-primary/40 font-black text-sm mb-2 uppercase;
 }
 
 .admin-stat-card-value {
-  @apply text-[#304B60] font-black text-3xl;
+  @apply text-primary font-black text-3xl;
 }
 
 .admin-quick-nav-card {
-  @apply bg-[#304B60]/5 p-8 rounded-[3rem] shadow-xl border border-[#D48161]/10;
+  @apply bg-primary/5 p-8 rounded-[3rem] shadow-xl border border-accent/10;
 }
 
 .admin-quick-nav-header {
@@ -99,7 +99,7 @@
 }
 
 .admin-quick-nav-title {
-    @apply text-[#304B60] font-black text-xl;
+    @apply text-primary font-black text-xl;
 }
 
 .admin-quick-nav-controls {
@@ -107,11 +107,11 @@
 }
 
 .admin-quick-nav-select {
-  @apply w-full p-4 bg-[#E3DAD1] text-[#304B60] rounded-2xl border-2 border-[#D48161]/20 focus:border-[#D48161] outline-none font-black text-sm;
+  @apply w-full p-4 bg-secondary text-primary rounded-2xl border-2 border-accent/20 focus:border-accent outline-none font-black text-sm;
 }
 
 .admin-quick-nav-btn {
-  @apply py-4 bg-[#304B60] text-[#D48161] rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all disabled:opacity-30;
+  @apply py-4 bg-primary text-accent rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all disabled:opacity-30;
 }
 
 .admin-users-list {
@@ -119,15 +119,15 @@
 }
 
 .admin-user-card {
-    @apply flex items-center justify-between p-4 bg-[#E3DAD1] rounded-2xl;
+    @apply flex items-center justify-between p-4 bg-secondary rounded-2xl;
 }
 
 .admin-user-card-name {
-    @apply font-black text-[#304B60];
+    @apply font-black text-primary;
 }
 
 .admin-user-card-details {
-    @apply text-sm text-[#304B60]/60;
+    @apply text-sm text-primary/60;
 }
 
 .admin-user-card-actions {
@@ -135,11 +135,11 @@
 }
 
 .admin-user-card-edit-btn {
-    @apply px-4 py-2 bg-[#304B60] text-[#D48161] rounded-xl font-black text-sm;
+    @apply px-4 py-2 bg-primary text-accent rounded-xl font-black text-sm;
 }
 
 .admin-user-card-delete-btn {
-    @apply px-4 py-2 bg-red-600 text-white rounded-xl font-black text-sm;
+    @apply px-4 py-2 bg-danger text-white rounded-xl font-black text-sm;
 }
 
 .admin-content-management-grid {
@@ -147,7 +147,7 @@
 }
 
 .admin-content-management-btn {
-    @apply p-6 bg-[#E3DAD1] rounded-2xl text-[#304B60] font-black text-lg hover:bg-[#304B60] hover:text-[#D48161] transition-all;
+    @apply p-6 bg-secondary rounded-2xl text-primary font-black text-lg hover:bg-primary hover:text-accent transition-all;
 }
 
 .admin-system-settings-list {
@@ -155,5 +155,5 @@
 }
 
 .admin-system-settings-btn {
-    @apply w-full p-4 bg-[#E3DAD1] rounded-2xl text-[#304B60] font-black text-lg hover:bg-[#304B60] hover:text-[#D48161] transition-all;
+    @apply w-full p-4 bg-secondary rounded-2xl text-primary font-black text-lg hover:bg-primary hover:text-accent transition-all;
 }
