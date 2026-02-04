@@ -4,7 +4,7 @@ import { useTranslate } from '../hooks/useTranslate';
 import './Navbar.css';
 
 export const Navbar = () => {
-  const { language, logout, audioEnabled, setAudioEnabled } = useAuth();
+  const { logout, audioEnabled, setAudioEnabled } = useAuth();
   const t = useTranslate();
   const navT = t.navbar;
   const [showSettings, setShowSettings] = useState(false);

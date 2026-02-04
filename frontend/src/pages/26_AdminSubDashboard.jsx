@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -11,6 +11,17 @@ export default function AdminSubDashboard() {
   const [permissions, setPermissions] = useState({});
   const [isVisible, setIsVisible] = useState(false);
 
+  const loadPermissions = useCallback(async () => {
+    try {
+      const res = await api.get('/api/admin/sub-admin-permissions', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPermissions(res.data);
+    } catch (err) {
+      console.error('Failed to load permissions', err);
+    }
+  }, [token]);
+
   useEffect(() => {
     setIsVisible(true);
     
@@ -20,18 +31,7 @@ export default function AdminSubDashboard() {
     }
     
     loadPermissions();
-  }, [startBgMusic]);
-
-  const loadPermissions = async () => {
-    try {
-      const res = await api.get('/api/admin/sub-admin-permissions', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setPermissions(res.data);
-    } catch (err) {
-      console.error('Failed to load permissions', err);
-    }
-  };
+  }, [startBgMusic, loadPermissions]);
 
   const t = adminSubDashboardTranslations[language || 'ar'];
 

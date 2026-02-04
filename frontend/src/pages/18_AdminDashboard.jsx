@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslate } from '../hooks/useTranslate';
@@ -32,25 +32,25 @@ export default function AdminDashboard() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
-  useEffect(() => {
-    loadStats();
-    if (activeTab === 'users') loadUsers();
-  }, [activeTab]);
-
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       const res = await api.get('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } });
       setStats(res.data);
     } catch (err) {}
-  };
+  }, [token]);
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     setLoading(true);
     try {
       const res = await api.get('/api/admin/users', { headers: { Authorization: `Bearer ${token}` } });
       setUsers(res.data);
     } catch (err) {} finally { setLoading(false); }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    loadStats();
+    if (activeTab === 'users') loadUsers();
+  }, [activeTab, loadStats, loadUsers]);
 
   const deleteUser = (userId) => {
     setUserToDelete(userId);
