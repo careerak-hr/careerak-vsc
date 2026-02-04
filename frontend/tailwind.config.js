@@ -56,6 +56,10 @@ module.exports = {
             '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-10px)' },
             '20%, 40%, 60%, 80%': { transform: 'translateX(10px)' },
         },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',
@@ -63,6 +67,7 @@ module.exports = {
         'expand-glow': 'expand-glow 4s ease-out infinite',
         'modal-enter': 'modal-enter 0.3s ease-out forwards',
         'shake': 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
+        'fade-in': 'fade-in 0.5s ease-out forwards',
       },
       fontFamily: {
         arabic: ['Amiri', 'Cairo', 'serif'],
