@@ -7,7 +7,7 @@ import { SuspenseWrapper, GlobalLoader } from './GlobalLoaders';
 const LanguagePage = React.lazy(() => import('../pages/00_LanguagePage'));
 
 /**
- * Smart Home Route Component - Handles initial routing logic correctly.
+ * Smart Home Route Component - Handles initial routing logic correctly with a timeout.
  */
 function SmartHomeRoute() {
   const [isComplete, setIsComplete] = useState(null);
@@ -16,11 +16,15 @@ function SmartHomeRoute() {
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       try {
-        const complete = await isOnboardingComplete();
+        // Race against a timeout to prevent getting stuck
+        const complete = await Promise.race([
+          isOnboardingComplete(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
+        ]);
         setIsComplete(complete);
       } catch (error) {
-        console.error('Failed to check onboarding status, defaulting to false:', error);
-        setIsComplete(false); // On error, assume onboarding is not complete
+        console.error('Onboarding check failed or timed out, defaulting to false:', error);
+        setIsComplete(false); // On any error or timeout, assume onboarding is not complete
       } finally {
         setLoading(false);
       }
@@ -29,18 +33,15 @@ function SmartHomeRoute() {
     checkOnboardingStatus();
   }, []);
 
-  // While checking the status, show a global loader
   if (loading) {
     return <GlobalLoader />;
   }
 
-  // If onboarding is complete, redirect to the entry page for the animation.
   if (isComplete) {
     console.log("✅ Onboarding is complete, redirecting to /entry.");
     return <Navigate to="/entry" replace />;
   }
   
-  // If onboarding is NOT complete, show the language page.
   console.log("🆕 Onboarding not complete, showing LanguagePage.");
   return (
     <SuspenseWrapper>
