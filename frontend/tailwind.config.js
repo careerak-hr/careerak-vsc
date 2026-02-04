@@ -46,12 +46,17 @@ module.exports = {
         'expand-glow': {
             '0%': { transform: 'scale(1)', opacity: '0.05' },
             '100%': { transform: 'scale(100)', opacity: '0' },
+        },
+        'modal-enter': {
+            '0%': { opacity: '0', transform: 'scale(0.95)' },
+            '100%': { opacity: '1', transform: 'scale(1)' },
         }
       },
       animation: {
         'spin-slow': 'spin 8s linear infinite',
         'slide-in-right': 'slide-in-right 0.5s ease-out forwards',
         'expand-glow': 'expand-glow 4s ease-out infinite',
+        'modal-enter': 'modal-enter 0.3s ease-out forwards',
       },
       fontFamily: {
         arabic: ['Amiri', 'Cairo', 'serif'],
