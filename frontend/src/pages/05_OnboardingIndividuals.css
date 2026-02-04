@@ -59,11 +59,11 @@
 }
 
 .onboarding-subsection-title {
-    @apply text-md font-black text-primary border-r-2 border-accent pr-2;
+    @apply text-base font-black text-primary border-r-2 border-accent pr-2;
 }
 
 .onboarding-input-base {
-  @apply w-full p-4 bg-secondary rounded-2xl border-2 border-accent/20 focus:border-accent outline-none font-black text-xs text-primary transition-all placeholder:text-hint shadow-sm;
+  @apply w-full p-4 bg-secondary rounded-2xl border-2 border-accent/20 focus:border-accent outline-none font-black text-xs text-primary transition-all placeholder-hint shadow-sm;
 }
 
 .onboarding-label-base {
