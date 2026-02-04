@@ -1,9 +1,9 @@
 .onboarding-companies-container {
-  @apply min-h-screen p-6 md:p-12 bg-[#E3DAD1] flex items-center justify-center transition-opacity duration-1000;
+  @apply min-h-screen p-6 md:p-12 bg-secondary flex items-center justify-center transition-opacity duration-1000;
 }
 
 .onboarding-companies-card {
-  @apply w-full max-w-2xl bg-[#E3DAD1] rounded-[4rem] shadow-2xl p-8 md:p-16 border-2 border-[#304B60]/5 transform transition-all duration-1000;
+  @apply w-full max-w-2xl bg-secondary rounded-[4rem] shadow-2xl p-8 md:p-16 border-2 border-primary/5 transform transition-all duration-1000;
 }
 
 .onboarding-companies-header {
@@ -11,11 +11,11 @@
 }
 
 .onboarding-companies-title {
-  @apply text-4xl font-black text-[#304B60] mb-4 italic;
+  @apply text-4xl font-black text-primary mb-4 italic;
 }
 
 .onboarding-companies-subtitle {
-  @apply text-[#304B60]/40 font-bold;
+  @apply text-primary/40 font-bold;
 }
 
 .onboarding-companies-form {
@@ -27,11 +27,11 @@
 }
 
 .onboarding-companies-label {
-  @apply text-sm font-black text-[#304B60] px-4 mb-2 block;
+  @apply text-sm font-black text-primary px-4 mb-2 block;
 }
 
 .onboarding-companies-input {
-  @apply w-full p-6 bg-[#E3DAD1] rounded-[2.5rem] outline-none font-black text-[#304B60] placeholder:text-gray-400 border-2 border-[#D48161]/20 focus:border-[#D48161] shadow-sm transition-all;
+  @apply w-full p-6 bg-secondary rounded-[2.5rem] outline-none font-black text-primary placeholder-hint border-2 border-accent/20 focus:border-accent shadow-sm transition-all;
 }
 
 .onboarding-companies-textarea {
@@ -47,11 +47,11 @@
 }
 
 .onboarding-companies-checkbox {
-  @apply w-6 h-6 rounded-lg accent-[#304B60];
+  @apply w-6 h-6 rounded-lg accent-primary;
 }
 
 .onboarding-companies-agreement-text {
-  @apply text-xs font-bold text-[#304B60]/40 leading-relaxed;
+  @apply text-xs font-bold text-primary/40 leading-relaxed;
 }
 
 .onboarding-companies-submit-btn {
@@ -59,13 +59,13 @@
 }
 
 .onboarding-companies-submit-btn-active {
-    @apply bg-[#304B60] text-[#D48161];
+    @apply bg-primary text-accent;
 }
 
 .onboarding-companies-submit-btn-inactive {
-    @apply bg-[#304B60]/10 text-[#304B60]/30;
+    @apply bg-primary/10 text-primary/30;
 }
 
 .onboarding-companies-loading-spinner {
-    @apply w-8 h-8 border-4 border-[#D48161]/30 border-t-[#D48161] rounded-full animate-spin mx-auto;
+    @apply w-8 h-8 border-4 border-accent/30 border-t-accent rounded-full animate-spin mx-auto;
 }
