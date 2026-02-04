@@ -1,11 +1,8 @@
-import { useAuth } from '../context/AuthContext';
-import ar from '../i18n/ar.json';
-import en from '../i18n/en.json';
-import fr from '../i18n/fr.json';
+import { useApp } from '../context/AppContext'; // Corrected import
 
-const translations = { ar, en, fr };
-
-export const useTranslate = () => {
-  const { language } = useAuth();
+const useTranslate = (translations) => {
+  const { language } = useApp(); // Corrected hook
   return translations[language] || translations.ar;
 };
+
+export default useTranslate;

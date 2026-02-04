@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { App } from '@capacitor/app';
-import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import loginTranslations from '../data/loginTranslations.json';
 import './02_LoginPage.css';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { language, login: performLogin, startBgMusic } = useAuth();
+  const { login: performLogin, startBgMusic, language } = useApp();
   const t = loginTranslations[language] || loginTranslations.ar;
   const isRTL = language === 'ar';
 
@@ -22,33 +22,23 @@ export default function LoginPage() {
 
   useEffect(() => {
     setIsVisible(true);
-    startBgMusic();
+    if(startBgMusic) startBgMusic();
 
     const loadRememberedData = async () => {
         try {
             const { value: savedId } = await localStorage.getItem({ key: 'remembered_user' });
-            if (savedId) {
-                setIdentifier(savedId);
-                setRememberMe(true);
-            }
+            if (savedId) setIdentifier(savedId);
+            setRememberMe(!!savedId);
         } catch(e) {
-            // fallback for web
             const savedId = localStorage.getItem('remembered_user');
-            if (savedId) {
-                setIdentifier(savedId);
-                setRememberMe(true);
-            }
+            if (savedId) setIdentifier(savedId);
+            setRememberMe(!!savedId);
         }
     };
     loadRememberedData();
 
-    const backButtonListener = App.addListener('backButton', () => {
-      App.exitApp();
-    });
-
-    return () => {
-      backButtonListener.then(l => l.remove());
-    };
+    const backButtonListener = App.addListener('backButton', () => App.exitApp());
+    return () => { backButtonListener.then(l => l.remove()); };
   }, [startBgMusic]);
 
   const handleSubmit = async (e) => {
@@ -66,26 +56,19 @@ export default function LoginPage() {
 
     try {
         if (rememberMe) {
-            try {
-                await localStorage.setItem({ key: 'remembered_user', value: identifier });
-            } catch (e) {
-                localStorage.setItem('remembered_user', identifier);
-            }
+            localStorage.setItem('remembered_user', identifier);
         } else {
-            try {
-                await localStorage.removeItem({ key: 'remembered_user' });
-            } catch (e) {
-                localStorage.removeItem('remembered_user');
-            }
+            localStorage.removeItem('remembered_user');
         }
 
       const response = await api.post('/users/login', { email: identifier, password });
       await performLogin(response.data.user, response.data.token);
-      
+
       const user = response.data.user;
       if (user.role === 'Admin') navigate('/admin-dashboard');
       else if (user.role === 'HR') navigate(user.bio ? '/profile' : '/onboarding-companies');
       else navigate(user.bio ? '/profile' : '/onboarding-individuals');
+
     } catch (err) {
       setError(err.response?.data?.error || t.error);
     } finally {
@@ -96,7 +79,7 @@ export default function LoginPage() {
   return (
     <div className={`login-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="login-page-content">
-        
+
         <div className="login-logo-container">
           <div className="login-logo">
              <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
@@ -130,17 +113,14 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`login-password-toggle ${isRTL ? 'left-6' : 'right-6'}`}
-            >
+              className={`login-password-toggle ${isRTL ? 'left-6' : 'right-6'}`}>
               {showPassword ? '👁️' : '🙈'}
             </button>
           </div>
 
           {error && (
             <div className="login-error-message">
-              <p className="login-error-text">
-                {error}
-              </p>
+              <p className="login-error-text">{error}</p>
             </div>
           )}
 
@@ -155,11 +135,7 @@ export default function LoginPage() {
             <label htmlFor="remember" className="login-remember-me-label">{t.rememberMe}</label>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="login-submit-btn"
-          >
+          <button type="submit" disabled={loading} className="login-submit-btn">
             {loading ? <div className="login-loading-spinner"></div> : t.loginBtn}
           </button>
         </form>

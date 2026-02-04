@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAppSettings } from '../context/AppSettingsContext';
 
 /**
  * مكون النص الذكي - يطبق الخط المناسب حسب اللغة تلقائياً
@@ -13,7 +13,7 @@ const LanguageAwareText = ({
   as: Component = 'span',
   ...props 
 }) => {
-  const { language } = useAuth();
+  const { language } = useAppSettings(); // Correctly use AppSettingsContext
   const elementRef = useRef(null);
   
   // تحديد الخط المناسب حسب اللغة

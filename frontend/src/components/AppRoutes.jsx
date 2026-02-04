@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { useAppSettings } from '../context/AppSettingsContext';
+import { useApp } from '../context/AppContext'; // Corrected import
 import { FloatingWhatsApp } from './FloatingWhatsApp';
 import { SuspenseWrapper, GlobalLoader } from './GlobalLoaders';
 import SmartHomeRoute from './SmartHomeRoute';
@@ -42,19 +42,16 @@ const InterfaceWorkshops = React.lazy(() => import('../pages/25_InterfaceWorksho
 const AdminSubDashboard = React.lazy(() => import('../pages/26_AdminSubDashboard'));
 
 /**
- * مكون التوجيه الرئيسي للتطبيق مع حماية المسارات
  * Main Application Routes Component with Route Protection
  */
 function AppRoutes() {
-  const { loaded } = useAppSettings();
+  const { isAppLoading } = useApp(); // Corrected hook
   const location = useLocation();
 
-  // Paths to hide the WhatsApp icon on
   const hideWhatsAppOnPaths = ['/', '/language', '/entry'];
   const shouldShowWhatsApp = !hideWhatsAppOnPaths.includes(location.pathname);
 
-  // Show loading screen while app settings are loading
-  if (!loaded) {
+  if (isAppLoading) {
     return <GlobalLoader />;
   }
 
@@ -64,15 +61,15 @@ function AppRoutes() {
         {/* Home Route - Smart routing based on onboarding status */}
         <Route path="/" element={<SmartHomeRoute />} />
         
+        {/* Entry page is now a public, unguarded route */}
+        <Route path="/entry" element={
+          <SuspenseWrapper><EntryPage /></SuspenseWrapper>
+        } />
+
         {/* Public Routes - Guest Only */}
         <Route path="/language" element={
           <GuestRoute>
             <SuspenseWrapper><LanguagePage /></SuspenseWrapper>
-          </GuestRoute>
-        } />
-        <Route path="/entry" element={
-          <GuestRoute>
-            <SuspenseWrapper><EntryPage /></SuspenseWrapper>
           </GuestRoute>
         } />
         <Route path="/login" element={

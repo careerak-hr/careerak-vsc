@@ -1,12 +1,12 @@
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAppSettings } from '../context/AppSettingsContext';
+import { useApp } from '../context/AppContext'; // Corrected import
 import { App } from '@capacitor/app';
 import audioManager from '../services/audioManager';
 
 const AppAudioPlayer = () => {
-  const { musicEnabled, audioEnabled } = useAppSettings();
+  const { musicEnabled, audioEnabled } = useApp(); // Corrected hook
   const location = useLocation();
 
   // تهيئة النظام الصوتي عند التفاعل الأول

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { discoverBestServer } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useApp } from '../context/AppContext';
 import { App } from '@capacitor/app';
 import entryTranslations from '../data/entryTranslations.json';
 import './01_EntryPage.css';
@@ -10,7 +10,9 @@ import './01_EntryPage.css';
 export default function EntryPage() {
   const [phase, setPhase] = useState(0);
   const navigate = useNavigate();
-  const { audioEnabled, language, isAuthenticated } = useAuth(); // isAuthenticated
+
+  const { isAuthenticated, language, audioEnabled } = useApp();
+
   const t = entryTranslations[language] || entryTranslations.ar;
 
   const audioRef = useRef(null);
@@ -18,33 +20,22 @@ export default function EntryPage() {
 
   useEffect(() => {
     isMounted.current = true;
-    const initServer = async () => {
-      try {
-        await discoverBestServer();
-      } catch (error) {
-        console.log("Server initializing...");
-      }
-    };
-    initServer();
+    discoverBestServer().catch(error => console.log("Server initializing..."));
 
     const SYSTEM_DELAY = 1000;
     const timers = [
       setTimeout(() => {
-        if (isMounted.current) {
-          setPhase(1);
-        }
+        if (isMounted.current) setPhase(1);
       }, SYSTEM_DELAY),
       setTimeout(() => { if (isMounted.current) setPhase(2); }, SYSTEM_DELAY + 1500),
       setTimeout(() => { if (isMounted.current) setPhase(3); }, SYSTEM_DELAY + 7000),
       setTimeout(() => {
-        if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current = null;
+        }
         if (isMounted.current) {
-          // Check authentication status and redirect accordingly
-          if (isAuthenticated) {
-            navigate('/', { replace: true });
-          } else {
-            navigate('/login', { replace: true });
-          }
+          navigate('/login', { replace: true });
         }
       }, SYSTEM_DELAY + 9000)
     ];
@@ -63,10 +54,13 @@ export default function EntryPage() {
     return () => {
       isMounted.current = false;
       timers.forEach(clearTimeout);
-      if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       listener.then(l => l.remove());
     };
-  }, [navigate, audioEnabled, isAuthenticated]); // Add isAuthenticated to dependencies
+  }, [navigate, audioEnabled, isAuthenticated]);
 
   useEffect(() => {
     if (audioEnabled && phase === 1 && !audioRef.current) {

@@ -1,12 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppSettings } from "../context/AppSettingsContext";
-import {
-  markOnboardingComplete,
-  isOnboardingComplete,
-  resetOnboarding, // Import the reset function
-} from "../utils/onboardingUtils";
+import { useApp } from "../context/AppContext"; // Corrected import
+import { markOnboardingComplete, isOnboardingComplete } from "../utils/onboardingUtils";
 import "./00_LanguagePage.css";
 
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
@@ -15,7 +11,7 @@ import NotificationSettingsModal from "../components/modals/NotificationSettings
 import languagePageTranslations from "../data/languagePage.json";
 
 export default function LanguagePage() {
-  const { saveLanguage } = useAppSettings();
+  const { saveLanguage } = useApp(); // Corrected hook
   const navigate = useNavigate();
 
   const [selectedLang, setSelectedLang] = useState(null);
@@ -27,10 +23,6 @@ export default function LanguagePage() {
 
   useEffect(() => {
     const checkOnboarding = async () => {
-      // This is a temporary measure to ensure a clean start on all devices.
-      // We can discuss if this should be kept or removed later.
-      // await resetOnboarding(); // Uncomment for testing to always reset.
-
       if (await isOnboardingComplete()) {
         navigate("/entry", { replace: true });
       } else {
@@ -67,15 +59,12 @@ export default function LanguagePage() {
 
   const finalize = async (audioConsent, notificationConsent) => {
     setIsNotificationModalOpen(false);
-
     await markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
     await saveLanguage(selectedLang);
-
     navigate("/entry", { replace: true });
   };
 
-  const t =
-    languagePageTranslations[selectedLang] || languagePageTranslations.ar;
+  const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
 
   if (loading) {
     return <div className="lang-page-loading-container">Loading...</div>;
@@ -99,24 +88,9 @@ export default function LanguagePage() {
         </h1>
 
         <div className="lang-page-buttons-container">
-          <button
-            onClick={() => handleLangPick("ar")}
-            className="lang-page-btn"
-          >
-            العربية
-          </button>
-          <button
-            onClick={() => handleLangPick("en")}
-            className="lang-page-btn"
-          >
-            English
-          </button>
-          <button
-            onClick={() => handleLangPick("fr")}
-            className="lang-page-btn"
-          >
-            Français
-          </button>
+          <button onClick={() => handleLangPick("ar")} className="lang-page-btn">العربية</button>
+          <button onClick={() => handleLangPick("en")} className="lang-page-btn">English</button>
+          <button onClick={() => handleLangPick("fr")} className="lang-page-btn">Français</button>
         </div>
       </div>
 

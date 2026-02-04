@@ -1,13 +1,13 @@
 
 import { useEffect } from 'react';
-import { useAppSettings } from '../context/AppSettingsContext';
+import { useApp } from '../context/AppContext'; // Corrected import
 
 /**
  * This component ensures the correct font family is applied to the body
  * based on the selected language.
  */
 const GlobalFontEnforcer = () => {
-  const { language } = useAppSettings();
+  const { language } = useApp(); // Corrected hook
 
   useEffect(() => {
     const body = document.body;
