@@ -2,46 +2,65 @@
  * أدوات مساعدة لإدارة الإعداد الأولي
  * Onboarding Utilities
  */
+import { Preferences } from "@capacitor/preferences";
 
 /**
  * فحص ما إذا كان المستخدم أكمل الإعداد الأولي
  * Check if user has completed onboarding
  */
-export const isOnboardingComplete = () => {
-  const onboardingComplete = localStorage.getItem('onboardingComplete');
-  const hasLanguage = localStorage.getItem('lang');
-  
+export const isOnboardingComplete = async () => {
+  const { value: onboardingComplete } = await Preferences.get({
+    key: "onboardingComplete",
+  });
+  const { value: hasLanguage } = await Preferences.get({ key: "lang" });
+
   console.log("🔍 Checking onboarding status:", {
     onboardingComplete,
     hasLanguage,
-    isComplete: onboardingComplete === 'true' && hasLanguage
+    isComplete: onboardingComplete === "true" && !!hasLanguage,
   });
-  
-  return onboardingComplete === 'true' && hasLanguage;
+
+  return onboardingComplete === "true" && !!hasLanguage;
 };
 
 /**
  * تحديد أن الإعداد الأولي اكتمل
  * Mark onboarding as complete
  */
-export const markOnboardingComplete = (language, audioConsent, notificationConsent) => {
+export const markOnboardingComplete = async (
+  language,
+  audioConsent,
+  notificationConsent
+) => {
   try {
     // حفظ الإعدادات الأساسية
-    localStorage.setItem('lang', language);
-    localStorage.setItem('audioConsent', audioConsent ? 'true' : 'false');
-    localStorage.setItem('audio_enabled', audioConsent ? 'true' : 'false');
-    localStorage.setItem('musicEnabled', audioConsent ? 'true' : 'false');
-    localStorage.setItem('notificationsEnabled', notificationConsent ? 'true' : 'false');
-    
+    await Preferences.set({ key: "lang", value: language });
+    await Preferences.set({
+      key: "audioConsent",
+      value: audioConsent ? "true" : "false",
+    });
+    await Preferences.set({
+      key: "audio_enabled",
+      value: audioConsent ? "true" : "false",
+    });
+    await Preferences.set({
+      key: "musicEnabled",
+      value: audioConsent ? "true" : "false",
+    });
+    await Preferences.set({
+      key: "notificationsEnabled",
+      value: notificationConsent ? "true" : "false",
+    });
+
     // تحديد أن الإعداد الأولي اكتمل
-    localStorage.setItem('onboardingComplete', 'true');
-    
+    await Preferences.set({ key: "onboardingComplete", value: "true" });
+
     console.log("✅ Onboarding marked as complete with settings:", {
       language,
       audioConsent,
-      notificationConsent
+      notificationConsent,
     });
-    
+
     return true;
   } catch (error) {
     console.error("❌ Failed to mark onboarding as complete:", error);
@@ -53,15 +72,15 @@ export const markOnboardingComplete = (language, audioConsent, notificationConse
  * إعادة تعيين حالة الإعداد الأولي
  * Reset onboarding status
  */
-export const resetOnboarding = () => {
+export const resetOnboarding = async () => {
   try {
-    localStorage.removeItem('onboardingComplete');
-    localStorage.removeItem('lang');
-    localStorage.removeItem('audioConsent');
-    localStorage.removeItem('audio_enabled');
-    localStorage.removeItem('musicEnabled');
-    localStorage.removeItem('notificationsEnabled');
-    
+    await Preferences.remove({ key: "onboardingComplete" });
+    await Preferences.remove({ key: "lang" });
+    await Preferences.remove({ key: "audioConsent" });
+    await Preferences.remove({ key: "audio_enabled" });
+    await Preferences.remove({ key: "musicEnabled" });
+    await Preferences.remove({ key: "notificationsEnabled" });
+
     console.log("🔄 Onboarding status reset");
     return true;
   } catch (error) {
@@ -74,13 +93,26 @@ export const resetOnboarding = () => {
  * الحصول على إعدادات المستخدم المحفوظة
  * Get saved user settings
  */
-export const getSavedSettings = () => {
+export const getSavedSettings = async () => {
+  const { value: language } = await Preferences.get({ key: "lang" });
+  const { value: audioConsent } = await Preferences.get({ key: "audioConsent" });
+  const { value: audioEnabled } = await Preferences.get({
+    key: "audio_enabled",
+  });
+  const { value: musicEnabled } = await Preferences.get({ key: "musicEnabled" });
+  const { value: notificationsEnabled } = await Preferences.get({
+    key: "notificationsEnabled",
+  });
+  const { value: onboardingComplete } = await Preferences.get({
+    key: "onboardingComplete",
+  });
+
   return {
-    language: localStorage.getItem('lang'),
-    audioConsent: localStorage.getItem('audioConsent') === 'true',
-    audioEnabled: localStorage.getItem('audio_enabled') === 'true',
-    musicEnabled: localStorage.getItem('musicEnabled') === 'true',
-    notificationsEnabled: localStorage.getItem('notificationsEnabled') === 'true',
-    onboardingComplete: localStorage.getItem('onboardingComplete') === 'true'
+    language: language,
+    audioConsent: audioConsent === "true",
+    audioEnabled: audioEnabled === "true",
+    musicEnabled: musicEnabled === "true",
+    notificationsEnabled: notificationsEnabled === "true",
+    onboardingComplete: onboardingComplete === "true",
   };
 };

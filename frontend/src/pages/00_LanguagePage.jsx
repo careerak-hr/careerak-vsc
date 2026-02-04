@@ -19,13 +19,17 @@ export default function LanguagePage() {
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false); // New state for notification modal
   const [loading, setLoading] = useState(true);
+  const [audioConsent, setAudioConsent] = useState(false);
 
   useEffect(() => {
-    if (isOnboardingComplete()) {
-      navigate("/entry", { replace: true });
-    } else {
-      setLoading(false);
-    }
+    const checkOnboarding = async () => {
+      if (await isOnboardingComplete()) {
+        navigate("/entry", { replace: true });
+      } else {
+        setLoading(false);
+      }
+    };
+    checkOnboarding();
   }, [navigate]);
 
   const handleLangPick = (lang) => {
@@ -44,22 +48,21 @@ export default function LanguagePage() {
   };
 
   const handleAudioConfirm = (consent) => {
-    localStorage.setItem("audioConsent", consent);
+    setAudioConsent(consent);
     setIsAudioModalOpen(false);
     setIsNotificationModalOpen(true); // Open notification modal next
   };
 
-  const handleNotificationConfirm = (consent) => {
-    const audioConsent = localStorage.getItem("audioConsent") === 'true';
-    finalize(audioConsent, consent);
+  const handleNotificationConfirm = async (consent) => {
+    await finalize(audioConsent, consent);
   };
 
-  const finalize = (audioConsent, notificationConsent) => {
+  const finalize = async (audioConsent, notificationConsent) => {
     setIsNotificationModalOpen(false);
 
     // Use the utility to mark onboarding as complete
-    markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
-    saveLanguage(selectedLang);
+    await markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
+    await saveLanguage(selectedLang);
 
     // Navigate to the entry page after finalization
     navigate("/entry", { replace: true });
