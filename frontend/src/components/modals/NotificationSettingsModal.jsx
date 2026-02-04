@@ -1,34 +1,31 @@
-import React from 'react';
 
-const NotificationSettingsModal = ({ isOpen, onClose, onConfirm, language, t }) => {
+import React from "react";
+import "./Modal.css"; // Use the unified modal CSS
+
+const NotificationSettingsModal = ({ isOpen, onConfirm, language, t }) => {
   if (!isOpen) return null;
 
+  // Use the correct translation keys from the t object
+  const texts = {
+    title: t.notificationTitle || "Enable Notifications?",
+    description: t.notificationDesc || "Stay updated with job alerts and application statuses.",
+    confirm: t.yes || "Yes",
+    deny: t.no || "No",
+  };
+
   return (
-    <div className="fixed inset-0 bg-[#304B60]/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000]">
-      <div className="bg-[#E3DAD1] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-[#304B60] animate-in fade-in zoom-in duration-300">
-        <div className="mb-6">
-          <div className="w-16 h-16 bg-[#304B60]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-3xl">🔔</span>
-          </div>
-          <p className="text-[#304B60] font-bold text-lg leading-relaxed" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-            {t.notificationTitle}
-          </p>
-          <p className="text-[#304B60]/60 font-bold text-sm mt-2" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-            {t.notificationDesc}
-          </p>
+    <div className="modal-backdrop">
+      <div className="modal-content" dir={language === "ar" ? "rtl" : "ltr"}>
+        <div className="modal-body">
+          <h2 className="modal-title">{texts.title}</h2>
+          <p className="modal-description">{texts.description}</p>
         </div>
-        <div className="flex gap-4 w-full">
-          <button 
-            onClick={() => onConfirm(true)} 
-            className="flex-1 py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg"
-          >
-            {t.yes}
+        <div className="modal-actions">
+          <button onClick={() => onConfirm(true)} className="modal-confirm-btn">
+            {texts.confirm}
           </button>
-          <button 
-            onClick={() => onConfirm(false)} 
-            className="flex-1 py-3 bg-[#304B60] text-[#E3DAD1] rounded-2xl font-bold shadow-lg border-2 border-[#304B60] hover:scale-105 transition-all text-lg"
-          >
-            {t.no}
+          <button onClick={() => onConfirm(false)} className="modal-cancel-btn">
+            {texts.deny}
           </button>
         </div>
       </div>

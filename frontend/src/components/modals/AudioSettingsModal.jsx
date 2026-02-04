@@ -1,20 +1,21 @@
+
 import React from 'react';
-import './LanguageConfirmModal.css';
+import './Modal.css'; // Use the unified modal CSS
 
 const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="lang-confirm-modal-backdrop">
-      <div className="lang-confirm-modal-content">
-        <p className="lang-confirm-modal-text" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-          {t.audioTitle}
-        </p>
-        <div className="lang-confirm-modal-buttons">
-          <button onClick={() => onConfirm(true)} className="lang-confirm-modal-btn">
+    <div className="modal-backdrop">
+      <div className="modal-content" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="modal-body">
+          <h2 className="modal-title">{t.audioTitle}</h2>
+        </div>
+        <div className="modal-actions">
+          <button onClick={() => onConfirm(true)} className="modal-confirm-btn">
             {t.yes}
           </button>
-          <button onClick={() => onConfirm(false)} className="lang-confirm-modal-btn">
+          <button onClick={() => onConfirm(false)} className="modal-cancel-btn">
             {t.no}
           </button>
         </div>

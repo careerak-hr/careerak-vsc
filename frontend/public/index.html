@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
@@ -5,13 +6,11 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#1A365D" />
-    
-    <!-- قفل الوضع الليلي على مستوى المتصفح -->
     <meta name="color-scheme" content="light">
-    
     <meta name="description" content="Careerak - The Future of HR" />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
     <title>Careerak</title>
     
     <style>
@@ -38,38 +37,32 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     
-    <!-- سكريبت إصلاح الحقول المقفولة -->
     <script src="%PUBLIC_URL%/input-fix.js"></script>
     
     <script>
-      // تعطيل قوائم النظام مع السماح للحقول بالعمل
       document.addEventListener('DOMContentLoaded', function() {
-        // تعطيل قائمة السياق فقط على العناصر غير التفاعلية
         document.addEventListener('contextmenu', function(e) {
-          if (!e.target.matches('input, select, textarea')) {
+          if (e.target && typeof e.target.matches === 'function' && !e.target.matches('input, select, textarea')) {
             e.preventDefault();
             return false;
           }
         });
         
-        // تعطيل تحديد النص فقط على العناصر غير التفاعلية
         document.addEventListener('selectstart', function(e) {
-          if (!e.target.matches('input, select, textarea')) {
+          if (e.target && typeof e.target.matches === 'function' && !e.target.matches('input, select, textarea')) {
             e.preventDefault();
             return false;
           }
         });
         
-        // تعطيل السحب والإفلات فقط على العناصر غير التفاعلية
         document.addEventListener('dragstart', function(e) {
-          if (!e.target.matches('input, select, textarea')) {
+          if (e.target && typeof e.target.matches === 'function' && !e.target.matches('input, select, textarea')) {
             e.preventDefault();
             return false;
           }
         });
       });
       
-      // تطبيق قواعد منع التحديد فقط على العناصر غير التفاعلية
       window.addEventListener('load', function() {
         const allElements = document.querySelectorAll('*:not(input):not(select):not(textarea)');
         allElements.forEach(function(element) {
@@ -83,7 +76,6 @@
           element.ondragstart = function() { return false; };
         });
         
-        // التأكد من أن الحقول قابلة للتفاعل
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(function(input) {
           input.style.webkitUserSelect = 'text';

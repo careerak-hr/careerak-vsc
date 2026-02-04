@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { discoverBestServer } from '../services/api';
@@ -9,7 +10,7 @@ import './01_EntryPage.css';
 export default function EntryPage() {
   const [phase, setPhase] = useState(0);
   const navigate = useNavigate();
-  const { audioEnabled, language } = useAuth();
+  const { audioEnabled, language, isAuthenticated } = useAuth(); // isAuthenticated
   const t = entryTranslations[language] || entryTranslations.ar;
 
   const audioRef = useRef(null);
@@ -37,7 +38,14 @@ export default function EntryPage() {
       setTimeout(() => { if (isMounted.current) setPhase(3); }, SYSTEM_DELAY + 7000),
       setTimeout(() => {
         if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
-        if (isMounted.current) navigate('/login', { replace: true });
+        if (isMounted.current) {
+          // Check authentication status and redirect accordingly
+          if (isAuthenticated) {
+            navigate('/', { replace: true });
+          } else {
+            navigate('/login', { replace: true });
+          }
+        }
       }, SYSTEM_DELAY + 9000)
     ];
 
@@ -58,7 +66,7 @@ export default function EntryPage() {
       if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
       listener.then(l => l.remove());
     };
-  }, [navigate, audioEnabled]);
+  }, [navigate, audioEnabled, isAuthenticated]); // Add isAuthenticated to dependencies
 
   useEffect(() => {
     if (audioEnabled && phase === 1 && !audioRef.current) {

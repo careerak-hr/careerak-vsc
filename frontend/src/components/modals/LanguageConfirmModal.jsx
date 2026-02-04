@@ -1,20 +1,21 @@
-import React from 'react';
-import './LanguageConfirmModal.css';
 
-const LanguageConfirmModal = ({ isOpen, onClose, onConfirm, onCancel, language, t }) => {
+import React from 'react';
+import './Modal.css'; // Use the unified modal CSS
+
+const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="lang-confirm-modal-backdrop">
-      <div className="lang-confirm-modal-content">
-        <p className="lang-confirm-modal-text" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-          {t.confirmLang}
-        </p>
-        <div className="lang-confirm-modal-buttons">
-          <button onClick={onConfirm} className="lang-confirm-modal-btn">
+    <div className="modal-backdrop">
+      <div className="modal-content" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+        <div className="modal-body">
+          <p className="modal-description">{t.confirmLang}</p>
+        </div>
+        <div className="modal-actions">
+          <button onClick={onConfirm} className="modal-confirm-btn">
             {t.ok}
           </button>
-          <button onClick={onCancel} className="lang-confirm-modal-btn">
+          <button onClick={onCancel} className="modal-cancel-btn">
             {t.no}
           </button>
         </div>

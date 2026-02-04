@@ -1,39 +1,31 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
+import { markOnboardingComplete, isOnboardingComplete } from "../utils/onboardingUtils";
 import "./00_LanguagePage.css";
+
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
+import NotificationSettingsModal from "../components/modals/NotificationSettingsModal"; // Import the new modal
 import languagePageTranslations from "../data/languagePage.json";
 
 export default function LanguagePage() {
-  const { saveLanguage, saveAudio, saveMusic } = useAppSettings();
+  const { saveLanguage } = useAppSettings();
   const navigate = useNavigate();
 
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false); // New state for notification modal
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkOnboarding = async () => {
-      try {
-        const { value } = await localStorage.getItem({ key: 'onboardingComplete' });
-        if (value === 'true') {
-          navigate('/entry', { replace: true });
-        } else {
-          setLoading(false);
-        }
-      } catch (err) {
-        const value = localStorage.getItem("onboardingComplete");
-        if (value === 'true') {
-          navigate('/entry', { replace: true });
-        } else {
-          setLoading(false);
-        }
-      }
-    };
-    checkOnboarding();
+    if (isOnboardingComplete()) {
+      navigate("/entry", { replace: true });
+    } else {
+      setLoading(false);
+    }
   }, [navigate]);
 
   const handleLangPick = (lang) => {
@@ -52,32 +44,31 @@ export default function LanguagePage() {
   };
 
   const handleAudioConfirm = (consent) => {
-    finalize(consent);
+    localStorage.setItem("audioConsent", consent);
+    setIsAudioModalOpen(false);
+    setIsNotificationModalOpen(true); // Open notification modal next
   };
 
-  const finalize = async (audioConsent) => {
-    setIsAudioModalOpen(false);
-    try {
-      if (saveLanguage && saveAudio && saveMusic) {
-        await saveLanguage(selectedLang);
-        await saveAudio(audioConsent);
-        await saveMusic(audioConsent);
-      }
-      await localStorage.setItem('onboardingComplete', 'true');
-    } catch (err) {
-      localStorage.setItem("onboardingComplete", 'true');
-    }
+  const handleNotificationConfirm = (consent) => {
+    const audioConsent = localStorage.getItem("audioConsent") === 'true';
+    finalize(audioConsent, consent);
+  };
+
+  const finalize = (audioConsent, notificationConsent) => {
+    setIsNotificationModalOpen(false);
+
+    // Use the utility to mark onboarding as complete
+    markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
+    saveLanguage(selectedLang);
+
+    // Navigate to the entry page after finalization
     navigate("/entry", { replace: true });
   };
 
   const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
 
   if (loading) {
-    return (
-      <div className="lang-page-loading-container">
-        Loading...
-      </div>
-    );
+    return <div className="lang-page-loading-container">Loading...</div>;
   }
 
   return (
@@ -124,8 +115,18 @@ export default function LanguagePage() {
       {isAudioModalOpen && (
         <AudioSettingsModal
           isOpen={isAudioModalOpen}
-          onClose={() => setIsAudioModalOpen(false)}
+          onClose={() => handleAudioConfirm(false)} // Assume no consent if closed
           onConfirm={handleAudioConfirm}
+          language={selectedLang}
+          t={t}
+        />
+      )}
+
+      {isNotificationModalOpen && (
+        <NotificationSettingsModal
+          isOpen={isNotificationModalOpen}
+          onClose={() => handleNotificationConfirm(false)} // Assume no consent if closed
+          onConfirm={handleNotificationConfirm}
           language={selectedLang}
           t={t}
         />

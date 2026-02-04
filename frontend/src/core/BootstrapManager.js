@@ -191,17 +191,13 @@ class BootstrapManager {
         // تحميل الأدوات المساعدة بشكل ديناميكي
         const utilityPromises = [
           import('../utils/resetSettings').catch(() => null),
-          import('../utils/fontTester').catch(() => null),
-          import('../utils/audioTester').catch(() => null),
-          import('../utils/appExitManager').catch(() => null),
-          import('../utils/exitTester').catch(() => null),
-          import('../utils/cvAnalyzerTester').catch(() => null)
+          import('../utils/appExitManager').catch(() => null)
         ];
         
         const results = await Promise.allSettled(utilityPromises);
         const loadedCount = results.filter(r => r.status === 'fulfilled' && r.value).length;
         
-        console.log(`✅ Development utilities loaded: ${loadedCount}/6`);
+        console.log(`✅ Development utilities loaded: ${loadedCount}/2`);
       } catch (error) {
         console.warn('⚠️ Some development utilities not available:', error.message);
       }
