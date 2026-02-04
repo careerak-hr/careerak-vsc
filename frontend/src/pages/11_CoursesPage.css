@@ -1,5 +1,5 @@
 .courses-page-container {
-  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000;
+  @apply min-h-screen bg-secondary transition-opacity duration-1000;
 }
 
 .courses-page-main {
@@ -7,15 +7,15 @@
 }
 
 .courses-header {
-  @apply mb-12 text-center;
+  @apply text-center mb-12;
 }
 
 .courses-title {
-  @apply text-4xl font-black text-[#304B60] mb-2 italic;
+  @apply text-4xl font-black text-primary mb-2 italic;
 }
 
 .courses-subtitle {
-  @apply text-[#304B60]/40 font-bold;
+  @apply text-primary/40 font-bold;
 }
 
 .courses-loading-container {
@@ -23,11 +23,11 @@
 }
 
 .courses-loading-spinner {
-  @apply w-12 h-12 border-4 border-[#304B60]/30 border-t-[#304B60] rounded-full animate-spin;
+  @apply w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin;
 }
 
 .courses-no-courses-container {
-  @apply bg-[#E3DAD1] rounded-[3rem] p-20 text-center shadow-xl border-2 border-[#304B60]/5;
+  @apply bg-secondary rounded-[3rem] p-20 text-center shadow-xl border-2 border-primary/5;
 }
 
 .courses-no-courses-icon {
@@ -35,7 +35,7 @@
 }
 
 .courses-no-courses-text {
-  @apply text-[#304B60] font-black text-xl;
+  @apply text-primary font-black text-xl;
 }
 
 .courses-grid {
@@ -43,19 +43,19 @@
 }
 
 .course-card {
-  @apply bg-[#304B60]/5 rounded-[3.5rem] shadow-xl border border-[#D48161]/10 overflow-hidden flex flex-col hover:scale-[1.02] transition-all group;
+  @apply bg-primary/5 rounded-[3.5rem] shadow-xl border border-accent/10 overflow-hidden flex flex-col hover:scale-[1.02] transition-all;
 }
 
 .course-card-header {
-  @apply h-48 bg-[#304B60] relative flex items-center justify-center;
+  @apply h-48 bg-primary relative flex items-center justify-center;
 }
 
 .course-card-icon {
-  @apply text-5xl opacity-20 text-[#E3DAD1];
+  @apply text-5xl opacity-20 text-secondary;
 }
 
 .course-card-category-badge {
-  @apply absolute top-4 right-4 px-4 py-2 bg-[#E3DAD1]/10 backdrop-blur-md rounded-xl text-[#E3DAD1] text-[10px] font-black uppercase;
+  @apply absolute top-4 right-4 px-4 py-2 bg-secondary/10 backdrop-blur-md rounded-xl text-secondary text-[10px] font-black uppercase;
 }
 
 .course-card-body {
@@ -63,7 +63,7 @@
 }
 
 .course-card-title {
-  @apply text-xl font-black text-[#304B60] mb-4 h-14 overflow-hidden;
+  @apply text-xl font-black text-primary mb-4 h-14 overflow-hidden;
 }
 
 .course-card-details {
@@ -71,17 +71,17 @@
 }
 
 .course-card-detail-item {
-  @apply flex justify-between items-center text-xs font-bold text-[#304B60]/40;
+  @apply flex justify-between items-center text-xs font-bold text-primary/40;
 }
 
 .course-card-detail-value {
-  @apply text-[#304B60];
+  @apply text-primary;
 }
 
 .course-card-price {
-  @apply text-[#D48161] font-black;
+  @apply text-accent font-black;
 }
 
 .course-card-enroll-btn {
-  @apply w-full bg-[#304B60] text-[#D48161] py-4 rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-all mt-auto;
+  @apply w-full bg-primary text-accent py-4 rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-all mt-auto;
 }
