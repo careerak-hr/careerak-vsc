@@ -2,12 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSettings } from "../context/AppSettingsContext";
-import { markOnboardingComplete, isOnboardingComplete } from "../utils/onboardingUtils";
+import {
+  markOnboardingComplete,
+  isOnboardingComplete,
+  resetOnboarding, // Import the reset function
+} from "../utils/onboardingUtils";
 import "./00_LanguagePage.css";
 
 import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
-import NotificationSettingsModal from "../components/modals/NotificationSettingsModal"; // Import the new modal
+import NotificationSettingsModal from "../components/modals/NotificationSettingsModal";
 import languagePageTranslations from "../data/languagePage.json";
 
 export default function LanguagePage() {
@@ -17,12 +21,16 @@ export default function LanguagePage() {
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
-  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false); // New state for notification modal
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [audioConsent, setAudioConsent] = useState(false);
 
   useEffect(() => {
     const checkOnboarding = async () => {
+      // This is a temporary measure to ensure a clean start on all devices.
+      // We can discuss if this should be kept or removed later.
+      // await resetOnboarding(); // Uncomment for testing to always reset.
+
       if (await isOnboardingComplete()) {
         navigate("/entry", { replace: true });
       } else {
@@ -50,7 +58,7 @@ export default function LanguagePage() {
   const handleAudioConfirm = (consent) => {
     setAudioConsent(consent);
     setIsAudioModalOpen(false);
-    setIsNotificationModalOpen(true); // Open notification modal next
+    setIsNotificationModalOpen(true);
   };
 
   const handleNotificationConfirm = async (consent) => {
@@ -60,15 +68,14 @@ export default function LanguagePage() {
   const finalize = async (audioConsent, notificationConsent) => {
     setIsNotificationModalOpen(false);
 
-    // Use the utility to mark onboarding as complete
     await markOnboardingComplete(selectedLang, audioConsent, notificationConsent);
     await saveLanguage(selectedLang);
 
-    // Navigate to the entry page after finalization
     navigate("/entry", { replace: true });
   };
 
-  const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
+  const t =
+    languagePageTranslations[selectedLang] || languagePageTranslations.ar;
 
   if (loading) {
     return <div className="lang-page-loading-container">Loading...</div>;
@@ -92,13 +99,22 @@ export default function LanguagePage() {
         </h1>
 
         <div className="lang-page-buttons-container">
-          <button onClick={() => handleLangPick("ar")} className="lang-page-btn">
+          <button
+            onClick={() => handleLangPick("ar")}
+            className="lang-page-btn"
+          >
             العربية
           </button>
-          <button onClick={() => handleLangPick("en")} className="lang-page-btn">
+          <button
+            onClick={() => handleLangPick("en")}
+            className="lang-page-btn"
+          >
             English
           </button>
-          <button onClick={() => handleLangPick("fr")} className="lang-page-btn">
+          <button
+            onClick={() => handleLangPick("fr")}
+            className="lang-page-btn"
+          >
             Français
           </button>
         </div>
@@ -118,7 +134,7 @@ export default function LanguagePage() {
       {isAudioModalOpen && (
         <AudioSettingsModal
           isOpen={isAudioModalOpen}
-          onClose={() => handleAudioConfirm(false)} // Assume no consent if closed
+          onClose={() => handleAudioConfirm(false)}
           onConfirm={handleAudioConfirm}
           language={selectedLang}
           t={t}
@@ -128,7 +144,7 @@ export default function LanguagePage() {
       {isNotificationModalOpen && (
         <NotificationSettingsModal
           isOpen={isNotificationModalOpen}
-          onClose={() => handleNotificationConfirm(false)} // Assume no consent if closed
+          onClose={() => handleNotificationConfirm(false)}
           onConfirm={handleNotificationConfirm}
           language={selectedLang}
           t={t}
