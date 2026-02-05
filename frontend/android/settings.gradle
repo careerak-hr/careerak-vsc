@@ -2,30 +2,4 @@ include ':app'
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 
-// --- Definitive Manual Capacitor Plugin Linking --- 
-// [FIX] Corrected the relative path from '../../' to '../'
-// This was the root cause of the persistent build failures.
-
-include ':capacitor-android'
-project(':capacitor-android').projectDir = new File(settingsDir, '../node_modules/@capacitor/android/capacitor')
-
-include ':capacitor-app'
-project(':capacitor-app').projectDir = new File(settingsDir, '../node_modules/@capacitor/app/android')
-
-include ':capacitor-preferences'
-project(':capacitor-preferences').projectDir = new File(settingsDir, '../node_modules/@capacitor/preferences/android')
-
-include ':capacitor-camera'
-project(':capacitor-camera').projectDir = new File(settingsDir, '../node_modules/@capacitor/camera/android')
-
-include ':capacitor-filesystem'
-project(':capacitor-filesystem').projectDir = new File(settingsDir, '../node_modules/@capacitor/filesystem/android')
-
-include ':capacitor-geolocation'
-project(':capacitor-geolocation').projectDir = new File(settingsDir, '../node_modules/@capacitor/geolocation/android')
-
-include ':capacitor-status-bar'
-project(':capacitor-status-bar').projectDir = new File(settingsDir, '../node_modules/@capacitor/status-bar/android')
-
-// The automatic linking can now be safely removed as we are handling it manually.
-// apply from: 'capacitor.settings.gradle'
+apply from: 'capacitor.settings.gradle'
