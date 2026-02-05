@@ -1,41 +1,29 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
 buildscript {
-    apply from: "variables.gradle"
+    
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:9.0.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'com.google.gms:google-services:4.4.4'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
+
+apply from: "variables.gradle"
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-        maven {
-            setUrl("https://jitpack.io") // [وعد] إصلاح تحذير Gradle 10 بدون كسر Groovy
-        }
-    }
-    
-    // Apply consistent versions across all subprojects
-    ext {
-        kotlin_version = rootProject.ext.kotlinVersion
-        compileSdkVersion = rootProject.ext.compileSdkVersion
-        minSdkVersion = rootProject.ext.minSdkVersion
-        targetSdkVersion = rootProject.ext.targetSdkVersion
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-allprojects {
-    configurations.all {
-        resolutionStrategy {
-            force 'org.bouncycastle:bcprov-jdk18on:1.78.1'
-        }
-    }
 }
