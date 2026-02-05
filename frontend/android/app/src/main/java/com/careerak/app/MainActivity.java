@@ -26,8 +26,8 @@ public class MainActivity extends BridgeActivity {
         // إعدادات WebView الضرورية لحل مشكلة الحقول المقفولة
         configureWebView();
 
-        // اختبار الاتصال بالسيرفر عند بدء التشغيل
-        checkBackendConnection();
+        // [تم التعطيل مؤقتاً] اختبار الاتصال بالسيرفر عند بدء التشغيل لتجاوز مشكلة التحميل
+        // checkBackendConnection();
     }
 
     private void configureWebView() {
