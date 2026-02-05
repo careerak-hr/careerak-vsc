@@ -6,9 +6,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-// ✅ إضافة المكتبات الأساسية المفقودة
-import com.getcapacitor.plugin.App;
-import com.getcapacitor.plugin.preferences.Preferences;
+// ✅ [تصحيح] إضافة المكتبات الأساسية بأسماء الحزم الصحيحة لـ Capacitor 6
+import com.getcapacitor.app.AppPlugin;
+import com.getcapacitor.preferences.PreferencesPlugin;
 
 import com.careerak.app.models.HealthResponse;
 import com.careerak.app.network.ApiClient;
@@ -24,9 +24,9 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // ✅ تسجيل الإضافات (Plugins) بشكل يدوي وصريح
-        registerPlugin(App.class);
-        registerPlugin(Preferences.class);
+        // ✅ [تصحيح] تسجيل الإضافات (Plugins) بأسماء الفئات الصحيحة
+        registerPlugin(AppPlugin.class);
+        registerPlugin(PreferencesPlugin.class);
         registerPlugin(WebViewConfigPlugin.class);
 
         // إعدادات WebView الضرورية
