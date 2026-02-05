@@ -13,9 +13,10 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #E3DAD1 !important; /* Keep background color */
-  color: #304B60 !important; /* Keep text color */
-  /* font-family is now handled by GlobalFontEnforcer */
+  /* Use theme() to apply colors directly from tailwind.config.js, respecting CORE_RULES.md */
+  background-color: theme('colors.secondary.DEFAULT') !important;
+  color: theme('colors.primary.DEFAULT') !important;
+  /* font-family is now handled by fontEnforcement.css */
 }
 
 /* Custom scrollbar */
@@ -27,9 +28,9 @@ body {
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #304B60, #D48161);
+  background: linear-gradient(to bottom, theme('colors.primary.DEFAULT'), theme('colors.accent.DEFAULT'));
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #D48161, #304B60);
+  background: linear-gradient(to bottom, theme('colors.accent.DEFAULT'), theme('colors.primary.DEFAULT'));
 }

@@ -6,20 +6,21 @@ module.exports = {
   ],
   theme: {
     colors: {
+      // Colors are now aligned with CORE_RULES.md
       primary: {
-        DEFAULT: '#1A365D',
-        light: '#274C7A',
-        dark: '#102A4C',
+        DEFAULT: '#304B60', // الكحلي الوقور
+        light: '#4A6A88', // Lighter shade for hover, etc.
+        dark: '#1A2C3F',  // Darker shade for active, etc.
       },
       secondary: {
-        DEFAULT: '#E3DAD0',
-        light: '#EFE9E3',
-        dark: '#CFC5BA',
+        DEFAULT: '#E3DAD1', // البيج الملكي
+        light: '#F1EAE4',
+        dark: '#D2C9C0',
       },
       accent: {
-        DEFAULT: '#C97A3D',
-        light: '#E2A36F',
-        dark: '#A8612E',
+        DEFAULT: '#D48161', // النحاسي الفخم
+        light: '#E5A88C',
+        dark: '#B86B49',
       },
       danger: {
         DEFAULT: '#D32F2F',
@@ -31,7 +32,7 @@ module.exports = {
         light: '#81C784',
         dark: '#1B5E20',
       },
-      hint: '#9CA3AF',
+      hint: '#9CA3AF', // As per CORE_RULES for hints
       white: '#FFFFFF',
       black: '#000000',
       transparent: 'transparent',

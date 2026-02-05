@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./i18n/i18n"; // Import i18n configuration
 import "./index.css";
+import "./styles/fontEnforcement.css"; // Import font enforcement styles
 import { resetOnboarding } from './utils/onboardingUtils';
 import { AuthProvider } from "./context/AuthContext";
 
