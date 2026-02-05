@@ -6,7 +6,7 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const session = require('express-session');
-const csrf = require('csurf');
+// const csrf = require('csurf'); // معطل مؤقتاً لحل مشكلة الموبايل
 const connectDB = require('./config/database');
 const logger = require('./utils/logger');
 const { 
@@ -40,8 +40,8 @@ app.use(session({
   }
 }));
 
-// 🛡️ CSRF Protection
-const csrfProtection = csrf({ cookie: true });
+// 🛡️ CSRF Protection (تم تعطيله مؤقتاً)
+// const csrfProtection = csrf({ cookie: true });
 
 // 🌐 HTTPS Enforcement في الإنتاج
 if (process.env.NODE_ENV === 'production') {
@@ -119,14 +119,14 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
-// المسارات
-app.use('/api/users', csrfProtection, userRoutes);
-app.use('/api/admin', csrfProtection, adminRoutes);
+// المسارات (بدون حماية CSRF مؤقتاً)
+app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 
-// مسار للحصول على CSRF token
-app.get('/api/csrf-token', csrfProtection, (req, res) => {
-  res.json({ csrfToken: req.csrfToken() });
-});
+// مسار للحصول على CSRF token (معطل مؤقتاً)
+// app.get('/api/csrf-token', csrfProtection, (req, res) => {
+//   res.json({ csrfToken: req.csrfToken() });
+// });
 
 app.get('/api/health', (req, res) => {
   logger.info('Health check accessed', { ip: req.ip });
@@ -166,9 +166,9 @@ app.use((err, req, res, next) => {
     userAgent: req.get('User-Agent')
   });
 
-  if (err.code === 'EBADCSRFTOKEN') {
-    return res.status(403).json({ error: 'رمز الأمان غير صحيح' });
-  }
+  // if (err.code === 'EBADCSRFTOKEN') { // معطل مؤقتاً
+  //   return res.status(403).json({ error: 'رمز الأمان غير صحيح' });
+  // }
 
   res.status(500).json({ 
     error: process.env.NODE_ENV === 'production' 

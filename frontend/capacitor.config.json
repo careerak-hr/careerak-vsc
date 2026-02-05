@@ -4,8 +4,7 @@
   "webDir": "build",
   "bundledWebRuntime": false,
   "server": {
-    "androidScheme": "https",
-    "hostname": "careerak-vsc.vercel.app"
+    "androidScheme": "https"
   },
   "android": {
     "allowMixedContent": true,

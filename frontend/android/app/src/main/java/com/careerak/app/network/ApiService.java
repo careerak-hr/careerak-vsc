@@ -6,6 +6,6 @@ import retrofit2.http.GET;
 
 public interface ApiService {
 
-    @GET("api/health")
+    @GET("health")
     Call<HealthResponse> checkServer();
 }
