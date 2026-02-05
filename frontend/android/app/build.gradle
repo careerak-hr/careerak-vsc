@@ -25,6 +25,8 @@ android {
     buildFeatures {
         resValues true
     }
+    // Required for capacitor-camera
+    coreLibraryDesugaringEnabled true
 }
 
 dependencies {
@@ -32,16 +34,28 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
-    implementation project(':capacitor-android')
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+
+    // --- Definitive Manual Capacitor Plugin Implementation --- 
+    // This is the final piece of the puzzle, linking the projects defined in settings.gradle.
+    implementation project(':capacitor-android')
+    implementation project(':capacitor-app')
+    implementation project(':capacitor-preferences')
+    implementation project(':capacitor-camera')
+    implementation project(':capacitor-filesystem')
+    implementation project(':capacitor-geolocation')
+    implementation project(':capacitor-status-bar')
     implementation project(':capacitor-cordova-android-plugins')
 
     // Re-add Retrofit and OkHttp dependencies
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+
+    // Required for capacitor-camera
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
 }
 
 apply from: 'capacitor.build.gradle'
