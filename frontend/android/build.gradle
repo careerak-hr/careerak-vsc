@@ -22,6 +22,24 @@ allprojects {
         google()
         mavenCentral()
     }
+
+    // --- The Definitive, Global Fix for the Proguard Issue ---
+    // This block intercepts the configuration of all Android sub-projects
+    // and corrects the Proguard file path before it can cause a build failure.
+    // This is the correct, sustainable way to solve this problem.
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin('com.android.library')) {
+            project.android.buildTypes.release {
+                proguardFiles project.files(project.android.buildTypes.release.proguardFiles.collect { file ->
+                    if (file.name == 'proguard-android.txt') {
+                        project.file(file.parentFile, 'proguard-android-optimize.txt')
+                    } else {
+                        file
+                    }
+                })
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {
