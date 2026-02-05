@@ -11,8 +11,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
@@ -25,8 +23,10 @@ android {
     buildFeatures {
         resValues true
     }
-    // Required for capacitor-camera
-    coreLibraryDesugaringEnabled true
+    // [FIX] Correctly place coreLibraryDesugaringEnabled inside compileOptions
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
 }
 
 dependencies {
@@ -38,8 +38,7 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
 
-    // --- Definitive Manual Capacitor Plugin Implementation --- 
-    // This is the final piece of the puzzle, linking the projects defined in settings.gradle.
+    // Definitive Manual Capacitor Plugin Implementation
     implementation project(':capacitor-android')
     implementation project(':capacitor-app')
     implementation project(':capacitor-preferences')
