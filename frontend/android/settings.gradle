@@ -2,30 +2,30 @@ include ':app'
 include ':capacitor-cordova-android-plugins'
 project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
 
-// --- Manual Capacitor Plugin Linking --- 
-// The automatic linking via 'capacitor.settings.gradle' is failing.
-// This manual inclusion is the definitive fix to ensure all plugins are found.
+// --- Definitive Manual Capacitor Plugin Linking --- 
+// [FIX] Corrected the relative path from '../../' to '../'
+// This was the root cause of the persistent build failures.
 
 include ':capacitor-android'
-project(':capacitor-android').projectDir = new File(settingsDir, '../../node_modules/@capacitor/android/capacitor')
+project(':capacitor-android').projectDir = new File(settingsDir, '../node_modules/@capacitor/android/capacitor')
 
 include ':capacitor-app'
-project(':capacitor-app').projectDir = new File(settingsDir, '../../node_modules/@capacitor/app/android')
+project(':capacitor-app').projectDir = new File(settingsDir, '../node_modules/@capacitor/app/android')
 
 include ':capacitor-preferences'
-project(':capacitor-preferences').projectDir = new File(settingsDir, '../../node_modules/@capacitor/preferences/android')
+project(':capacitor-preferences').projectDir = new File(settingsDir, '../node_modules/@capacitor/preferences/android')
 
 include ':capacitor-camera'
-project(':capacitor-camera').projectDir = new File(settingsDir, '../../node_modules/@capacitor/camera/android')
+project(':capacitor-camera').projectDir = new File(settingsDir, '../node_modules/@capacitor/camera/android')
 
 include ':capacitor-filesystem'
-project(':capacitor-filesystem').projectDir = new File(settingsDir, '../../node_modules/@capacitor/filesystem/android')
+project(':capacitor-filesystem').projectDir = new File(settingsDir, '../node_modules/@capacitor/filesystem/android')
 
 include ':capacitor-geolocation'
-project(':capacitor-geolocation').projectDir = new File(settingsDir, '../../node_modules/@capacitor/geolocation/android')
+project(':capacitor-geolocation').projectDir = new File(settingsDir, '../node_modules/@capacitor/geolocation/android')
 
 include ':capacitor-status-bar'
-project(':capacitor-status-bar').projectDir = new File(settingsDir, '../../node_modules/@capacitor/status-bar/android')
+project(':capacitor-status-bar').projectDir = new File(settingsDir, '../node_modules/@capacitor/status-bar/android')
 
-// We keep the original line, but our manual includes above will solve the problem.
-apply from: 'capacitor.settings.gradle'
+// The automatic linking can now be safely removed as we are handling it manually.
+// apply from: 'capacitor.settings.gradle'
