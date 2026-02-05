@@ -1102,7 +1102,7 @@
   resolved "https://registry.npmjs.org/@capacitor/android/-/android-6.2.1.tgz"
   integrity sha512-8gd4CIiQO5LAIlPIfd5mCuodBRxMMdZZEdj8qG8m+dQ1sQ2xyemVpzHmRK8qSCHorsBUCg3D62j2cp6bEBAkdw==
 
-"@capacitor/app@^6.0.1":
+"@capacitor/app@^6.0.3":
   version "6.0.3"
   resolved "https://registry.npmjs.org/@capacitor/app/-/app-6.0.3.tgz"
   integrity sha512-4gFUCbcVz0N/YYN32OBFerocWXslIv3Nc90gDiRsBkJc0plwK6kIUT6PKa5WtW2kfhteUeCVXQbvArH2fH+0Ug==
@@ -1152,7 +1152,7 @@
   resolved "https://registry.npmjs.org/@capacitor/geolocation/-/geolocation-6.1.1.tgz"
   integrity sha512-zR24reZqkb9farg+qVqR0+DdDYs05SqkiqxCENoPofk/QWD6AobcHKDZutwifqO66jK2rM0ECo8MvbQv4MUTyA==
 
-"@capacitor/preferences@^6.0.2":
+"@capacitor/preferences@^6.0.4":
   version "6.0.4"
   resolved "https://registry.npmjs.org/@capacitor/preferences/-/preferences-6.0.4.tgz"
   integrity sha512-ziauSI1pgdyl+gduvvf8lInvzF3Wdyu/ok+u7NlnhKp8XOj9plJgtnXZWFiR8CiCK5wMvo+gFaNh3zhMyEUwpA==
@@ -10420,15 +10420,10 @@ yallist@^5.0.0:
   resolved "https://registry.npmjs.org/yallist/-/yallist-5.0.0.tgz"
   integrity sha512-YgvUTfwqyc7UXVMrB+SImsVYSmTS8X/tSrtdNZMImM+n7+QTriRXyXim0mBrTXNeqzVF0KWGgHPeiyViFFrNDw==
 
-yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2:
+yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2, yaml@^2.4.2:
   version "1.10.2"
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.2.tgz"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
-
-yaml@^2.4.2:
-  version "2.8.2"
-  resolved "https://registry.npmjs.org/yaml/-/yaml-2.8.2.tgz"
-  integrity sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==
 
 yargs-parser@^20.2.2:
   version "20.2.9"
