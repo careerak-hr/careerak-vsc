@@ -10,12 +10,13 @@ import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.app.AppPlugin;
 import com.getcapacitor.preferences.PreferencesPlugin;
 
-// Assuming these are the correct paths for your custom classes
+// Re-added imports for our custom network and model classes
 import com.careerak.app.models.HealthResponse;
 import com.careerak.app.network.ApiClient;
 import com.careerak.app.network.ApiService;
 import com.careerak.app.WebViewConfigPlugin;
 
+// Re-added imports for Retrofit
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,7 +26,7 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Register all the necessary plugins
+        // Register all necessary plugins
         registerPlugin(AppPlugin.class);
         registerPlugin(PreferencesPlugin.class);
         registerPlugin(WebViewConfigPlugin.class);
@@ -66,14 +67,14 @@ public class MainActivity extends BridgeActivity {
                     Log.d("Careerak_API", "Backend connection successful: " + response.body().getServer());
                 } else {
                     Log.e("Careerak_API", "Backend connection check failed. Response: " + response.message());
-                    // We show a log message but avoid showing a Toast to prevent disruption
+                    // We avoid showing a Toast to prevent user disruption
                 }
             }
 
             @Override
             public void onFailure(Call<HealthResponse> call, Throwable t) {
                 Log.e("Careerak_API", "Backend connection error: " + t.getMessage());
-                // We show a log message but avoid showing a Toast to prevent disruption
+                 // We avoid showing a Toast to prevent user disruption
             }
         });
     }
