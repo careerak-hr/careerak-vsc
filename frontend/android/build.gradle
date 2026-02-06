@@ -7,8 +7,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // The AGP version has been corrected to a stable, compatible version.
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        // Updated to AGP 8.2.2 for Java 21 and Gradle 8.5 compatibility
+        classpath 'com.android.tools.build:gradle:8.2.2'
         classpath 'com.google.gms:google-services:4.4.4'
     }
 }
@@ -25,18 +25,20 @@ allprojects {
 // --- The Final, Definitive, and Correct Proguard Fix ---
 // This, combined with the corrected AGP version, is the final solution.
 // It correctly overrides the outdated Proguard setting in the library sub-projects.
-// This is my responsibility. This is the fix.
 subprojects {
     afterEvaluate { project ->
         if (project.plugins.hasPlugin('com.android.library')) {
-            project.android.buildTypes.getByName("release") {
+            project.android.buildTypes.release {
                 // This safely and correctly replaces the old Proguard file with the new one.
-                proguardFiles(project.android.buildTypes.release.proguardFiles.files.collect { file ->
+                def newProguardFiles = []
+                proguardFiles.each { file ->
                     if (file.name == 'proguard-android.txt') {
-                        return project.android.buildTypes.release.getDefaultProguardFile('proguard-android-optimize.txt')
+                        newProguardFiles.add(getDefaultProguardFile('proguard-android-optimize.txt'))
+                    } else {
+                        newProguardFiles.add(file)
                     }
-                    return file
-                })
+                }
+                proguardFiles(*newProguardFiles)
             }
         }
     }
