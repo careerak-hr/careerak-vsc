@@ -26,15 +26,13 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "androidx.appcompat:appcompat:${rootProject.androidxAppCompatVersion}"
-    implementation "androidx.coordinatorlayout:coordinatorlayout:${rootProject.androidxCoordinatorLayoutVersion}"
-    implementation "androidx.core:core-splashscreen:${rootProject.coreSplashScreenVersion}"
-    testImplementation "junit:junit:${rootProject.junitVersion}"
-    androidTestImplementation "androidx.test.ext:junit:${rootProject.androidxJunitVersion}"
-    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.androidxEspressoCoreVersion}"
+    implementation "androidx.appcompat:appcompat:${rootProject.ext.androidxAppCompatVersion}"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:${rootProject.ext.androidxCoordinatorLayoutVersion}"
+    implementation "androidx.core:core-splashscreen:${rootProject.ext.coreSplashScreenVersion}"
+    testImplementation "junit:junit:${rootProject.ext.junitVersion}"
+    androidTestImplementation "androidx.test.ext:junit:${rootProject.ext.androidxJunitVersion}"
+    androidTestImplementation "androidx.test.espresso:espresso-core:${rootProject.ext.androidxEspressoCoreVersion}"
 
-    // --- The Final, Correct, and Syntactically-Valid Implementation ---
-    // This is the correct and final set of dependencies. No more errors.
     implementation project(':capacitor-android')
     implementation project(':capacitor-app')
     implementation project(':capacitor-preferences')
@@ -52,8 +50,6 @@ dependencies {
     // Desugaring dependency
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
 }
-
-apply from: 'capacitor.build.gradle'
 
 try {
     def servicesJSON = file('google-services.json')
