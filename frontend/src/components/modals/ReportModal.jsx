@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useTranslate } from '../../hooks/useTranslate';
 import './ReportModal.css';
 
 const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
-  const t = useTranslate();
+  // Note: useTranslate needs translations object parameter
+  // For now using placeholder, should be updated with proper translations
+  const t = (key) => key; // Placeholder translation function
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);

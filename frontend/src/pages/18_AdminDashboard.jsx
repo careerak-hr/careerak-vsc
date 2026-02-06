@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { useTranslate } from '../hooks/useTranslate';
+import useTranslate from '../hooks/useTranslate';
 import adminDashboardTranslations from '../data/adminDashboard.json';
 import './18_AdminDashboard.css';
 
