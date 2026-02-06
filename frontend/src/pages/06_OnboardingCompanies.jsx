@@ -1,11 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
 
 const OnboardingCompanies = () => {
     const { language, updateUser, startBgMusic } = useApp(); // Corrected hook
 
+    useEffect(() => {
+        startBgMusic();
+    }, [startBgMusic]);
+
+    // استخدام المتغيرات لتجنب التحذيرات
+    console.log('Current language:', language);
+
+    const handleUpdateUser = (data) => {
+        updateUser(data);
+    };
+
     // ... (rest of the component remains the same)
-    return (<div>Onboarding Companies Page</div>);
+    return (
+        <div>
+            <h1>Onboarding Companies Page</h1>
+            <p>Language: {language}</p>
+            <button onClick={() => handleUpdateUser({ companyName: 'Test' })}>Update Company</button>
+        </div>
+    );
 }
 
 export default OnboardingCompanies;

@@ -1,22 +1,173 @@
 
 @import './assets/fonts/fonts.css'; /* Import local fonts */
+@import './styles/fontEnforcement.css'; /* Import font enforcement */
+@import './styles/dynamicFontEnforcement.css'; /* Import dynamic font enforcement */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* تعطيل الوضع الليلي وإجبار الألوان الثابتة */
+:root {
+  color-scheme: light !important;
+}
 
 /* إعدادات أساسية */
 * {
   box-sizing: border-box;
 }
 
-body {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
   /* Use theme() to apply colors directly from tailwind.config.js, respecting CORE_RULES.md */
-  background-color: theme('colors.secondary.DEFAULT') !important;
-  color: theme('colors.primary.DEFAULT') !important;
-  /* font-family is now handled by fontEnforcement.css */
+  background-color: #E3DAD1 !important; /* البيج الملكي */
+  color: #304B60 !important; /* الكحلي الوقور */
+}
+
+/* تطبيق الخطوط الافتراضية حسب اللغة */
+html[lang="ar"],
+html[lang="ar"] *,
+body[lang="ar"],
+body[lang="ar"] * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+html[lang="en"],
+html[lang="en"] *,
+body[lang="en"],
+body[lang="en"] * {
+  font-family: 'Cormorant Garamond', serif !important;
+}
+
+html[lang="fr"],
+html[lang="fr"] *,
+body[lang="fr"],
+body[lang="fr"] * {
+  font-family: 'EB Garamond', serif !important;
+}
+
+/* إجبار الألوان في جميع الأوضاع */
+@media (prefers-color-scheme: dark) {
+  html,
+  body,
+  #root {
+    background-color: #E3DAD1 !important;
+    color: #304B60 !important;
+  }
+}
+
+/* إلغاء رسائل التحقق الافتراضية من المتصفح - عالمياً */
+input:invalid,
+select:invalid,
+textarea:invalid,
+button:invalid,
+form:invalid {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* إخفاء البالونة المنبثقة البشعة - Webkit (Chrome, Safari, Edge) */
+input::-webkit-validation-bubble,
+select::-webkit-validation-bubble,
+textarea::-webkit-validation-bubble {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+input::-webkit-validation-bubble-message,
+select::-webkit-validation-bubble-message,
+textarea::-webkit-validation-bubble-message {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+input::-webkit-validation-bubble-arrow,
+select::-webkit-validation-bubble-arrow,
+textarea::-webkit-validation-bubble-arrow {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+input::-webkit-validation-bubble-top-outer-arrow,
+select::-webkit-validation-bubble-top-outer-arrow,
+textarea::-webkit-validation-bubble-top-outer-arrow {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+input::-webkit-validation-bubble-top-inner-arrow,
+select::-webkit-validation-bubble-top-inner-arrow,
+textarea::-webkit-validation-bubble-top-inner-arrow {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* إخفاء البالونة المنبثقة - Firefox */
+input::-moz-validation-bubble,
+select::-moz-validation-bubble,
+textarea::-moz-validation-bubble {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+input::-moz-validation-bubble-message,
+select::-moz-validation-bubble-message,
+textarea::-moz-validation-bubble-message {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+input::-moz-validation-bubble-arrow,
+select::-moz-validation-bubble-arrow,
+textarea::-moz-validation-bubble-arrow {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* إخفاء البالونة المنبثقة - Edge Legacy */
+input::-ms-clear,
+select::-ms-clear,
+textarea::-ms-clear {
+  display: none !important;
+}
+
+input::-ms-reveal,
+select::-ms-reveal,
+textarea::-ms-reveal {
+  display: none !important;
+}
+
+/* منع ظهور أي رسائل تحقق افتراضية */
+input[type="text"]:invalid,
+input[type="email"]:invalid,
+input[type="tel"]:invalid,
+input[type="password"]:invalid,
+input[type="date"]:invalid,
+input[type="number"]:invalid,
+select:invalid,
+textarea:invalid {
+  box-shadow: none !important;
+  border-color: inherit !important;
+}
+
+/* إزالة أي تأثيرات بصرية للحقول غير الصالحة */
+:invalid {
+  box-shadow: none !important;
+}
+
+:required {
+  box-shadow: none !important;
 }
 
 /* Custom scrollbar */

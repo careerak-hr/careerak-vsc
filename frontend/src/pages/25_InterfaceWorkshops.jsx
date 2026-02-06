@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
 
 const InterfaceWorkshops = () => {
     const { language, user, startBgMusic } = useApp(); // Corrected hook
 
+    useEffect(() => {
+        startBgMusic();
+    }, [startBgMusic]);
+
     // ... (rest of the component remains the same)
-    return (<div>Interface Workshops Page</div>);
+    return (
+        <div>
+            <h1>Interface Workshops Page</h1>
+            <p>Language: {language}</p>
+            <p>User: {user?.name || 'Guest'}</p>
+        </div>
+    );
 }
 
 export default InterfaceWorkshops;

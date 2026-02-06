@@ -1,109 +1,222 @@
 /**
- * مساعد الخطوط - تطبيق الخطوط المناسبة حسب اللغة
- * Font Utility - Apply appropriate fonts based on language
+ * دوال مساعدة للخطوط
+ * Font Utility Functions
+ * توفر دوال لتطبيق الخطوط برمجياً على العناصر
  */
 
 /**
- * الحصول على كلاس الخط المناسب للعناوين حسب اللغة
- * @param {string} language - اللغة المحددة (ar, en, fr)
- * @returns {string} - كلاس CSS للخط
- */
-export const getHeadingFontClass = (language) => {
-  switch (language) {
-    case 'ar':
-      return 'font-heading-ar';
-    case 'en':
-      return 'font-heading-en';
-    case 'fr':
-      return 'font-heading-fr';
-    default:
-      return 'font-heading-ar';
-  }
-};
-
-/**
- * الحصول على كلاس الخط المناسب للنصوص العادية حسب اللغة
- * @param {string} language - اللغة المحددة (ar, en, fr)
- * @returns {string} - كلاس CSS للخط
- */
-export const getBodyFontClass = (language) => {
-  switch (language) {
-    case 'ar':
-      return 'font-body-ar';
-    case 'en':
-      return 'font-body-en';
-    case 'fr':
-      return 'font-body-fr';
-    default:
-      return 'font-body-ar';
-  }
-};
-
-/**
- * الحصول على خاصية font-family المباشرة حسب اللغة
- * @param {string} language - اللغة المحددة (ar, en, fr)
- * @returns {string} - قيمة font-family
+ * الحصول على الخط المناسب حسب اللغة
+ * @param {string} language - اللغة (ar, en, fr)
+ * @returns {string} - اسم الخط
  */
 export const getFontFamily = (language) => {
   switch (language) {
     case 'ar':
-      return "'Amiri', 'Cairo', serif";
-    case 'en':
-      return "'Cormorant Garamond', serif";
+      return '"Amiri", "Cairo", serif';
     case 'fr':
-      return "'EB Garamond', serif";
+      return '"EB Garamond", serif';
+    case 'en':
     default:
-      return "'Amiri', 'Cairo', serif";
+      return '"Cormorant Garamond", serif';
   }
 };
 
 /**
- * الحصول على كلاس الخط الشامل (عناوين + نصوص) حسب اللغة
- * @param {string} language - اللغة المحددة (ar, en, fr)
- * @param {boolean} isHeading - هل هو عنوان أم نص عادي
- * @returns {string} - كلاس CSS للخط
- */
-export const getFontClass = (language, isHeading = false) => {
-  return isHeading ? getHeadingFontClass(language) : getBodyFontClass(language);
-};
-
-/**
- * تطبيق الخط على عنصر DOM مباشرة
+ * تطبيق الخط على عنصر محدد
  * @param {HTMLElement} element - العنصر المراد تطبيق الخط عليه
- * @param {string} language - اللغة المحددة
+ * @param {string} language - اللغة
  */
 export const applyFontToElement = (element, language) => {
   if (!element) return;
   
   const fontFamily = getFontFamily(language);
-  element.style.setProperty('font-family', fontFamily, 'important');
+  element.style.fontFamily = fontFamily;
   
-  // تطبيق على جميع العناصر الفرعية
-  const childElements = element.querySelectorAll('*');
-  childElements.forEach(child => {
-    child.style.setProperty('font-family', fontFamily, 'important');
+  // تطبيق على جميع الأطفال
+  const children = element.querySelectorAll('*');
+  children.forEach(child => {
+    child.style.fontFamily = fontFamily;
   });
 };
 
 /**
- * تطبيق الخط على جميع عناصر الصفحة
- * @param {string} language - اللغة المحددة
+ * تطبيق الخط على جميع العناصر في الصفحة
+ * @param {string} language - اللغة
  */
-export const applyFontGlobally = (language) => {
+export const applyFontToAll = (language) => {
   const fontFamily = getFontFamily(language);
   
-  // تطبيق على العناصر الأساسية
-  document.documentElement.style.setProperty('font-family', fontFamily, 'important');
-  document.body.style.setProperty('font-family', fontFamily, 'important');
+  // تطبيق على html و body
+  document.documentElement.style.fontFamily = fontFamily;
+  document.body.style.fontFamily = fontFamily;
   
-  const rootElement = document.getElementById('root');
-  if (rootElement) {
-    rootElement.style.setProperty('font-family', fontFamily, 'important');
+  // تطبيق على root
+  const root = document.getElementById('root');
+  if (root) {
+    root.style.fontFamily = fontFamily;
   }
   
-  // تطبيق على جميع العناصر الموجودة
+  // تطبيق على جميع العناصر
   const allElements = document.querySelectorAll('*');
   allElements.forEach(element => {
-    element.style.setProperty('font-family', fontFamily, 'important');
+    element.style.fontFamily = fontFamily;
   });
+};
+
+/**
+ * تطبيق الخط على عناصر محددة بواسطة selector
+ * @param {string} selector - CSS selector
+ * @param {string} language - اللغة
+ */
+export const applyFontToSelector = (selector, language) => {
+  const fontFamily = getFontFamily(language);
+  const elements = document.querySelectorAll(selector);
+  
+  elements.forEach(element => {
+    element.style.fontFamily = fontFamily;
+    // تطبيق على جميع الأطفال
+    const children = element.querySelectorAll('*');
+    children.forEach(child => {
+      child.style.fontFamily = fontFamily;
+    });
+  });
+};
+
+/**
+ * إنشاء style tag عالمي لتطبيق الخط
+ * @param {string} language - اللغة
+ * @returns {HTMLStyleElement} - عنصر style
+ */
+export const createGlobalFontStyle = (language) => {
+  const fontFamily = getFontFamily(language);
+  const styleId = 'global-font-style';
+  
+  // إزالة style القديم إن وجد
+  const oldStyle = document.getElementById(styleId);
+  if (oldStyle) {
+    oldStyle.remove();
+  }
+  
+  // إنشاء style جديد
+  const style = document.createElement('style');
+  style.id = styleId;
+  style.textContent = `
+    * {
+      font-family: ${fontFamily} !important;
+    }
+    
+    html, body, #root {
+      font-family: ${fontFamily} !important;
+    }
+    
+    input, textarea, select, button, option, label {
+      font-family: ${fontFamily} !important;
+    }
+    
+    .modal, .popup, .dialog, .tooltip, .dropdown, .menu {
+      font-family: ${fontFamily} !important;
+    }
+    
+    [role="dialog"], [role="menu"], [role="tooltip"], [role="alert"] {
+      font-family: ${fontFamily} !important;
+    }
+  `;
+  
+  document.head.appendChild(style);
+  return style;
+};
+
+/**
+ * مراقبة التغييرات في DOM وتطبيق الخط على العناصر الجديدة
+ * @param {string} language - اللغة
+ * @returns {MutationObserver} - المراقب
+ */
+export const observeDOMChanges = (language) => {
+  const fontFamily = getFontFamily(language);
+  
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.addedNodes.length > 0) {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) { // Element node
+            node.style.fontFamily = fontFamily;
+            // تطبيق على جميع الأطفال
+            const children = node.querySelectorAll('*');
+            children.forEach(child => {
+              child.style.fontFamily = fontFamily;
+            });
+          }
+        });
+      }
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+  
+  return observer;
+};
+
+/**
+ * تطبيق الخط على العناصر الديناميكية (modals, popups, etc.)
+ * @param {string} language - اللغة
+ */
+export const applyFontToDynamicElements = (language) => {
+  const fontFamily = getFontFamily(language);
+  
+  const dynamicSelectors = [
+    '.modal', '.popup', '.dialog', '.tooltip',
+    '.dropdown', '.menu', '.overlay',
+    '[role="dialog"]', '[role="menu"]', '[role="tooltip"]',
+    '[role="popup"]', '[role="alert"]', '[role="alertdialog"]',
+    '.MuiDialog-root', '.MuiPopover-root', '.MuiMenu-root',
+    '.ant-modal', '.ant-popover', '.ant-dropdown',
+    '[class*="Modal"]', '[class*="Popup"]', '[class*="Dialog"]'
+  ];
+  
+  dynamicSelectors.forEach(selector => {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+      element.style.fontFamily = fontFamily;
+      // تطبيق على جميع الأطفال
+      const children = element.querySelectorAll('*');
+      children.forEach(child => {
+        child.style.fontFamily = fontFamily;
+      });
+    });
+  });
+};
+
+/**
+ * تطبيق lang attribute على html
+ * @param {string} language - اللغة
+ */
+export const applyLangAttribute = (language) => {
+  document.documentElement.lang = language;
+  document.body.lang = language;
+};
+
+/**
+ * تطبيق الخط بشكل شامل (يجمع جميع الدوال)
+ * @param {string} language - اللغة
+ */
+export const applyFontComprehensive = (language) => {
+  applyFontToAll(language);
+  applyFontToDynamicElements(language);
+  applyLangAttribute(language);
+  createGlobalFontStyle(language);
+};
+
+export default {
+  getFontFamily,
+  applyFontToElement,
+  applyFontToAll,
+  applyFontToSelector,
+  createGlobalFontStyle,
+  observeDOMChanges,
+  applyFontToDynamicElements,
+  applyLangAttribute,
+  applyFontComprehensive
 };

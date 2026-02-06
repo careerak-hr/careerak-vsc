@@ -8,7 +8,7 @@ const OTPVerification = () => {
   // تشغيل الموسيقى عند فتح الصفحة (اختياري)
   useEffect(() => {
     startBgMusic();
-  }, []);
+  }, [startBgMusic]);
 
   return (
     <div>

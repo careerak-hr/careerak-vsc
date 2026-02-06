@@ -1,0 +1,175 @@
+/* 
+ * فرض الخطوط على العناصر الديناميكية
+ * Dynamic Font Enforcement
+ * يضمن تطبيق الخطوط على العناصر التي تُضاف ديناميكياً
+ */
+
+/* فرض الخطوط على العناصر المنبثقة والنوافذ */
+.modal, .modal *,
+.popup, .popup *,
+.dialog, .dialog *,
+.tooltip, .tooltip *,
+.dropdown, .dropdown *,
+.menu, .menu *,
+.overlay, .overlay *,
+.popover, .popover * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على عناصر ARIA */
+[role="dialog"], [role="dialog"] *,
+[role="menu"], [role="menu"] *,
+[role="tooltip"], [role="tooltip"] *,
+[role="popup"], [role="popup"] *,
+[role="alert"], [role="alert"] *,
+[role="alertdialog"], [role="alertdialog"] *,
+[role="menuitem"], [role="menuitem"] *,
+[role="option"], [role="option"] * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على مكتبات UI الشائعة */
+/* Material-UI */
+.MuiDialog-root, .MuiDialog-root *,
+.MuiPopover-root, .MuiPopover-root *,
+.MuiMenu-root, .MuiMenu-root *,
+.MuiTooltip-tooltip, .MuiTooltip-tooltip *,
+.MuiSnackbar-root, .MuiSnackbar-root *,
+.MuiAlert-root, .MuiAlert-root * {
+  font-family: inherit !important;
+}
+
+/* Ant Design */
+.ant-modal, .ant-modal *,
+.ant-popover, .ant-popover *,
+.ant-dropdown, .ant-dropdown *,
+.ant-tooltip, .ant-tooltip *,
+.ant-message, .ant-message *,
+.ant-notification, .ant-notification * {
+  font-family: inherit !important;
+}
+
+/* Bootstrap */
+.modal, .modal *,
+.popover, .popover *,
+.dropdown-menu, .dropdown-menu *,
+.tooltip, .tooltip *,
+.alert, .alert * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على عناصر النماذج */
+input, input *,
+textarea, textarea *,
+select, select *,
+button, button *,
+option, option *,
+optgroup, optgroup *,
+label, label *,
+fieldset, fieldset *,
+legend, legend * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على عناصر القوائم */
+ul, ul *,
+ol, ol *,
+li, li *,
+dl, dl *,
+dt, dt *,
+dd, dd * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على الجداول */
+table, table *,
+thead, thead *,
+tbody, tbody *,
+tfoot, tfoot *,
+tr, tr *,
+th, th *,
+td, td *,
+caption, caption * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على العناصر النصية */
+p, p *,
+span, span *,
+div, div *,
+h1, h1 *,
+h2, h2 *,
+h3, h3 *,
+h4, h4 *,
+h5, h5 *,
+h6, h6 *,
+a, a *,
+strong, strong *,
+em, em *,
+b, b *,
+i, i *,
+u, u *,
+small, small *,
+mark, mark *,
+code, code *,
+pre, pre * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على العناصر المخصصة */
+[class*="Modal"], [class*="Modal"] *,
+[class*="Popup"], [class*="Popup"] *,
+[class*="Dialog"], [class*="Dialog"] *,
+[class*="Tooltip"], [class*="Tooltip"] *,
+[class*="Dropdown"], [class*="Dropdown"] *,
+[class*="Menu"], [class*="Menu"] *,
+[class*="Alert"], [class*="Alert"] *,
+[class*="Notification"], [class*="Notification"] *,
+[class*="Toast"], [class*="Toast"] *,
+[class*="Snackbar"], [class*="Snackbar"] * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على عناصر React */
+[data-reactroot], [data-reactroot] *,
+[data-react-helmet], [data-react-helmet] *,
+[data-testid], [data-testid] *,
+[data-cy], [data-cy] * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على عناصر Tailwind */
+.prose, .prose *,
+[class*="prose-"], [class*="prose-"] *,
+.not-prose, .not-prose * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على العناصر المتحركة */
+[class*="animate-"], [class*="animate-"] *,
+[class*="transition-"], [class*="transition-"] *,
+[class*="transform"], [class*="transform"] * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على العناصر المخفية */
+[hidden], [hidden] *,
+[style*="display: none"], [style*="display: none"] *,
+[style*="visibility: hidden"], [style*="visibility: hidden"] * {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على العناصر في Shadow DOM */
+::slotted(*) {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على Web Components */
+:host, :host(*) {
+  font-family: inherit !important;
+}
+
+/* فرض الخطوط على جميع المستويات */
+* * * * * * * * * * {
+  font-family: inherit !important;
+}

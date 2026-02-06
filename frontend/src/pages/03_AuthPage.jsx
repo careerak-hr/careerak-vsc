@@ -277,7 +277,7 @@ export default function AuthPage() {
         </div>
 
         {userType && (
-          <form onSubmit={handleRegisterClick} className="auth-form">
+          <form onSubmit={handleRegisterClick} noValidate className="auth-form">
 
             <div className="auth-photo-upload-container">
               <div
@@ -335,12 +335,11 @@ export default function AuthPage() {
                 className="auth-checkbox"
               />
               <label htmlFor="agreePolicy" className="auth-checkbox-label">
-                {t.agreePolicy}
                 <span
                   onClick={() => setShowPolicy(true)}
                   className="auth-policy-link"
                 >
-                  (سياسة الخصوصية)
+                  {t.agreePolicy}
                 </span>
               </label>
             </div>

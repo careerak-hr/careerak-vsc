@@ -55,11 +55,37 @@
 }
 
 .auth-input-error {
-  @apply text-danger font-bold text-sm mt-1;
+  @apply text-danger font-black text-sm mt-1 block;
+}
+
+.auth-input-error::before {
+  content: "★ ";
 }
 
 .auth-input-base {
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none text-primary placeholder-hint transition-all;
+}
+
+/* إلغاء رسائل التحقق الافتراضية من المتصفح */
+.auth-input-base:invalid,
+.auth-select-base:invalid,
+input:invalid,
+select:invalid,
+textarea:invalid {
+  box-shadow: none !important;
+}
+
+/* إخفاء البالونة المنبثقة */
+input::-webkit-validation-bubble-message,
+select::-webkit-validation-bubble-message,
+textarea::-webkit-validation-bubble-message {
+  display: none !important;
+}
+
+input::-moz-validation-bubble-message,
+select::-moz-validation-bubble-message,
+textarea::-moz-validation-bubble-message {
+  display: none !important;
 }
 
 .auth-select-base {
