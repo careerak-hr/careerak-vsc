@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace = "com.careerak.app"
-    compileSdk = rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.careerak.app"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -50,6 +50,8 @@ dependencies {
     // Desugaring dependency
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.5"
 }
+
+// The 'apply from: capacitor.build.gradle' line has been removed to prevent conflicts.
 
 try {
     def servicesJSON = file('google-services.json')
