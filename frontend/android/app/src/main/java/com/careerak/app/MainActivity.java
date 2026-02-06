@@ -7,8 +7,6 @@ import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.getcapacitor.BridgeActivity;
-import com.getcapacitor.app.AppPlugin;
-import com.getcapacitor.preferences.PreferencesPlugin;
 
 // Re-added imports for our custom network and model classes
 import com.careerak.app.models.HealthResponse;
@@ -26,9 +24,7 @@ public class MainActivity extends BridgeActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Register all necessary plugins
-        registerPlugin(AppPlugin.class);
-        registerPlugin(PreferencesPlugin.class);
+        // Register custom plugin only (Capacitor 6 auto-registers core plugins)
         registerPlugin(WebViewConfigPlugin.class);
 
         // Configure the WebView
