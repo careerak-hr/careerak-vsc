@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "844222097708",
+    "project_id": "careerak-39e09",
+    "storage_bucket": "careerak-39e09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844222097708:android:0eeaf10216cdf0f021a489",
+        "android_client_info": {
+          "package_name": "com.careerak.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACK8aT7mnTR7EtcXM15BVQ07NnKq_Fe_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
