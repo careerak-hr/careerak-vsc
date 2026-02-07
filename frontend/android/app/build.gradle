@@ -44,7 +44,6 @@ dependencies {
     implementation project(':capacitor-filesystem')
     implementation project(':capacitor-geolocation')
     implementation project(':capacitor-status-bar')
-    implementation project(':capacitor-cordova-android-plugins')
 
     // Network dependencies
     implementation 'com.squareup.retrofit2:retrofit:3.0.0'
