@@ -15,7 +15,7 @@ buildscript {
 
 ext {
     compileSdkVersion = 36
-    minSdkVersion = 22
+    minSdkVersion = 24
     targetSdkVersion = 36
     androidxAppCompatVersion = '1.7.1'
     androidxCoordinatorLayoutVersion = '1.3.0'
