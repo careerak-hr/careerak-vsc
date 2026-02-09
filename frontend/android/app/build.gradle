@@ -19,6 +19,26 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            // تسمية ملف APK
+            applicationIdSuffix ".debug"
+        }
+    }
+    
+    // تخصيص اسم ملف APK
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def appName = "Careerak"
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+            def versionCode = variant.versionCode
+            
+            if (buildType == "release") {
+                outputFileName = "${appName}-v${versionName}-release.apk"
+            } else {
+                outputFileName = "${appName}-v${versionName}-debug.apk"
+            }
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

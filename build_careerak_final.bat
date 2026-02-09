@@ -120,28 +120,33 @@ echo [Eng.AlaaUddien] FINAL STABLE BUILD SUCCESS!
 echo ============================================
 echo.
 echo 🎯 Build completed with stable configuration
-echo 📱 APK Location: %CD%\frontend\android\app\build\outputs\apk\debug\careerak-debug.apk
+echo 📱 APK Location: %CD%\frontend\android\app\build\outputs\apk\debug\Careerak-v1.0-debug.apk
 echo.
 echo Build completed at: %date% %time%
 echo.
 
 :: Check if APK exists and get detailed info
-if exist "frontend\android\app\build\outputs\apk\debug\careerak-debug.apk" (
+if exist "frontend\android\app\build\outputs\apk\debug\Careerak-v1.0-debug.apk" (
     echo ✅ APK file confirmed to exist
-    for %%A in ("frontend\android\app\build\outputs\apk\debug\careerak-debug.apk") do (
+    for %%A in ("frontend\android\app\build\outputs\apk\debug\Careerak-v1.0-debug.apk") do (
         set size=%%~zA
         set /a sizeMB=!size!/1024/1024
         echo 📊 APK Size: !sizeMB! MB ^(!size! bytes^)
         echo 📅 APK Date: %%~tA
     )
+    
+    :: Copy APK to easy access folder
+    if not exist "..\apk_output" mkdir "..\apk_output"
+    copy "frontend\android\app\build\outputs\apk\debug\Careerak-v1.0-debug.apk" "apk_output\" >nul 2>&1
+    if exist "apk_output\Careerak-v1.0-debug.apk" (
+        echo.
+        echo 📂 APK copied to: %CD%\apk_output\Careerak-v1.0-debug.apk
+        echo 🚀 Opening APK folder...
+        timeout /t 2 > nul
+        explorer apk_output
+    )
 ) else (
     echo ❌ Warning: APK file not found at expected location
-    echo 🔍 Checking alternative locations...
-    if exist "frontend\android\app\build\outputs\apk\debug\app-debug.apk" (
-        echo ✅ Found APK at: app-debug.apk
-        ren "frontend\android\app\build\outputs\apk\debug\app-debug.apk" "careerak-debug.apk"
-        echo ✅ Renamed to: careerak-debug.apk
-    )
 )
 
 echo.
