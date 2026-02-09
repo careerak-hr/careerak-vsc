@@ -24,17 +24,32 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const [
-          { value: lang },
-          { value: audio },
-          { value: music },
-          { value: notifications },
-        ] = await Promise.all([
+        // إضافة timeout للتأكد من عدم التعليق
+        const timeoutPromise = new Promise((resolve) => 
+          setTimeout(() => {
+            console.warn('⚠️ Settings loading timeout - using defaults');
+            resolve([
+              { value: 'ar' },
+              { value: 'false' },
+              { value: 'false' },
+              { value: 'false' }
+            ]);
+          }, 3000)
+        );
+
+        const settingsPromise = Promise.all([
           Preferences.get({ key: 'lang' }),
           Preferences.get({ key: 'audio_enabled' }),
           Preferences.get({ key: 'musicEnabled' }),
           Preferences.get({ key: 'notificationsEnabled' }),
         ]);
+
+        const [
+          { value: lang },
+          { value: audio },
+          { value: music },
+          { value: notifications },
+        ] = await Promise.race([settingsPromise, timeoutPromise]);
 
         setLanguage(lang || 'ar');
         setAudioEnabled(audio === 'true');
@@ -43,6 +58,11 @@ export const AppProvider = ({ children }) => {
 
       } catch (error) {
         console.warn('Failed to load settings from Preferences, using defaults.', error);
+        // استخدام القيم الافتراضية
+        setLanguage('ar');
+        setAudioEnabled(false);
+        setMusicEnabled(false);
+        setNotificationsEnabled(false);
       } finally {
         setSettingsLoading(false);
       }
@@ -54,9 +74,22 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const loadAuthData = async () => {
       try {
-        const [{ value: encryptedToken }, { value: savedUser }] = await Promise.all([
+        // إضافة timeout للتأكد من عدم التعليق
+        const timeoutPromise = new Promise((resolve) => 
+          setTimeout(() => {
+            console.warn('⚠️ Auth data loading timeout - continuing without auth');
+            resolve([{ value: null }, { value: null }]);
+          }, 3000)
+        );
+
+        const authPromise = Promise.all([
           Preferences.get({ key: 'auth_token' }),
           Preferences.get({ key: 'user' }),
+        ]);
+
+        const [{ value: encryptedToken }, { value: savedUser }] = await Promise.race([
+          authPromise,
+          timeoutPromise
         ]);
 
         if (encryptedToken) {

@@ -38,27 +38,44 @@ class BootstrapManager {
     console.log('🚀 Bootstrap Manager: Initializing application...');
 
     try {
-      // 1. تهيئة الخدمات الأساسية
-      await this._initCoreServices();
+      // إضافة timeout عام لكل عملية التهيئة (10 ثواني)
+      const initTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Application initialization timeout')), 10000)
+      );
 
-      // 2. تهيئة المراقبة
-      await this._initMonitoring();
+      const initProcess = (async () => {
+        // 1. تهيئة الخدمات الأساسية
+        await this._initCoreServices();
 
-      // 3. تهيئة تتبع الجلسة
-      await this._initSessionTracking();
+        // 2. تهيئة المراقبة
+        await this._initMonitoring();
 
-      // 4. تهيئة أدوات التطوير (حسب البيئة)
-      await this._initDevTools();
+        // 3. تهيئة تتبع الجلسة
+        await this._initSessionTracking();
 
-      // 5. تهيئة خدمات إضافية
-      await this._initAdditionalServices();
+        // 4. تهيئة أدوات التطوير (حسب البيئة)
+        await this._initDevTools();
+
+        // 5. تهيئة خدمات إضافية
+        await this._initAdditionalServices();
+      })();
+
+      // تشغيل التهيئة مع timeout
+      await Promise.race([initProcess, initTimeout]);
 
       this.isInitialized = true;
       console.log('✅ Bootstrap Manager: Application initialized successfully');
 
     } catch (error) {
       console.error('❌ Bootstrap Manager: Initialization failed:', error);
-      throw error;
+      
+      // في حالة timeout، نحاول المتابعة بدون بعض الخدمات
+      if (error.message.includes('timeout')) {
+        console.warn('⚠️ Initialization timeout - continuing with partial initialization');
+        this.isInitialized = true;
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -68,17 +85,29 @@ class BootstrapManager {
   async _initCoreServices() {
     console.log('🔧 Initializing core services...');
 
-    // تهيئة API Discovery
+    // تهيئة API Discovery مع timeout
     try {
       const { discoverBestServer } = await import('../services/api');
-      const apiUrl = await discoverBestServer();
+      
+      // إضافة timeout للتأكد من عدم التعليق
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('API discovery timeout')), 5000)
+      );
+      
+      const apiUrl = await Promise.race([
+        discoverBestServer(),
+        timeoutPromise
+      ]);
       
       this.services.set('apiUrl', apiUrl);
       console.log('📡 API Server discovered:', apiUrl);
       
     } catch (error) {
       console.error('❌ API Discovery failed:', error);
-      // لا نرمي الخطأ هنا لأن التطبيق يمكن أن يعمل بدون API
+      // استخدام URL افتراضي
+      const fallbackUrl = 'https://careerak-vsc.vercel.app';
+      this.services.set('apiUrl', fallbackUrl);
+      console.log('📡 Using fallback API URL:', fallbackUrl);
     }
   }
 

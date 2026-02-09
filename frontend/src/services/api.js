@@ -101,7 +101,8 @@ api.interceptors.response.use(
 );
 
 export const discoverBestServer = async () => {
-  return BASE_URL;
+  // إرجاع Promise محلول مباشرة
+  return Promise.resolve(BASE_URL);
 };
 
 export default api;
