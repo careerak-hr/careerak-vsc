@@ -1,10 +1,12 @@
 
 .lang-page-container {
   @apply min-h-screen bg-secondary flex flex-col items-center justify-center p-4;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lang-page-content {
   @apply flex flex-col items-center text-center;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lang-page-logo-container {
@@ -21,6 +23,7 @@
 
 .lang-page-title {
   @apply text-primary font-bold text-xl mb-8;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lang-page-buttons-container {
@@ -29,10 +32,12 @@
 
 .lang-page-btn {
   @apply bg-primary text-white py-3 rounded-lg font-semibold transition-transform active:scale-95;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lang-page-loading-container {
   @apply min-h-screen bg-secondary flex items-center justify-center text-primary font-bold;
+  font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .lang-page-glow-effect {
