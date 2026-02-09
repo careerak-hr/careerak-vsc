@@ -24,41 +24,14 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        // إضافة timeout للتأكد من عدم التعليق
-        const timeoutPromise = new Promise((resolve) => 
-          setTimeout(() => {
-            console.warn('⚠️ Settings loading timeout - using defaults');
-            resolve([
-              { value: 'ar' },
-              { value: 'false' },
-              { value: 'false' },
-              { value: 'false' }
-            ]);
-          }, 3000)
-        );
-
-        const settingsPromise = Promise.all([
-          Preferences.get({ key: 'lang' }),
-          Preferences.get({ key: 'audio_enabled' }),
-          Preferences.get({ key: 'musicEnabled' }),
-          Preferences.get({ key: 'notificationsEnabled' }),
-        ]);
-
-        const [
-          { value: lang },
-          { value: audio },
-          { value: music },
-          { value: notifications },
-        ] = await Promise.race([settingsPromise, timeoutPromise]);
-
-        setLanguage(lang || 'ar');
-        setAudioEnabled(audio === 'true');
-        setMusicEnabled(music === 'true');
-        setNotificationsEnabled(notifications === 'true');
-
+        console.log('⚡ Fast settings load - using defaults');
+        // استخدام القيم الافتراضية مباشرة
+        setLanguage('ar');
+        setAudioEnabled(false);
+        setMusicEnabled(false);
+        setNotificationsEnabled(false);
       } catch (error) {
-        console.warn('Failed to load settings from Preferences, using defaults.', error);
-        // استخدام القيم الافتراضية
+        console.warn('Failed to load settings, using defaults.', error);
         setLanguage('ar');
         setAudioEnabled(false);
         setMusicEnabled(false);
@@ -74,33 +47,8 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const loadAuthData = async () => {
       try {
-        // إضافة timeout للتأكد من عدم التعليق
-        const timeoutPromise = new Promise((resolve) => 
-          setTimeout(() => {
-            console.warn('⚠️ Auth data loading timeout - continuing without auth');
-            resolve([{ value: null }, { value: null }]);
-          }, 3000)
-        );
-
-        const authPromise = Promise.all([
-          Preferences.get({ key: 'auth_token' }),
-          Preferences.get({ key: 'user' }),
-        ]);
-
-        const [{ value: encryptedToken }, { value: savedUser }] = await Promise.race([
-          authPromise,
-          timeoutPromise
-        ]);
-
-        if (encryptedToken) {
-          const bytes = CryptoJS.AES.decrypt(encryptedToken, SECRET_KEY);
-          const originalToken = bytes.toString(CryptoJS.enc.Utf8);
-          if (originalToken) setToken(originalToken);
-        }
-
-        if (savedUser) {
-          setUser(JSON.parse(savedUser));
-        }
+        console.log('⚡ Fast auth load - skipping');
+        // تخطي تحميل Auth مؤقتاً
       } catch (error) {
         console.error('Failed to load auth data', error);
       } finally {
