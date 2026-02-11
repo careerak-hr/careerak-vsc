@@ -42,7 +42,29 @@ fix_gradle_issues.bat
 
 ## 📚 All Documentation
 
-📑 **[BUILD_INDEX.md](BUILD_INDEX.md)** - Complete documentation index
+📑 **[BUILD_INDEX.md](BUILD_INDEX.md)** - Complete documentation index  
+📑 **[GIT_QUICK_GUIDE.md](GIT_QUICK_GUIDE.md)** - Git workflow guide
+
+---
+
+## 🔄 Git Workflow
+
+### Setup Git (First Time)
+```cmd
+setup_git.bat
+```
+
+### Commit & Push Changes
+```cmd
+git_commit_push.bat
+```
+
+### Test Git Connection
+```cmd
+test_git_push.bat
+```
+
+📖 Full guide: **[docs/GIT_WORKFLOW_AR.md](docs/GIT_WORKFLOW_AR.md)**
 
 ---
 
