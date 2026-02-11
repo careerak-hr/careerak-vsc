@@ -78,3 +78,18 @@
 .ai-modal-btn {
   @apply flex-1 py-3 rounded-2xl font-black shadow-lg active:scale-95 transition-all disabled:opacity-50;
 }
+
+/* تطبيق الخطوط حسب اللغة */
+.auth-modal-backdrop[dir="rtl"],
+.auth-modal-backdrop[dir="rtl"] *,
+.auth-modal-content[dir="rtl"],
+.auth-modal-content[dir="rtl"] * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+.auth-modal-backdrop[dir="ltr"],
+.auth-modal-backdrop[dir="ltr"] *,
+.auth-modal-content[dir="ltr"],
+.auth-modal-content[dir="ltr"] * {
+  font-family: 'Cormorant Garamond', 'EB Garamond', serif !important;
+}

@@ -42,6 +42,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
         <input
           type="date"
           name="birthDate"
+          placeholder={t.birthDatePlaceholder}
           value={formData.birthDate}
           onChange={handleInputChange}
           className="auth-input-base"

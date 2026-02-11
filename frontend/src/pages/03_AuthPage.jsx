@@ -342,11 +342,11 @@ export default function AuthPage() {
   };
 
   if (showAgeCheck) {
-    return <AgeCheckModal t={t} onResponse={handleAgeResponse} />;
+    return <AgeCheckModal t={t} onResponse={handleAgeResponse} language={language} />;
   }
 
   if (showGoodbyeModal) {
-    return <GoodbyeModal t={t} onConfirm={handleGoodbyeConfirm} />;
+    return <GoodbyeModal t={t} onConfirm={handleGoodbyeConfirm} language={language} />;
   }
 
   return (
@@ -480,6 +480,7 @@ export default function AuthPage() {
             onCropComplete={onCropComplete}
             onSave={handleCropSave}
             onClose={() => setShowCropModal(false)}
+            language={language}
           />
         )}
 
@@ -490,6 +491,7 @@ export default function AuthPage() {
             onAccept={handleAIAccept}
             onReject={handleAIReject}
             isAnalyzing={isAnalyzing}
+            language={language}
           />
         )}
 

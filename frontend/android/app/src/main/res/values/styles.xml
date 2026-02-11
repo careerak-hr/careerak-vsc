@@ -21,8 +21,9 @@
     </style>
 
 
-    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+    <!-- إلغاء السبلاش - عرض التطبيق مباشرة -->
+    <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
+        <item name="android:background">@color/colorPrimary</item>
         <!-- Force light mode -->
         <item name="android:forceDarkAllowed">false</item>
     </style>

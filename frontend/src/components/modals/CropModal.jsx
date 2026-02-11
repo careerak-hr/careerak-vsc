@@ -3,9 +3,10 @@ import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import './CropModal.css';
 
-const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose }) => {
+const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, language }) => {
   const imgRef = useRef();
   const [completedCrop, setCompletedCrop] = useState(null);
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
   
   const onImageLoad = useCallback((e) => {
     const { width, height } = e.currentTarget;
@@ -45,8 +46,8 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose })
   };
 
   return (
-    <div className="crop-modal-backdrop">
-      <div className="crop-modal-content">
+    <div className="crop-modal-backdrop" dir={dir}>
+      <div className="crop-modal-content" dir={dir}>
         <h3 className="crop-modal-title">{t.cropTitle || 'قص الصورة'}</h3>
         <p className="crop-modal-subtitle">{t.cropSubtitle || 'اسحب لتحديد المنطقة المطلوبة'}</p>
         

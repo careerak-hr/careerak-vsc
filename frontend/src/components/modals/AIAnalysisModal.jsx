@@ -1,10 +1,12 @@
 import React from 'react';
 import './AuthModals.css';
 
-const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing }) => {
+const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, language }) => {
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
+  
   return (
-    <div className="auth-modal-backdrop">
-      <div className="auth-modal-content">
+    <div className="auth-modal-backdrop" dir={dir}>
+      <div className="auth-modal-content" dir={dir}>
         <h3 className="text-xl font-black text-[#304B60] mb-4">
           {isAnalyzing ? (t.aiAnalyzing || 'جاري التحليل الذكي...') : (t.aiComplete || 'اكتمل التحليل')}
         </h3>

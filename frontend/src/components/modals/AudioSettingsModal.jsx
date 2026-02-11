@@ -12,9 +12,11 @@ const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
     deny: t?.no || "No",
   };
 
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
+
   return (
-    <div className="modal-backdrop">
-      <div className="modal-content" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="modal-backdrop" dir={dir}>
+      <div className="modal-content" dir={dir}>
         <div className="modal-body">
           <h2 className="modal-title">{texts.title}</h2>
         </div>

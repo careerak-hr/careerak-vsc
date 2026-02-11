@@ -1,10 +1,12 @@
 import React from 'react';
 import './AuthModals.css';
 
-const AgeCheckModal = ({ t, onResponse }) => {
+const AgeCheckModal = ({ t, onResponse, language }) => {
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
+  
   return (
-    <div className="auth-modal-backdrop">
-      <div className="auth-modal-content">
+    <div className="auth-modal-backdrop" dir={dir}>
+      <div className="auth-modal-content" dir={dir}>
         <h2 className="auth-modal-title">{t.ageCheckTitle}</h2>
         <p className="auth-modal-message">{t.ageCheckMessage}</p>
         <div className="auth-modal-buttons">

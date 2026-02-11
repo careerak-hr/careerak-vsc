@@ -17,3 +17,18 @@
 .confirm-modal-btn {
   @apply flex-1 py-3 bg-primary text-secondary rounded-2xl font-bold shadow-lg border-2 border-primary hover:scale-105 transition-all text-lg;
 }
+
+/* تطبيق الخطوط حسب اللغة */
+.confirm-modal-backdrop[dir="rtl"],
+.confirm-modal-backdrop[dir="rtl"] *,
+.confirm-modal-content[dir="rtl"],
+.confirm-modal-content[dir="rtl"] * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+.confirm-modal-backdrop[dir="ltr"],
+.confirm-modal-backdrop[dir="ltr"] *,
+.confirm-modal-content[dir="ltr"],
+.confirm-modal-content[dir="ltr"] * {
+  font-family: 'Cormorant Garamond', 'EB Garamond', serif !important;
+}

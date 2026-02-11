@@ -5,9 +5,11 @@ import './Modal.css'; // Use the unified modal CSS
 const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
   if (!isOpen) return null;
 
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
+
   return (
-    <div className="modal-backdrop">
-      <div className="modal-content" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="modal-backdrop" dir={dir}>
+      <div className="modal-content" dir={dir}>
         <div className="modal-body">
           <p className="modal-description">{t.confirmLang}</p>
         </div>

@@ -10,6 +10,10 @@
   @apply text-2xl font-black text-primary mb-4;
 }
 
+.crop-modal-subtitle {
+  @apply text-sm font-bold text-primary/70 mb-4;
+}
+
 .crop-modal-image-container {
   @apply flex justify-center mb-4;
 }
@@ -28,4 +32,19 @@
 
 .crop-modal-btn-secondary {
   @apply border-2 border-danger text-danger;
+}
+
+/* تطبيق الخطوط حسب اللغة */
+.crop-modal-backdrop[dir="rtl"],
+.crop-modal-backdrop[dir="rtl"] *,
+.crop-modal-content[dir="rtl"],
+.crop-modal-content[dir="rtl"] * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+}
+
+.crop-modal-backdrop[dir="ltr"],
+.crop-modal-backdrop[dir="ltr"] *,
+.crop-modal-content[dir="ltr"],
+.crop-modal-content[dir="ltr"] * {
+  font-family: 'Cormorant Garamond', 'EB Garamond', serif !important;
 }

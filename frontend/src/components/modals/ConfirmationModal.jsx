@@ -4,10 +4,12 @@ import './ConfirmationModal.css';
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, message, confirmText, cancelText, language }) => {
   if (!isOpen) return null;
 
+  const dir = language === 'ar' ? 'rtl' : 'ltr';
+
   return (
-    <div className="confirm-modal-backdrop">
-      <div className="confirm-modal-content">
-        <p className="confirm-modal-message" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="confirm-modal-backdrop" dir={dir}>
+      <div className="confirm-modal-content" dir={dir}>
+        <p className="confirm-modal-message" dir={dir}>
           {message}
         </p>
         <div className={`confirm-modal-buttons ${!cancelText ? 'justify-center' : ''}`}>

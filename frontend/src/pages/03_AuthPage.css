@@ -66,6 +66,38 @@
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none text-primary placeholder-hint transition-all;
 }
 
+/* تنسيق خاص لحقل التاريخ */
+input[type="date"].auth-input-base {
+  position: relative;
+  color: #9CA3AF; /* رمادي للهينت */
+}
+
+/* عندما يتم اختيار تاريخ، يتغير اللون للكحلي */
+input[type="date"].auth-input-base:valid,
+input[type="date"].auth-input-base:not(:placeholder-shown) {
+  color: #304B60 !important; /* كحلي */
+}
+
+/* إخفاء أيقونة التقويم الافتراضية في بعض المتصفحات */
+input[type="date"].auth-input-base::-webkit-calendar-picker-indicator {
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+input[type="date"].auth-input-base::-webkit-datetime-edit-text,
+input[type="date"].auth-input-base::-webkit-datetime-edit-month-field,
+input[type="date"].auth-input-base::-webkit-datetime-edit-day-field,
+input[type="date"].auth-input-base::-webkit-datetime-edit-year-field {
+  color: #9CA3AF; /* رمادي للهينت */
+}
+
+input[type="date"].auth-input-base:valid::-webkit-datetime-edit-text,
+input[type="date"].auth-input-base:valid::-webkit-datetime-edit-month-field,
+input[type="date"].auth-input-base:valid::-webkit-datetime-edit-day-field,
+input[type="date"].auth-input-base:valid::-webkit-datetime-edit-year-field {
+  color: #304B60 !important; /* كحلي */
+}
+
 /* منع تغيير لون الخلفية عند autofill */
 .auth-input-base:-webkit-autofill,
 .auth-input-base:-webkit-autofill:hover,
@@ -81,6 +113,14 @@
 .auth-input-base:-moz-autofill,
 .auth-input-base:-moz-autofill:hover,
 .auth-input-base:-moz-autofill:focus {
+  background-color: #F5F0E8 !important;
+  color: #304B60 !important;
+}
+
+/* منع تغيير الخلفية بعد الكتابة */
+.auth-input-base:focus,
+.auth-input-base:active,
+.auth-input-base:not(:placeholder-shown) {
   background-color: #F5F0E8 !important;
   color: #304B60 !important;
 }
@@ -108,7 +148,14 @@ textarea::-moz-validation-bubble-message {
 }
 
 .auth-select-base {
-  @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none text-primary transition-all;
+  @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none transition-all;
+  color: #9CA3AF; /* رمادي للهينت الافتراضي */
+}
+
+/* عندما يتم اختيار قيمة، يتغير اللون للكحلي */
+.auth-select-base:not([value=""]),
+.auth-select-base:valid {
+  color: #304B60 !important; /* كحلي */
 }
 
 /* لون الهينت في القوائم المنسدلة (الخيار الأول المعطل) */
@@ -119,6 +166,7 @@ textarea::-moz-validation-bubble-message {
 /* لون الخيارات العادية */
 .auth-select-base option:not([disabled]) {
   color: #304B60 !important; /* كحلي */
+  background-color: #F5F0E8 !important; /* بيج */
 }
 
 /* منع تغيير لون الخلفية عند autofill للـ select */
