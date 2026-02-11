@@ -21,9 +21,10 @@
     </style>
 
 
-    <!-- إلغاء السبلاش - عرض التطبيق مباشرة -->
+    <!-- Splash Screen - استخدام اللون البيج بدلاً من الأزرق -->
     <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/splashBackground</item>
+        <item name="android:windowBackground">@color/splashBackground</item>
         <!-- Force light mode -->
         <item name="android:forceDarkAllowed">false</item>
     </style>

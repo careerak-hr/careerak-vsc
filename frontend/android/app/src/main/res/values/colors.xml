@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Careerak Brand Colors -->
+    <!-- Override Capacitor default colors with our brand colors -->
+    
+    <!-- Primary Color - الكحلي الوقور -->
+    <color name="colorPrimary">#304B60</color>
+    <color name="colorPrimaryDark">#1A2C3F</color>
+    
+    <!-- Accent Color - النحاسي الفخم -->
+    <color name="colorAccent">#D48161</color>
+    
+    <!-- Secondary Color - البيج الملكي -->
+    <color name="colorSecondary">#E3DAD1</color>
+    <color name="colorSecondaryLight">#F1EAE4</color>
+    
+    <!-- Background Colors -->
+    <color name="backgroundColor">#E3DAD1</color>
+    <color name="splashBackground">#E3DAD1</color>
+    
+    <!-- Status Bar -->
+    <color name="statusBarColor">#304B60</color>
+    
+    <!-- Other Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>
