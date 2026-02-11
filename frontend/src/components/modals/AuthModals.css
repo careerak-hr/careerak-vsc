@@ -3,15 +3,19 @@
 }
 
 .auth-modal-content {
-  @apply bg-secondary rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border-2 border-accent/20;
+  background-color: #E3DAD1 !important; /* البيج الملكي */
+  border: 2px solid #304B60 !important; /* إطار كحلي */
+  @apply rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl;
 }
 
 .auth-modal-title {
-  @apply text-2xl font-black text-primary mb-6;
+  color: #304B60 !important; /* الكحلي الوقور */
+  @apply text-2xl font-black mb-6;
 }
 
 .auth-modal-message {
-  @apply text-lg font-bold text-primary/80 mb-8;
+  color: #304B60 !important; /* الكحلي الوقور */
+  @apply text-lg font-bold mb-8;
 }
 
 .auth-modal-buttons {
@@ -23,21 +27,54 @@
 }
 
 .auth-modal-btn-primary {
-  @apply bg-primary text-secondary;
+  background-color: #304B60 !important; /* خلفية كحلي */
+  color: #D48161 !important; /* نص نحاسي */
+  border: 2px solid #304B60 !important;
+}
+
+.auth-modal-btn-primary:hover {
+  background-color: #3d5f7a !important;
+  transform: scale(1.02);
 }
 
 .auth-modal-btn-danger {
-  @apply bg-primary text-secondary;
+  background-color: #304B60 !important; /* خلفية كحلي */
+  color: #D48161 !important; /* نص نحاسي */
+  border: 2px solid #304B60 !important;
 }
 
+.auth-modal-btn-danger:hover {
+  background-color: #3d5f7a !important;
+  transform: scale(1.02);
+}
+
+/* AI Analysis Modal Styles */
 .ai-modal-spinner {
-    @apply w-24 h-24 rounded-full border-4 border-primary border-t-accent animate-spin mx-auto mb-6;
+  border-color: #304B60 !important;
+  border-top-color: #D48161 !important;
+  @apply w-24 h-24 rounded-full border-4 animate-spin mx-auto mb-6;
 }
 
 .ai-modal-img {
-    @apply w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4 border-primary;
+  border-color: #304B60 !important;
+  @apply w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4;
+}
+
+.ai-modal-image-wrapper {
+  @apply relative inline-block;
+}
+
+.ai-modal-check-mark {
+  @apply absolute -top-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center text-2xl font-black shadow-lg;
+  background-color: #304B60 !important;
+  color: #D48161 !important;
+}
+
+.ai-modal-message {
+  color: #304B60 !important;
+  @apply text-base font-bold mb-6;
 }
 
 .ai-modal-btn {
-    @apply flex-1 py-3 rounded-2xl font-black shadow-lg active:scale-95 transition-all disabled:opacity-50;
+  @apply flex-1 py-3 rounded-2xl font-black shadow-lg active:scale-95 transition-all disabled:opacity-50;
 }

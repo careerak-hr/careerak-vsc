@@ -83,16 +83,56 @@ export default function AuthPage() {
 
   useEffect(() => setIsVisible(true), []);
 
+  // التحقق من حالة الأذونات عند تحميل الصفحة
+  useEffect(() => {
+    const checkPermissions = async () => {
+      try {
+        const permissions = await Camera.checkPermissions();
+        console.log('📱 Current permissions:', permissions);
+        
+        if (permissions.camera === 'prompt' || permissions.photos === 'prompt') {
+          console.log('ℹ️ Permissions not yet requested');
+        } else if (permissions.camera === 'denied' || permissions.photos === 'denied') {
+          console.warn('⚠️ Permissions previously denied');
+        } else {
+          console.log('✅ Permissions already granted');
+        }
+      } catch (error) {
+        console.log('ℹ️ Running in web browser - permissions check skipped');
+      }
+    };
+    
+    checkPermissions();
+  }, []);
+
   const handleAgeResponse = (isAbove18) => {
+    console.log('👤 Age response:', isAbove18 ? 'Above 18' : 'Below 18');
+    
     if (isAbove18) {
+      // المستخدم فوق 18 - يدخل للتطبيق
+      console.log('✅ User is above 18, allowing access');
       setShowAgeCheck(false);
     } else {
-      setShowGoodbyeModal(true);
+      // المستخدم تحت 18 - يظهر رسالة الوداع
+      console.log('❌ User is below 18, showing goodbye message');
+      setShowAgeCheck(false); // إخفاء رسالة التحقق أولاً
+      setShowGoodbyeModal(true); // ثم إظهار رسالة الوداع
     }
   };
 
-  const handleGoodbyeConfirm = () => {
-    window.location.href = '/';
+  const handleGoodbyeConfirm = async () => {
+    console.log('👋 User confirmed goodbye, exiting app...');
+    
+    try {
+      // محاولة الخروج من التطبيق على الأجهزة المحمولة
+      const { App } = await import('@capacitor/app');
+      await App.exitApp();
+      console.log('✅ App exited successfully');
+    } catch (error) {
+      // في حالة المتصفح أو فشل الخروج، نعود للصفحة الرئيسية
+      console.log('ℹ️ Running in browser or exit failed, redirecting to home');
+      window.location.href = '/';
+    }
   };
 
   const handleInputChange = (e) => {
@@ -135,17 +175,59 @@ export default function AuthPage() {
 
   const getPhoto = async (source) => {
     setShowPhotoModal(false);
+    
     try {
+      // طلب الأذونات أولاً
+      console.log('📱 Requesting camera permissions...');
+      const permissions = await Camera.requestPermissions({
+        permissions: ['camera', 'photos']
+      });
+      
+      console.log('📱 Permissions status:', permissions);
+      
+      // التحقق من الأذونات
+      if (permissions.camera === 'denied' || permissions.photos === 'denied') {
+        console.error('❌ Camera permissions denied');
+        setFieldErrors(prev => ({ 
+          ...prev, 
+          image: t.permissionDenied || 'تم رفض الإذن. يرجى السماح بالوصول للكاميرا والصور من إعدادات التطبيق.' 
+        }));
+        return;
+      }
+      
+      console.log('✅ Permissions granted, opening camera...');
+      
+      // التقاط الصورة
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.Base64,
-        source
+        source,
+        width: 1024,
+        height: 1024
       });
+      
+      console.log('✅ Photo captured successfully');
       setTempImage(`data:image/jpeg;base64,${image.base64String}`);
       setShowCropModal(true);
+      
     } catch (error) {
-      console.log('Camera error:', error);
+      console.error('❌ Camera error:', error);
+      
+      // معالجة الأخطاء المختلفة
+      if (error.message && error.message.includes('permission')) {
+        setFieldErrors(prev => ({ 
+          ...prev, 
+          image: t.permissionDenied || 'تم رفض الإذن. يرجى السماح بالوصول للكاميرا والصور.' 
+        }));
+      } else if (error.message && error.message.includes('cancel')) {
+        console.log('ℹ️ User cancelled photo selection');
+      } else {
+        setFieldErrors(prev => ({ 
+          ...prev, 
+          image: t.cameraError || 'حدث خطأ أثناء التقاط الصورة. يرجى المحاولة مرة أخرى.' 
+        }));
+      }
     }
   };
 
@@ -154,28 +236,52 @@ export default function AuthPage() {
   }, []);
 
   const handleCropSave = async () => {
-    const cropped = await createCroppedImage(tempImage, croppedAreaPixels);
-    setTempImage(null);
-    setShowCropModal(false);
-    setShowAIAnalysis(true);
-    setIsAnalyzing(true);
+    try {
+      console.log('✂️ Cropping image...');
+      const cropped = await createCroppedImage(tempImage, croppedAreaPixels);
+      console.log('✅ Image cropped successfully');
+      
+      setShowCropModal(false);
+      setShowAIAnalysis(true);
+      setIsAnalyzing(true);
 
-    setTimeout(() => {
-      setIsAnalyzing(false);
-      setProfileImage(cropped);
-      setShowAIAnalysis(false);
-    }, 2000);
+      // محاكاة التحليل الذكي
+      setTimeout(() => {
+        console.log('🤖 AI analysis completed');
+        setIsAnalyzing(false);
+        // حفظ الصورة المقصوصة مؤقتاً للمعاينة في AI Modal
+        setTempImage(cropped);
+      }, 2000);
+      
+    } catch (error) {
+      console.error('❌ Crop error:', error);
+      setFieldErrors(prev => ({ 
+        ...prev, 
+        image: t.cropError || 'حدث خطأ أثناء قص الصورة. يرجى المحاولة مرة أخرى.' 
+      }));
+      setShowCropModal(false);
+    }
   };
 
   const handleAIAccept = () => {
-    setProfileImage(tempImage);
+    console.log('✅ User accepted AI analysis');
+    setProfileImage(tempImage); // tempImage الآن يحتوي على الصورة المقصوصة
+    setTempImage(null);
     setShowAIAnalysis(false);
+    // مسح أي أخطاء سابقة
+    if (fieldErrors.image) {
+      setFieldErrors(prev => ({ ...prev, image: '' }));
+    }
   };
 
   const handleAIReject = () => {
+    console.log('❌ User rejected AI analysis');
     setTempImage(null);
     setShowAIAnalysis(false);
-    setFieldErrors(prev => ({ ...prev, image: t.invalidImage }));
+    setFieldErrors(prev => ({ 
+      ...prev, 
+      image: t.invalidImage || 'الصورة غير مناسبة. يرجى اختيار صورة أخرى.' 
+    }));
   };
 
   const validateForm = () => {
@@ -301,10 +407,10 @@ export default function AuthPage() {
                 onChange={handleInputChange}
                 className="auth-select-base"
               >
-                <option value="">{t.country}</option>
+                <option value="" disabled selected>{t.country}</option>
                 {countries.map(c => (
-                  <option key={c.name} value={c.name}>
-                    {c.flag} {c.name}
+                  <option key={c.key} value={c.key}>
+                    {c.flag} {language === 'ar' ? c.name_ar : c.name_en}
                   </option>
                 ))}
               </select>

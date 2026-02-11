@@ -5,12 +5,12 @@ import "./Modal.css"; // Use the unified modal CSS
 const NotificationSettingsModal = ({ isOpen, onConfirm, language, t }) => {
   if (!isOpen) return null;
 
-  // Use the correct translation keys from the t object
+  // Use the correct translation keys from the t object with fallbacks
   const texts = {
-    title: t.notificationTitle || "Enable Notifications?",
-    description: t.notificationDesc || "Stay updated with job alerts and application statuses.",
-    confirm: t.yes || "Yes",
-    deny: t.no || "No",
+    title: t?.notificationTitle || "Enable Notifications?",
+    description: t?.notificationDesc || "Stay updated with job alerts and application statuses.",
+    confirm: t?.yes || "Yes",
+    deny: t?.no || "No",
   };
 
   return (

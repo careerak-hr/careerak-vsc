@@ -34,7 +34,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           onChange={handleInputChange}
           className="auth-select-base"
         >
-          <option value="">{t.gender}</option>
+          <option value="" disabled selected>{t.gender}</option>
           <option value="male">{t.male}</option>
           <option value="female">{t.female}</option>
           <option value="preferNot">{t.preferNot}</option>
@@ -57,7 +57,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           onChange={handleInputChange}
           className="auth-select-base"
         >
-          <option value="">{t.educationLevel}</option>
+          <option value="" disabled selected>{t.educationLevel}</option>
           <option value="phd">{t.phd}</option>
           <option value="masters">{t.masters}</option>
           <option value="bachelors">{t.bachelors}</option>
@@ -96,7 +96,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           onChange={handleInputChange}
           className="auth-select-base text-sm"
         >
-          <option value="">{t.countryCode}</option>
+          <option value="" disabled selected>{t.countryCode}</option>
           {countries.map(c => (
             <option key={c.code} value={c.code}>
               {c.flag} {c.code}
@@ -185,7 +185,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           onChange={handleInputChange}
           className="auth-select-base"
         >
-          <option value="">{t.disabilityType}</option>
+          <option value="" disabled selected>{t.disabilityType}</option>
           <option value="visual">{t.visual}</option>
           <option value="hearing">{t.hearing}</option>
           <option value="speech">{t.speech}</option>

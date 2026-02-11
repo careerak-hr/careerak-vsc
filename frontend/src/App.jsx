@@ -31,11 +31,7 @@ export default function App() {
     restart
   } = useAppBootstrap();
 
-  // حالة التحميل الأولي
-  if (isLoading) {
-    return <InitialLoadingScreen />;
-  }
-
+  // تخطي شاشة التحميل - عرض التطبيق مباشرة
   // حالة الخطأ
   if (error) {
     return (
@@ -47,11 +43,6 @@ export default function App() {
     );
   }
 
-  // حالة الجاهزية - عرض التطبيق
-  if (isReady) {
-    return <ApplicationShell />;
-  }
-
-  // حالة احتياطية (لا يجب الوصول إليها)
-  return <InitialLoadingScreen />;
+  // عرض التطبيق مباشرة (حتى أثناء التحميل)
+  return <ApplicationShell />;
 }

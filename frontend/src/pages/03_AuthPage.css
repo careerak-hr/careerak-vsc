@@ -66,6 +66,25 @@
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none text-primary placeholder-hint transition-all;
 }
 
+/* منع تغيير لون الخلفية عند autofill */
+.auth-input-base:-webkit-autofill,
+.auth-input-base:-webkit-autofill:hover,
+.auth-input-base:-webkit-autofill:focus,
+.auth-input-base:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset !important;
+  -webkit-text-fill-color: #304B60 !important;
+  transition: background-color 5000s ease-in-out 0s;
+  border-radius: 1rem !important;
+}
+
+/* للمتصفحات الأخرى */
+.auth-input-base:-moz-autofill,
+.auth-input-base:-moz-autofill:hover,
+.auth-input-base:-moz-autofill:focus {
+  background-color: #F5F0E8 !important;
+  color: #304B60 !important;
+}
+
 /* إلغاء رسائل التحقق الافتراضية من المتصفح */
 .auth-input-base:invalid,
 .auth-select-base:invalid,
@@ -90,6 +109,27 @@ textarea::-moz-validation-bubble-message {
 
 .auth-select-base {
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none text-primary transition-all;
+}
+
+/* لون الهينت في القوائم المنسدلة (الخيار الأول المعطل) */
+.auth-select-base option[disabled] {
+  color: #9CA3AF !important; /* رمادي */
+}
+
+/* لون الخيارات العادية */
+.auth-select-base option:not([disabled]) {
+  color: #304B60 !important; /* كحلي */
+}
+
+/* منع تغيير لون الخلفية عند autofill للـ select */
+.auth-select-base:-webkit-autofill,
+.auth-select-base:-webkit-autofill:hover,
+.auth-select-base:-webkit-autofill:focus,
+.auth-select-base:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset !important;
+  -webkit-text-fill-color: #304B60 !important;
+  transition: background-color 5000s ease-in-out 0s;
+  border-radius: 1rem !important;
 }
 
 .auth-textarea {

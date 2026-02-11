@@ -23,7 +23,7 @@ const CompanyForm = ({ t, formData, handleInputChange, fieldErrors, showPassword
           onChange={handleInputChange}
           className="auth-select-base"
         >
-          <option value="">{t.industry}</option>
+          <option value="" disabled selected>{t.industry}</option>
           <option value="industrial">{t.industrial}</option>
           <option value="commercial">{t.commercial}</option>
           <option value="service">{t.service}</option>
@@ -83,7 +83,7 @@ const CompanyForm = ({ t, formData, handleInputChange, fieldErrors, showPassword
           onChange={handleInputChange}
           className="auth-select-base text-sm"
         >
-          <option value="">{t.countryCode}</option>
+          <option value="" disabled selected>{t.countryCode}</option>
           {countries.map(c => (
             <option key={c.code} value={c.code}>
               {c.flag} {c.code}

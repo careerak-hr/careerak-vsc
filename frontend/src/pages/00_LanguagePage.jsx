@@ -64,7 +64,12 @@ export default function LanguagePage() {
     navigate("/entry", { replace: true });
   };
 
-  const t = languagePageTranslations[selectedLang] || languagePageTranslations.ar;
+  // Get translations based on selected language, fallback to Arabic
+  const getTranslations = (lang) => {
+    return languagePageTranslations[lang] || languagePageTranslations.ar;
+  };
+
+  const t = getTranslations(selectedLang);
 
   if (loading) {
     return <div className="lang-page-loading-container">Loading...</div>;

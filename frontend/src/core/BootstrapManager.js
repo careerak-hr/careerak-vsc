@@ -38,15 +38,12 @@ class BootstrapManager {
     console.log('🚀 Bootstrap Manager: Initializing application...');
 
     try {
-      // تخطي كل التهيئة والبدء مباشرة (للاختبار)
-      console.log('⚡ Fast initialization - skipping all services');
-      
+      // تهيئة فورية بدون تأخير
       this.isInitialized = true;
-      console.log('✅ Bootstrap Manager: Application initialized successfully (fast mode)');
+      console.log('✅ Bootstrap Manager: Application initialized instantly');
 
     } catch (error) {
       console.error('❌ Bootstrap Manager: Initialization failed:', error);
-      // حتى لو فشل، نكمل
       this.isInitialized = true;
     }
   }

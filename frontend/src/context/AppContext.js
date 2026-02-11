@@ -24,12 +24,37 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        console.log('⚡ Fast settings load - using defaults');
-        // استخدام القيم الافتراضية مباشرة
-        setLanguage('ar');
-        setAudioEnabled(false);
-        setMusicEnabled(false);
-        setNotificationsEnabled(false);
+        console.log('📱 Loading app settings from Preferences...');
+        
+        // تحميل الإعدادات من Preferences
+        const [langResult, audioResult, musicResult, notifResult] = await Promise.all([
+          Preferences.get({ key: 'lang' }),
+          Preferences.get({ key: 'audio_enabled' }),
+          Preferences.get({ key: 'musicEnabled' }),
+          Preferences.get({ key: 'notificationsEnabled' })
+        ]);
+
+        const loadedLang = langResult.value || 'ar';
+        const loadedAudio = audioResult.value === 'true';
+        const loadedMusic = musicResult.value === 'true';
+        const loadedNotif = notifResult.value === 'true';
+
+        setLanguage(loadedLang);
+        setAudioEnabled(loadedAudio);
+        setMusicEnabled(loadedMusic);
+        setNotificationsEnabled(loadedNotif);
+
+        // مزامنة مع localStorage للتوافق مع audioManager
+        localStorage.setItem('audio_enabled', loadedAudio ? 'true' : 'false');
+        localStorage.setItem('musicEnabled', loadedMusic ? 'true' : 'false');
+        localStorage.setItem('audioConsent', loadedAudio ? 'true' : 'false');
+
+        console.log('✅ Settings loaded:', { 
+          language: loadedLang, 
+          audio: loadedAudio, 
+          music: loadedMusic, 
+          notifications: loadedNotif 
+        });
       } catch (error) {
         console.warn('Failed to load settings, using defaults.', error);
         setLanguage('ar');
@@ -84,6 +109,30 @@ export const AppProvider = ({ children }) => {
     await Preferences.set({ key: 'lang', value: lang });
   };
 
+  const updateAudioSettings = async (audio, music) => {
+    setAudioEnabled(audio);
+    setMusicEnabled(music);
+    
+    // حفظ في Preferences
+    await Promise.all([
+      Preferences.set({ key: 'audio_enabled', value: audio ? 'true' : 'false' }),
+      Preferences.set({ key: 'musicEnabled', value: music ? 'true' : 'false' })
+    ]);
+
+    // مزامنة مع localStorage
+    localStorage.setItem('audio_enabled', audio ? 'true' : 'false');
+    localStorage.setItem('musicEnabled', music ? 'true' : 'false');
+    localStorage.setItem('audioConsent', audio ? 'true' : 'false');
+
+    console.log('✅ Audio settings updated:', { audio, music });
+  };
+
+  const updateNotificationSettings = async (enabled) => {
+    setNotificationsEnabled(enabled);
+    await Preferences.set({ key: 'notificationsEnabled', value: enabled ? 'true' : 'false' });
+    console.log('✅ Notification settings updated:', enabled);
+  };
+
   // --- Combined Value ---
   const value = {
     // Auth
@@ -100,6 +149,8 @@ export const AppProvider = ({ children }) => {
     notificationsEnabled,
     isSettingsLoading,
     saveLanguage,
+    updateAudioSettings,
+    updateNotificationSettings,
     // Combined Loading State
     isAppLoading: isAuthLoading || isSettingsLoading,
   };
