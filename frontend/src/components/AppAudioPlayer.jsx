@@ -91,8 +91,8 @@ const AppAudioPlayer = () => {
     setupListener();
 
     return () => {
-      if (listener) {
-        listener.then(l => l.remove()).catch(() => {});
+      if (listener && typeof listener.remove === 'function') {
+        listener.remove();
       }
     };
   }, []);

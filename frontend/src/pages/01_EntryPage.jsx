@@ -49,7 +49,16 @@ export default function EntryPage() {
         }
       }
     };
-    const listener = App.addListener('appStateChange', handleAppState);
+    
+    let listener;
+    const setupListener = async () => {
+      try {
+        listener = await App.addListener('appStateChange', handleAppState);
+      } catch (error) {
+        console.log('App state listener not available');
+      }
+    };
+    setupListener();
 
     return () => {
       isMounted.current = false;
@@ -58,7 +67,9 @@ export default function EntryPage() {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      listener.then(l => l.remove());
+      if (listener && typeof listener.remove === 'function') {
+        listener.remove();
+      }
     };
   }, [navigate, audioEnabled, isAuthenticated]);
 

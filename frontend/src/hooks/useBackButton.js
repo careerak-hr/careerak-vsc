@@ -77,13 +77,13 @@ export const useBackButton = (options = {}) => {
 
     // تنظيف المستمع عند إلغاء التحميل
     return () => {
-      if (backButtonListener) {
-        backButtonListener.then(listener => {
-          listener.remove();
+      if (backButtonListener && typeof backButtonListener.remove === 'function') {
+        try {
+          backButtonListener.remove();
           console.log('🗑️ Back button listener removed');
-        }).catch(err => {
+        } catch (err) {
           console.error('❌ Failed to remove back button listener:', err);
-        });
+        }
       }
     };
   }, [navigate, location.pathname, onBack, exitOnRoot, exitRoutes]);
