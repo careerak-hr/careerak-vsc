@@ -4,7 +4,7 @@
 
 .auth-modal-content {
   background-color: #E3DAD1 !important; /* البيج الملكي */
-  border: 2px solid #304B60 !important; /* إطار كحلي */
+  border: 4px solid #304B60 !important; /* إطار كحلي سميك */
   @apply rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl;
 }
 
@@ -79,17 +79,37 @@
   @apply flex-1 py-3 rounded-2xl font-black shadow-lg active:scale-95 transition-all disabled:opacity-50;
 }
 
-/* تطبيق الخطوط حسب اللغة */
+/* تطبيق الخطوط حسب اللغة - بأولوية عالية */
 .auth-modal-backdrop[dir="rtl"],
 .auth-modal-backdrop[dir="rtl"] *,
 .auth-modal-content[dir="rtl"],
-.auth-modal-content[dir="rtl"] * {
+.auth-modal-content[dir="rtl"] *,
+.auth-modal-title[dir="rtl"],
+.auth-modal-message[dir="rtl"],
+.auth-modal-buttons[dir="rtl"],
+.auth-modal-buttons[dir="rtl"] *,
+.auth-modal-btn[dir="rtl"] {
   font-family: 'Amiri', 'Cairo', serif !important;
 }
 
 .auth-modal-backdrop[dir="ltr"],
 .auth-modal-backdrop[dir="ltr"] *,
 .auth-modal-content[dir="ltr"],
-.auth-modal-content[dir="ltr"] * {
+.auth-modal-content[dir="ltr"] *,
+.auth-modal-title[dir="ltr"],
+.auth-modal-message[dir="ltr"],
+.auth-modal-buttons[dir="ltr"],
+.auth-modal-buttons[dir="ltr"] *,
+.auth-modal-btn[dir="ltr"] {
   font-family: 'Cormorant Garamond', 'EB Garamond', serif !important;
+}
+
+/* إجبار الخطوط على جميع عناصر AuthModal */
+.auth-modal-backdrop *,
+.auth-modal-content *,
+.auth-modal-title,
+.auth-modal-message,
+.auth-modal-buttons *,
+.auth-modal-btn {
+  font-family: inherit !important;
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-import { App } from '@capacitor/app';
 import { useApp } from '../context/AppContext';
 import loginTranslations from '../data/loginTranslations.json';
 import './02_LoginPage.css';
@@ -36,9 +35,6 @@ export default function LoginPage() {
         }
     };
     loadRememberedData();
-
-    const backButtonListener = App.addListener('backButton', () => App.exitApp());
-    return () => { backButtonListener.then(l => l.remove()); };
   }, [startBgMusic]);
 
   const handleSubmit = async (e) => {

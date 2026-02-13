@@ -3,7 +3,7 @@
 }
 
 .performance-dashboard-container {
-  @apply bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto;
+  @apply bg-secondary rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto;
 }
 
 .performance-dashboard-header {

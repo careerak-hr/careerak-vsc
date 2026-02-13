@@ -8,7 +8,7 @@ import './03_AuthPage.css';
 // Context & Services
 import countries from '../data/countries.json';
 import authTranslations from '../data/authTranslations.json';
-import { createCroppedImage } from '../utils/imageUtils';
+import { createCroppedImage, analyzeImage } from '../utils/imageUtils';
 
 // Modals
 import AgeCheckModal from '../components/modals/AgeCheckModal';
@@ -73,6 +73,7 @@ export default function AuthPage() {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
 
   // Modal States
   const [showPhotoModal, setShowPhotoModal] = useState(false);
@@ -241,17 +242,19 @@ export default function AuthPage() {
       const cropped = await createCroppedImage(tempImage, croppedAreaPixels);
       console.log('✅ Image cropped successfully');
       
+      setTempImage(cropped);
       setShowCropModal(false);
       setShowAIAnalysis(true);
       setIsAnalyzing(true);
+      setAnalysisResult(null);
 
-      // محاكاة التحليل الذكي
-      setTimeout(() => {
-        console.log('🤖 AI analysis completed');
-        setIsAnalyzing(false);
-        // حفظ الصورة المقصوصة مؤقتاً للمعاينة في AI Modal
-        setTempImage(cropped);
-      }, 2000);
+      // التحليل الذكي الحقيقي
+      console.log('🤖 Starting AI analysis for userType:', userType);
+      const result = await analyzeImage(cropped, userType);
+      console.log('🤖 AI analysis completed:', result);
+      
+      setAnalysisResult(result);
+      setIsAnalyzing(false);
       
     } catch (error) {
       console.error('❌ Crop error:', error);
@@ -265,10 +268,10 @@ export default function AuthPage() {
 
   const handleAIAccept = () => {
     console.log('✅ User accepted AI analysis');
-    setProfileImage(tempImage); // tempImage الآن يحتوي على الصورة المقصوصة
+    setProfileImage(tempImage);
     setTempImage(null);
+    setAnalysisResult(null);
     setShowAIAnalysis(false);
-    // مسح أي أخطاء سابقة
     if (fieldErrors.image) {
       setFieldErrors(prev => ({ ...prev, image: '' }));
     }
@@ -277,10 +280,18 @@ export default function AuthPage() {
   const handleAIReject = () => {
     console.log('❌ User rejected AI analysis');
     setTempImage(null);
+    setAnalysisResult(null);
     setShowAIAnalysis(false);
+    
+    // رسالة خطأ مخصصة بناءً على نتيجة التحليل
+    let errorMessage = t.invalidImage || 'الصورة غير مناسبة. يرجى اختيار صورة أخرى.';
+    if (analysisResult && !analysisResult.isValid) {
+      errorMessage = analysisResult.reason;
+    }
+    
     setFieldErrors(prev => ({ 
       ...prev, 
-      image: t.invalidImage || 'الصورة غير مناسبة. يرجى اختيار صورة أخرى.' 
+      image: errorMessage
     }));
   };
 
@@ -491,6 +502,8 @@ export default function AuthPage() {
             onAccept={handleAIAccept}
             onReject={handleAIReject}
             isAnalyzing={isAnalyzing}
+            analysisResult={analysisResult}
+            userType={userType}
             language={language}
           />
         )}

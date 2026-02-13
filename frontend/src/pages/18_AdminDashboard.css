@@ -157,3 +157,47 @@
 .admin-system-settings-btn {
     @apply w-full p-4 bg-secondary rounded-2xl text-primary font-black text-lg hover:bg-primary hover:text-accent transition-all;
 }
+
+.admin-loading {
+    @apply flex flex-col items-center justify-center min-h-screen;
+}
+
+.admin-loading-spinner {
+    @apply w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin;
+}
+
+.admin-error-message {
+    @apply bg-danger/10 border-2 border-danger rounded-2xl p-4 mb-6;
+}
+
+.admin-users-header {
+    @apply flex items-center justify-between mb-6;
+}
+
+.admin-users-title {
+    @apply text-2xl font-black text-primary;
+}
+
+.admin-refresh-btn {
+    @apply px-6 py-3 bg-primary text-accent rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-all;
+}
+
+.admin-empty-state {
+    @apply text-center py-12;
+}
+
+.admin-user-card-phone {
+    @apply text-xs text-primary/50 mt-1;
+}
+
+.admin-user-card-view-btn {
+    @apply px-4 py-2 bg-accent text-primary rounded-xl font-black text-sm hover:bg-accent/80 transition-all;
+}
+
+.admin-section-title {
+    @apply text-2xl font-black text-primary mb-6;
+}
+
+.admin-content-count {
+    @apply ml-2 px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-black;
+}

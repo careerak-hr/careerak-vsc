@@ -69,11 +69,12 @@
 /* تنسيق خاص لحقل التاريخ */
 input[type="date"].auth-input-base {
   position: relative;
-  color: #9CA3AF; /* رمادي للهينت */
+  color: #9CA3AF !important; /* رمادي للهينت */
+  text-align: center;
 }
 
 /* عندما يتم اختيار تاريخ، يتغير اللون للكحلي */
-input[type="date"].auth-input-base:valid,
+input[type="date"].auth-input-base:valid:not([value=""]),
 input[type="date"].auth-input-base:not(:placeholder-shown) {
   color: #304B60 !important; /* كحلي */
 }
@@ -88,14 +89,40 @@ input[type="date"].auth-input-base::-webkit-datetime-edit-text,
 input[type="date"].auth-input-base::-webkit-datetime-edit-month-field,
 input[type="date"].auth-input-base::-webkit-datetime-edit-day-field,
 input[type="date"].auth-input-base::-webkit-datetime-edit-year-field {
-  color: #9CA3AF; /* رمادي للهينت */
+  color: #9CA3AF !important; /* رمادي للهينت */
 }
 
-input[type="date"].auth-input-base:valid::-webkit-datetime-edit-text,
-input[type="date"].auth-input-base:valid::-webkit-datetime-edit-month-field,
-input[type="date"].auth-input-base:valid::-webkit-datetime-edit-day-field,
-input[type="date"].auth-input-base:valid::-webkit-datetime-edit-year-field {
+input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-text,
+input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-month-field,
+input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-day-field,
+input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-year-field {
   color: #304B60 !important; /* كحلي */
+}
+
+/* عرض placeholder مخصص للتاريخ */
+input[type="date"].auth-input-base:invalid,
+input[type="date"].auth-input-base[value=""] {
+  color: #9CA3AF !important;
+}
+
+input[type="date"].auth-input-base:invalid::-webkit-datetime-edit,
+input[type="date"].auth-input-base[value=""]::-webkit-datetime-edit {
+  color: transparent;
+}
+
+input[type="date"].auth-input-base:invalid::before,
+input[type="date"].auth-input-base[value=""]::before {
+  content: attr(placeholder);
+  color: #9CA3AF;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+input[type="date"].auth-input-base:focus:invalid::before,
+input[type="date"].auth-input-base:focus[value=""]::before {
+  content: "";
 }
 
 /* منع تغيير لون الخلفية عند autofill */
@@ -103,7 +130,7 @@ input[type="date"].auth-input-base:valid::-webkit-datetime-edit-year-field {
 .auth-input-base:-webkit-autofill:hover,
 .auth-input-base:-webkit-autofill:focus,
 .auth-input-base:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #E3DAD1 inset !important;
   -webkit-text-fill-color: #304B60 !important;
   transition: background-color 5000s ease-in-out 0s;
   border-radius: 1rem !important;
@@ -113,15 +140,14 @@ input[type="date"].auth-input-base:valid::-webkit-datetime-edit-year-field {
 .auth-input-base:-moz-autofill,
 .auth-input-base:-moz-autofill:hover,
 .auth-input-base:-moz-autofill:focus {
-  background-color: #F5F0E8 !important;
+  background-color: #E3DAD1 !important;
   color: #304B60 !important;
 }
 
-/* منع تغيير الخلفية بعد الكتابة */
+/* الحفاظ على لون الخلفية الأصلي */
 .auth-input-base:focus,
-.auth-input-base:active,
-.auth-input-base:not(:placeholder-shown) {
-  background-color: #F5F0E8 !important;
+.auth-input-base:active {
+  background-color: #E3DAD1 !important;
   color: #304B60 !important;
 }
 
@@ -149,12 +175,12 @@ textarea::-moz-validation-bubble-message {
 
 .auth-select-base {
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none transition-all;
-  color: #9CA3AF; /* رمادي للهينت الافتراضي */
+  color: #9CA3AF !important; /* رمادي للهينت الافتراضي */
 }
 
 /* عندما يتم اختيار قيمة، يتغير اللون للكحلي */
-.auth-select-base:not([value=""]),
-.auth-select-base:valid {
+.auth-select-base:not([value=""]):not(:invalid),
+.auth-select-base:valid:not([value=""]) {
   color: #304B60 !important; /* كحلي */
 }
 
@@ -166,7 +192,7 @@ textarea::-moz-validation-bubble-message {
 /* لون الخيارات العادية */
 .auth-select-base option:not([disabled]) {
   color: #304B60 !important; /* كحلي */
-  background-color: #F5F0E8 !important; /* بيج */
+  background-color: #E3DAD1 !important; /* بيج */
 }
 
 /* منع تغيير لون الخلفية عند autofill للـ select */
@@ -174,10 +200,17 @@ textarea::-moz-validation-bubble-message {
 .auth-select-base:-webkit-autofill:hover,
 .auth-select-base:-webkit-autofill:focus,
 .auth-select-base:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #E3DAD1 inset !important;
   -webkit-text-fill-color: #304B60 !important;
   transition: background-color 5000s ease-in-out 0s;
   border-radius: 1rem !important;
+}
+
+/* الحفاظ على لون الخلفية الأصلي للـ select */
+.auth-select-base:focus,
+.auth-select-base:active {
+  background-color: #E3DAD1 !important;
+  color: #304B60 !important;
 }
 
 .auth-textarea {
@@ -197,7 +230,34 @@ textarea::-moz-validation-bubble-message {
 }
 
 .auth-checkbox {
-  @apply w-5 h-5 rounded-lg border-accent/30 text-primary focus:ring-primary/20 bg-secondary-light;
+  @apply w-6 h-6 rounded-lg border-4 border-primary/30 text-primary focus:ring-4 focus:ring-primary/20 bg-secondary-light cursor-pointer transition-all;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+}
+
+.auth-checkbox:checked {
+  @apply bg-primary border-primary;
+}
+
+.auth-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #D48161;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.auth-checkbox:hover {
+  @apply border-primary scale-105 shadow-lg;
+}
+
+.auth-checkbox:focus {
+  @apply outline-none ring-4 ring-primary/30;
 }
 
 .auth-checkbox-label {

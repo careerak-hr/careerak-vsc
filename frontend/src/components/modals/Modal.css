@@ -1,4 +1,16 @@
 
+/* إجبار الخطوط على جميع عناصر Modal */
+.modal-backdrop *,
+.modal-content *,
+.modal-body *,
+.modal-title,
+.modal-description,
+.modal-actions *,
+.modal-confirm-btn,
+.modal-cancel-btn {
+  font-family: inherit !important;
+}
+
 .modal-backdrop {
   @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity;
 }
@@ -20,6 +32,14 @@
   @apply text-primary text-opacity-80 mb-6;
 }
 
+/* إجبار الخط على modal-description */
+.modal-description,
+.modal-description * {
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  font-style: inherit !important;
+}
+
 .modal-actions {
   @apply flex flex-col sm:flex-row gap-3;
 }
@@ -37,18 +57,34 @@
   @apply bg-secondary text-primary border border-primary hover:bg-primary-light hover:text-white active:scale-95;
 }
 
-/* تطبيق الخطوط حسب اللغة */
+/* تطبيق الخطوط حسب اللغة - بأولوية عالية */
 .modal-backdrop[dir="rtl"],
 .modal-backdrop[dir="rtl"] *,
 .modal-content[dir="rtl"],
-.modal-content[dir="rtl"] * {
+.modal-content[dir="rtl"] *,
+.modal-title[dir="rtl"],
+.modal-description[dir="rtl"],
+.modal-confirm-btn[dir="rtl"],
+.modal-cancel-btn[dir="rtl"],
+.modal-body[dir="rtl"],
+.modal-body[dir="rtl"] *,
+.modal-actions[dir="rtl"],
+.modal-actions[dir="rtl"] * {
   font-family: 'Amiri', 'Cairo', serif !important;
 }
 
 .modal-backdrop[dir="ltr"],
 .modal-backdrop[dir="ltr"] *,
 .modal-content[dir="ltr"],
-.modal-content[dir="ltr"] * {
+.modal-content[dir="ltr"] *,
+.modal-title[dir="ltr"],
+.modal-description[dir="ltr"],
+.modal-confirm-btn[dir="ltr"],
+.modal-cancel-btn[dir="ltr"],
+.modal-body[dir="ltr"],
+.modal-body[dir="ltr"] *,
+.modal-actions[dir="ltr"],
+.modal-actions[dir="ltr"] * {
   font-family: 'Cormorant Garamond', 'EB Garamond', serif !important;
 }
 

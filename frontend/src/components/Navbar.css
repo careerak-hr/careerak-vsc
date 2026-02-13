@@ -1,5 +1,5 @@
 .navbar-container {
-  @apply fixed top-0 left-0 right-0 z-[5000] bg-white/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-primary/5 shadow-sm;
+  @apply fixed top-0 left-0 right-0 z-[5000] bg-secondary/80 backdrop-blur-md px-6 py-4 flex justify-between items-center border-b border-primary/5 shadow-sm;
 }
 
 .navbar-logo-container {
@@ -27,7 +27,7 @@
 }
 
 .navbar-notifications-dropdown {
-  @apply absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-secondary-dark z-50;
+  @apply absolute right-0 mt-2 w-80 bg-secondary rounded-lg shadow-lg border border-secondary-dark z-50;
 }
 
 .navbar-notifications-header {
@@ -55,7 +55,7 @@
 }
 
 .settings-panel {
-  @apply w-80 h-full bg-white shadow-2xl p-8 flex flex-col animate-slide-in-right;
+  @apply w-80 h-full bg-secondary shadow-2xl p-8 flex flex-col animate-slide-in-right;
 }
 
 .settings-panel-header {
@@ -107,7 +107,7 @@
 }
 
 .search-bar-container {
-    @apply absolute top-full left-0 right-0 bg-white border-t border-secondary-dark shadow-lg z-40 p-4;
+    @apply absolute top-full left-0 right-0 bg-secondary border-t border-secondary-dark shadow-lg z-40 p-4;
 }
 
 .search-bar-content {

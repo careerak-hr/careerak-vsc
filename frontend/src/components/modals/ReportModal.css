@@ -3,7 +3,7 @@
 }
 
 .report-modal-container {
-  @apply bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto;
+  @apply bg-secondary rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto;
 }
 
 .report-modal-content {

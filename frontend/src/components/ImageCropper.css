@@ -7,7 +7,7 @@
 }
 
 .image-cropper-controls-container {
-  @apply p-6 bg-white rounded-t-[2.5rem] flex flex-col gap-4;
+  @apply p-6 bg-secondary rounded-t-[2.5rem] flex flex-col gap-4;
 }
 
 .image-cropper-zoom-container {

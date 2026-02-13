@@ -13,18 +13,30 @@ const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
   };
 
   const dir = language === 'ar' ? 'rtl' : 'ltr';
+  const fontFamily = language === 'ar' 
+    ? "Amiri, Cairo, serif" 
+    : language === 'fr' 
+      ? "EB Garamond, serif" 
+      : "Cormorant Garamond, serif";
+
+  // Create inline style object
+  const fontStyle = {
+    fontFamily: fontFamily,
+    fontWeight: 'inherit',
+    fontStyle: 'inherit'
+  };
 
   return (
-    <div className="modal-backdrop" dir={dir}>
-      <div className="modal-content" dir={dir}>
-        <div className="modal-body">
-          <h2 className="modal-title">{texts.title}</h2>
+    <div className="modal-backdrop" dir={dir} style={fontStyle}>
+      <div className="modal-content" dir={dir} style={fontStyle}>
+        <div className="modal-body" style={fontStyle}>
+          <h2 className="modal-title" style={fontStyle}>{texts.title}</h2>
         </div>
-        <div className="modal-actions">
-          <button onClick={() => onConfirm(true)} className="modal-confirm-btn">
+        <div className="modal-actions" style={fontStyle}>
+          <button onClick={() => onConfirm(true)} className="modal-confirm-btn" style={fontStyle}>
             {texts.confirm}
           </button>
-          <button onClick={() => onConfirm(false)} className="modal-cancel-btn">
+          <button onClick={() => onConfirm(false)} className="modal-cancel-btn" style={fontStyle}>
             {texts.deny}
           </button>
         </div>

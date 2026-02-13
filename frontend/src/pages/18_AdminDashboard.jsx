@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import useTranslate from '../hooks/useTranslate';
 import adminDashboardTranslations from '../data/adminDashboard.json';
+import api from '../services/api';
 import './18_AdminDashboard.css';
 
 const AdminDashboard = () => {
     const { logout, user, language, token, startBgMusic } = useApp();
     const navigate = useNavigate();
-    const t = useTranslate(adminDashboardTranslations);
+    const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
     
     const [activeTab, setActiveTab] = useState('overview');
     const [stats, setStats] = useState({
@@ -19,10 +20,11 @@ const AdminDashboard = () => {
     });
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     // تشغيل الموسيقى عند فتح الصفحة
     useEffect(() => {
-        startBgMusic();
+        if (startBgMusic) startBgMusic();
     }, [startBgMusic]);
 
     // جلب الإحصائيات والبيانات
@@ -36,26 +38,42 @@ const AdminDashboard = () => {
             console.log('No token or user, redirecting to login');
             navigate('/login');
         }
+        if (user && user.role !== 'Admin') {
+            console.log('User is not admin, redirecting');
+            navigate('/');
+        }
     }, [token, user, navigate]);
 
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            // هنا يمكن إضافة استدعاءات API لجلب البيانات الحقيقية
-            // مؤقتاً نستخدم بيانات تجريبية
+            setError('');
+            
+            // جلب الإحصائيات من API
+            const statsResponse = await api.get('/admin/stats');
             setStats({
-                totalUsers: 150,
-                totalJobs: 45,
-                totalCourses: 28,
-                totalApplications: 320
+                totalUsers: statsResponse.data.users || 0,
+                totalJobs: statsResponse.data.jobs || 0,
+                totalCourses: statsResponse.data.courses || 0,
+                totalApplications: statsResponse.data.applications || 0
             });
             
-            setUsers([
-                { id: 1, name: 'أحمد محمد', email: 'ahmad@example.com', type: 'Employee' },
-                { id: 2, name: 'شركة التقنية', email: 'tech@example.com', type: 'HR' },
-            ]);
+            // جلب المستخدمين
+            const usersResponse = await api.get('/admin/users');
+            setUsers(usersResponse.data || []);
+            
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
+            setError(error.response?.data?.error || 'فشل تحميل البيانات');
+            
+            // في حالة الفشل، استخدم بيانات تجريبية
+            setStats({
+                totalUsers: 0,
+                totalJobs: 0,
+                totalCourses: 0,
+                totalApplications: 0
+            });
+            setUsers([]);
         } finally {
             setLoading(false);
         }
@@ -66,10 +84,30 @@ const AdminDashboard = () => {
         navigate('/login');
     };
 
-    const handleDeleteUser = (userId) => {
-        if (window.confirm(t('deleteConfirm'))) {
-            // هنا يمكن إضافة استدعاء API لحذف المستخدم
-            setUsers(users.filter(u => u.id !== userId));
+    const handleDeleteUser = async (userId) => {
+        const confirmText = language === 'ar' ? 'هل أنت متأكد من حذف هذا المستخدم؟' :
+                           language === 'fr' ? 'Êtes-vous sûr de supprimer cet utilisateur?' :
+                           'Are you sure you want to delete this user?';
+        
+        if (window.confirm(confirmText)) {
+            try {
+                await api.delete(`/admin/delete-user/${userId}`);
+                setUsers(users.filter(u => u._id !== userId));
+                
+                const successText = language === 'ar' ? 'تم حذف المستخدم بنجاح' :
+                                   language === 'fr' ? 'Utilisateur supprimé avec succès' :
+                                   'User deleted successfully';
+                alert(successText);
+                
+                // تحديث الإحصائيات
+                fetchDashboardData();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                const errorText = language === 'ar' ? 'فشل حذف المستخدم' :
+                                 language === 'fr' ? 'Échec de la suppression' :
+                                 'Failed to delete user';
+                alert(errorText);
+            }
         }
     };
 
@@ -91,6 +129,12 @@ const AdminDashboard = () => {
                 </div>
                 <div className="admin-welcome-bg-element"></div>
             </div>
+
+            {error && (
+                <div className="admin-error-message">
+                    <p className="text-danger font-black">{error}</p>
+                </div>
+            )}
 
             {/* الإحصائيات */}
             <div className="admin-stats-grid">
@@ -143,36 +187,52 @@ const AdminDashboard = () => {
                 </div>
                 <div className="admin-quick-nav-controls">
                     <button 
-                        onClick={() => navigate('/admin/users')}
+                        onClick={() => setActiveTab('users')}
                         className="admin-quick-nav-btn"
                     >
-                        {language === 'ar' ? 'إدارة المستخدمين' : 
+                        👥 {language === 'ar' ? 'إدارة المستخدمين' : 
                          language === 'fr' ? 'Gérer les Utilisateurs' : 
                          'Manage Users'}
                     </button>
                     <button 
-                        onClick={() => navigate('/admin/jobs')}
+                        onClick={() => navigate('/job-postings')}
                         className="admin-quick-nav-btn"
                     >
-                        {language === 'ar' ? 'إدارة الوظائف' : 
+                        💼 {language === 'ar' ? 'إدارة الوظائف' : 
                          language === 'fr' ? 'Gérer les Emplois' : 
                          'Manage Jobs'}
                     </button>
                     <button 
-                        onClick={() => navigate('/admin/courses')}
+                        onClick={() => navigate('/courses')}
                         className="admin-quick-nav-btn"
                     >
-                        {language === 'ar' ? 'إدارة الدورات' : 
+                        🎓 {language === 'ar' ? 'إدارة الدورات' : 
                          language === 'fr' ? 'Gérer les Cours' : 
                          'Manage Courses'}
                     </button>
                     <button 
-                        onClick={() => navigate('/admin/settings')}
+                        onClick={() => navigate('/settings')}
                         className="admin-quick-nav-btn"
                     >
-                        {language === 'ar' ? 'الإعدادات' : 
+                        ⚙️ {language === 'ar' ? 'الإعدادات' : 
                          language === 'fr' ? 'Paramètres' : 
                          'Settings'}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/post-job')}
+                        className="admin-quick-nav-btn"
+                    >
+                        ➕ {language === 'ar' ? 'إضافة وظيفة' : 
+                         language === 'fr' ? 'Ajouter un Emploi' : 
+                         'Add Job'}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/post-course')}
+                        className="admin-quick-nav-btn"
+                    >
+                        ➕ {language === 'ar' ? 'إضافة دورة' : 
+                         language === 'fr' ? 'Ajouter un Cours' : 
+                         'Add Course'}
                     </button>
                 </div>
             </div>
@@ -181,58 +241,114 @@ const AdminDashboard = () => {
 
     const renderUsersTab = () => (
         <div className="admin-tab-content">
-            <div className="admin-users-list">
-                {users.map(user => (
-                    <div key={user.id} className="admin-user-card">
-                        <div>
-                            <div className="admin-user-card-name">{user.name}</div>
-                            <div className="admin-user-card-details">
-                                {user.email} • {user.type}
+            <div className="admin-users-header">
+                <h2 className="admin-users-title">
+                    {language === 'ar' ? 'إدارة المستخدمين' : 
+                     language === 'fr' ? 'Gestion des Utilisateurs' : 
+                     'User Management'}
+                </h2>
+                <button 
+                    onClick={fetchDashboardData}
+                    className="admin-refresh-btn"
+                >
+                    🔄 {language === 'ar' ? 'تحديث' : 
+                        language === 'fr' ? 'Actualiser' : 
+                        'Refresh'}
+                </button>
+            </div>
+            
+            {users.length === 0 ? (
+                <div className="admin-empty-state">
+                    <p className="text-primary/60 font-black">
+                        {language === 'ar' ? 'لا يوجد مستخدمون' : 
+                         language === 'fr' ? 'Aucun utilisateur' : 
+                         'No users found'}
+                    </p>
+                </div>
+            ) : (
+                <div className="admin-users-list">
+                    {users.map(user => (
+                        <div key={user._id} className="admin-user-card">
+                            <div>
+                                <div className="admin-user-card-name">
+                                    {user.firstName} {user.lastName}
+                                </div>
+                                <div className="admin-user-card-details">
+                                    {user.email} • {user.role}
+                                </div>
+                                {user.phone && (
+                                    <div className="admin-user-card-phone">
+                                        📞 {user.phone}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="admin-user-card-actions">
+                                <button 
+                                    onClick={() => navigate(`/profile`, { state: { userId: user._id } })}
+                                    className="admin-user-card-view-btn"
+                                >
+                                    👁️ {language === 'ar' ? 'عرض' : 
+                                        language === 'fr' ? 'Voir' : 
+                                        'View'}
+                                </button>
+                                <button 
+                                    onClick={() => handleDeleteUser(user._id)}
+                                    className="admin-user-card-delete-btn"
+                                    disabled={user.role === 'Admin'}
+                                >
+                                    🗑️ {language === 'ar' ? 'حذف' : 
+                                        language === 'fr' ? 'Supprimer' : 
+                                        'Delete'}
+                                </button>
                             </div>
                         </div>
-                        <div className="admin-user-card-actions">
-                            <button className="admin-user-card-edit-btn">
-                                {language === 'ar' ? 'تعديل' : 
-                                 language === 'fr' ? 'Modifier' : 
-                                 'Edit'}
-                            </button>
-                            <button 
-                                onClick={() => handleDeleteUser(user.id)}
-                                className="admin-user-card-delete-btn"
-                            >
-                                {language === 'ar' ? 'حذف' : 
-                                 language === 'fr' ? 'Supprimer' : 
-                                 'Delete'}
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 
     const renderContentTab = () => (
         <div className="admin-tab-content">
+            <h2 className="admin-section-title">
+                {language === 'ar' ? 'إدارة المحتوى' : 
+                 language === 'fr' ? 'Gestion du Contenu' : 
+                 'Content Management'}
+            </h2>
             <div className="admin-content-management-grid">
-                <button className="admin-content-management-btn">
-                    {language === 'ar' ? '📋 إدارة الوظائف' : 
-                     language === 'fr' ? '📋 Gérer les Emplois' : 
-                     '📋 Manage Jobs'}
+                <button 
+                    onClick={() => navigate('/job-postings')}
+                    className="admin-content-management-btn"
+                >
+                    📋 {language === 'ar' ? 'إدارة الوظائف' : 
+                        language === 'fr' ? 'Gérer les Emplois' : 
+                        'Manage Jobs'}
+                    <span className="admin-content-count">{stats.totalJobs}</span>
                 </button>
-                <button className="admin-content-management-btn">
-                    {language === 'ar' ? '🎓 إدارة الدورات' : 
-                     language === 'fr' ? '🎓 Gérer les Cours' : 
-                     '🎓 Manage Courses'}
+                <button 
+                    onClick={() => navigate('/courses')}
+                    className="admin-content-management-btn"
+                >
+                    🎓 {language === 'ar' ? 'إدارة الدورات' : 
+                        language === 'fr' ? 'Gérer les Cours' : 
+                        'Manage Courses'}
+                    <span className="admin-content-count">{stats.totalCourses}</span>
                 </button>
-                <button className="admin-content-management-btn">
-                    {language === 'ar' ? '📝 إدارة الطلبات' : 
-                     language === 'fr' ? '📝 Gérer les Candidatures' : 
-                     '📝 Manage Applications'}
+                <button 
+                    onClick={() => navigate('/post-job')}
+                    className="admin-content-management-btn"
+                >
+                    ➕ {language === 'ar' ? 'إضافة وظيفة جديدة' : 
+                        language === 'fr' ? 'Ajouter un Emploi' : 
+                        'Add New Job'}
                 </button>
-                <button className="admin-content-management-btn">
-                    {language === 'ar' ? '📊 التقارير' : 
-                     language === 'fr' ? '📊 Rapports' : 
-                     '📊 Reports'}
+                <button 
+                    onClick={() => navigate('/post-course')}
+                    className="admin-content-management-btn"
+                >
+                    ➕ {language === 'ar' ? 'إضافة دورة جديدة' : 
+                        language === 'fr' ? 'Ajouter un Cours' : 
+                        'Add New Course'}
                 </button>
             </div>
         </div>
@@ -240,26 +356,43 @@ const AdminDashboard = () => {
 
     const renderSettingsTab = () => (
         <div className="admin-tab-content">
+            <h2 className="admin-section-title">
+                {language === 'ar' ? 'إعدادات النظام' : 
+                 language === 'fr' ? 'Paramètres Système' : 
+                 'System Settings'}
+            </h2>
             <div className="admin-system-settings-list">
-                <button className="admin-system-settings-btn">
-                    {language === 'ar' ? '⚙️ إعدادات النظام' : 
-                     language === 'fr' ? '⚙️ Paramètres Système' : 
-                     '⚙️ System Settings'}
+                <button 
+                    onClick={() => navigate('/settings')}
+                    className="admin-system-settings-btn"
+                >
+                    ⚙️ {language === 'ar' ? 'إعدادات التطبيق' : 
+                        language === 'fr' ? 'Paramètres Application' : 
+                        'App Settings'}
                 </button>
-                <button className="admin-system-settings-btn">
-                    {language === 'ar' ? '🔒 الأمان والخصوصية' : 
-                     language === 'fr' ? '🔒 Sécurité et Confidentialité' : 
-                     '🔒 Security & Privacy'}
+                <button 
+                    onClick={() => navigate('/policy')}
+                    className="admin-system-settings-btn"
+                >
+                    🔒 {language === 'ar' ? 'سياسة الخصوصية' : 
+                        language === 'fr' ? 'Politique de Confidentialité' : 
+                        'Privacy Policy'}
                 </button>
-                <button className="admin-system-settings-btn">
-                    {language === 'ar' ? '📧 إعدادات البريد' : 
-                     language === 'fr' ? '📧 Paramètres Email' : 
-                     '📧 Email Settings'}
+                <button 
+                    onClick={() => setActiveTab('overview')}
+                    className="admin-system-settings-btn"
+                >
+                    📊 {language === 'ar' ? 'الإحصائيات' : 
+                        language === 'fr' ? 'Statistiques' : 
+                        'Statistics'}
                 </button>
-                <button className="admin-system-settings-btn">
-                    {language === 'ar' ? '🔔 إعدادات الإشعارات' : 
-                     language === 'fr' ? '🔔 Paramètres Notifications' : 
-                     '🔔 Notification Settings'}
+                <button 
+                    onClick={fetchDashboardData}
+                    className="admin-system-settings-btn"
+                >
+                    🔄 {language === 'ar' ? 'تحديث البيانات' : 
+                        language === 'fr' ? 'Actualiser les Données' : 
+                        'Refresh Data'}
                 </button>
             </div>
         </div>
@@ -268,10 +401,13 @@ const AdminDashboard = () => {
     if (loading) {
         return (
             <div className="admin-dashboard-container">
-                <div className="text-primary text-xl font-black">
-                    {language === 'ar' ? 'جاري التحميل...' : 
-                     language === 'fr' ? 'Chargement...' : 
-                     'Loading...'}
+                <div className="admin-loading">
+                    <div className="admin-loading-spinner"></div>
+                    <p className="text-primary text-xl font-black mt-4">
+                        {language === 'ar' ? 'جاري التحميل...' : 
+                         language === 'fr' ? 'Chargement...' : 
+                         'Loading...'}
+                    </p>
                 </div>
             </div>
         );
@@ -297,9 +433,9 @@ const AdminDashboard = () => {
                     </div>
                 </div>
                 <button onClick={handleLogout} className="admin-logout-btn">
-                    {language === 'ar' ? '🚪 تسجيل الخروج' : 
-                     language === 'fr' ? '🚪 Déconnexion' : 
-                     '🚪 Logout'}
+                    🚪 {language === 'ar' ? 'تسجيل الخروج' : 
+                        language === 'fr' ? 'Déconnexion' : 
+                        'Logout'}
                 </button>
             </div>
 

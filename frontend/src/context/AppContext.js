@@ -151,6 +151,12 @@ export const AppProvider = ({ children }) => {
     saveLanguage,
     updateAudioSettings,
     updateNotificationSettings,
+    // Audio Control (for backward compatibility)
+    startBgMusic: () => {
+      // دالة فارغة للتوافق مع الصفحات القديمة
+      // audioManager يدير الموسيقى تلقائياً
+      console.log('startBgMusic called - audioManager handles this automatically');
+    },
     // Combined Loading State
     isAppLoading: isAuthLoading || isSettingsLoading,
   };

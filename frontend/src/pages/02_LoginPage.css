@@ -55,7 +55,34 @@
 }
 
 .login-remember-me-checkbox {
-  @apply w-5 h-5 rounded-lg border-accent/30 text-primary focus:ring-primary/20 bg-secondary;
+  @apply w-6 h-6 rounded-lg border-4 border-primary/30 text-primary focus:ring-4 focus:ring-primary/20 bg-secondary cursor-pointer transition-all;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+}
+
+.login-remember-me-checkbox:checked {
+  @apply bg-primary border-primary;
+}
+
+.login-remember-me-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #D48161;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.login-remember-me-checkbox:hover {
+  @apply border-primary scale-105 shadow-lg;
+}
+
+.login-remember-me-checkbox:focus {
+  @apply outline-none ring-4 ring-primary/30;
 }
 
 .login-remember-me-label {

@@ -3,7 +3,7 @@
 }
 
 .error-boundary-card {
-  @apply bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center;
+  @apply bg-secondary rounded-lg shadow-lg p-8 max-w-md w-full text-center;
 }
 
 .error-boundary-icon {

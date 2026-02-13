@@ -1,162 +1,194 @@
-// 🔊 نظام أصوات الإشعارات المتقدم لتطبيق Careerak
-// يحتوي على أصوات مختلفة للأفراد والشركات حسب نوع الإشعار
+/**
+ * نظام الإشعارات الصوتية
+ * Notification Sounds System
+ * 
+ * يستخدم soundGenerator كحل مؤقت لحين إضافة ملفات MP3
+ */
+
+import soundGenerator from '../utils/soundGenerator';
 
 class NotificationSoundManager {
   constructor() {
-    this.sounds = {};
-    this.isEnabled = true;
-    this.volume = 0.7;
-    this.loadSounds();
-  }
-
-  // تحميل جميع الأصوات
-  loadSounds() {
-    // أصوات الأفراد (Individuals)
-    this.sounds.individuals = {
-      jobAccepted: this.createAudio('/sounds/individuals/applause.mp3', 'تصفيق عند قبول طلب توظيف'),
-      jobRejected: this.createAudio('/sounds/individuals/gentle-notification.mp3', 'صوت لطيف عند رفض طلب'),
-      courseCompleted: this.createAudio('/sounds/individuals/congratulations.mp3', 'تهانينا عند إتمام دورة'),
-      courseEnrolled: this.createAudio('/sounds/individuals/success-chime.mp3', 'صوت نجاح عند التسجيل في دورة'),
-      newJobPosted: this.createAudio('/sounds/individuals/opportunity-bell.mp3', 'جرس فرصة عند نشر وظيفة جديدة'),
-      profileViewed: this.createAudio('/sounds/individuals/soft-ping.mp3', 'صوت لطيف عند مشاهدة الملف الشخصي'),
-      messageReceived: this.createAudio('/sounds/individuals/message-pop.mp3', 'صوت رسالة جديدة'),
-      interviewScheduled: this.createAudio('/sounds/individuals/important-chime.mp3', 'صوت مهم لموعد مقابلة'),
-      certificateEarned: this.createAudio('/sounds/individuals/achievement.mp3', 'صوت إنجاز عند الحصول على شهادة')
-    };
-
-    // أصوات الشركات (Companies/HR)
-    this.sounds.companies = {
-      paymentReceived: this.createAudio('/sounds/companies/cash-register.mp3', 'صوت فلوس عند استلام دفعة'),
-      paymentSent: this.createAudio('/sounds/companies/money-transfer.mp3', 'صوت تحويل مالي'),
-      newApplication: this.createAudio('/sounds/companies/professional-notification.mp3', 'صوت مهني لطلب جديد'),
-      candidateShortlisted: this.createAudio('/sounds/companies/selection-sound.mp3', 'صوت اختيار مرشح'),
-      jobPostExpired: this.createAudio('/sounds/companies/gentle-reminder.mp3', 'تذكير لطيف لانتهاء إعلان'),
-      subscriptionRenewal: this.createAudio('/sounds/companies/business-chime.mp3', 'صوت تجاري للاشتراك'),
-      reportGenerated: this.createAudio('/sounds/companies/document-ready.mp3', 'صوت جاهزية تقرير'),
-      teamUpdate: this.createAudio('/sounds/companies/team-notification.mp3', 'إشعار فريق العمل'),
-      contractSigned: this.createAudio('/sounds/companies/success-fanfare.mp3', 'صوت احتفالي لتوقيع عقد')
-    };
-
-    // أصوات عامة (General)
-    this.sounds.general = {
-      systemUpdate: this.createAudio('/sounds/general/system-notification.mp3', 'تحديث النظام'),
-      maintenance: this.createAudio('/sounds/general/maintenance-alert.mp3', 'تنبيه صيانة'),
-      welcome: this.createAudio('/sounds/general/welcome-sound.mp3', 'صوت ترحيب'),
-      error: this.createAudio('/sounds/general/error-sound.mp3', 'صوت خطأ'),
-      success: this.createAudio('/sounds/general/success-sound.mp3', 'صوت نجاح عام')
-    };
-  }
-
-  // إنشاء عنصر صوتي
-  createAudio(src, description) {
-    try {
-      const audio = new Audio();
-      audio.src = src;
-      audio.volume = this.volume;
-      audio.preload = 'auto';
-      audio.description = description;
+    this.enabled = true;
+    this.volume = 0.3;
+    
+    // خريطة الأصوات حسب نوع الإشعار
+    this.soundMap = {
+      // أصوات الأفراد
+      jobAccepted: 'applause',
+      jobRejected: 'error',
+      newJobMatch: 'opportunity',
+      applicationSubmitted: 'success',
+      profileUpdated: 'notification',
+      messageReceived: 'messagePop',
+      courseEnrolled: 'congratulations',
+      achievementUnlocked: 'applause',
       
-      // معالجة الأخطاء
-      audio.addEventListener('error', (e) => {
-        console.warn(`⚠️ Failed to load notification sound: ${src} (${description})`);
-      });
-
-      return audio;
-    } catch (error) {
-      console.error('Failed to create audio element:', error);
-      return null;
-    }
+      // أصوات الشركات
+      newApplication: 'cashRegister',
+      candidateShortlisted: 'bell',
+      interviewScheduled: 'notification',
+      jobPosted: 'success',
+      profileViewed: 'messagePop',
+      
+      // أصوات عامة
+      success: 'success',
+      error: 'error',
+      warning: 'alert',
+      info: 'notification',
+      message: 'messagePop'
+    };
+    
+    console.log('🔔 NotificationSoundManager initialized');
   }
 
-  // تشغيل صوت حسب نوع المستخدم والحدث
-  async playSound(userType, eventType, fallbackToGeneral = true) {
-    if (!this.isEnabled) {
-      console.log('🔇 Notification sounds are disabled');
+  /**
+   * تفعيل/تعطيل الأصوات
+   */
+  setEnabled(enabled) {
+    this.enabled = enabled;
+    console.log(`🔔 Notification sounds ${enabled ? 'enabled' : 'disabled'}`);
+  }
+
+  /**
+   * تعيين مستوى الصوت
+   */
+  setVolume(volume) {
+    this.volume = Math.max(0, Math.min(1, volume));
+    console.log(`🔊 Volume set to ${this.volume}`);
+  }
+
+  /**
+   * تشغيل صوت إشعار
+   * @param {string} notificationType - نوع الإشعار
+   */
+  play(notificationType) {
+    if (!this.enabled) {
+      console.log('🔇 Sounds disabled, skipping');
       return;
     }
 
+    const soundType = this.soundMap[notificationType] || 'notification';
+    console.log(`🔔 Playing sound: ${soundType} for ${notificationType}`);
+
     try {
-      let audio = null;
-
-      // البحث عن الصوت المناسب
-      if (userType === 'Employee' || userType === 'individual') {
-        audio = this.sounds.individuals[eventType];
-      } else if (userType === 'HR' || userType === 'company') {
-        audio = this.sounds.companies[eventType];
+      // تشغيل الصوت المناسب
+      switch (soundType) {
+        case 'success':
+          soundGenerator.playSuccess();
+          break;
+        case 'error':
+          soundGenerator.playError();
+          break;
+        case 'notification':
+          soundGenerator.playNotification();
+          break;
+        case 'alert':
+          soundGenerator.playAlert();
+          break;
+        case 'applause':
+          soundGenerator.playApplause();
+          break;
+        case 'bell':
+          soundGenerator.playBell();
+          break;
+        case 'cashRegister':
+          soundGenerator.playCashRegister();
+          break;
+        case 'messagePop':
+          soundGenerator.playMessagePop();
+          break;
+        case 'congratulations':
+          soundGenerator.playCongratulations();
+          break;
+        case 'opportunity':
+          soundGenerator.playOpportunity();
+          break;
+        default:
+          soundGenerator.playNotification();
       }
-
-      // إذا لم يوجد صوت مخصص، استخدم الصوت العام
-      if (!audio && fallbackToGeneral) {
-        audio = this.sounds.general[eventType] || this.sounds.general.success;
-      }
-
-      if (audio) {
-        console.log(`🔊 Playing notification sound: ${audio.description}`);
-        await audio.play();
-      } else {
-        console.warn(`⚠️ No sound found for ${userType}:${eventType}`);
-      }
-
     } catch (error) {
-      console.error('Failed to play notification sound:', error);
+      console.error('❌ Failed to play notification sound:', error);
     }
   }
 
-  // تفعيل/تعطيل الأصوات
-  setEnabled(enabled) {
-    this.isEnabled = enabled;
-    console.log(`🔊 Notification sounds ${enabled ? 'enabled' : 'disabled'}`);
+  /**
+   * تشغيل صوت نجاح
+   */
+  playSuccess() {
+    this.play('success');
   }
 
-  // تعديل مستوى الصوت
-  setVolume(volume) {
-    this.volume = Math.max(0, Math.min(1, volume));
-    
-    // تطبيق المستوى الجديد على جميع الأصوات
-    Object.values(this.sounds).forEach(category => {
-      Object.values(category).forEach(audio => {
-        if (audio) audio.volume = this.volume;
-      });
-    });
-    
-    console.log(`🔊 Notification volume set to: ${Math.round(this.volume * 100)}%`);
+  /**
+   * تشغيل صوت خطأ
+   */
+  playError() {
+    this.play('error');
   }
 
-  // اختبار صوت
-  async testSound(userType = 'individual', eventType = 'success') {
-    console.log(`🧪 Testing notification sound: ${userType}:${eventType}`);
-    await this.playSound(userType, eventType);
+  /**
+   * تشغيل صوت تنبيه
+   */
+  playWarning() {
+    this.play('warning');
   }
 
-  // الحصول على قائمة الأصوات المتاحة
+  /**
+   * تشغيل صوت معلومة
+   */
+  playInfo() {
+    this.play('info');
+  }
+
+  /**
+   * تشغيل صوت رسالة
+   */
+  playMessage() {
+    this.play('message');
+  }
+
+  /**
+   * الحصول على قائمة الأصوات المتاحة
+   */
   getAvailableSounds() {
-    return {
-      individuals: Object.keys(this.sounds.individuals),
-      companies: Object.keys(this.sounds.companies),
-      general: Object.keys(this.sounds.general)
-    };
+    return Object.keys(this.soundMap);
+  }
+
+  /**
+   * اختبار جميع الأصوات
+   */
+  async testAll() {
+    console.log('🎵 Testing all notification sounds...');
+    const sounds = this.getAvailableSounds();
+    
+    for (let i = 0; i < sounds.length; i++) {
+      const sound = sounds[i];
+      console.log(`Testing: ${sound}`);
+      this.play(sound);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+    
+    console.log('✅ All sounds tested');
+  }
+
+  /**
+   * تنظيف الموارد
+   */
+  cleanup() {
+    soundGenerator.cleanup();
+    console.log('🗑️ NotificationSoundManager cleaned up');
   }
 }
 
-// إنشاء مثيل واحد للاستخدام في التطبيق
+// إنشاء مثيل واحد
 const notificationSoundManager = new NotificationSoundManager();
 
-// تصدير للاستخدام في باقي التطبيق
+// تصدير المثيل
 export default notificationSoundManager;
 
-// تصدير دوال مساعدة
-export const playNotificationSound = (userType, eventType) => {
-  return notificationSoundManager.playSound(userType, eventType);
-};
-
-export const setNotificationSoundsEnabled = (enabled) => {
-  notificationSoundManager.setEnabled(enabled);
-};
-
-export const setNotificationVolume = (volume) => {
-  notificationSoundManager.setVolume(volume);
-};
-
-export const testNotificationSound = (userType, eventType) => {
-  return notificationSoundManager.testSound(userType, eventType);
-};
+// إضافة للـ window للاختبار
+if (typeof window !== 'undefined') {
+  window.notificationSoundManager = notificationSoundManager;
+  console.log('🔔 NotificationSoundManager available at window.notificationSoundManager');
+  console.log('💡 Try: window.notificationSoundManager.testAll()');
+}

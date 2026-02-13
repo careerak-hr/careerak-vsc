@@ -202,6 +202,11 @@ class AudioManager {
     }
 
     try {
+      console.log('🎵 Initializing AudioManager...');
+      
+      // تحديث الإعدادات أولاً
+      this.updateSettings();
+      
       // إنشاء عناصر الصوت
       this.musicAudio = new Audio();
       this.musicAudio.src = `${process.env.PUBLIC_URL || ''}/Music.mp3`;
@@ -218,6 +223,11 @@ class AudioManager {
       this.musicAudio.addEventListener('ended', () => {
         console.log('🎵 Music ended (should not happen with loop)');
         this.isMusicPlaying = false;
+        // إعادة التشغيل تلقائياً
+        if (this.settings.musicEnabled && this.settings.audioEnabled) {
+          console.log('🎵 Restarting music after unexpected end');
+          this.playMusic();
+        }
       });
 
       this.musicAudio.addEventListener('pause', () => {
@@ -228,6 +238,24 @@ class AudioManager {
       this.musicAudio.addEventListener('play', () => {
         console.log('🎵 Music started playing');
         this.isMusicPlaying = true;
+      });
+      
+      // معالجة انقطاع التشغيل
+      this.musicAudio.addEventListener('stalled', () => {
+        console.warn('🎵 Music stalled - attempting recovery');
+        if (this.isMusicPlaying && this.settings.musicEnabled) {
+          setTimeout(() => {
+            this.musicAudio.play().catch(e => console.error('🎵 Recovery failed:', e));
+          }, 500);
+        }
+      });
+      
+      this.musicAudio.addEventListener('waiting', () => {
+        console.log('🎵 Music waiting for data...');
+      });
+      
+      this.musicAudio.addEventListener('canplaythrough', () => {
+        console.log('🎵 Music can play through');
       });
 
       this.introAudio.addEventListener('ended', () => {
@@ -248,6 +276,10 @@ class AudioManager {
       // معالجة الأخطاء
       this.musicAudio.addEventListener('error', (e) => {
         console.error('🎵 Music audio error:', e);
+        console.error('🎵 Error details:', {
+          code: e.target?.error?.code,
+          message: e.target?.error?.message
+        });
       });
 
       this.introAudio.addEventListener('error', (e) => {
@@ -257,8 +289,13 @@ class AudioManager {
       this.isInitialized = true;
       console.log('🎵 AudioManager initialized successfully');
       
-      // تحديث الإعدادات من localStorage
-      this.updateSettings();
+      // محاولة تحميل الملفات مسبقاً
+      try {
+        await this.musicAudio.load();
+        console.log('🎵 Music file preloaded');
+      } catch (e) {
+        console.warn('🎵 Could not preload music:', e);
+      }
       
     } catch (error) {
       console.error('🎵 Failed to initialize AudioManager:', error);

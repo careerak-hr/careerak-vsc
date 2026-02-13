@@ -6,18 +6,30 @@ const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
   if (!isOpen) return null;
 
   const dir = language === 'ar' ? 'rtl' : 'ltr';
+  const fontFamily = language === 'ar' 
+    ? "Amiri, Cairo, serif" 
+    : language === 'fr' 
+      ? "EB Garamond, serif" 
+      : "Cormorant Garamond, serif";
+
+  // Create inline style object
+  const fontStyle = {
+    fontFamily: fontFamily,
+    fontWeight: 'inherit',
+    fontStyle: 'inherit'
+  };
 
   return (
-    <div className="modal-backdrop" dir={dir}>
-      <div className="modal-content" dir={dir}>
-        <div className="modal-body">
-          <p className="modal-description">{t.confirmLang}</p>
+    <div className="modal-backdrop" dir={dir} style={fontStyle}>
+      <div className="modal-content" dir={dir} style={fontStyle}>
+        <div className="modal-body" style={fontStyle}>
+          <p className="modal-description" style={fontStyle}>{t.confirmLang}</p>
         </div>
-        <div className="modal-actions">
-          <button onClick={onConfirm} className="modal-confirm-btn">
+        <div className="modal-actions" style={fontStyle}>
+          <button onClick={onConfirm} className="modal-confirm-btn" style={fontStyle}>
             {t.ok}
           </button>
-          <button onClick={onCancel} className="modal-cancel-btn">
+          <button onClick={onCancel} className="modal-cancel-btn" style={fontStyle}>
             {t.no}
           </button>
         </div>
