@@ -11,51 +11,32 @@ const AppAudioPlayer = () => {
   const [isInitialized, setIsInitialized] = useState(false);
   const initAttempted = useRef(false);
 
-  // تهيئة النظام الصوتي عند التفاعل الأول أو بعد تأخير قصير
+  // تهيئة النظام الصوتي - فوراً بدون انتظار تفاعل
   useEffect(() => {
-    let initTimeout;
-    
     const initializeAudio = async () => {
       if (initAttempted.current) return;
       initAttempted.current = true;
       
-      console.log('🎵 AppAudioPlayer: Initializing audio system...');
-      await audioManager.initialize();
-      setIsInitialized(true);
-      console.log('🎵 AppAudioPlayer: Audio system initialized');
-    };
-
-    const handleUserInteraction = async () => {
-      await initializeAudio();
+      console.log('🎵 AppAudioPlayer: Initializing audio system immediately...');
       
-      // إزالة مستمعي الأحداث بعد التفاعل الأول
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
-      
-      if (initTimeout) clearTimeout(initTimeout);
-    };
-
-    // محاولة التهيئة عند التفاعل
-    document.addEventListener('click', handleUserInteraction, { once: true });
-    document.addEventListener('touchstart', handleUserInteraction, { once: true });
-    document.addEventListener('keydown', handleUserInteraction, { once: true });
-
-    // تهيئة تلقائية بعد 2 ثانية إذا لم يحدث تفاعل
-    initTimeout = setTimeout(async () => {
-      if (!initAttempted.current) {
-        console.log('🎵 AppAudioPlayer: Auto-initializing after timeout');
-        await initializeAudio();
+      try {
+        await audioManager.initialize();
+        setIsInitialized(true);
+        console.log('🎵 AppAudioPlayer: Audio system initialized successfully');
+        
+        // تحديث الصفحة الحالية بعد التهيئة مباشرة
+        if (location.pathname) {
+          console.log('🎵 AppAudioPlayer: Updating initial page:', location.pathname);
+          await audioManager.updatePage(location.pathname);
+        }
+      } catch (error) {
+        console.error('🎵 AppAudioPlayer: Failed to initialize:', error);
       }
-    }, 2000);
-
-    return () => {
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
-      if (initTimeout) clearTimeout(initTimeout);
     };
-  }, []);
+
+    // تهيئة فورية
+    initializeAudio();
+  }, [location.pathname]);
 
   // مراقبة تغيير الصفحة
   useEffect(() => {

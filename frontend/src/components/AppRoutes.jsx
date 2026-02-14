@@ -40,6 +40,10 @@ const InterfaceUltimate = React.lazy(() => import('../pages/23_InterfaceUltimate
 const InterfaceShops = React.lazy(() => import('../pages/24_InterfaceShops'));
 const InterfaceWorkshops = React.lazy(() => import('../pages/25_InterfaceWorkshops'));
 const AdminSubDashboard = React.lazy(() => import('../pages/26_AdminSubDashboard'));
+const AdminPagesNavigator = React.lazy(() => import('../pages/27_AdminPagesNavigator'));
+const AdminSystemControl = React.lazy(() => import('../pages/28_AdminSystemControl'));
+const AdminDatabaseManager = React.lazy(() => import('../pages/29_AdminDatabaseManager'));
+const AdminCodeEditor = React.lazy(() => import('../pages/30_AdminCodeEditor'));
 
 /**
  * Main Application Routes Component with Route Protection
@@ -168,6 +172,26 @@ function AppRoutes() {
         <Route path="/admin-sub-dashboard" element={
           <AdminRoute>
             <SuspenseWrapper><AdminSubDashboard /></SuspenseWrapper>
+          </AdminRoute>
+        } />
+        <Route path="/admin-pages" element={
+          <AdminRoute>
+            <SuspenseWrapper><AdminPagesNavigator /></SuspenseWrapper>
+          </AdminRoute>
+        } />
+        <Route path="/admin-system" element={
+          <AdminRoute>
+            <SuspenseWrapper><AdminSystemControl /></SuspenseWrapper>
+          </AdminRoute>
+        } />
+        <Route path="/admin-database" element={
+          <AdminRoute>
+            <SuspenseWrapper><AdminDatabaseManager /></SuspenseWrapper>
+          </AdminRoute>
+        } />
+        <Route path="/admin-code-editor" element={
+          <AdminRoute>
+            <SuspenseWrapper><AdminCodeEditor /></SuspenseWrapper>
           </AdminRoute>
         } />
         

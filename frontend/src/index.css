@@ -62,7 +62,7 @@ textarea:-webkit-autofill,
 textarea:-webkit-autofill:hover,
 textarea:-webkit-autofill:focus,
 textarea:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #F5F0E8 inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #E3DAD1 inset !important;
   -webkit-text-fill-color: #304B60 !important;
   transition: background-color 5000s ease-in-out 0s !important;
 }
@@ -77,7 +77,7 @@ select:-moz-autofill:focus,
 textarea:-moz-autofill,
 textarea:-moz-autofill:hover,
 textarea:-moz-autofill:focus {
-  background-color: #F5F0E8 !important;
+  background-color: #E3DAD1 !important;
   color: #304B60 !important;
 }
 
@@ -85,7 +85,7 @@ textarea:-moz-autofill:focus {
 input:focus,
 select:focus,
 textarea:focus {
-  background-color: #F5F0E8 !important;
+  background-color: #E3DAD1 !important;
 }
 
 /* إجبار الألوان في جميع الأوضاع */

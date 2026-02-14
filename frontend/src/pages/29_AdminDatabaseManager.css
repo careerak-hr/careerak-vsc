@@ -1,0 +1,240 @@
+/* Admin Database Manager Styles */
+
+.admin-database-manager {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E3DAD1 0%, #D2C9C0 100%);
+  padding: 2rem;
+}
+
+.adb-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.adb-back-btn {
+  padding: 0.75rem 1.5rem;
+  background: #304B60;
+  color: #D48161;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.adb-back-btn:hover {
+  background: #4A6A88;
+  transform: translateY(-2px);
+}
+
+.adb-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #304B60;
+  margin: 0;
+}
+
+.adb-content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.adb-collections-panel,
+.adb-documents-panel {
+  background: white;
+  border: 3px solid #304B60;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+}
+
+.adb-panel-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #304B60;
+  margin: 0 0 1rem 0;
+}
+
+.adb-collections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.adb-collection-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #F1EAE4;
+  border: 2px solid #304B60;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+}
+
+.adb-collection-btn:hover {
+  background: #E3DAD1;
+  transform: translateX(4px);
+}
+
+.adb-collection-btn.active {
+  background: #304B60;
+  color: #D48161;
+}
+
+.adb-collection-icon {
+  font-size: 2rem;
+}
+
+.adb-collection-info {
+  flex: 1;
+}
+
+.adb-collection-name {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.adb-collection-count {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.adb-refresh-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #388E3C;
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.adb-refresh-btn:hover {
+  background: #2E7D32;
+  transform: translateY(-2px);
+}
+
+.adb-documents-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.adb-export-btn {
+  padding: 0.75rem 1.5rem;
+  background: #9C27B0;
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.adb-export-btn:hover {
+  background: #7B1FA2;
+  transform: translateY(-2px);
+}
+
+.adb-documents-list {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.adb-document-card {
+  background: #F1EAE4;
+  border: 2px solid #304B60;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.adb-document-json {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+  margin: 0 0 1rem 0;
+}
+
+.adb-document-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.adb-delete-btn {
+  padding: 0.5rem 1rem;
+  background: #D32F2F;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.adb-delete-btn:hover {
+  background: #B71C1C;
+}
+
+.adb-empty-state,
+.adb-loading,
+.adb-no-data {
+  text-align: center;
+  padding: 3rem;
+  color: #9CA3AF;
+  font-weight: bold;
+}
+
+.adb-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #E3DAD1;
+  border-top-color: #304B60;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.adb-warning {
+  background: #FFF3CD;
+  border: 3px solid #FF9800;
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  font-weight: bold;
+  color: #856404;
+}
+
+@media (max-width: 1024px) {
+  .adb-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-database-manager {
+    padding: 1rem;
+  }
+
+  .adb-title {
+    font-size: 1.5rem;
+  }
+}

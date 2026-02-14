@@ -297,7 +297,7 @@ export default function AuthPage() {
 
   const validateForm = () => {
     const errors = {};
-    if (!profileImage) errors.image = 'يرجى رفع الصورة';
+    // الصورة اختيارية - تم إزالة التحقق الإجباري
 
     if (userType === 'individual') {
       if (!formData.firstName.trim()) errors.firstName = 'الاسم الأول مطلوب';

@@ -175,7 +175,7 @@ textarea::-moz-validation-bubble-message {
 
 .auth-select-base {
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg border-2 border-accent/20 focus:border-primary outline-none transition-all;
-  color: #9CA3AF !important; /* رمادي للهينت الافتراضي */
+  color: #9CA3AF !important; /* رمادي للهينت الافتراضي - نفس لون hints الحقول */
 }
 
 /* عندما يتم اختيار قيمة، يتغير اللون للكحلي */
@@ -210,7 +210,12 @@ textarea::-moz-validation-bubble-message {
 .auth-select-base:focus,
 .auth-select-base:active {
   background-color: #E3DAD1 !important;
-  color: #304B60 !important;
+}
+
+/* الحفاظ على اللون الرمادي عند التركيز إذا لم يتم اختيار قيمة */
+.auth-select-base:focus:invalid,
+.auth-select-base:focus[value=""] {
+  color: #9CA3AF !important;
 }
 
 .auth-textarea {

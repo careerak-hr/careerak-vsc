@@ -117,191 +117,307 @@ export const compressImage = async (imageSrc, maxWidth = 1024, maxHeight = 1024,
 };
 
 /**
- * تحليل الصورة للتحقق من مطابقتها للمعايير
+ * كشف الوجوه في الصورة باستخدام Face Detection API
+ * @param {string} imageSrc - مصدر الصورة
+ * @returns {Promise<object>} - نتيجة كشف الوجوه
+ */
+const detectFaces = async (imageSrc) => {
+  try {
+    // التحقق من دعم المتصفح لـ Face Detection API
+    if (!('FaceDetector' in window)) {
+      console.warn('⚠️ Face Detection API not supported, using fallback');
+      return null;
+    }
+
+    const image = await loadImage(imageSrc);
+    const faceDetector = new window.FaceDetector({ maxDetectedFaces: 5, fastMode: false });
+    const faces = await faceDetector.detect(image);
+    
+    console.log('👤 Faces detected:', faces.length);
+    return {
+      count: faces.length,
+      faces: faces.map(face => ({
+        confidence: face.confidence || 0,
+        boundingBox: face.boundingBox
+      }))
+    };
+  } catch (error) {
+    console.warn('⚠️ Face detection failed:', error.message);
+    return null;
+  }
+};
+
+/**
+ * تحميل الصورة كعنصر Image
+ */
+const loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+};
+
+/**
+ * تحليل متقدم للصورة - كشف الوجوه والخصائص
+ */
+const advancedImageAnalysis = async (imageSrc) => {
+  const image = await loadImage(imageSrc);
+  const canvas = document.createElement('canvas');
+  canvas.width = image.width;
+  canvas.height = image.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(image, 0, 0);
+  
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  const pixelCount = data.length / 4;
+  
+  // تحليل متقدم للخصائص
+  let totalBrightness = 0;
+  let minBrightness = 255;
+  let maxBrightness = 0;
+  let totalSaturation = 0;
+  let skinTonePixels = 0;
+  let edgeCount = 0;
+  let colorVariance = 0;
+  
+  // مصفوفة لحساب توزيع الألوان
+  const colorBuckets = new Array(8).fill(0);
+  
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    
+    // السطوع
+    const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+    totalBrightness += brightness;
+    minBrightness = Math.min(minBrightness, brightness);
+    maxBrightness = Math.max(maxBrightness, brightness);
+    
+    // التشبع (Saturation)
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const saturation = max === 0 ? 0 : (max - min) / max;
+    totalSaturation += saturation;
+    
+    // كشف ألوان البشرة (Skin tone detection)
+    if (r > 95 && g > 40 && b > 20 && 
+        r > g && r > b && 
+        Math.abs(r - g) > 15 &&
+        max - min > 15) {
+      skinTonePixels++;
+    }
+    
+    // توزيع الألوان
+    const bucket = Math.floor((r + g + b) / 96);
+    colorBuckets[Math.min(bucket, 7)]++;
+    
+    // تباين الألوان
+    colorVariance += Math.abs(r - g) + Math.abs(g - b) + Math.abs(b - r);
+  }
+  
+  // كشف الحواف المتقدم (Sobel operator)
+  for (let y = 1; y < canvas.height - 1; y++) {
+    for (let x = 1; x < canvas.width - 1; x++) {
+      const idx = (y * canvas.width + x) * 4;
+      
+      // Sobel X
+      const gx = 
+        -data[((y-1) * canvas.width + (x-1)) * 4] + data[((y-1) * canvas.width + (x+1)) * 4] +
+        -2 * data[(y * canvas.width + (x-1)) * 4] + 2 * data[(y * canvas.width + (x+1)) * 4] +
+        -data[((y+1) * canvas.width + (x-1)) * 4] + data[((y+1) * canvas.width + (x+1)) * 4];
+      
+      // Sobel Y
+      const gy = 
+        -data[((y-1) * canvas.width + (x-1)) * 4] - 2 * data[((y-1) * canvas.width + x) * 4] - data[((y-1) * canvas.width + (x+1)) * 4] +
+        data[((y+1) * canvas.width + (x-1)) * 4] + 2 * data[((y+1) * canvas.width + x) * 4] + data[((y+1) * canvas.width + (x+1)) * 4];
+      
+      const magnitude = Math.sqrt(gx * gx + gy * gy);
+      if (magnitude > 100) edgeCount++;
+    }
+  }
+  
+  // حساب المتوسطات
+  const avgBrightness = totalBrightness / pixelCount;
+  const contrast = maxBrightness - minBrightness;
+  const avgSaturation = totalSaturation / pixelCount;
+  const skinToneRatio = skinTonePixels / pixelCount;
+  const edgeRatio = edgeCount / pixelCount;
+  const avgColorVariance = colorVariance / pixelCount;
+  
+  // حساب توزيع الألوان (Color distribution entropy)
+  let colorEntropy = 0;
+  for (const count of colorBuckets) {
+    if (count > 0) {
+      const p = count / pixelCount;
+      colorEntropy -= p * Math.log2(p);
+    }
+  }
+  
+  return {
+    brightness: avgBrightness,
+    contrast,
+    saturation: avgSaturation,
+    skinToneRatio,
+    edgeRatio,
+    colorVariance: avgColorVariance,
+    colorEntropy,
+    width: canvas.width,
+    height: canvas.height
+  };
+};
+
+/**
+ * تحليل الصورة للتحقق من مطابقتها للمعايير - نظام متقدم
  * @param {string} imageSrc - مصدر الصورة
  * @param {string} userType - نوع المستخدم ('individual' أو 'company')
  * @returns {Promise<object>} - نتيجة التحليل {isValid, reason, confidence}
  */
 export const analyzeImage = async (imageSrc, userType) => {
-  return new Promise((resolve) => {
-    const image = new Image();
+  try {
+    console.log('🤖 Starting advanced AI analysis for:', userType);
     
-    image.onload = () => {
-      try {
-        const canvas = document.createElement('canvas');
-        canvas.width = image.width;
-        canvas.height = image.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(image, 0, 0);
-        
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-        
-        // تحليل خصائص الصورة
-        const analysis = {
-          brightness: 0,
-          contrast: 0,
-          colorfulness: 0,
-          edgeCount: 0,
-          faceIndicators: 0,
-          logoIndicators: 0
-        };
-        
-        let totalBrightness = 0;
-        let minBrightness = 255;
-        let maxBrightness = 0;
-        
-        // حساب السطوع والتباين
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          
-          // السطوع (Luminance)
-          const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
-          totalBrightness += brightness;
-          minBrightness = Math.min(minBrightness, brightness);
-          maxBrightness = Math.max(maxBrightness, brightness);
-          
-          // التنوع اللوني
-          const colorDiff = Math.abs(r - g) + Math.abs(g - b) + Math.abs(b - r);
-          analysis.colorfulness += colorDiff;
-        }
-        
-        const pixelCount = data.length / 4;
-        analysis.brightness = totalBrightness / pixelCount;
-        analysis.contrast = maxBrightness - minBrightness;
-        analysis.colorfulness = analysis.colorfulness / pixelCount;
-        
-        // كشف الحواف (Edge Detection) - مؤشر على التفاصيل
-        for (let y = 1; y < canvas.height - 1; y++) {
-          for (let x = 1; x < canvas.width - 1; x++) {
-            const idx = (y * canvas.width + x) * 4;
-            const idxRight = (y * canvas.width + (x + 1)) * 4;
-            const idxDown = ((y + 1) * canvas.width + x) * 4;
-            
-            const diffX = Math.abs(data[idx] - data[idxRight]);
-            const diffY = Math.abs(data[idx] - data[idxDown]);
-            
-            if (diffX + diffY > 50) {
-              analysis.edgeCount++;
-            }
-          }
-        }
-        
-        // مؤشرات الوجه البشري
-        // الوجه البشري عادة يحتوي على:
-        // - تنوع لوني متوسط (بشرة)
-        // - سطوع متوسط
-        // - تباين متوسط
-        // - حواف كثيرة (عيون، أنف، فم)
-        if (analysis.brightness > 80 && analysis.brightness < 200) {
-          analysis.faceIndicators += 2;
-        }
-        if (analysis.contrast > 50 && analysis.contrast < 150) {
-          analysis.faceIndicators += 2;
-        }
-        if (analysis.colorfulness > 10 && analysis.colorfulness < 40) {
-          analysis.faceIndicators += 2;
-        }
-        if (analysis.edgeCount > pixelCount * 0.1) {
-          analysis.faceIndicators += 2;
-        }
-        
-        // مؤشرات اللوجو
-        // اللوجو عادة يحتوي على:
-        // - ألوان محددة (تنوع لوني منخفض أو عالي جداً)
-        // - تباين عالي
-        // - حواف حادة ومحددة
-        // - مناطق صلبة من الألوان
-        if (analysis.colorfulness < 10 || analysis.colorfulness > 50) {
-          analysis.logoIndicators += 2;
-        }
-        if (analysis.contrast > 150) {
-          analysis.logoIndicators += 2;
-        }
-        if (analysis.edgeCount < pixelCount * 0.05 || analysis.edgeCount > pixelCount * 0.3) {
-          analysis.logoIndicators += 2;
-        }
-        
-        // اتخاذ القرار بناءً على نوع المستخدم
-        let isValid = false;
-        let reason = '';
-        let confidence = 0;
-        
-        if (userType === 'individual') {
-          // للأفراد: نتوقع صورة وجه شخصي
-          if (analysis.faceIndicators >= analysis.logoIndicators) {
-            isValid = true;
-            confidence = (analysis.faceIndicators / 8) * 100;
-            reason = 'الصورة تبدو كصورة شخصية مناسبة';
-          } else {
-            isValid = false;
-            confidence = (analysis.logoIndicators / 8) * 100;
-            reason = 'الصورة تبدو كلوجو أو شعار وليست صورة شخصية';
-          }
-        } else if (userType === 'company') {
-          // للشركات: نتوقع لوجو
-          if (analysis.logoIndicators >= analysis.faceIndicators) {
-            isValid = true;
-            confidence = (analysis.logoIndicators / 8) * 100;
-            reason = 'الصورة تبدو كلوجو مناسب للشركة';
-          } else {
-            isValid = false;
-            confidence = (analysis.faceIndicators / 8) * 100;
-            reason = 'الصورة تبدو كصورة شخصية وليست لوجو شركة';
-          }
-        }
-        
-        // التحقق من جودة الصورة
-        if (analysis.brightness < 30) {
-          isValid = false;
-          reason = 'الصورة مظلمة جداً';
-          confidence = 20;
-        } else if (analysis.brightness > 230) {
-          isValid = false;
-          reason = 'الصورة ساطعة جداً';
-          confidence = 20;
-        } else if (analysis.contrast < 20) {
-          isValid = false;
-          reason = 'الصورة غير واضحة (تباين منخفض)';
-          confidence = 30;
-        }
-        
-        console.log('🤖 Image Analysis:', {
-          userType,
-          analysis,
-          result: { isValid, reason, confidence: Math.round(confidence) }
-        });
-        
-        resolve({
-          isValid,
-          reason,
-          confidence: Math.round(confidence),
-          details: analysis
-        });
-        
-      } catch (error) {
-        console.error('❌ Analysis error:', error);
-        // في حالة الخطأ، نقبل الصورة بثقة منخفضة
-        resolve({
-          isValid: true,
-          reason: 'تم قبول الصورة (فشل التحليل)',
-          confidence: 50,
-          details: null
-        });
+    // 1. كشف الوجوه باستخدام Face Detection API
+    const faceDetection = await detectFaces(imageSrc);
+    
+    // 2. التحليل المتقدم للصورة
+    const analysis = await advancedImageAnalysis(imageSrc);
+    
+    console.log('📊 Analysis results:', { faceDetection, analysis });
+    
+    // 3. اتخاذ القرار بناءً على نوع المستخدم
+    let isValid = false;
+    let reason = '';
+    let confidence = 0;
+    
+    if (userType === 'individual') {
+      // للأفراد: يجب أن تكون صورة وجه بشري حصراً
+      
+      // التحقق من وجود وجوه
+      const hasFaces = faceDetection && faceDetection.count > 0;
+      const faceScore = hasFaces ? Math.min(faceDetection.count * 30, 40) : 0;
+      
+      // مؤشرات الوجه البشري
+      let faceIndicators = faceScore;
+      
+      // نسبة ألوان البشرة (مهم جداً)
+      if (analysis.skinToneRatio > 0.15) faceIndicators += 25;
+      else if (analysis.skinToneRatio > 0.08) faceIndicators += 15;
+      else if (analysis.skinToneRatio > 0.03) faceIndicators += 5;
+      
+      // السطوع المناسب للوجه
+      if (analysis.brightness > 80 && analysis.brightness < 200) faceIndicators += 10;
+      
+      // التباين المناسب
+      if (analysis.contrast > 40 && analysis.contrast < 180) faceIndicators += 10;
+      
+      // التشبع المناسب
+      if (analysis.saturation > 0.1 && analysis.saturation < 0.6) faceIndicators += 10;
+      
+      // الحواف (الوجه يحتوي على تفاصيل)
+      if (analysis.edgeRatio > 0.05 && analysis.edgeRatio < 0.25) faceIndicators += 5;
+      
+      confidence = Math.min(faceIndicators, 100);
+      
+      // القرار النهائي
+      if (confidence >= 60 && hasFaces) {
+        isValid = true;
+        reason = 'تم التعرف على صورة شخصية مناسبة';
+      } else if (!hasFaces && analysis.skinToneRatio < 0.03) {
+        isValid = false;
+        reason = 'عذراً، الصورة المختارة ليست صورة شخصية';
+      } else if (!hasFaces) {
+        isValid = false;
+        reason = 'عذراً، لم يتم التعرف على وجه بشري في الصورة';
+      } else {
+        isValid = false;
+        reason = 'عذراً، جودة الصورة غير كافية أو الصورة غير واضحة';
+      }
+      
+    } else if (userType === 'company') {
+      // للشركات: يجب أن تكون صورة لوجو حصراً
+      
+      // التحقق من عدم وجود وجوه
+      const noFaces = !faceDetection || faceDetection.count === 0;
+      const noFaceScore = noFaces ? 30 : 0;
+      
+      // مؤشرات اللوجو
+      let logoIndicators = noFaceScore;
+      
+      // عدم وجود ألوان بشرة
+      if (analysis.skinToneRatio < 0.03) logoIndicators += 25;
+      else if (analysis.skinToneRatio < 0.08) logoIndicators += 10;
+      
+      // تباين عالي (اللوجو عادة واضح)
+      if (analysis.contrast > 120) logoIndicators += 15;
+      else if (analysis.contrast > 80) logoIndicators += 10;
+      
+      // توزيع ألوان محدد (entropy منخفض = ألوان قليلة)
+      if (analysis.colorEntropy < 2.5) logoIndicators += 15;
+      else if (analysis.colorEntropy < 3.0) logoIndicators += 10;
+      
+      // حواف حادة ومحددة
+      if (analysis.edgeRatio > 0.15 || analysis.edgeRatio < 0.08) logoIndicators += 10;
+      
+      // تشبع مناسب
+      if (analysis.saturation > 0.3 || analysis.saturation < 0.15) logoIndicators += 5;
+      
+      confidence = Math.min(logoIndicators, 100);
+      
+      // القرار النهائي
+      if (confidence >= 60 && noFaces) {
+        isValid = true;
+        reason = 'تم التعرف على لوجو مناسب للشركة';
+      } else if (faceDetection && faceDetection.count > 0) {
+        isValid = false;
+        reason = 'عذراً، الصورة المختارة ليست لوجو شركة';
+      } else if (analysis.skinToneRatio > 0.1) {
+        isValid = false;
+        reason = 'عذراً، الصورة تبدو كصورة شخصية وليست لوجو';
+      } else {
+        isValid = false;
+        reason = 'عذراً، جودة الصورة غير كافية أو الصورة غير واضحة';
+      }
+    }
+    
+    // التحقق من جودة الصورة العامة
+    if (analysis.brightness < 20) {
+      isValid = false;
+      reason = 'عذراً، الصورة مظلمة جداً';
+      confidence = 15;
+    } else if (analysis.brightness > 240) {
+      isValid = false;
+      reason = 'عذراً، الصورة ساطعة جداً';
+      confidence = 15;
+    } else if (analysis.contrast < 15) {
+      isValid = false;
+      reason = 'عذراً، الصورة غير واضحة';
+      confidence = 20;
+    }
+    
+    console.log('✅ Final decision:', { isValid, reason, confidence });
+    
+    return {
+      isValid,
+      reason,
+      confidence: Math.round(confidence),
+      details: {
+        faceDetection,
+        analysis
       }
     };
     
-    image.onerror = () => {
-      resolve({
-        isValid: false,
-        reason: 'فشل تحميل الصورة',
-        confidence: 0,
-        details: null
-      });
+  } catch (error) {
+    console.error('❌ Analysis error:', error);
+    return {
+      isValid: false,
+      reason: 'عذراً، حدث خطأ أثناء تحليل الصورة',
+      confidence: 0,
+      details: null
     };
-    
-    image.src = imageSrc;
-  });
+  }
 };

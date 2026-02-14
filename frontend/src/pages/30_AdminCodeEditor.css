@@ -1,0 +1,228 @@
+/* Admin Code Editor Styles */
+
+.admin-code-editor {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E3DAD1 0%, #D2C9C0 100%);
+  padding: 2rem;
+}
+
+.ace-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ace-back-btn,
+.ace-save-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.ace-back-btn {
+  background: #304B60;
+  color: #D48161;
+}
+
+.ace-save-btn {
+  background: #388E3C;
+  color: white;
+  margin-left: auto;
+}
+
+.ace-back-btn:hover {
+  background: #4A6A88;
+  transform: translateY(-2px);
+}
+
+.ace-save-btn:hover {
+  background: #2E7D32;
+  transform: translateY(-2px);
+}
+
+.ace-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #304B60;
+  margin: 0;
+}
+
+.ace-content {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.ace-file-tree,
+.ace-editor-panel {
+  background: white;
+  border: 3px solid #304B60;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.ace-tree-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #304B60;
+  margin: 0;
+  padding: 1.5rem;
+  background: #F1EAE4;
+  border-bottom: 3px solid #304B60;
+}
+
+.ace-tree-list {
+  padding: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.ace-file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: #F1EAE4;
+  border: 2px solid #304B60;
+  border-radius: 0.75rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+  width: 100%;
+}
+
+.ace-file-item:hover {
+  background: #E3DAD1;
+  transform: translateX(4px);
+}
+
+.ace-file-item.active {
+  background: #304B60;
+  color: #D48161;
+}
+
+.ace-file-path {
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+  word-break: break-all;
+}
+
+.ace-editor-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.ace-editor-header {
+  padding: 1rem 1.5rem;
+  background: #1e1e1e;
+  border-bottom: 3px solid #304B60;
+}
+
+.ace-current-file {
+  color: #d4d4d4;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
+.ace-code-textarea {
+  flex: 1;
+  min-height: 600px;
+  padding: 1.5rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border: none;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+}
+
+.ace-code-textarea::-webkit-scrollbar {
+  width: 12px;
+}
+
+.ace-code-textarea::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+.ace-code-textarea::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 6px;
+}
+
+.ace-code-textarea::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+.ace-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 600px;
+  color: #9CA3AF;
+  font-weight: bold;
+  font-size: 1.25rem;
+}
+
+.ace-warning,
+.ace-info {
+  background: white;
+  border: 3px solid #FF9800;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.ace-warning {
+  text-align: center;
+  font-weight: bold;
+  color: #856404;
+}
+
+.ace-info {
+  border-color: #2196F3;
+}
+
+.ace-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #304B60;
+  font-size: 1.1rem;
+}
+
+.ace-info p {
+  margin: 0;
+  color: #666;
+  line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+  .ace-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-code-editor {
+    padding: 1rem;
+  }
+
+  .ace-title {
+    font-size: 1.5rem;
+  }
+
+  .ace-header {
+    flex-wrap: wrap;
+  }
+
+  .ace-save-btn {
+    margin-left: 0;
+    width: 100%;
+  }
+}

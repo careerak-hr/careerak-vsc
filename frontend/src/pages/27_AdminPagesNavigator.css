@@ -1,0 +1,236 @@
+/* Admin Pages Navigator Styles */
+
+.admin-pages-navigator {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E3DAD1 0%, #D2C9C0 100%);
+  padding: 2rem;
+}
+
+/* Header */
+.apn-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.apn-back-btn {
+  padding: 0.75rem 1.5rem;
+  background: #304B60;
+  color: #D48161;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.apn-back-btn:hover {
+  background: #4A6A88;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.apn-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #304B60;
+  margin: 0;
+}
+
+/* Search Bar */
+.apn-search-bar {
+  margin-bottom: 1.5rem;
+}
+
+.apn-search-input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: white;
+  border: 3px solid #304B60;
+  border-radius: 1.5rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #304B60;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.apn-search-input:focus {
+  border-color: #D48161;
+  box-shadow: 0 0 0 4px rgba(212, 129, 97, 0.2);
+  transform: translateY(-2px);
+}
+
+.apn-search-input::placeholder {
+  color: #9CA3AF;
+}
+
+/* Categories */
+.apn-categories {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.apn-category-btn {
+  padding: 0.75rem 1.25rem;
+  background: white;
+  border: 2px solid #304B60;
+  border-radius: 1rem;
+  font-weight: bold;
+  color: #304B60;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.apn-category-btn:hover {
+  background: #F1EAE4;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.2);
+}
+
+.apn-category-btn.active {
+  background: #304B60;
+  color: #D48161;
+  border-color: #304B60;
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+/* Results Count */
+.apn-results-count {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 0.75rem;
+  display: inline-block;
+  border: 2px solid #D48161;
+}
+
+/* Pages Grid */
+.apn-pages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.apn-page-card {
+  background: white;
+  border: 3px solid #304B60;
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.1);
+}
+
+.apn-page-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(48, 75, 96, 0.2);
+  border-color: #D48161;
+}
+
+.apn-page-icon {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.apn-page-info {
+  flex: 1;
+}
+
+.apn-page-name {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #304B60;
+  margin: 0 0 0.5rem 0;
+  text-align: center;
+}
+
+.apn-page-path {
+  font-size: 0.9rem;
+  color: #9CA3AF;
+  margin: 0;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  background: #F1EAE4;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.apn-page-visit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: #304B60;
+  color: #D48161;
+  border: none;
+  border-radius: 1rem;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.apn-page-visit-btn:hover {
+  background: #4A6A88;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.apn-page-visit-btn:active {
+  transform: translateY(0);
+}
+
+/* No Results */
+.apn-no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border: 3px dashed #304B60;
+  border-radius: 1.5rem;
+  margin-top: 2rem;
+}
+
+.apn-no-results p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #304B60;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-pages-navigator {
+    padding: 1rem;
+  }
+
+  .apn-title {
+    font-size: 1.5rem;
+  }
+
+  .apn-pages-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .apn-categories {
+    gap: 0.5rem;
+  }
+
+  .apn-category-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}

@@ -303,24 +303,40 @@ class AudioManager {
   }
 
   /**
-   * تحديث الإعدادات من localStorage
+   * تحديث الإعدادات من localStorage و Preferences
    */
-  updateSettings() {
-    const audioConsent = localStorage.getItem('audioConsent');
-    const audioEnabled = localStorage.getItem('audio_enabled');
-    const musicEnabled = localStorage.getItem('musicEnabled');
+  async updateSettings() {
+    // قراءة من localStorage أولاً (أسرع)
+    let audioEnabled = localStorage.getItem('audio_enabled') === 'true';
+    let musicEnabled = localStorage.getItem('musicEnabled') === 'true';
+    
+    // إذا لم تكن موجودة في localStorage، جرّب audioConsent
+    if (!audioEnabled) {
+      audioEnabled = localStorage.getItem('audioConsent') === 'true';
+    }
 
-    this.settings.audioEnabled = audioConsent === 'true' || audioEnabled === 'true';
-    this.settings.musicEnabled = musicEnabled === 'true';
+    this.settings.audioEnabled = audioEnabled;
+    this.settings.musicEnabled = musicEnabled;
 
     console.log('🎵 Settings updated:', this.settings);
+    
+    // التأكد من التزامن مع localStorage
+    if (audioEnabled) {
+      localStorage.setItem('audio_enabled', 'true');
+      localStorage.setItem('audioConsent', 'true');
+    }
+    if (musicEnabled) {
+      localStorage.setItem('musicEnabled', 'true');
+    }
   }
 
   /**
    * تحديث الصفحة الحالية وإدارة الصوت تبعاً لها
    */
   async updatePage(pathname) {
+    // التأكد من التهيئة أولاً
     if (!this.isInitialized) {
+      console.log('🎵 AudioManager not initialized yet, initializing now...');
       await this.initialize();
     }
 
@@ -336,7 +352,9 @@ class AudioManager {
     this.currentPage = pathname;
     
     // تحديث الإعدادات
-    this.updateSettings();
+    await this.updateSettings();
+    
+    console.log('🎵 Current settings:', this.settings);
     
     // صفحة Entry تدير صوتها بنفسها، لا نتدخل
     if (pathname === '/entry') {
@@ -353,6 +371,8 @@ class AudioManager {
       const needsMusic = this.musicPages.some(page => pathname.startsWith(page));
       const previousNeedsMusic = previousPage ? this.musicPages.some(page => previousPage.startsWith(page)) : false;
       
+      console.log(`🎵 Page music check: needsMusic=${needsMusic}, previousNeedsMusic=${previousNeedsMusic}, musicEnabled=${this.settings.musicEnabled}`);
+      
       if (needsMusic && this.settings.musicEnabled) {
         // إذا كانت الصفحة السابقة والحالية تحتاجان موسيقى، استمر في التشغيل
         if (previousNeedsMusic && this.isMusicPlaying) {
@@ -363,12 +383,14 @@ class AudioManager {
         
         // إذا لم تكن الموسيقى تعمل، ابدأ تشغيلها
         if (!this.isMusicPlaying) {
+          console.log('🎵 Starting music for this page...');
           await this.playMusic();
           this.lastMusicPage = pathname;
         }
       } else {
         // إذا لم نعد في صفحة موسيقى، أوقف الموسيقى
         if (this.isMusicPlaying) {
+          console.log('🎵 Stopping music - not a music page');
           await this.stopMusic();
         }
         this.lastMusicPage = null;
@@ -383,6 +405,7 @@ class AudioManager {
         await this.playIntro();
       }
     } else {
+      console.log('🎵 Audio disabled or page not visible - stopping all');
       // إذا كان الصوت معطلاً أو الصفحة غير مرئية، أوقف كل شيء
       await this.stopAll();
     }

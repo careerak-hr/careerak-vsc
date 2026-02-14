@@ -187,6 +187,15 @@ const AdminDashboard = () => {
                 </div>
                 <div className="admin-quick-nav-controls">
                     <button 
+                        onClick={() => navigate('/admin-pages')}
+                        className="admin-quick-nav-btn"
+                        style={{ background: '#FF5722', color: 'white' }}
+                    >
+                        🗺️ {language === 'ar' ? 'متصفح جميع الصفحات' : 
+                         language === 'fr' ? 'Navigateur Pages' : 
+                         'All Pages Navigator'}
+                    </button>
+                    <button 
                         onClick={() => setActiveTab('users')}
                         className="admin-quick-nav-btn"
                     >
@@ -209,6 +218,30 @@ const AdminDashboard = () => {
                         🎓 {language === 'ar' ? 'إدارة الدورات' : 
                          language === 'fr' ? 'Gérer les Cours' : 
                          'Manage Courses'}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/admin-system')}
+                        className="admin-quick-nav-btn"
+                    >
+                        🖥️ {language === 'ar' ? 'التحكم بالنظام' : 
+                         language === 'fr' ? 'Contrôle Système' : 
+                         'System Control'}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/admin-database')}
+                        className="admin-quick-nav-btn"
+                    >
+                        🗄️ {language === 'ar' ? 'قاعدة البيانات' : 
+                         language === 'fr' ? 'Base de Données' : 
+                         'Database'}
+                    </button>
+                    <button 
+                        onClick={() => navigate('/admin-code-editor')}
+                        className="admin-quick-nav-btn"
+                    >
+                        💻 {language === 'ar' ? 'محرر الأكواد' : 
+                         language === 'fr' ? 'Éditeur Code' : 
+                         'Code Editor'}
                     </button>
                     <button 
                         onClick={() => navigate('/settings')}

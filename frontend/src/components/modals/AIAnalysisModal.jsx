@@ -4,57 +4,99 @@ import './AuthModals.css';
 const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisResult, userType, language }) => {
   const dir = language === 'ar' ? 'rtl' : 'ltr';
   
+  // الخطوط حسب اللغة
+  const fontFamily = language === 'ar' ? 'Amiri, Cairo, serif' : 
+                     language === 'fr' ? 'EB Garamond, serif' : 
+                     'Cormorant Garamond, serif';
+  
+  const fontStyle = {
+    fontFamily: fontFamily,
+    fontWeight: 'inherit',
+    fontStyle: 'inherit'
+  };
+  
   // رسائل مخصصة حسب نوع المستخدم
   const getExpectedImageType = () => {
     if (language === 'ar') {
-      return userType === 'individual' ? 'صورة شخصية للوجه' : 'لوجو الشركة';
+      return userType === 'individual' ? 'صورة شخصية' : 'لوجو شركة';
     } else if (language === 'fr') {
-      return userType === 'individual' ? 'Photo de profil' : 'Logo de l\'entreprise';
+      return userType === 'individual' ? 'Photo personnelle' : 'Logo d\'entreprise';
     } else {
-      return userType === 'individual' ? 'Personal face photo' : 'Company logo';
+      return userType === 'individual' ? 'Personal photo' : 'Company logo';
+    }
+  };
+  
+  const getAnalyzingMessage = () => {
+    if (language === 'ar') {
+      return '🤖 جاري التحليل الذكي للصورة...';
+    } else if (language === 'fr') {
+      return '🤖 Analyse intelligente en cours...';
+    } else {
+      return '🤖 AI analysis in progress...';
     }
   };
   
   const getAnalysisMessage = () => {
-    if (isAnalyzing) {
-      return t.aiAnalyzing || 'جاري التحليل الذكي...';
-    }
-    
-    if (!analysisResult) {
-      return t.aiComplete || 'اكتمل التحليل';
-    }
+    if (!analysisResult) return '';
     
     if (analysisResult.isValid) {
       if (language === 'ar') {
-        return `✓ الصورة مناسبة ومطابقة للمعايير\n${analysisResult.reason}`;
+        return `✓ ${analysisResult.reason}`;
       } else if (language === 'fr') {
-        return `✓ Image appropriée et conforme\n${analysisResult.reason}`;
+        return `✓ ${analysisResult.reason}`;
       } else {
-        return `✓ Image is suitable and compliant\n${analysisResult.reason}`;
+        return `✓ ${analysisResult.reason}`;
       }
     } else {
-      if (language === 'ar') {
-        return `⚠ ${analysisResult.reason}\nالمطلوب: ${getExpectedImageType()}`;
-      } else if (language === 'fr') {
-        return `⚠ ${analysisResult.reason}\nRequis: ${getExpectedImageType()}`;
-      } else {
-        return `⚠ ${analysisResult.reason}\nRequired: ${getExpectedImageType()}`;
-      }
+      return analysisResult.reason;
     }
   };
   
   const getConfidenceColor = () => {
     if (!analysisResult) return '#304B60';
-    if (analysisResult.confidence >= 70) return '#2ecc71'; // أخضر
-    if (analysisResult.confidence >= 50) return '#f39c12'; // برتقالي
-    return '#e74c3c'; // أحمر
+    if (analysisResult.confidence >= 70) return '#2ecc71';
+    if (analysisResult.confidence >= 50) return '#f39c12';
+    return '#e74c3c';
   };
+  
+  // إذا كانت الصورة غير صالحة، نرفضها تلقائياً بعد 2 ثانية
+  React.useEffect(() => {
+    if (!isAnalyzing && analysisResult && !analysisResult.isValid) {
+      const timer = setTimeout(() => {
+        onReject();
+      }, 2500);
+      return () => clearTimeout(timer);
+    } else if (!isAnalyzing && analysisResult && analysisResult.isValid) {
+      // إذا كانت صالحة، نقبلها تلقائياً بعد 1.5 ثانية
+      const timer = setTimeout(() => {
+        onAccept();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAnalyzing, analysisResult, onReject, onAccept]);
   
   return (
     <div className="auth-modal-backdrop" dir={dir}>
-      <div className="auth-modal-content" dir={dir}>
-        <h3 className="text-xl font-black text-[#304B60] mb-4">
-          {isAnalyzing ? (t.aiAnalyzing || 'جاري التحليل الذكي...') : (t.aiComplete || 'اكتمل التحليل')}
+      <div 
+        className="auth-modal-content" 
+        dir={dir}
+        style={{
+          border: '4px solid #304B60',
+          backgroundColor: '#E3DAD1',
+          borderRadius: '1.5rem',
+          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          ...fontStyle
+        }}
+      >
+        <h3 
+          className="text-xl font-black mb-4"
+          style={{ color: '#304B60', ...fontStyle }}
+        >
+          {isAnalyzing ? getAnalyzingMessage() : (
+            language === 'ar' ? '✓ اكتمل التحليل' :
+            language === 'fr' ? '✓ Analyse terminée' :
+            '✓ Analysis Complete'
+          )}
         </h3>
         
         {isAnalyzing && (
@@ -69,15 +111,18 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
               className="ai-modal-img"
               style={{
                 filter: isAnalyzing ? 'blur(2px)' : 'none',
-                transition: 'filter 0.3s ease'
+                transition: 'filter 0.3s ease',
+                border: '3px solid #304B60'
               }}
             />
             {!isAnalyzing && analysisResult && (
               <div 
                 className="ai-modal-check-mark"
                 style={{
-                  backgroundColor: analysisResult.isValid ? '#304B60' : '#e74c3c',
-                  color: '#E3DAD1'
+                  backgroundColor: analysisResult.isValid ? '#2ecc71' : '#e74c3c',
+                  color: '#FFFFFF',
+                  fontSize: '2rem',
+                  fontWeight: 'bold'
                 }}
               >
                 {analysisResult.isValid ? '✓' : '✗'}
@@ -88,21 +133,40 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
         
         {!isAnalyzing && analysisResult && (
           <>
-            <p className="ai-modal-message whitespace-pre-line">
+            <p 
+              className="ai-modal-message whitespace-pre-line"
+              style={{ 
+                color: analysisResult.isValid ? '#304B60' : '#e74c3c',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                ...fontStyle
+              }}
+            >
               {getAnalysisMessage()}
             </p>
             
             {analysisResult.confidence > 0 && (
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-bold text-[#304B60]">
-                    {language === 'ar' ? 'مستوى الثقة' : language === 'fr' ? 'Niveau de confiance' : 'Confidence Level'}
+                  <span 
+                    className="text-sm font-bold"
+                    style={{ color: '#304B60', ...fontStyle }}
+                  >
+                    {language === 'ar' ? 'مستوى الثقة' : 
+                     language === 'fr' ? 'Niveau de confiance' : 
+                     'Confidence Level'}
                   </span>
-                  <span className="text-sm font-black" style={{ color: getConfidenceColor() }}>
+                  <span 
+                    className="text-sm font-black" 
+                    style={{ color: getConfidenceColor(), ...fontStyle }}
+                  >
                     {analysisResult.confidence}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="w-full rounded-full h-2"
+                  style={{ backgroundColor: '#D4C5B9' }}
+                >
                   <div 
                     className="h-2 rounded-full transition-all duration-500"
                     style={{ 
@@ -113,25 +177,19 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
                 </div>
               </div>
             )}
+            
+            {!analysisResult.isValid && (
+              <p 
+                className="text-sm mt-3"
+                style={{ color: '#304B60', opacity: 0.8, ...fontStyle }}
+              >
+                {language === 'ar' ? 'يرجى اختيار صورة أخرى...' :
+                 language === 'fr' ? 'Veuillez choisir une autre image...' :
+                 'Please choose another image...'}
+              </p>
+            )}
           </>
         )}
-        
-        <div className="auth-modal-buttons">
-          <button
-            onClick={onAccept}
-            disabled={isAnalyzing}
-            className="ai-modal-btn auth-modal-btn-primary"
-          >
-            {t.accept || 'قبول'}
-          </button>
-          <button
-            onClick={onReject}
-            disabled={isAnalyzing}
-            className="ai-modal-btn auth-modal-btn-danger"
-          >
-            {t.reject || 'رفض'}
-          </button>
-        </div>
       </div>
     </div>
   );

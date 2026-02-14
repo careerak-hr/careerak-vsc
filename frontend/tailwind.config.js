@@ -14,7 +14,7 @@ module.exports = {
       },
       secondary: {
         DEFAULT: '#E3DAD1', // البيج الملكي
-        light: '#F1EAE4',
+        light: '#E8DFD6',   // بيج أفتح قليلاً (بدلاً من الأبيض)
         dark: '#D2C9C0',
       },
       accent: {
