@@ -20,8 +20,8 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
     image.onload = () => {
       try {
         const canvas = document.createElement('canvas');
-        // حجم مناسب للعرض في الدائرة وللتحليل الذكي
-        const SIZE = 512; // حجم أصغر لضغط أفضل
+        // ✅ زيادة الحجم من 512 إلى 800 لجودة أفضل
+        const SIZE = 800;
         canvas.width = SIZE;
         canvas.height = SIZE;
 
@@ -32,9 +32,13 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
           return;
         }
 
-        // تحسين جودة الرسم
+        // ✅ تحسين جودة الرسم
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
+
+        // ✅ رسم خلفية بيضاء أولاً لتجنب الشفافية
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, SIZE, SIZE);
 
         // رسم الصورة المقصوصة
         ctx.drawImage(
@@ -49,8 +53,32 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
           SIZE
         );
 
-        // تحويل إلى base64 بجودة متوسطة للضغط الأفضل
-        const croppedImage = canvas.toDataURL('image/jpeg', 0.85);
+        // ✅ تحسين السطوع والتباين تلقائياً
+        const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
+        const data = imageData.data;
+        
+        // حساب متوسط السطوع
+        let totalBrightness = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+          totalBrightness += brightness;
+        }
+        const avgBrightness = totalBrightness / (data.length / 4);
+        
+        // ✅ إذا كانت الصورة مظلمة، قم بتفتيحها قليلاً
+        if (avgBrightness < 100) {
+          const brightnessBoost = 1.2; // زيادة السطوع بنسبة 20%
+          for (let i = 0; i < data.length; i += 4) {
+            data[i] = Math.min(255, data[i] * brightnessBoost);     // R
+            data[i + 1] = Math.min(255, data[i + 1] * brightnessBoost); // G
+            data[i + 2] = Math.min(255, data[i + 2] * brightnessBoost); // B
+          }
+          ctx.putImageData(imageData, 0, 0);
+          console.log('✨ Applied brightness boost to dark image');
+        }
+
+        // ✅ تحويل إلى base64 بجودة عالية (0.92 بدلاً من 0.85)
+        const croppedImage = canvas.toDataURL('image/jpeg', 0.92);
         resolve(croppedImage);
         
       } catch (error) {
@@ -386,15 +414,16 @@ export const analyzeImage = async (imageSrc, userType) => {
     }
     
     // التحقق من جودة الصورة العامة
-    if (analysis.brightness < 20) {
+    // ✅ تخفيف شروط السطوع - الحد الأدنى كان صارماً جداً
+    if (analysis.brightness < 10) { // ✅ تغيير من 20 إلى 10
       isValid = false;
       reason = 'عذراً، الصورة مظلمة جداً';
       confidence = 15;
-    } else if (analysis.brightness > 240) {
+    } else if (analysis.brightness > 245) { // ✅ تغيير من 240 إلى 245
       isValid = false;
       reason = 'عذراً، الصورة ساطعة جداً';
       confidence = 15;
-    } else if (analysis.contrast < 15) {
+    } else if (analysis.contrast < 10) { // ✅ تغيير من 15 إلى 10
       isValid = false;
       reason = 'عذراً، الصورة غير واضحة';
       confidence = 20;

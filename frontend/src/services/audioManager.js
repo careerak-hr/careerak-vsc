@@ -160,9 +160,11 @@ class AudioManager {
    */
   async resumeAllAudio() {
     console.log('🎵 Resuming audio after app state change');
+    console.log('🎵 Current page:', this.currentPage);
+    console.log('🎵 Was music playing before pause:', this.wasMusicPlayingBeforePause);
     
     // التحقق من الإعدادات أولاً
-    this.updateSettings();
+    await this.updateSettings();
     
     if (!this.settings.audioEnabled) {
       console.log('🎵 Audio disabled, not resuming');
@@ -170,12 +172,34 @@ class AudioManager {
     }
     
     try {
-      // استئناف الموسيقى إذا كانت تعمل قبل الإيقاف
+      // ✅ استئناف الموسيقى إذا كانت تعمل قبل الإيقاف
       if (this.wasMusicPlayingBeforePause && this.settings.musicEnabled && this.musicAudio) {
+        // ✅ التحقق من أننا ما زلنا في صفحة تحتاج موسيقى
         const needsMusic = this.musicPages.some(page => this.currentPage?.startsWith(page));
+        
         if (needsMusic) {
-          await this.musicAudio.play();
-          console.log('🎵 Music resumed');
+          console.log('🎵 Attempting to resume music...');
+          // ✅ محاولة استئناف التشغيل مع معالجة الأخطاء
+          try {
+            await this.musicAudio.play();
+            this.isMusicPlaying = true;
+            console.log('🎵 Music resumed successfully');
+          } catch (playError) {
+            console.warn('🎵 Failed to resume music, retrying...', playError);
+            // ✅ إعادة المحاولة بعد تأخير قصير
+            setTimeout(async () => {
+              try {
+                await this.musicAudio.play();
+                this.isMusicPlaying = true;
+                console.log('🎵 Music resumed on retry');
+              } catch (retryError) {
+                console.error('🎵 Failed to resume music after retry:', retryError);
+              }
+            }, 500);
+          }
+        } else {
+          console.log('🎵 Current page does not need music, clearing pause state');
+          this.wasMusicPlayingBeforePause = false;
         }
       }
       
@@ -183,8 +207,15 @@ class AudioManager {
       if (this.wasIntroPlayingBeforePause && this.introAudio) {
         const needsIntro = this.introPages.includes(this.currentPage);
         if (needsIntro) {
-          await this.introAudio.play();
-          console.log('🎵 Intro resumed');
+          try {
+            await this.introAudio.play();
+            this.isIntroPlaying = true;
+            console.log('🎵 Intro resumed');
+          } catch (error) {
+            console.error('🎵 Failed to resume intro:', error);
+          }
+        } else {
+          this.wasIntroPlayingBeforePause = false;
         }
       }
     } catch (error) {
@@ -539,19 +570,47 @@ class AudioManager {
   handleAppStateChange(isActive) {
     if (!this.isInitialized) return;
 
+    const previousState = this.isAppActive;
     this.isAppActive = isActive;
-    console.log(`🎵 App state changed: ${isActive ? 'active' : 'inactive'}`);
+    console.log(`🎵 App state changed: ${isActive ? 'active' : 'inactive'} (was: ${previousState ? 'active' : 'inactive'})`);
 
     if (isActive) {
-      console.log('🎵 App became active');
-      // تأخير بسيط للتأكد من استقرار الحالة
+      console.log('🎵 App became active - preparing to resume audio');
+      
+      // ✅ تأخير أطول للتأكد من استقرار الحالة بعد العودة من المعرض/الكاميرا
       setTimeout(() => {
-        if (this.isPageVisible) {
+        console.log('🎵 Checking if we should resume audio...');
+        console.log('🎵 isPageVisible:', this.isPageVisible);
+        console.log('🎵 wasMusicPlayingBeforePause:', this.wasMusicPlayingBeforePause);
+        console.log('🎵 currentPage:', this.currentPage);
+        
+        // ✅ محاولة الاستئناف حتى لو لم تكن الصفحة مرئية بعد
+        // لأن بعض الأجهزة تأخذ وقتاً لتحديث حالة الرؤية
+        if (this.wasMusicPlayingBeforePause || this.wasIntroPlayingBeforePause) {
           this.resumeAllAudio();
+        } else {
+          console.log('🎵 No audio was playing before pause, nothing to resume');
         }
-      }, 200);
+      }, 500); // ✅ زيادة التأخير من 200ms إلى 500ms
+      
+      // ✅ محاولة إضافية بعد ثانية واحدة للتأكد
+      setTimeout(() => {
+        if (this.wasMusicPlayingBeforePause && !this.isMusicPlaying && this.settings.musicEnabled && this.settings.audioEnabled) {
+          console.log('🎵 Second attempt to resume music after 1 second');
+          const needsMusic = this.musicPages.some(page => this.currentPage?.startsWith(page));
+          if (needsMusic && this.musicAudio) {
+            this.musicAudio.play().then(() => {
+              this.isMusicPlaying = true;
+              console.log('🎵 Music resumed on second attempt');
+            }).catch(e => {
+              console.error('🎵 Failed to resume music on second attempt:', e);
+            });
+          }
+        }
+      }, 1000);
+      
     } else {
-      console.log('🎵 App went to background/inactive');
+      console.log('🎵 App went to background/inactive - pausing audio');
       // إيقاف مؤقت لجميع الأصوات عند الانتقال للخلفية
       this.pauseAllAudio();
     }

@@ -11,6 +11,7 @@ const AdminPagesNavigator = () => {
 
   // تشغيل الموسيقى عند فتح الصفحة
   useEffect(() => {
+    console.log('🗺️ AdminPagesNavigator mounted');
     if (startBgMusic) startBgMusic();
   }, [startBgMusic]);
 
