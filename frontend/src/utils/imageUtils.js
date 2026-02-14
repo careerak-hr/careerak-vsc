@@ -1,5 +1,5 @@
 /**
- * قص الصورة وإرجاع صورة مقصوصة بحجم محدد
+ * قص الصورة وإرجاع صورة مقصوصة بحجم محدد ومضغوطة
  * @param {string} imageSrc - مصدر الصورة (base64 أو URL)
  * @param {object} pixelCrop - معلومات القص {x, y, width, height}
  * @returns {Promise<string>} - الصورة المقصوصة بصيغة base64
@@ -20,7 +20,8 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
     image.onload = () => {
       try {
         const canvas = document.createElement('canvas');
-        const SIZE = 1024; // حجم أكبر لجودة أفضل
+        // حجم مناسب للعرض في الدائرة وللتحليل الذكي
+        const SIZE = 512; // حجم أصغر لضغط أفضل
         canvas.width = SIZE;
         canvas.height = SIZE;
 
@@ -48,8 +49,8 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
           SIZE
         );
 
-        // تحويل إلى base64 بجودة عالية
-        const croppedImage = canvas.toDataURL('image/jpeg', 0.95);
+        // تحويل إلى base64 بجودة متوسطة للضغط الأفضل
+        const croppedImage = canvas.toDataURL('image/jpeg', 0.85);
         resolve(croppedImage);
         
       } catch (error) {

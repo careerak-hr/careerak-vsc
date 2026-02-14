@@ -85,7 +85,14 @@ textarea:-moz-autofill:focus {
 input:focus,
 select:focus,
 textarea:focus {
-  background-color: #E3DAD1 !important;
+  background-color: #E8DFD6 !important; /* بيج أفتح قليلاً - secondary.light */
+}
+
+/* منع تغيير لون الخلفية عند blur (الانتقال لحقل آخر) */
+input:not(:focus),
+select:not(:focus),
+textarea:not(:focus) {
+  background-color: #E8DFD6 !important; /* نفس اللون */
 }
 
 /* إجبار الألوان في جميع الأوضاع */

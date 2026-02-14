@@ -28,6 +28,11 @@ export default function AuthPage() {
   const { language } = useAuth();
   const t = authTranslations[language] || authTranslations.ar;
   const isRTL = language === 'ar';
+  
+  // الخطوط المعتمدة حسب اللغة
+  const fontFamily = language === 'ar' ? 'Amiri, Cairo, serif' : 
+                     language === 'fr' ? 'EB Garamond, serif' : 
+                     'Cormorant Garamond, serif';
 
   // UI States
   const [isVisible, setIsVisible] = useState(false);
@@ -361,8 +366,8 @@ export default function AuthPage() {
   }
 
   return (
-    <div className={`auth-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="auth-page-content">
+    <div className={`auth-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} style={{ fontFamily }}>
+      <div className="auth-page-content" style={{ fontFamily }}>
 
         <div className="auth-logo-container">
           <div className="auth-logo">
@@ -378,6 +383,7 @@ export default function AuthPage() {
                 ? 'auth-user-type-btn-active'
                 : 'auth-user-type-btn-inactive'
             }`}
+            style={{ fontFamily }}
           >
             {t.individuals}
           </button>
@@ -388,13 +394,14 @@ export default function AuthPage() {
                 ? 'auth-user-type-btn-active'
                 : 'auth-user-type-btn-inactive'
             }`}
+            style={{ fontFamily }}
           >
             {t.companies}
           </button>
         </div>
 
         {userType && (
-          <form onSubmit={handleRegisterClick} noValidate className="auth-form">
+          <form onSubmit={handleRegisterClick} noValidate className="auth-form" style={{ fontFamily }}>
 
             <div className="auth-photo-upload-container">
               <div
@@ -407,8 +414,8 @@ export default function AuthPage() {
                   <span className="auth-photo-upload-placeholder">📷</span>
                 )}
               </div>
-              <p className="auth-photo-upload-label">{t.uploadPhoto}</p>
-              {fieldErrors.image && <p className="auth-input-error">{fieldErrors.image}</p>}
+              <p className="auth-photo-upload-label" style={{ fontFamily }}>{t.uploadPhoto}</p>
+              {fieldErrors.image && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.image}</p>}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -417,6 +424,7 @@ export default function AuthPage() {
                 value={formData.country}
                 onChange={handleInputChange}
                 className="auth-select-base"
+                style={{ fontFamily }}
               >
                 <option value="" disabled selected>{t.country}</option>
                 {countries.map(c => (
@@ -432,15 +440,16 @@ export default function AuthPage() {
                 value={formData.city}
                 onChange={handleInputChange}
                 className="auth-input-base"
+                style={{ fontFamily }}
               />
             </div>
-            {fieldErrors.country && <p className="auth-input-error">{fieldErrors.country}</p>}
-            {fieldErrors.city && <p className="auth-input-error">{fieldErrors.city}</p>}
+            {fieldErrors.country && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.country}</p>}
+            {fieldErrors.city && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.city}</p>}
 
             {userType === 'individual' ? (
-              <IndividualForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL }} />
+              <IndividualForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }} />
             ) : (
-              <CompanyForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL }} />
+              <CompanyForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }} />
             )}
 
             <div className="auth-checkbox-container">

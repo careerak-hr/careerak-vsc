@@ -15,8 +15,8 @@ export const AppProvider = ({ children }) => {
 
   // --- State from AppSettingsContext ---
   const [language, setLanguage] = useState('ar');
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const [musicEnabled, setMusicEnabled] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true); // ✅ تفعيل الصوت افتراضياً
+  const [musicEnabled, setMusicEnabled] = useState(true); // ✅ تفعيل الموسيقى افتراضياً
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [isSettingsLoading, setSettingsLoading] = useState(true);
 
@@ -34,15 +34,24 @@ export const AppProvider = ({ children }) => {
           Preferences.get({ key: 'notificationsEnabled' })
         ]);
 
+        // ✅ القيم الافتراضية عند أول تثبيت
         const loadedLang = langResult.value || 'ar';
-        const loadedAudio = audioResult.value === 'true';
-        const loadedMusic = musicResult.value === 'true';
+        const loadedAudio = audioResult.value !== null ? audioResult.value === 'true' : true; // ✅ true افتراضياً
+        const loadedMusic = musicResult.value !== null ? musicResult.value === 'true' : true; // ✅ true افتراضياً
         const loadedNotif = notifResult.value === 'true';
 
         setLanguage(loadedLang);
         setAudioEnabled(loadedAudio);
         setMusicEnabled(loadedMusic);
         setNotificationsEnabled(loadedNotif);
+
+        // ✅ حفظ القيم الافتراضية عند أول تشغيل
+        if (audioResult.value === null) {
+          await Preferences.set({ key: 'audio_enabled', value: 'true' });
+        }
+        if (musicResult.value === null) {
+          await Preferences.set({ key: 'musicEnabled', value: 'true' });
+        }
 
         // مزامنة مع localStorage للتوافق مع audioManager
         localStorage.setItem('audio_enabled', loadedAudio ? 'true' : 'false');
@@ -57,10 +66,16 @@ export const AppProvider = ({ children }) => {
         });
       } catch (error) {
         console.warn('Failed to load settings, using defaults.', error);
+        // ✅ القيم الافتراضية في حالة الخطأ
         setLanguage('ar');
-        setAudioEnabled(false);
-        setMusicEnabled(false);
+        setAudioEnabled(true);
+        setMusicEnabled(true);
         setNotificationsEnabled(false);
+        
+        // حفظ القيم الافتراضية
+        localStorage.setItem('audio_enabled', 'true');
+        localStorage.setItem('musicEnabled', 'true');
+        localStorage.setItem('audioConsent', 'true');
       } finally {
         setSettingsLoading(false);
       }

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import './30_AdminCodeEditor.css';
 
 const AdminCodeEditor = () => {
-  const { language } = useApp();
+  const { language, startBgMusic } = useApp();
   const navigate = useNavigate();
   const [selectedFile, setSelectedFile] = useState('');
   const [code, setCode] = useState('');
@@ -20,6 +20,11 @@ const AdminCodeEditor = () => {
     { path: 'package.json', type: 'file', icon: '📦' },
     { path: 'README.md', type: 'file', icon: '📖' },
   ]);
+
+  // تشغيل الموسيقى عند فتح الصفحة
+  useEffect(() => {
+    if (startBgMusic) startBgMusic();
+  }, [startBgMusic]);
 
   const loadFile = (filePath) => {
     setSelectedFile(filePath);

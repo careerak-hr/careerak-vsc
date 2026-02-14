@@ -2,7 +2,7 @@ import React from 'react';
 import countries from '../../data/countries.json';
 import '../../pages/03_AuthPage.css';
 
-const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL }) => {
+const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }) => {
 
   return (
     <>
@@ -14,6 +14,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           value={formData.firstName}
           onChange={handleInputChange}
           className="auth-input-base"
+          style={{ fontFamily }}
         />
         <input
           type="text"
@@ -22,10 +23,11 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           value={formData.lastName}
           onChange={handleInputChange}
           className="auth-input-base"
+          style={{ fontFamily }}
         />
       </div>
-      {fieldErrors.firstName && <p className="auth-input-error">{fieldErrors.firstName}</p>}
-      {fieldErrors.lastName && <p className="auth-input-error">{fieldErrors.lastName}</p>}
+      {fieldErrors.firstName && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.firstName}</p>}
+      {fieldErrors.lastName && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.lastName}</p>}
 
       <div className="grid grid-cols-2 gap-4">
         <select

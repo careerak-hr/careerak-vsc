@@ -5,7 +5,7 @@ import api from '../services/api';
 import './29_AdminDatabaseManager.css';
 
 const AdminDatabaseManager = () => {
-  const { language } = useApp();
+  const { language, startBgMusic } = useApp();
   const navigate = useNavigate();
   const [collections, setCollections] = useState([
     { name: 'users', count: 0, icon: '👥' },
@@ -18,7 +18,9 @@ const AdminDatabaseManager = () => {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // تشغيل الموسيقى عند فتح الصفحة
   useEffect(() => {
+    if (startBgMusic) startBgMusic();
     loadCollectionsCounts();
   }, []);
 

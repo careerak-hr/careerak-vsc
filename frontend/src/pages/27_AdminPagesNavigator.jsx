@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import './27_AdminPagesNavigator.css';
 
 const AdminPagesNavigator = () => {
-  const { language } = useApp();
+  const { language, startBgMusic } = useApp();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+
+  // تشغيل الموسيقى عند فتح الصفحة
+  useEffect(() => {
+    if (startBgMusic) startBgMusic();
+  }, [startBgMusic]);
 
   // قائمة شاملة بجميع صفحات التطبيق
   const allPages = [

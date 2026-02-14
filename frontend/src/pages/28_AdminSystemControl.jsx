@@ -5,7 +5,7 @@ import api from '../services/api';
 import './28_AdminSystemControl.css';
 
 const AdminSystemControl = () => {
-  const { language, user } = useApp();
+  const { language, user, startBgMusic } = useApp();
   const navigate = useNavigate();
   const [systemInfo, setSystemInfo] = useState({
     nodeVersion: 'N/A',
@@ -18,10 +18,12 @@ const AdminSystemControl = () => {
   const [logs, setLogs] = useState([]);
   const [activeTab, setActiveTab] = useState('info');
 
+  // تشغيل الموسيقى عند فتح الصفحة
   useEffect(() => {
+    if (startBgMusic) startBgMusic();
     loadSystemInfo();
     loadLogs();
-  }, []);
+  }, [startBgMusic]);
 
   const loadSystemInfo = () => {
     // معلومات النظام من المتصفح
