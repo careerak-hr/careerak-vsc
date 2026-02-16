@@ -2,7 +2,7 @@
 // يمكن استخدامها في console المتصفح لإعادة تعيين التطبيق للحالة الأولى
 
 import notificationManager from '../services/notificationManager';
-import { testNotificationSound } from '../services/notificationSounds';
+import notificationSoundManager from '../services/notificationSounds';
 import { resetOnboarding, getSavedSettings } from './onboardingUtils';
 
 export const resetAppSettings = () => {
@@ -57,12 +57,12 @@ export const testNotificationSounds = async () => {
   
   // اختبار أصوات الأفراد
   console.log('👤 Testing individual sounds:');
-  await testNotificationSound('individual', 'jobAccepted');
+  notificationSoundManager.play('jobAccepted');
   
   setTimeout(async () => {
     // اختبار أصوات الشركات
     console.log('🏢 Testing company sounds:');
-    await testNotificationSound('company', 'paymentReceived');
+    notificationSoundManager.play('newApplication');
   }, 2000);
 };
 

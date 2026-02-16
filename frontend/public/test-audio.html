@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #E3DAD1;
+            color: #304B60;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #304B60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #D48161;
+        }
+        .info {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        audio {
+            width: 100%;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 Audio File Test</h1>
+        
+        <h2>Music.mp3</h2>
+        <audio id="musicAudio" controls>
+            <source src="/Music.mp3" type="audio/mpeg">
+        </audio>
+        <div id="musicInfo" class="info">Loading...</div>
+        
+        <h2>intro.mp3</h2>
+        <audio id="introAudio" controls>
+            <source src="/intro.mp3" type="audio/mpeg">
+        </audio>
+        <div id="introInfo" class="info">Loading...</div>
+        
+        <div style="margin-top: 20px;">
+            <button onclick="testMusic()">Test Music Loop</button>
+            <button onclick="reloadMusic()">Reload Music</button>
+        </div>
+    </div>
+
+    <script>
+        const musicAudio = document.getElementById('musicAudio');
+        const introAudio = document.getElementById('introAudio');
+        const musicInfo = document.getElementById('musicInfo');
+        const introInfo = document.getElementById('introInfo');
+
+        function updateInfo(audio, infoDiv, name) {
+            const info = `
+${name} Info:
+- Duration: ${audio.duration ? audio.duration.toFixed(2) + ' seconds (' + (audio.duration / 60).toFixed(2) + ' minutes)' : 'Unknown'}
+- Current Time: ${audio.currentTime.toFixed(2)} seconds
+- Ready State: ${audio.readyState} (${getReadyStateText(audio.readyState)})
+- Network State: ${audio.networkState} (${getNetworkStateText(audio.networkState)})
+- Paused: ${audio.paused}
+- Ended: ${audio.ended}
+- Loop: ${audio.loop}
+- Source: ${audio.currentSrc}
+            `.trim();
+            infoDiv.textContent = info;
+        }
+
+        function getReadyStateText(state) {
+            const states = ['HAVE_NOTHING', 'HAVE_METADATA', 'HAVE_CURRENT_DATA', 'HAVE_FUTURE_DATA', 'HAVE_ENOUGH_DATA'];
+            return states[state] || 'Unknown';
+        }
+
+        function getNetworkStateText(state) {
+            const states = ['NETWORK_EMPTY', 'NETWORK_IDLE', 'NETWORK_LOADING', 'NETWORK_NO_SOURCE'];
+            return states[state] || 'Unknown';
+        }
+
+        // Update info on various events
+        ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough', 'timeupdate', 'ended', 'play', 'pause'].forEach(event => {
+            musicAudio.addEventListener(event, () => {
+                console.log(`Music: ${event}`);
+                updateInfo(musicAudio, musicInfo, 'Music.mp3');
+            });
+            
+            introAudio.addEventListener(event, () => {
+                console.log(`Intro: ${event}`);
+                updateInfo(introAudio, introInfo, 'intro.mp3');
+            });
+        });
+
+        // Initial update
+        setTimeout(() => {
+            updateInfo(musicAudio, musicInfo, 'Music.mp3');
+            updateInfo(introAudio, introInfo, 'intro.mp3');
+        }, 100);
+
+        // Periodic update
+        setInterval(() => {
+            if (!musicAudio.paused) {
+                updateInfo(musicAudio, musicInfo, 'Music.mp3');
+            }
+            if (!introAudio.paused) {
+                updateInfo(introAudio, introInfo, 'intro.mp3');
+            }
+        }, 1000);
+
+        function testMusic() {
+            musicAudio.loop = true;
+            musicAudio.play();
+            console.log('Testing music with loop enabled');
+        }
+
+        function reloadMusic() {
+            musicAudio.load();
+            console.log('Reloading music file');
+            setTimeout(() => updateInfo(musicAudio, musicInfo, 'Music.mp3'), 500);
+        }
+
+        // Log errors
+        musicAudio.addEventListener('error', (e) => {
+            console.error('Music error:', e);
+            musicInfo.textContent = 'Error loading music: ' + (musicAudio.error ? musicAudio.error.message : 'Unknown error');
+        });
+
+        introAudio.addEventListener('error', (e) => {
+            console.error('Intro error:', e);
+            introInfo.textContent = 'Error loading intro: ' + (introAudio.error ? introAudio.error.message : 'Unknown error');
+        });
+    </script>
+</body>
+</html>

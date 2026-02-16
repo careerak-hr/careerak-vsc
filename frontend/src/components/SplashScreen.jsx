@@ -6,7 +6,8 @@ export const SplashScreen = ({ onFinish }) => {
 
   useEffect(() => {
     // 1. تشغيل ملف intro.mp3
-    const audio = new Audio('./intro.mp3');
+    const introPath = process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/intro.mp3` : '/intro.mp3';
+    const audio = new Audio(introPath);
     audio.volume = 0.8;
     
     const playIntro = () => {

@@ -269,13 +269,15 @@ class AudioManager {
       
       // إنشاء عناصر الصوت
       this.musicAudio = new Audio();
-      this.musicAudio.src = `${process.env.PUBLIC_URL || ''}/Music.mp3`;
+      const musicPath = process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/Music.mp3` : '/Music.mp3';
+      this.musicAudio.src = musicPath;
       this.musicAudio.loop = true; // ✅ تفعيل التكرار التلقائي
       this.musicAudio.volume = 0.3;
-      this.musicAudio.preload = 'auto';
+      this.musicAudio.preload = 'metadata'; // ✅ تحميل metadata فقط في البداية لتوفير الباندويث
 
       this.introAudio = new Audio();
-      this.introAudio.src = `${process.env.PUBLIC_URL || ''}/intro.mp3`;
+      const introPath = process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/intro.mp3` : '/intro.mp3';
+      this.introAudio.src = introPath;
       this.introAudio.volume = 0.7;
       this.introAudio.preload = 'auto';
 
@@ -316,6 +318,21 @@ class AudioManager {
       // ✅ مراقبة التحميل
       this.musicAudio.addEventListener('loadedmetadata', () => {
         console.log('🎵 Music metadata loaded - duration:', this.musicAudio.duration, 'seconds');
+        console.log('🎵 Music file info:', {
+          src: this.musicAudio.src,
+          duration: this.musicAudio.duration,
+          readyState: this.musicAudio.readyState,
+          networkState: this.musicAudio.networkState
+        });
+      });
+      
+      // ✅ مراقبة اكتمال التحميل
+      this.musicAudio.addEventListener('loadeddata', () => {
+        console.log('🎵 Music data loaded - can start playing');
+      });
+      
+      this.musicAudio.addEventListener('canplay', () => {
+        console.log('🎵 Music can play - duration:', this.musicAudio.duration, 'seconds');
       });
       
       // ✅ مراقبة التقدم
@@ -324,6 +341,11 @@ class AudioManager {
         if (Math.floor(this.musicAudio.currentTime) % 30 === 0 && this.musicAudio.currentTime > 0) {
           console.log('🎵 Music playing:', Math.floor(this.musicAudio.currentTime), '/', Math.floor(this.musicAudio.duration), 'seconds');
         }
+      });
+      
+      // ✅ مراقبة إعادة التشغيل التلقائي
+      this.musicAudio.addEventListener('seeked', () => {
+        console.log('🎵 Music seeked to:', Math.floor(this.musicAudio.currentTime), 'seconds');
       });
 
       this.introAudio.addEventListener('ended', () => {
@@ -529,6 +551,34 @@ class AudioManager {
       
       // ✅ التأكد من تفعيل loop قبل التشغيل
       this.musicAudio.loop = true;
+      
+      // ✅ انتظار تحميل metadata إذا لم تكن محملة
+      if (!this.musicAudio.duration || this.musicAudio.duration === Infinity || isNaN(this.musicAudio.duration)) {
+        console.log('🎵 Waiting for music metadata to load...');
+        await new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Metadata load timeout'));
+          }, 5000);
+          
+          const onLoaded = () => {
+            clearTimeout(timeout);
+            this.musicAudio.removeEventListener('loadedmetadata', onLoaded);
+            this.musicAudio.removeEventListener('canplay', onLoaded);
+            console.log('🎵 Metadata loaded - duration:', this.musicAudio.duration, 'seconds');
+            resolve();
+          };
+          
+          this.musicAudio.addEventListener('loadedmetadata', onLoaded);
+          this.musicAudio.addEventListener('canplay', onLoaded);
+          
+          // إعادة تحميل الملف إذا لزم الأمر
+          if (this.musicAudio.readyState < 1) {
+            this.musicAudio.load();
+          }
+        }).catch(error => {
+          console.warn('🎵 Metadata load timeout, proceeding anyway:', error);
+        });
+      }
       
       // ✅ تشغيل الموسيقى من البداية فقط إذا لم تكن قد بدأت
       if (this.musicAudio.currentTime === 0 || this.musicAudio.currentTime >= this.musicAudio.duration) {

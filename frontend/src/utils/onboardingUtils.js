@@ -4,7 +4,7 @@
 import { Preferences } from "@capacitor/preferences";
 
 const ONBOARDING_VERSION_KEY = 'onboardingVersion';
-const CURRENT_ONBOARDING_VERSION = '3'; // Increment this version to force reset for all users
+const CURRENT_ONBOARDING_VERSION = '4'; // Increment this version to force reset for all users
 
 /**
  * Check if user has completed onboarding and if the data is up-to-date.
