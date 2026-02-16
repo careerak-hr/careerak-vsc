@@ -96,6 +96,23 @@ const AdminPagesNavigator = () => {
     return cat.nameEn;
   };
 
+  const handleVisitPage = (page) => {
+    // إضافة preview=true للصفحات المحمية بـ OnboardingRoute
+    const onboardingPages = [
+      '/onboarding-individuals',
+      '/onboarding-companies',
+      '/onboarding-illiterate',
+      '/onboarding-visual',
+      '/onboarding-ultimate'
+    ];
+    
+    if (onboardingPages.includes(page.path)) {
+      navigate(`${page.path}?preview=true`);
+    } else {
+      navigate(page.path);
+    }
+  };
+
   return (
     <div className="admin-pages-navigator">
       {/* الهيدر */}
@@ -154,7 +171,7 @@ const AdminPagesNavigator = () => {
               <p className="apn-page-path">{page.path}</p>
             </div>
             <button
-              onClick={() => navigate(page.path)}
+              onClick={() => handleVisitPage(page)}
               className="apn-page-visit-btn"
             >
               {language === 'ar' ? 'زيارة' : language === 'fr' ? 'Visiter' : 'Visit'}

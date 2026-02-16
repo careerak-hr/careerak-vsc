@@ -22,8 +22,16 @@
   @apply text-[10px] text-primary/60 font-bold uppercase tracking-wider;
 }
 
+.admin-header-actions {
+  @apply flex items-center gap-3;
+}
+
+.admin-settings-btn {
+  @apply p-3 bg-primary text-accent rounded-2xl font-black text-2xl shadow-lg active:scale-95 transition-all hover:bg-primary/90;
+}
+
 .admin-logout-btn {
-  @apply p-3 bg-danger text-white rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all;
+  @apply p-3 bg-primary text-accent rounded-2xl font-black text-xs shadow-lg active:scale-95 transition-all hover:bg-primary/90;
 }
 
 .admin-tabs-container {
@@ -104,14 +112,23 @@
 
 /* تصميم الأيقونات الدائرية بأسلوب Apple Watch */
 .admin-quick-nav-grid {
-  @apply relative w-full min-h-[500px] flex items-center justify-center;
+  @apply relative w-full flex items-center justify-center;
+  min-height: 550px;
   perspective: 1000px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .admin-quick-nav-orb {
-  @apply absolute w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 border-4 border-primary shadow-2xl;
+  @apply absolute rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 border-4 border-primary shadow-2xl;
   background: linear-gradient(135deg, #304B60 0%, #4A6A88 100%);
   transform-style: preserve-3d;
+  width: 70px;
+  height: 70px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .admin-quick-nav-orb:hover {
@@ -124,83 +141,97 @@
   transform: scale(1.05) translateZ(10px);
 }
 
-/* توزيع الأيقونات بشكل دائري */
+/* توزيع الأيقونات بشكل دائري محسّن - بدون تراكب */
+/* الأيقونة المركزية */
 .admin-quick-nav-orb:nth-child(1) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90px;
-  height: 90px;
+  width: 85px;
+  height: 85px;
   z-index: 10;
 }
 
+/* الأيقونة العلوية */
 .admin-quick-nav-orb:nth-child(2) {
-  top: 10%;
+  top: 5%;
   left: 50%;
   transform: translateX(-50%);
 }
 
+/* الأيقونة العلوية اليمنى */
 .admin-quick-nav-orb:nth-child(3) {
-  top: 25%;
-  right: 15%;
+  top: 18%;
+  right: 18%;
 }
 
+/* الأيقونة اليمنى */
 .admin-quick-nav-orb:nth-child(4) {
   top: 50%;
-  right: 5%;
+  right: 8%;
   transform: translateY(-50%);
 }
 
+/* الأيقونة السفلية اليمنى */
 .admin-quick-nav-orb:nth-child(5) {
-  bottom: 25%;
-  right: 15%;
+  bottom: 18%;
+  right: 18%;
 }
 
+/* الأيقونة السفلية */
 .admin-quick-nav-orb:nth-child(6) {
-  bottom: 10%;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
 }
 
+/* الأيقونة السفلية اليسرى */
 .admin-quick-nav-orb:nth-child(7) {
-  bottom: 25%;
-  left: 15%;
+  bottom: 18%;
+  left: 18%;
 }
 
+/* الأيقونة اليسرى */
 .admin-quick-nav-orb:nth-child(8) {
   top: 50%;
-  left: 5%;
+  left: 8%;
   transform: translateY(-50%);
 }
 
+/* الأيقونة العلوية اليسرى */
 .admin-quick-nav-orb:nth-child(9) {
-  top: 25%;
-  left: 15%;
+  top: 18%;
+  left: 18%;
 }
 
+/* أيقونة إضافية (إذا وجدت) */
 .admin-quick-nav-orb:nth-child(10) {
-  top: 75%;
-  left: 30%;
+  bottom: 35%;
+  left: 28%;
 }
 
 .orb-icon {
-  @apply text-4xl;
+  @apply text-3xl;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  pointer-events: none;
 }
 
 .admin-quick-nav-orb:nth-child(1) .orb-icon {
-  @apply text-5xl;
+  @apply text-4xl;
 }
 
 /* عرض التسمية عند الـ hover */
 .admin-quick-nav-orb::after {
   content: attr(data-label);
-  @apply absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-primary text-accent px-3 py-1 rounded-lg text-xs font-black whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300;
+  @apply absolute left-1/2 transform -translate-x-1/2 bg-primary text-accent px-3 py-1 rounded-lg text-xs font-black whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300;
+  bottom: -35px;
   box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+  z-index: 20;
 }
 
 .admin-quick-nav-orb:hover::after {
-  @apply opacity-100 -bottom-10;
+  @apply opacity-100;
+  bottom: -40px;
 }
 
 /* تأثير النبض للأيقونة المركزية */
@@ -217,10 +248,10 @@
   animation: pulse-orb 2s infinite;
 }
 
-/* Responsive */
+/* Responsive - تحسين للشاشات الصغيرة */
 @media (max-width: 768px) {
   .admin-quick-nav-grid {
-    min-height: 400px;
+    min-height: 450px;
   }
   
   .admin-quick-nav-orb {
@@ -234,11 +265,53 @@
   }
   
   .orb-icon {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
   
   .admin-quick-nav-orb:nth-child(1) .orb-icon {
-    font-size: 2.5rem;
+    font-size: 2rem;
+  }
+  
+  /* تقليل المسافات للشاشات الصغيرة */
+  .admin-quick-nav-orb:nth-child(2) {
+    top: 8%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(3) {
+    top: 20%;
+    right: 15%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(4) {
+    right: 5%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(5) {
+    bottom: 20%;
+    right: 15%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(6) {
+    bottom: 8%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(7) {
+    bottom: 20%;
+    left: 15%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(8) {
+    left: 5%;
+  }
+  
+  .admin-quick-nav-orb:nth-child(9) {
+    top: 20%;
+    left: 15%;
+  }
+  
+  .admin-quick-nav-orb::after {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
   }
 }
 

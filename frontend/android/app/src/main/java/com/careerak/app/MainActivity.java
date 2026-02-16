@@ -20,6 +20,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends BridgeActivity {
+    private static final String TAG = "Careerak_MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,22 @@ public class MainActivity extends BridgeActivity {
 
         // Re-enable the backend connection check
         checkBackendConnection();
+    }
+
+    /**
+     * ✅ Override onBackPressed to let Capacitor handle back button
+     * This ensures our JavaScript listener gets the event before Android's default behavior
+     */
+    @Override
+    public void onBackPressed() {
+        // Let Capacitor's bridge handle the back button event first
+        // This will trigger our JavaScript listener in useExitConfirm.js
+        // If JavaScript doesn't handle it, the default behavior will occur
+        Log.d(TAG, "Back button pressed - delegating to Capacitor bridge");
+        
+        // Don't call super.onBackPressed() immediately
+        // Let the bridge handle it through the backButton event
+        // The JavaScript side will decide what to do
     }
 
     private void configureWebView() {

@@ -27,7 +27,7 @@ const PolicyModal = ({ onClose, onAgree }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="bg-[#E3DAD1] rounded-[2rem] max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border-4 border-[#304B60]">
+      <div className="bg-[#E3DAD1] rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border-4 border-[#304B60] overflow-hidden">
         {/* Header - Fixed */}
         <div className="flex items-center justify-between p-6 border-b border-[#304B60]/10 bg-[#E3DAD1] flex-shrink-0">
           <h2 className="text-2xl font-black text-[#304B60]" style={fontStyle}>{t.title}</h2>

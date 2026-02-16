@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { App as CapacitorApp } from '@capacitor/app';
 
@@ -10,6 +10,7 @@ const useExitConfirm = () => {
   const [showExitModal, setShowExitModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const isHandlingBack = useRef(false);
 
   // الصفحات التي يجب فيها تأكيد الخروج عند الضغط على زر الخلف
   const exitPages = [
@@ -37,23 +38,45 @@ const useExitConfirm = () => {
 
     const setupBackButton = async () => {
       try {
-        backButtonListener = await CapacitorApp.addListener('backButton', ({ canGoBack }) => {
-          console.log('🔙 Back button pressed, canGoBack:', canGoBack, 'current path:', location.pathname);
+        // ✅ استخدام handler مع منع السلوك الافتراضي بشكل كامل
+        const handleBackButton = (event) => {
+          // ✅ منع التنفيذ المتعدد
+          if (isHandlingBack.current) {
+            console.log('⏳ Already handling back button, ignoring...');
+            return;
+          }
 
-          // إذا كنا في صفحة خروج، نعرض رسالة التأكيد
+          isHandlingBack.current = true;
+          console.log('🔙 Back button pressed, canGoBack:', event.canGoBack, 'current path:', location.pathname);
+
+          // إذا كنا في صفحة خروج، نعرض رسالة التأكيد ونمنع السلوك الافتراضي
           if (isExitPage()) {
             console.log('📍 On exit page, showing confirmation modal');
+            // ✅ عرض الرسالة مباشرة بدون setTimeout
             setShowExitModal(true);
-          } else if (canGoBack) {
+            // ✅ إعادة تعيين الحالة بعد فترة قصيرة
+            setTimeout(() => {
+              isHandlingBack.current = false;
+            }, 300);
+          } else if (event.canGoBack) {
             // إذا كان يمكن الرجوع، نرجع للصفحة السابقة
             console.log('⬅️ Going back to previous page');
             navigate(-1);
+            setTimeout(() => {
+              isHandlingBack.current = false;
+            }, 300);
           } else {
             // إذا لم يكن هناك صفحة سابقة، نعرض رسالة التأكيد
             console.log('🚪 No previous page, showing exit confirmation');
             setShowExitModal(true);
+            setTimeout(() => {
+              isHandlingBack.current = false;
+            }, 300);
           }
-        });
+        };
+
+        // ✅ تسجيل المستمع مع priority عالية لمنع السلوك الافتراضي
+        backButtonListener = await CapacitorApp.addListener('backButton', handleBackButton);
 
         console.log('✅ Back button listener registered');
       } catch (error) {
@@ -68,6 +91,7 @@ const useExitConfirm = () => {
         backButtonListener.remove();
         console.log('🗑️ Back button listener removed');
       }
+      isHandlingBack.current = false;
     };
   }, [location.pathname, navigate, isExitPage]);
 

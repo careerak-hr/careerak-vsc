@@ -88,9 +88,16 @@ export const GuestRoute = ({ children }) => {
 
 /**
  * Onboarding Route Guard
+ * يسمح بالمعاينة للأدمن عند إضافة ?preview=true
  */
 export const OnboardingRoute = ({ children }) => {
   const { user, isAppLoading } = useApp(); // Corrected hook
+  const location = useLocation();
+  
+  // التحقق من وجود معامل preview للأدمن
+  const searchParams = new URLSearchParams(location.search);
+  const isPreview = searchParams.get('preview') === 'true';
+  const isAdmin = user?.role === 'Admin';
 
   if (isAppLoading) {
     return <GlobalLoader />;
@@ -98,6 +105,11 @@ export const OnboardingRoute = ({ children }) => {
 
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // السماح للأدمن بالمعاينة
+  if (isAdmin && isPreview) {
+    return children;
   }
 
   if (user.bio) {

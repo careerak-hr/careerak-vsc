@@ -1,6 +1,32 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
 
+// ✅ إضافة الأنيميشن في head مباشرة
+if (typeof document !== 'undefined') {
+  const styleId = 'exit-modal-animations';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes scaleIn {
+        from { 
+          opacity: 0;
+          transform: scale(0.9) translateZ(0);
+        }
+        to { 
+          opacity: 1;
+          transform: scale(1) translateZ(0);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
 const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
   const { language } = useApp();
 
@@ -46,13 +72,25 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm"
       onClick={onCancel}
       dir={isRTL ? 'rtl' : 'ltr'}
+      style={{ 
+        animation: 'fadeIn 0.15s ease-out',
+        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: 'hidden'
+      }}
     >
       <div 
-        className="bg-secondary rounded-3xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden animate-scale-in"
-        style={{ border: '4px solid #304B60' }}
+        className="bg-secondary rounded-3xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden"
+        style={{ 
+          border: '4px solid #304B60',
+          animation: 'scaleIn 0.2s ease-out',
+          WebkitBackfaceVisibility: 'hidden',
+          backfaceVisibility: 'hidden',
+          transform: 'translateZ(0)',
+          willChange: 'transform, opacity'
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* المحتوى */}

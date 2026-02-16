@@ -31,7 +31,20 @@
 }
 
 .login-input {
-  @apply w-full p-6 bg-secondary text-primary rounded-[2.5rem] border-2 border-accent focus:border-accent outline-none font-black text-center transition-all placeholder-hint shadow-sm;
+  @apply w-full p-6 bg-secondary text-primary rounded-[2.5rem] outline-none font-black text-center transition-all placeholder-hint shadow-sm;
+  border: 2px solid #D48161 !important; /* نحاسي دائماً - محرّم تغييره */
+}
+
+.login-input:focus {
+  border: 2px solid #D48161 !important; /* نحاسي حتى عند التركيز */
+}
+
+.login-input:hover {
+  border: 2px solid #D48161 !important; /* نحاسي عند hover */
+}
+
+.login-input:active {
+  border: 2px solid #D48161 !important; /* نحاسي عند active */
 }
 
 .login-password-wrapper {

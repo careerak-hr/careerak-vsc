@@ -47,7 +47,7 @@ const AdminDashboard = () => {
     const fetchDashboardData = async () => {
         try {
             setLoading(true);
-            setError('');
+            setError(''); // مسح أي خطأ سابق
             
             // جلب الإحصائيات من API
             const statsResponse = await api.get('/admin/stats');
@@ -64,9 +64,12 @@ const AdminDashboard = () => {
             
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            setError(error.response?.data?.error || 'فشل تحميل البيانات');
+            // عرض رسالة الخطأ فقط إذا كان هناك خطأ في الاتصال
+            if (error.response?.status >= 500 || error.message === 'Network Error') {
+                setError(error.response?.data?.error || 'فشل تحميل البيانات');
+            }
             
-            // في حالة الفشل، استخدم بيانات تجريبية
+            // في حالة الفشل، استخدم بيانات افتراضية بدون عرض خطأ
             setStats({
                 totalUsers: 0,
                 totalJobs: 0,
@@ -474,11 +477,22 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </div>
-                <button onClick={handleLogout} className="admin-logout-btn">
-                    🚪 {language === 'ar' ? 'تسجيل الخروج' : 
-                        language === 'fr' ? 'Déconnexion' : 
-                        'Logout'}
-                </button>
+                <div className="admin-header-actions">
+                    <button 
+                        onClick={() => navigate('/settings')} 
+                        className="admin-settings-btn"
+                        title={language === 'ar' ? 'الإعدادات' : 
+                               language === 'fr' ? 'Paramètres' : 
+                               'Settings'}
+                    >
+                        ⚙️
+                    </button>
+                    <button onClick={handleLogout} className="admin-logout-btn">
+                        🚪 {language === 'ar' ? 'تسجيل الخروج' : 
+                            language === 'fr' ? 'Déconnexion' : 
+                            'Logout'}
+                    </button>
+                </div>
             </div>
 
             {/* التبويبات */}
