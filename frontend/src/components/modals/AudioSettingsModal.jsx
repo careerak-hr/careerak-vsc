@@ -5,10 +5,10 @@ import './Modal.css'; // Use the unified modal CSS
 const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
   if (!isOpen) return null;
 
-  // Use the correct translation keys from the t object with fallbacks
+  // Use the correct translation keys from the t object
   const texts = {
-    title: t?.audioSettingsTitle || t?.title || "Audio Settings",
-    description: t?.audioTitle || "Enable Audio?",
+    title: t?.audioTitle || "Enable Audio?",
+    description: t?.audioDesc || "Enable audio and music in the app?",
     confirm: t?.yes || "Yes",
     deny: t?.no || "No",
   };

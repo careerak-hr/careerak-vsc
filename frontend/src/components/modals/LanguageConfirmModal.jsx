@@ -23,8 +23,8 @@ const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
     <div className="modal-backdrop" dir={dir} style={fontStyle}>
       <div className="modal-content" dir={dir} style={fontStyle}>
         <div className="modal-body" style={fontStyle}>
-          <h2 className="modal-title" style={fontStyle}>{t.title}</h2>
-          <p className="modal-description" style={fontStyle}>{t.confirmLang}</p>
+          <h2 className="modal-title" style={fontStyle}>{t.confirmLangTitle}</h2>
+          <p className="modal-description" style={fontStyle}>{t.confirmLangDesc}</p>
         </div>
         <div className="modal-actions" style={fontStyle}>
           <button onClick={onConfirm} className="modal-confirm-btn" style={fontStyle}>
