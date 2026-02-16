@@ -7,7 +7,8 @@ const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
 
   // Use the correct translation keys from the t object with fallbacks
   const texts = {
-    title: t?.audioTitle || "Enable Audio?",
+    title: t?.audioSettingsTitle || t?.title || "Audio Settings",
+    description: t?.audioTitle || "Enable Audio?",
     confirm: t?.yes || "Yes",
     deny: t?.no || "No",
   };
@@ -31,6 +32,7 @@ const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
       <div className="modal-content" dir={dir} style={fontStyle}>
         <div className="modal-body" style={fontStyle}>
           <h2 className="modal-title" style={fontStyle}>{texts.title}</h2>
+          <p className="modal-description" style={fontStyle}>{texts.description}</p>
         </div>
         <div className="modal-actions" style={fontStyle}>
           <button onClick={() => onConfirm(true)} className="modal-confirm-btn" style={fontStyle}>

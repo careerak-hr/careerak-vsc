@@ -22,7 +22,7 @@ const AdminPagesNavigator = () => {
     { id: 2, name: 'Entry Page', nameAr: 'صفحة الدخول', nameFr: 'Page d\'Entrée', path: '/entry', category: 'auth', icon: '🚪' },
     { id: 3, name: 'Login', nameAr: 'تسجيل الدخول', nameFr: 'Connexion', path: '/login', category: 'auth', icon: '🔐' },
     { id: 4, name: 'Registration', nameAr: 'التسجيل', nameFr: 'Inscription', path: '/auth', category: 'auth', icon: '📝' },
-    { id: 5, name: 'OTP Verification', nameAr: 'التحقق OTP', nameFr: 'Vérification OTP', path: '/otp-verification', category: 'auth', icon: '🔢' },
+    { id: 5, name: 'OTP Verification', nameAr: 'التحقق OTP', nameFr: 'Vérification OTP', path: '/otp-verify', category: 'auth', icon: '🔢' },
     
     // صفحات Onboarding
     { id: 6, name: 'Onboarding Individuals', nameAr: 'إعداد الأفراد', nameFr: 'Intégration Individus', path: '/onboarding-individuals', category: 'onboarding', icon: '👤' },
@@ -43,7 +43,7 @@ const AdminPagesNavigator = () => {
     // صفحات الوظائف والدورات
     { id: 18, name: 'Job Postings', nameAr: 'الوظائف المتاحة', nameFr: 'Offres d\'Emploi', path: '/job-postings', category: 'jobs', icon: '💼' },
     { id: 19, name: 'Post Job', nameAr: 'نشر وظيفة', nameFr: 'Publier Emploi', path: '/post-job', category: 'jobs', icon: '➕' },
-    { id: 20, name: 'Apply for Job', nameAr: 'التقديم للوظيفة', nameFr: 'Postuler', path: '/apply', category: 'jobs', icon: '📄' },
+    // ملاحظة: صفحة التقديم تحتاج jobId، لذا سنوجه للوظائف بدلاً منها
     { id: 21, name: 'Courses', nameAr: 'الدورات التدريبية', nameFr: 'Cours', path: '/courses', category: 'courses', icon: '🎓' },
     { id: 22, name: 'Post Course', nameAr: 'نشر دورة', nameFr: 'Publier Cours', path: '/post-course', category: 'courses', icon: '📚' },
     

@@ -177,20 +177,22 @@
   color: #D48161;
   border: none;
   border-radius: 1rem;
-  font-weight: bold;
+  font-weight: 900;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .apn-page-visit-btn:hover {
-  background: #4A6A88;
+  background: #D48161;
+  color: #304B60;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.4);
 }
 
 .apn-page-visit-btn:active {
   transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(212, 129, 97, 0.3);
 }
 
 /* No Results */

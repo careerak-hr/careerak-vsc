@@ -102,8 +102,144 @@
     @apply text-primary font-black text-xl;
 }
 
-.admin-quick-nav-controls {
-  @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+/* تصميم الأيقونات الدائرية بأسلوب Apple Watch */
+.admin-quick-nav-grid {
+  @apply relative w-full min-h-[500px] flex items-center justify-center;
+  perspective: 1000px;
+}
+
+.admin-quick-nav-orb {
+  @apply absolute w-20 h-20 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 border-4 border-primary shadow-2xl;
+  background: linear-gradient(135deg, #304B60 0%, #4A6A88 100%);
+  transform-style: preserve-3d;
+}
+
+.admin-quick-nav-orb:hover {
+  transform: scale(1.15) translateZ(20px);
+  box-shadow: 0 20px 40px rgba(48, 75, 96, 0.4);
+  border-color: #D48161;
+}
+
+.admin-quick-nav-orb:active {
+  transform: scale(1.05) translateZ(10px);
+}
+
+/* توزيع الأيقونات بشكل دائري */
+.admin-quick-nav-orb:nth-child(1) {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90px;
+  height: 90px;
+  z-index: 10;
+}
+
+.admin-quick-nav-orb:nth-child(2) {
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.admin-quick-nav-orb:nth-child(3) {
+  top: 25%;
+  right: 15%;
+}
+
+.admin-quick-nav-orb:nth-child(4) {
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+}
+
+.admin-quick-nav-orb:nth-child(5) {
+  bottom: 25%;
+  right: 15%;
+}
+
+.admin-quick-nav-orb:nth-child(6) {
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.admin-quick-nav-orb:nth-child(7) {
+  bottom: 25%;
+  left: 15%;
+}
+
+.admin-quick-nav-orb:nth-child(8) {
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+}
+
+.admin-quick-nav-orb:nth-child(9) {
+  top: 25%;
+  left: 15%;
+}
+
+.admin-quick-nav-orb:nth-child(10) {
+  top: 75%;
+  left: 30%;
+}
+
+.orb-icon {
+  @apply text-4xl;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.admin-quick-nav-orb:nth-child(1) .orb-icon {
+  @apply text-5xl;
+}
+
+/* عرض التسمية عند الـ hover */
+.admin-quick-nav-orb::after {
+  content: attr(data-label);
+  @apply absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-primary text-accent px-3 py-1 rounded-lg text-xs font-black whitespace-nowrap opacity-0 pointer-events-none transition-all duration-300;
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.admin-quick-nav-orb:hover::after {
+  @apply opacity-100 -bottom-10;
+}
+
+/* تأثير النبض للأيقونة المركزية */
+@keyframes pulse-orb {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 129, 97, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(212, 129, 97, 0);
+  }
+}
+
+.admin-quick-nav-orb:nth-child(1) {
+  animation: pulse-orb 2s infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-quick-nav-grid {
+    min-height: 400px;
+  }
+  
+  .admin-quick-nav-orb {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .admin-quick-nav-orb:nth-child(1) {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .orb-icon {
+    font-size: 2rem;
+  }
+  
+  .admin-quick-nav-orb:nth-child(1) .orb-icon {
+    font-size: 2.5rem;
+  }
 }
 
 .admin-quick-nav-select {

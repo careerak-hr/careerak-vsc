@@ -185,87 +185,96 @@ const AdminDashboard = () => {
                          'Quick Navigation'}
                     </h2>
                 </div>
-                <div className="admin-quick-nav-controls">
+                <div className="admin-quick-nav-grid">
                     <button 
                         onClick={() => navigate('/admin-pages')}
-                        className="admin-quick-nav-btn"
-                        style={{ background: '#FF5722', color: 'white' }}
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'متصفح الصفحات' : 
+                                   language === 'fr' ? 'Navigateur' : 
+                                   'Pages'}
                     >
-                        🗺️ {language === 'ar' ? 'متصفح جميع الصفحات' : 
-                         language === 'fr' ? 'Navigateur Pages' : 
-                         'All Pages Navigator'}
+                        <span className="orb-icon">🗺️</span>
                     </button>
                     <button 
                         onClick={() => setActiveTab('users')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'المستخدمين' : 
+                                   language === 'fr' ? 'Utilisateurs' : 
+                                   'Users'}
                     >
-                        👥 {language === 'ar' ? 'إدارة المستخدمين' : 
-                         language === 'fr' ? 'Gérer les Utilisateurs' : 
-                         'Manage Users'}
+                        <span className="orb-icon">👥</span>
                     </button>
                     <button 
                         onClick={() => navigate('/job-postings')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'الوظائف' : 
+                                   language === 'fr' ? 'Emplois' : 
+                                   'Jobs'}
                     >
-                        💼 {language === 'ar' ? 'إدارة الوظائف' : 
-                         language === 'fr' ? 'Gérer les Emplois' : 
-                         'Manage Jobs'}
+                        <span className="orb-icon">💼</span>
                     </button>
                     <button 
                         onClick={() => navigate('/courses')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'الدورات' : 
+                                   language === 'fr' ? 'Cours' : 
+                                   'Courses'}
                     >
-                        🎓 {language === 'ar' ? 'إدارة الدورات' : 
-                         language === 'fr' ? 'Gérer les Cours' : 
-                         'Manage Courses'}
+                        <span className="orb-icon">🎓</span>
                     </button>
                     <button 
                         onClick={() => navigate('/admin-system')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'النظام' : 
+                                   language === 'fr' ? 'Système' : 
+                                   'System'}
                     >
-                        🖥️ {language === 'ar' ? 'التحكم بالنظام' : 
-                         language === 'fr' ? 'Contrôle Système' : 
-                         'System Control'}
+                        <span className="orb-icon">🖥️</span>
                     </button>
                     <button 
                         onClick={() => navigate('/admin-database')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'قاعدة البيانات' : 
+                                   language === 'fr' ? 'Base de Données' : 
+                                   'Database'}
                     >
-                        🗄️ {language === 'ar' ? 'قاعدة البيانات' : 
-                         language === 'fr' ? 'Base de Données' : 
-                         'Database'}
+                        <span className="orb-icon">🗄️</span>
                     </button>
                     <button 
                         onClick={() => navigate('/admin-code-editor')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'الأكواد' : 
+                                   language === 'fr' ? 'Code' : 
+                                   'Code'}
                     >
-                        💻 {language === 'ar' ? 'محرر الأكواد' : 
-                         language === 'fr' ? 'Éditeur Code' : 
-                         'Code Editor'}
+                        <span className="orb-icon">💻</span>
                     </button>
                     <button 
                         onClick={() => navigate('/settings')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'الإعدادات' : 
+                                   language === 'fr' ? 'Paramètres' : 
+                                   'Settings'}
                     >
-                        ⚙️ {language === 'ar' ? 'الإعدادات' : 
-                         language === 'fr' ? 'Paramètres' : 
-                         'Settings'}
+                        <span className="orb-icon">⚙️</span>
                     </button>
                     <button 
                         onClick={() => navigate('/post-job')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'إضافة وظيفة' : 
+                                   language === 'fr' ? 'Ajouter Emploi' : 
+                                   'Add Job'}
                     >
-                        ➕ {language === 'ar' ? 'إضافة وظيفة' : 
-                         language === 'fr' ? 'Ajouter un Emploi' : 
-                         'Add Job'}
+                        <span className="orb-icon">➕</span>
                     </button>
                     <button 
                         onClick={() => navigate('/post-course')}
-                        className="admin-quick-nav-btn"
+                        className="admin-quick-nav-orb"
+                        data-label={language === 'ar' ? 'إضافة دورة' : 
+                                   language === 'fr' ? 'Ajouter Cours' : 
+                                   'Add Course'}
                     >
-                        ➕ {language === 'ar' ? 'إضافة دورة' : 
-                         language === 'fr' ? 'Ajouter un Cours' : 
-                         'Add Course'}
+                        <span className="orb-icon">📚</span>
                     </button>
                 </div>
             </div>

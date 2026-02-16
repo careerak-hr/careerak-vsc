@@ -17,7 +17,36 @@ class AudioManager {
     };
     
     // حالات الصفحات التي تحتاج موسيقى
-    this.musicPages = ['/login', '/auth'];
+    // ✅ جميع الصفحات تحتاج موسيقى ماعدا Entry (التي تدير صوتها بنفسها)
+    this.musicPages = [
+      '/login',
+      '/auth', 
+      '/admin-dashboard',
+      '/admin-system',
+      '/admin-database',
+      '/admin-code-editor',
+      '/admin-pages',
+      '/profile',
+      '/settings',
+      '/policy',
+      '/job-postings',
+      '/post-job',
+      '/apply',
+      '/courses',
+      '/post-course',
+      '/onboarding-individuals',
+      '/onboarding-companies',
+      '/onboarding-illiterate',
+      '/onboarding-visual',
+      '/onboarding-ultimate',
+      '/interface-individuals',
+      '/interface-companies',
+      '/interface-illiterate',
+      '/interface-visual',
+      '/interface-ultimate',
+      '/interface-shops',
+      '/interface-workshops'
+    ];
     this.introPages = []; // Entry page manages its own audio
     this.lastMusicPage = null; // لتتبع آخر صفحة موسيقى
     
@@ -241,7 +270,7 @@ class AudioManager {
       // إنشاء عناصر الصوت
       this.musicAudio = new Audio();
       this.musicAudio.src = `${process.env.PUBLIC_URL || ''}/Music.mp3`;
-      this.musicAudio.loop = true;
+      this.musicAudio.loop = true; // ✅ تفعيل التكرار التلقائي
       this.musicAudio.volume = 0.3;
       this.musicAudio.preload = 'auto';
 
@@ -251,34 +280,29 @@ class AudioManager {
       this.introAudio.preload = 'auto';
 
       // إضافة مستمعي الأحداث
+      // ✅ إزالة مستمع ended لأن loop: true يجب أن يمنع هذا الحدث
+      // إذا حدث ended رغم loop، فهذا يعني مشكلة في الملف أو المتصفح
       this.musicAudio.addEventListener('ended', () => {
-        console.log('🎵 Music ended (should not happen with loop)');
+        console.warn('🎵 Music ended unexpectedly (loop should prevent this)');
         this.isMusicPlaying = false;
-        // إعادة التشغيل تلقائياً
-        if (this.settings.musicEnabled && this.settings.audioEnabled) {
-          console.log('🎵 Restarting music after unexpected end');
-          this.playMusic();
-        }
+        // ✅ لا نعيد التشغيل تلقائياً لتجنب التكرار المستمر
+        // loop: true يجب أن يتولى الأمر
       });
 
       this.musicAudio.addEventListener('pause', () => {
-        console.log('🎵 Music paused');
+        console.log('🎵 Music paused - currentTime:', Math.floor(this.musicAudio.currentTime), 'duration:', Math.floor(this.musicAudio.duration));
         this.isMusicPlaying = false;
       });
 
       this.musicAudio.addEventListener('play', () => {
-        console.log('🎵 Music started playing');
+        console.log('🎵 Music started playing - loop:', this.musicAudio.loop, 'duration:', Math.floor(this.musicAudio.duration));
         this.isMusicPlaying = true;
       });
       
-      // معالجة انقطاع التشغيل
+      // ✅ معالجة انقطاع التشغيل بشكل أفضل
       this.musicAudio.addEventListener('stalled', () => {
-        console.warn('🎵 Music stalled - attempting recovery');
-        if (this.isMusicPlaying && this.settings.musicEnabled) {
-          setTimeout(() => {
-            this.musicAudio.play().catch(e => console.error('🎵 Recovery failed:', e));
-          }, 500);
-        }
+        console.warn('🎵 Music stalled - file may be corrupted or network issue');
+        // ✅ لا نحاول إعادة التشغيل تلقائياً لتجنب التكرار
       });
       
       this.musicAudio.addEventListener('waiting', () => {
@@ -286,7 +310,20 @@ class AudioManager {
       });
       
       this.musicAudio.addEventListener('canplaythrough', () => {
-        console.log('🎵 Music can play through');
+        console.log('🎵 Music can play through - ready for seamless playback');
+      });
+      
+      // ✅ مراقبة التحميل
+      this.musicAudio.addEventListener('loadedmetadata', () => {
+        console.log('🎵 Music metadata loaded - duration:', this.musicAudio.duration, 'seconds');
+      });
+      
+      // ✅ مراقبة التقدم
+      this.musicAudio.addEventListener('timeupdate', () => {
+        // تسجيل كل 30 ثانية فقط لتجنب الإزعاج
+        if (Math.floor(this.musicAudio.currentTime) % 30 === 0 && this.musicAudio.currentTime > 0) {
+          console.log('🎵 Music playing:', Math.floor(this.musicAudio.currentTime), '/', Math.floor(this.musicAudio.duration), 'seconds');
+        }
       });
 
       this.introAudio.addEventListener('ended', () => {
@@ -309,8 +346,12 @@ class AudioManager {
         console.error('🎵 Music audio error:', e);
         console.error('🎵 Error details:', {
           code: e.target?.error?.code,
-          message: e.target?.error?.message
+          message: e.target?.error?.message,
+          src: this.musicAudio.src,
+          networkState: this.musicAudio.networkState,
+          readyState: this.musicAudio.readyState
         });
+        this.isMusicPlaying = false;
       });
 
       this.introAudio.addEventListener('error', (e) => {
@@ -486,9 +527,16 @@ class AudioManager {
       // إيقاف المقدمة إذا كانت تعمل
       await this.stopIntro();
       
-      // تشغيل الموسيقى من البداية
-      this.musicAudio.currentTime = 0;
+      // ✅ التأكد من تفعيل loop قبل التشغيل
+      this.musicAudio.loop = true;
+      
+      // ✅ تشغيل الموسيقى من البداية فقط إذا لم تكن قد بدأت
+      if (this.musicAudio.currentTime === 0 || this.musicAudio.currentTime >= this.musicAudio.duration) {
+        this.musicAudio.currentTime = 0;
+      }
+      
       await this.musicAudio.play();
+      console.log('🎵 Music started - loop enabled, duration:', this.musicAudio.duration, 'seconds');
       
     } catch (error) {
       console.error('🎵 Failed to play music:', error);
