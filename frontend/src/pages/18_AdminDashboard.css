@@ -110,6 +110,52 @@
     @apply text-primary font-black text-xl;
 }
 
+/* قائمة منسدلة للتنقل بين الصفحات */
+.admin-pages-dropdown-container {
+  @apply mb-8;
+}
+
+.admin-pages-dropdown-label {
+  @apply block text-primary font-black text-sm mb-3;
+}
+
+.admin-pages-dropdown {
+  @apply w-full p-4 bg-secondary text-primary rounded-2xl border-2 border-accent font-black text-sm outline-none cursor-pointer transition-all;
+  @apply hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/20;
+}
+
+.admin-pages-dropdown option {
+  @apply bg-secondary text-primary font-black py-2;
+}
+
+/* شبكة الأيقونات البسيطة */
+.admin-quick-nav-simple-grid {
+  @apply grid grid-cols-3 gap-4;
+}
+
+@media (max-width: 768px) {
+  .admin-quick-nav-simple-grid {
+    @apply grid-cols-2;
+  }
+}
+
+.admin-quick-nav-simple-btn {
+  @apply flex flex-col items-center justify-center gap-3 p-6 bg-secondary rounded-2xl border-2 border-accent/20 transition-all cursor-pointer;
+  @apply hover:bg-primary hover:border-accent hover:scale-105 active:scale-95;
+}
+
+.simple-btn-icon {
+  @apply text-4xl;
+}
+
+.simple-btn-label {
+  @apply text-primary font-black text-sm text-center;
+}
+
+.admin-quick-nav-simple-btn:hover .simple-btn-label {
+  @apply text-accent;
+}
+
 /* تصميم الأيقونات الدائرية بأسلوب Apple Watch */
 .admin-quick-nav-grid {
   @apply relative w-full flex items-center justify-center;

@@ -188,96 +188,192 @@ const AdminDashboard = () => {
                          'Quick Navigation'}
                     </h2>
                 </div>
-                <div className="admin-quick-nav-grid">
-                    <button 
-                        onClick={() => navigate('/admin-pages')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'متصفح الصفحات' : 
-                                   language === 'fr' ? 'Navigateur' : 
-                                   'Pages'}
+                
+                {/* قائمة منسدلة للتنقل بين صفحات التطبيق */}
+                <div className="admin-pages-dropdown-container">
+                    <label className="admin-pages-dropdown-label">
+                        {language === 'ar' ? 'الانتقال إلى صفحة:' : 
+                         language === 'fr' ? 'Aller à la page:' : 
+                         'Go to page:'}
+                    </label>
+                    <select 
+                        className="admin-pages-dropdown"
+                        onChange={(e) => {
+                            if (e.target.value) {
+                                navigate(e.target.value + '?preview=true');
+                                e.target.value = ''; // إعادة تعيين القيمة
+                            }
+                        }}
+                        defaultValue=""
                     >
-                        <span className="orb-icon">🗺️</span>
-                    </button>
+                        <option value="" disabled>
+                            {language === 'ar' ? 'اختر صفحة...' : 
+                             language === 'fr' ? 'Choisir une page...' : 
+                             'Select a page...'}
+                        </option>
+                        <option value="/entry">
+                            {language === 'ar' ? '🏠 الصفحة الرئيسية' : 
+                             language === 'fr' ? '🏠 Page d\'accueil' : 
+                             '🏠 Home Page'}
+                        </option>
+                        <option value="/language">
+                            {language === 'ar' ? '🌐 اختيار اللغة' : 
+                             language === 'fr' ? '🌐 Choix de langue' : 
+                             '🌐 Language Selection'}
+                        </option>
+                        <option value="/login">
+                            {language === 'ar' ? '🔐 تسجيل الدخول' : 
+                             language === 'fr' ? '🔐 Connexion' : 
+                             '🔐 Login'}
+                        </option>
+                        <option value="/auth">
+                            {language === 'ar' ? '📝 التسجيل' : 
+                             language === 'fr' ? '📝 Inscription' : 
+                             '📝 Registration'}
+                        </option>
+                        <option value="/interface-individuals">
+                            {language === 'ar' ? '👤 واجهة الأفراد' : 
+                             language === 'fr' ? '👤 Interface Individus' : 
+                             '👤 Individuals Interface'}
+                        </option>
+                        <option value="/interface-companies">
+                            {language === 'ar' ? '🏢 واجهة الشركات' : 
+                             language === 'fr' ? '🏢 Interface Entreprises' : 
+                             '🏢 Companies Interface'}
+                        </option>
+                        <option value="/interface-illiterate">
+                            {language === 'ar' ? '📖 واجهة الأميين' : 
+                             language === 'fr' ? '📖 Interface Analphabètes' : 
+                             '📖 Illiterate Interface'}
+                        </option>
+                        <option value="/interface-visual">
+                            {language === 'ar' ? '👁️ واجهة المكفوفين' : 
+                             language === 'fr' ? '👁️ Interface Malvoyants' : 
+                             '👁️ Visual Interface'}
+                        </option>
+                        <option value="/interface-ultimate">
+                            {language === 'ar' ? '⭐ الواجهة المتقدمة' : 
+                             language === 'fr' ? '⭐ Interface Ultime' : 
+                             '⭐ Ultimate Interface'}
+                        </option>
+                        <option value="/interface-shops">
+                            {language === 'ar' ? '🛍️ واجهة المتاجر' : 
+                             language === 'fr' ? '🛍️ Interface Boutiques' : 
+                             '🛍️ Shops Interface'}
+                        </option>
+                        <option value="/interface-workshops">
+                            {language === 'ar' ? '🔧 واجهة الورش' : 
+                             language === 'fr' ? '🔧 Interface Ateliers' : 
+                             '🔧 Workshops Interface'}
+                        </option>
+                        <option value="/profile">
+                            {language === 'ar' ? '👤 الملف الشخصي' : 
+                             language === 'fr' ? '👤 Profil' : 
+                             '👤 Profile'}
+                        </option>
+                    </select>
+                </div>
+
+                {/* شبكة الأيقونات العادية */}
+                <div className="admin-quick-nav-simple-grid">
                     <button 
                         onClick={() => setActiveTab('users')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'المستخدمين' : 
-                                   language === 'fr' ? 'Utilisateurs' : 
-                                   'Users'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">👥</span>
+                        <span className="simple-btn-icon">👥</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'المستخدمين' : 
+                             language === 'fr' ? 'Utilisateurs' : 
+                             'Users'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/job-postings')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'الوظائف' : 
-                                   language === 'fr' ? 'Emplois' : 
-                                   'Jobs'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">💼</span>
+                        <span className="simple-btn-icon">💼</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'الوظائف' : 
+                             language === 'fr' ? 'Emplois' : 
+                             'Jobs'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/courses')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'الدورات' : 
-                                   language === 'fr' ? 'Cours' : 
-                                   'Courses'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">🎓</span>
+                        <span className="simple-btn-icon">🎓</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'الدورات' : 
+                             language === 'fr' ? 'Cours' : 
+                             'Courses'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/admin-system')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'النظام' : 
-                                   language === 'fr' ? 'Système' : 
-                                   'System'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">🖥️</span>
+                        <span className="simple-btn-icon">🖥️</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'النظام' : 
+                             language === 'fr' ? 'Système' : 
+                             'System'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/admin-database')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'قاعدة البيانات' : 
-                                   language === 'fr' ? 'Base de Données' : 
-                                   'Database'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">🗄️</span>
+                        <span className="simple-btn-icon">🗄️</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'قاعدة البيانات' : 
+                             language === 'fr' ? 'Base de Données' : 
+                             'Database'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/admin-code-editor')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'الأكواد' : 
-                                   language === 'fr' ? 'Code' : 
-                                   'Code'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">💻</span>
+                        <span className="simple-btn-icon">💻</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'الأكواد' : 
+                             language === 'fr' ? 'Code' : 
+                             'Code'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/settings')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'الإعدادات' : 
-                                   language === 'fr' ? 'Paramètres' : 
-                                   'Settings'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">⚙️</span>
+                        <span className="simple-btn-icon">⚙️</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'الإعدادات' : 
+                             language === 'fr' ? 'Paramètres' : 
+                             'Settings'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/post-job')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'إضافة وظيفة' : 
-                                   language === 'fr' ? 'Ajouter Emploi' : 
-                                   'Add Job'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">➕</span>
+                        <span className="simple-btn-icon">➕</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'إضافة وظيفة' : 
+                             language === 'fr' ? 'Ajouter Emploi' : 
+                             'Add Job'}
+                        </span>
                     </button>
                     <button 
                         onClick={() => navigate('/post-course')}
-                        className="admin-quick-nav-orb"
-                        data-label={language === 'ar' ? 'إضافة دورة' : 
-                                   language === 'fr' ? 'Ajouter Cours' : 
-                                   'Add Course'}
+                        className="admin-quick-nav-simple-btn"
                     >
-                        <span className="orb-icon">📚</span>
+                        <span className="simple-btn-icon">📚</span>
+                        <span className="simple-btn-label">
+                            {language === 'ar' ? 'إضافة دورة' : 
+                             language === 'fr' ? 'Ajouter Cours' : 
+                             'Add Course'}
+                        </span>
                     </button>
                 </div>
             </div>

@@ -53,32 +53,9 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
           SIZE
         );
 
-        // ✅ تحسين السطوع والتباين تلقائياً
-        const imageData = ctx.getImageData(0, 0, SIZE, SIZE);
-        const data = imageData.data;
-        
-        // حساب متوسط السطوع
-        let totalBrightness = 0;
-        for (let i = 0; i < data.length; i += 4) {
-          const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-          totalBrightness += brightness;
-        }
-        const avgBrightness = totalBrightness / (data.length / 4);
-        
-        // ✅ إذا كانت الصورة مظلمة، قم بتفتيحها قليلاً
-        if (avgBrightness < 100) {
-          const brightnessBoost = 1.2; // زيادة السطوع بنسبة 20%
-          for (let i = 0; i < data.length; i += 4) {
-            data[i] = Math.min(255, data[i] * brightnessBoost);     // R
-            data[i + 1] = Math.min(255, data[i + 1] * brightnessBoost); // G
-            data[i + 2] = Math.min(255, data[i + 2] * brightnessBoost); // B
-          }
-          ctx.putImageData(imageData, 0, 0);
-          console.log('✨ Applied brightness boost to dark image');
-        }
-
-        // ✅ تحويل إلى base64 بجودة عالية (0.92 بدلاً من 0.85)
-        const croppedImage = canvas.toDataURL('image/jpeg', 0.92);
+        // ✅ تحويل إلى base64 بجودة عالية بدون معالجة إضافية
+        // تم إزالة معالجة السطوع التلقائية لتجنب الصور المظلمة/الساطعة
+        const croppedImage = canvas.toDataURL('image/jpeg', 0.90);
         resolve(croppedImage);
         
       } catch (error) {
