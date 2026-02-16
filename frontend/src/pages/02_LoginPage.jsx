@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useApp } from '../context/AppContext';
 import loginTranslations from '../data/loginTranslations.json';
+import useExitConfirm from '../hooks/useExitConfirm';
+import ExitConfirmModal from '../components/modals/ExitConfirmModal';
 import './02_LoginPage.css';
 
 export default function LoginPage() {
@@ -10,6 +12,9 @@ export default function LoginPage() {
   const { login: performLogin, startBgMusic, language } = useApp();
   const t = loginTranslations[language] || loginTranslations.ar;
   const isRTL = language === 'ar';
+
+  // نظام تأكيد الخروج
+  const { showExitModal, confirmExit, cancelExit } = useExitConfirm();
 
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
@@ -74,6 +79,13 @@ export default function LoginPage() {
 
   return (
     <div className={`login-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* رسالة تأكيد الخروج */}
+      <ExitConfirmModal 
+        isOpen={showExitModal}
+        onConfirm={confirmExit}
+        onCancel={cancelExit}
+      />
+
       <div className="login-page-content">
 
         <div className="login-logo-container">
