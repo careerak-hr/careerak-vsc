@@ -16,14 +16,18 @@ function SmartHomeRoute() {
   useEffect(() => {
     const checkOnboardingStatus = async () => {
       try {
+        console.log('🔍 Checking onboarding status...');
+        
         // Race against a timeout to prevent getting stuck
         const complete = await Promise.race([
           isOnboardingComplete(),
           new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
         ]);
+        
+        console.log('📊 Onboarding complete status:', complete);
         setIsComplete(complete);
       } catch (error) {
-        console.error('Onboarding check failed or timed out, defaulting to false:', error);
+        console.error('⚠️ Onboarding check failed or timed out, defaulting to false:', error);
         setIsComplete(false); // On any error or timeout, assume onboarding is not complete
       } finally {
         setLoading(false);

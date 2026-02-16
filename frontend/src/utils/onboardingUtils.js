@@ -14,17 +14,26 @@ export const isOnboardingComplete = async () => {
   const { value: hasLanguage } = await Preferences.get({ key: "lang" });
   const { value: storedVersion } = await Preferences.get({ key: ONBOARDING_VERSION_KEY });
 
+  console.log('🔍 Onboarding check:', {
+    onboardingComplete,
+    hasLanguage,
+    storedVersion,
+    expectedVersion: CURRENT_ONBOARDING_VERSION
+  });
+
   const isComplete = onboardingComplete === 'true' && !!hasLanguage;
   const isUpToDate = storedVersion === CURRENT_ONBOARDING_VERSION;
 
   // If onboarding was complete but the version is outdated, reset.
   if (isComplete && !isUpToDate) {
-    console.log(`Stale onboarding version (found: ${storedVersion}, expected: ${CURRENT_ONBOARDING_VERSION}). Resetting.`);
+    console.log(`🔄 Stale onboarding version (found: ${storedVersion}, expected: ${CURRENT_ONBOARDING_VERSION}). Resetting.`);
     await resetOnboarding();
     return false;
   }
 
-  return isComplete && isUpToDate;
+  const result = isComplete && isUpToDate;
+  console.log('📊 Final onboarding status:', result);
+  return result;
 };
 
 /**
