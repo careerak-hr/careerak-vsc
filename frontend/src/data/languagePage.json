@@ -9,7 +9,6 @@
     "yes": "نعم",
     "no": "لا",
     "ok": "تأكيد",
-  
   },
   "en": {
     "confirmLangTitle": "Are you sure about the selected language?",
@@ -20,8 +19,7 @@
     "notificationDesc": "You'll receive important notifications about jobs, courses, and updates. You can control them from settings.",
     "yes": "Yes",
     "no": "No",
-    "ok": "Confirm",
-    
+    "ok": "Confirm",    
   },
   "fr": {
     "confirmLangTitle": "Êtes-vous sûr de la langue sélectionnée ?",
@@ -32,7 +30,6 @@
     "notificationDesc": "Vous recevrez des notifications importantes sur les emplois, les cours et les mises à jour. Vous pouvez les contrôler depuis les paramètres.",
     "yes": "Oui",
     "no": "Non",
-    "ok": "Confirmer",
- 
-  }
+    "ok": "Confirmer", 
+  },
 }
