@@ -1,39 +1,42 @@
 .interface-shops-container {
-  @apply min-h-screen bg-[#E3DAD1] transition-opacity duration-1000;
+  @apply min-h-screen bg-[#E3DAD1] flex items-center justify-center p-4;
 }
 
-.interface-shops-main {
-  @apply max-w-6xl mx-auto px-4 py-24 pb-32;
+.interface-shops-content {
+  @apply w-full max-w-2xl;
 }
 
-.interface-shops-header {
-  @apply text-center mb-12;
+.under-development-card {
+  @apply bg-white rounded-3xl shadow-2xl border-4 border-[#304B60] p-12 text-center;
 }
 
-.interface-shops-title {
-  @apply text-4xl font-black text-[#304B60] mb-4 italic;
+.under-development-icon {
+  @apply text-8xl mb-6 opacity-30;
 }
 
-.interface-shops-subtitle {
-  @apply text-[#304B60]/40 font-bold text-lg;
+.under-development-title {
+  @apply text-4xl font-black text-[#304B60] mb-4;
+  font-family: 'Amiri', 'Cormorant Garamond', 'EB Garamond', serif;
 }
 
-.interface-shops-grid {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+.under-development-badge {
+  @apply inline-block bg-[#D48161] text-white px-6 py-3 rounded-full text-xl font-bold mb-6;
 }
 
-.interface-shops-card {
-  @apply bg-[#E3DAD1] rounded-[3rem] shadow-xl border border-[#304B60]/10 p-8 text-center hover:scale-[1.02] transition-all cursor-pointer;
+.under-development-description {
+  @apply text-[#304B60]/70 text-lg font-bold mb-8 leading-relaxed;
+  font-family: 'Amiri', 'Cormorant Garamond', 'EB Garamond', serif;
 }
 
-.interface-shops-card-icon {
-  @apply text-6xl mb-4 opacity-20;
+.under-development-info {
+  @apply bg-[#E3DAD1] rounded-2xl p-6 text-left;
 }
 
-.interface-shops-card-title {
-  @apply text-2xl font-black text-[#304B60] mb-4;
+.under-development-info p {
+  @apply text-[#304B60] font-bold mb-2 last:mb-0;
+  font-family: 'Amiri', 'Cormorant Garamond', 'EB Garamond', serif;
 }
 
-.interface-shops-card-description {
-  @apply text-[#304B60]/60 font-bold;
+.under-development-info strong {
+  @apply text-[#D48161];
 }
