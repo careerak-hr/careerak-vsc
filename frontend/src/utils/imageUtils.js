@@ -19,6 +19,9 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
     
     image.onload = () => {
       try {
+        console.log('🖼️ Original image size:', image.width, 'x', image.height);
+        console.log('✂️ Crop area:', pixelCrop);
+        
         const canvas = document.createElement('canvas');
         // ✅ زيادة الحجم من 512 إلى 800 لجودة أفضل
         const SIZE = 800;
@@ -40,25 +43,35 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, SIZE, SIZE);
 
+        // ✅ التأكد من أن معاملات القص صحيحة وضمن حدود الصورة
+        const cropX = Math.max(0, Math.min(pixelCrop.x, image.width));
+        const cropY = Math.max(0, Math.min(pixelCrop.y, image.height));
+        const cropWidth = Math.min(pixelCrop.width, image.width - cropX);
+        const cropHeight = Math.min(pixelCrop.height, image.height - cropY);
+
+        console.log('✅ Adjusted crop:', { cropX, cropY, cropWidth, cropHeight });
+
         // رسم الصورة المقصوصة
         ctx.drawImage(
           image,
-          pixelCrop.x,
-          pixelCrop.y,
-          pixelCrop.width,
-          pixelCrop.height,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight,
           0,
           0,
           SIZE,
           SIZE
         );
 
-        // ✅ تحويل إلى base64 بجودة عالية بدون معالجة إضافية
-        // تم إزالة معالجة السطوع التلقائية لتجنب الصور المظلمة/الساطعة
-        const croppedImage = canvas.toDataURL('image/jpeg', 0.90);
+        // ✅ تحويل إلى base64 بجودة عالية
+        const croppedImage = canvas.toDataURL('image/jpeg', 0.92);
+        
+        console.log('✅ Cropped image created successfully');
         resolve(croppedImage);
         
       } catch (error) {
+        console.error('❌ Crop error:', error);
         reject(new Error(`Failed to crop image: ${error.message}`));
       }
     };
@@ -391,19 +404,26 @@ export const analyzeImage = async (imageSrc, userType) => {
     }
     
     // التحقق من جودة الصورة العامة
-    // ✅ تخفيف شروط السطوع - الحد الأدنى كان صارماً جداً
-    if (analysis.brightness < 10) { // ✅ تغيير من 20 إلى 10
+    // ✅ تخفيف شروط السطوع بشكل كبير
+    if (analysis.brightness < 5) { // ✅ تغيير من 10 إلى 5 - أكثر تساهلاً
       isValid = false;
       reason = 'عذراً، الصورة مظلمة جداً';
-      confidence = 15;
-    } else if (analysis.brightness > 245) { // ✅ تغيير من 240 إلى 245
+      confidence = 10;
+    } else if (analysis.brightness > 250) { // ✅ تغيير من 245 إلى 250
       isValid = false;
       reason = 'عذراً، الصورة ساطعة جداً';
-      confidence = 15;
-    } else if (analysis.contrast < 10) { // ✅ تغيير من 15 إلى 10
+      confidence = 10;
+    } else if (analysis.contrast < 5) { // ✅ تغيير من 10 إلى 5 - أكثر تساهلاً
       isValid = false;
       reason = 'عذراً، الصورة غير واضحة';
-      confidence = 20;
+      confidence = 15;
+    }
+    
+    // ✅ إذا كانت الصورة سوداء تماماً (مشكلة في القص)
+    if (analysis.brightness < 3 && analysis.contrast < 3) {
+      isValid = false;
+      reason = 'عذراً، حدث خطأ في معالجة الصورة. يرجى المحاولة مرة أخرى';
+      confidence = 0;
     }
     
     console.log('✅ Final decision:', { isValid, reason, confidence });
