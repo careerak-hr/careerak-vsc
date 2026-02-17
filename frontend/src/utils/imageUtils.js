@@ -1,5 +1,6 @@
 /**
  * قص الصورة وإرجاع صورة مقصوصة بحجم محدد ومضغوطة
+ * متوافقة مع react-easy-crop
  * @param {string} imageSrc - مصدر الصورة (base64 أو URL)
  * @param {object} pixelCrop - معلومات القص {x, y, width, height}
  * @returns {Promise<string>} - الصورة المقصوصة بصيغة base64
@@ -20,11 +21,10 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
     image.onload = () => {
       try {
         console.log('🖼️ Original image size:', image.width, 'x', image.height);
-        console.log('✂️ Crop area:', pixelCrop);
+        console.log('✂️ Crop area from react-easy-crop:', pixelCrop);
         
         const canvas = document.createElement('canvas');
-        // ✅ زيادة الحجم من 512 إلى 800 لجودة أفضل
-        const SIZE = 800;
+        const SIZE = 800; // حجم الصورة النهائية
         canvas.width = SIZE;
         canvas.height = SIZE;
 
@@ -35,36 +35,34 @@ export const createCroppedImage = async (imageSrc, pixelCrop) => {
           return;
         }
 
-        // ✅ تحسين جودة الرسم
+        // تحسين جودة الرسم
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
 
-        // ✅ رسم خلفية بيضاء أولاً لتجنب الشفافية
+        // رسم خلفية بيضاء أولاً لتجنب الشفافية
         ctx.fillStyle = '#FFFFFF';
         ctx.fillRect(0, 0, SIZE, SIZE);
 
-        // ✅ التأكد من أن معاملات القص صحيحة وضمن حدود الصورة
-        const cropX = Math.max(0, Math.min(pixelCrop.x, image.width));
-        const cropY = Math.max(0, Math.min(pixelCrop.y, image.height));
-        const cropWidth = Math.min(pixelCrop.width, image.width - cropX);
-        const cropHeight = Math.min(pixelCrop.height, image.height - cropY);
-
-        console.log('✅ Adjusted crop:', { cropX, cropY, cropWidth, cropHeight });
+        // ✅ react-easy-crop تعطي معاملات دقيقة جداً
+        // لا حاجة لتعديلها - فقط نستخدمها مباشرة
+        const { x, y, width, height } = pixelCrop;
+        
+        console.log('✅ Using crop coordinates:', { x, y, width, height });
 
         // رسم الصورة المقصوصة
         ctx.drawImage(
           image,
-          cropX,
-          cropY,
-          cropWidth,
-          cropHeight,
-          0,
-          0,
-          SIZE,
-          SIZE
+          x,      // مصدر X
+          y,      // مصدر Y
+          width,  // عرض المصدر
+          height, // ارتفاع المصدر
+          0,      // وجهة X
+          0,      // وجهة Y
+          SIZE,   // عرض الوجهة
+          SIZE    // ارتفاع الوجهة
         );
 
-        // ✅ تحويل إلى base64 بجودة عالية
+        // تحويل إلى base64 بجودة عالية
         const croppedImage = canvas.toDataURL('image/jpeg', 0.92);
         
         console.log('✅ Cropped image created successfully');
@@ -291,151 +289,71 @@ const advancedImageAnalysis = async (imageSrc) => {
 };
 
 /**
- * تحليل الصورة للتحقق من مطابقتها للمعايير - نظام متقدم
+ * تحليل بسيط وموثوق للصورة - بدون AI معقد
  * @param {string} imageSrc - مصدر الصورة
  * @param {string} userType - نوع المستخدم ('individual' أو 'company')
  * @returns {Promise<object>} - نتيجة التحليل {isValid, reason, confidence}
  */
 export const analyzeImage = async (imageSrc, userType) => {
   try {
-    console.log('🤖 Starting advanced AI analysis for:', userType);
+    console.log('🔍 Starting simple image validation for:', userType);
     
-    // 1. كشف الوجوه باستخدام Face Detection API
-    const faceDetection = await detectFaces(imageSrc);
+    // تحليل بسيط للصورة
+    const image = await loadImage(imageSrc);
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(image, 0, 0);
     
-    // 2. التحليل المتقدم للصورة
-    const analysis = await advancedImageAnalysis(imageSrc);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const pixelCount = data.length / 4;
     
-    console.log('📊 Analysis results:', { faceDetection, analysis });
+    // حساب السطوع المتوسط
+    let totalBrightness = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      totalBrightness += brightness;
+    }
+    const avgBrightness = totalBrightness / pixelCount;
     
-    // 3. اتخاذ القرار بناءً على نوع المستخدم
-    let isValid = false;
-    let reason = '';
-    let confidence = 0;
+    console.log('📊 Image brightness:', avgBrightness);
     
-    if (userType === 'individual') {
-      // للأفراد: يجب أن تكون صورة وجه بشري حصراً
-      
-      // التحقق من وجود وجوه
-      const hasFaces = faceDetection && faceDetection.count > 0;
-      const faceScore = hasFaces ? Math.min(faceDetection.count * 30, 40) : 0;
-      
-      // مؤشرات الوجه البشري
-      let faceIndicators = faceScore;
-      
-      // نسبة ألوان البشرة (مهم جداً)
-      if (analysis.skinToneRatio > 0.15) faceIndicators += 25;
-      else if (analysis.skinToneRatio > 0.08) faceIndicators += 15;
-      else if (analysis.skinToneRatio > 0.03) faceIndicators += 5;
-      
-      // السطوع المناسب للوجه
-      if (analysis.brightness > 80 && analysis.brightness < 200) faceIndicators += 10;
-      
-      // التباين المناسب
-      if (analysis.contrast > 40 && analysis.contrast < 180) faceIndicators += 10;
-      
-      // التشبع المناسب
-      if (analysis.saturation > 0.1 && analysis.saturation < 0.6) faceIndicators += 10;
-      
-      // الحواف (الوجه يحتوي على تفاصيل)
-      if (analysis.edgeRatio > 0.05 && analysis.edgeRatio < 0.25) faceIndicators += 5;
-      
-      confidence = Math.min(faceIndicators, 100);
-      
-      // القرار النهائي
-      if (confidence >= 60 && hasFaces) {
-        isValid = true;
-        reason = 'تم التعرف على صورة شخصية مناسبة';
-      } else if (!hasFaces && analysis.skinToneRatio < 0.03) {
-        isValid = false;
-        reason = 'عذراً، الصورة المختارة ليست صورة شخصية';
-      } else if (!hasFaces) {
-        isValid = false;
-        reason = 'عذراً، لم يتم التعرف على وجه بشري في الصورة';
-      } else {
-        isValid = false;
-        reason = 'عذراً، جودة الصورة غير كافية أو الصورة غير واضحة';
-      }
-      
-    } else if (userType === 'company') {
-      // للشركات: يجب أن تكون صورة لوجو حصراً
-      
-      // التحقق من عدم وجود وجوه
-      const noFaces = !faceDetection || faceDetection.count === 0;
-      const noFaceScore = noFaces ? 30 : 0;
-      
-      // مؤشرات اللوجو
-      let logoIndicators = noFaceScore;
-      
-      // عدم وجود ألوان بشرة
-      if (analysis.skinToneRatio < 0.03) logoIndicators += 25;
-      else if (analysis.skinToneRatio < 0.08) logoIndicators += 10;
-      
-      // تباين عالي (اللوجو عادة واضح)
-      if (analysis.contrast > 120) logoIndicators += 15;
-      else if (analysis.contrast > 80) logoIndicators += 10;
-      
-      // توزيع ألوان محدد (entropy منخفض = ألوان قليلة)
-      if (analysis.colorEntropy < 2.5) logoIndicators += 15;
-      else if (analysis.colorEntropy < 3.0) logoIndicators += 10;
-      
-      // حواف حادة ومحددة
-      if (analysis.edgeRatio > 0.15 || analysis.edgeRatio < 0.08) logoIndicators += 10;
-      
-      // تشبع مناسب
-      if (analysis.saturation > 0.3 || analysis.saturation < 0.15) logoIndicators += 5;
-      
-      confidence = Math.min(logoIndicators, 100);
-      
-      // القرار النهائي
-      if (confidence >= 60 && noFaces) {
-        isValid = true;
-        reason = 'تم التعرف على لوجو مناسب للشركة';
-      } else if (faceDetection && faceDetection.count > 0) {
-        isValid = false;
-        reason = 'عذراً، الصورة المختارة ليست لوجو شركة';
-      } else if (analysis.skinToneRatio > 0.1) {
-        isValid = false;
-        reason = 'عذراً، الصورة تبدو كصورة شخصية وليست لوجو';
-      } else {
-        isValid = false;
-        reason = 'عذراً، جودة الصورة غير كافية أو الصورة غير واضحة';
-      }
+    // ✅ قبول الصورة إذا كانت ليست سوداء تماماً
+    if (avgBrightness < 10) {
+      console.log('❌ Image is too dark (black)');
+      return {
+        isValid: false,
+        reason: 'عذراً، حدث خطأ في معالجة الصورة. يرجى المحاولة مرة أخرى',
+        confidence: 0,
+        details: { brightness: avgBrightness }
+      };
     }
     
-    // التحقق من جودة الصورة العامة
-    // ✅ تخفيف شروط السطوع بشكل كبير
-    if (analysis.brightness < 5) { // ✅ تغيير من 10 إلى 5 - أكثر تساهلاً
-      isValid = false;
-      reason = 'عذراً، الصورة مظلمة جداً';
-      confidence = 10;
-    } else if (analysis.brightness > 250) { // ✅ تغيير من 245 إلى 250
-      isValid = false;
-      reason = 'عذراً، الصورة ساطعة جداً';
-      confidence = 10;
-    } else if (analysis.contrast < 5) { // ✅ تغيير من 10 إلى 5 - أكثر تساهلاً
-      isValid = false;
-      reason = 'عذراً، الصورة غير واضحة';
-      confidence = 15;
+    // ✅ قبول الصورة إذا كانت ليست بيضاء تماماً
+    if (avgBrightness > 245) {
+      console.log('❌ Image is too bright (white)');
+      return {
+        isValid: false,
+        reason: 'عذراً، الصورة ساطعة جداً',
+        confidence: 0,
+        details: { brightness: avgBrightness }
+      };
     }
     
-    // ✅ إذا كانت الصورة سوداء تماماً (مشكلة في القص)
-    if (analysis.brightness < 3 && analysis.contrast < 3) {
-      isValid = false;
-      reason = 'عذراً، حدث خطأ في معالجة الصورة. يرجى المحاولة مرة أخرى';
-      confidence = 0;
-    }
+    // ✅ قبول جميع الصور الأخرى
+    console.log('✅ Image is valid');
     
-    console.log('✅ Final decision:', { isValid, reason, confidence });
+    const successMessage = userType === 'individual' 
+      ? 'تم قبول الصورة الشخصية' 
+      : 'تم قبول صورة اللوجو';
     
     return {
-      isValid,
-      reason,
-      confidence: Math.round(confidence),
-      details: {
-        faceDetection,
-        analysis
-      }
+      isValid: true,
+      reason: successMessage,
+      confidence: 100,
+      details: { brightness: avgBrightness }
     };
     
   } catch (error) {

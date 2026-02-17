@@ -77,12 +77,12 @@ export default function LanguagePage() {
 
   return (
     <div className="lang-page-container">
-      <div className="lang-page-glow-effect">
-        <div className="lang-page-glow-dot"></div>
-      </div>
-
       <div className="lang-page-content">
         <div className="lang-page-logo-container">
+          {/* ✅ الشفافية خلف اللوجو مباشرة */}
+          <div className="lang-page-glow-effect">
+            <div className="lang-page-glow-dot"></div>
+          </div>
           <div className="lang-page-logo">
             <img src="/logo.jpg" alt="Logo" className="lang-page-logo-img" />
           </div>

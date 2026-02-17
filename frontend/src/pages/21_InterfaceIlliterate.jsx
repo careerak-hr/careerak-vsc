@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './21_InterfaceIlliterate.css';
 
 const InterfaceIlliterate = () => {
     const { language, user, startBgMusic } = useApp(); // Corrected hook

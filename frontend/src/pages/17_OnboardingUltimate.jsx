@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './17_OnboardingUltimate.css';
 
 const OnboardingUltimate = () => {
     const { language, updateUser, startBgMusic } = useApp(); // Corrected hook

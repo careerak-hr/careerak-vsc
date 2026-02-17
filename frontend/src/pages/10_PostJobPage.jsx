@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './10_PostJobPage.css';
 
 const PostJobPage = () => {
     const { language, startBgMusic } = useApp(); // Corrected hook

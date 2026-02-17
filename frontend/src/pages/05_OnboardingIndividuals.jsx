@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { useApp } from '../context/AppContext'; // Corrected import
+import { useApp } from '../context/AppContext';
+import './05_OnboardingIndividuals.css';
 
 const OnboardingIndividuals = () => {
     const { language, updateUser, user: tempUser, startBgMusic } = useApp(); // Corrected hook

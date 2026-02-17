@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './14_SettingsPage.css';
 
 const SettingsPage = () => {
     const { language, saveLanguage, logout, startBgMusic } = useApp(); // Corrected hook

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import './13_PolicyPage.css';
 
 const PolicyPage = ({ isModal }) => {
     const { startBgMusic, language } = useApp();

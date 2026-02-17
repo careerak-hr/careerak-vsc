@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './19_InterfaceIndividuals.css';
 
 const InterfaceIndividuals = () => {
     const { language, user, startBgMusic } = useApp(); // Corrected hook

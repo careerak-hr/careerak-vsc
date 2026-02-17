@@ -1,14 +1,10 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import ReactCrop from 'react-image-crop';
-import 'react-image-crop/dist/ReactCrop.css';
+import React, { useState, useCallback } from 'react';
+import Cropper from 'react-easy-crop';
 import './CropModal.css';
 
 const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, language }) => {
-  const imgRef = useRef();
-  const containerRef = useRef();
-  const [completedCrop, setCompletedCrop] = useState(null);
-  const [scale, setScale] = useState(1);
-  const [touchDistance, setTouchDistance] = useState(0);
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const dir = language === 'ar' ? 'rtl' : 'ltr';
   
   // الخطوط حسب اللغة
@@ -21,108 +17,29 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
     fontWeight: 'inherit',
     fontStyle: 'inherit'
   };
-  
-  const onImageLoad = useCallback((e) => {
-    const { width, height } = e.currentTarget;
-    const size = Math.min(width, height) * 0.8; // 80% من أصغر بعد
-    const x = (width - size) / 2;
-    const y = (height - size) / 2;
 
-    const initialCrop = {
-      unit: 'px',
-      x,
-      y,
-      width: size,
-      height: size
-    };
-
-    setCrop(initialCrop);
-    setCompletedCrop(initialCrop);
-  }, [setCrop]);
-
-  const handleCropChange = (newCrop) => {
-    setCrop(newCrop);
+  // دالة تُستدعى عند تغيير منطقة القص
+  const onCropChange = (location) => {
+    setCrop(location);
   };
 
-  const handleCropComplete = (crop, pixelCrop) => {
-    setCompletedCrop(pixelCrop);
+  // دالة تُستدعى عند اكتمال القص
+  const onCropCompleteHandler = useCallback((croppedArea, croppedAreaPixels) => {
+    console.log('✂️ Crop completed:', croppedAreaPixels);
+    setCroppedAreaPixels(croppedAreaPixels);
     if (onCropComplete) {
-      onCropComplete(crop, pixelCrop);
+      onCropComplete(croppedArea, croppedAreaPixels);
     }
-  };
+  }, [onCropComplete]);
 
-  // دعم Zoom بالأصابع (Pinch to Zoom)
-  const getTouchDistance = (touches) => {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-  };
-
-  const handleTouchStart = (e) => {
-    if (e.touches.length === 2) {
-      const distance = getTouchDistance(e.touches);
-      setTouchDistance(distance);
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches.length === 2 && touchDistance > 0) {
-      e.preventDefault();
-      const newDistance = getTouchDistance(e.touches);
-      const scaleChange = newDistance / touchDistance;
-      const newScale = Math.min(Math.max(scale * scaleChange, 0.5), 3);
-      setScale(newScale);
-      setTouchDistance(newDistance);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setTouchDistance(0);
-  };
-
-  // دعم Zoom بالماوس (Mouse Wheel)
-  const handleWheel = (e) => {
-    e.preventDefault();
-    const delta = e.deltaY * -0.001;
-    const newScale = Math.min(Math.max(scale + delta, 0.5), 3);
-    setScale(newScale);
-  };
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('touchstart', handleTouchStart, { passive: false });
-      container.addEventListener('touchmove', handleTouchMove, { passive: false });
-      container.addEventListener('touchend', handleTouchEnd);
-      container.addEventListener('wheel', handleWheel, { passive: false });
-      
-      return () => {
-        container.removeEventListener('touchstart', handleTouchStart);
-        container.removeEventListener('touchmove', handleTouchMove);
-        container.removeEventListener('touchend', handleTouchEnd);
-        container.removeEventListener('wheel', handleWheel);
-      };
-    }
-  }, [scale, touchDistance]);
-
+  // دالة الحفظ
   const handleSave = () => {
-    if (completedCrop && completedCrop.width && completedCrop.height) {
+    if (croppedAreaPixels) {
+      console.log('💾 Saving crop with pixels:', croppedAreaPixels);
       onSave();
     } else {
       console.warn('⚠️ No valid crop area selected');
     }
-  };
-
-  const handleZoomIn = () => {
-    setScale(prev => Math.min(prev + 0.2, 3));
-  };
-
-  const handleZoomOut = () => {
-    setScale(prev => Math.max(prev - 0.2, 0.5));
-  };
-
-  const handleResetZoom = () => {
-    setScale(1);
   };
 
   return (
@@ -155,55 +72,46 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
            'Drag to select area • Pinch to zoom'}
         </p>
         
-        {image && (
-          <div 
-            ref={containerRef}
-            className="crop-modal-image-container"
-            style={{ 
-              overflow: 'hidden',
-              position: 'relative',
-              touchAction: 'none',
-              border: '2px solid #304B60',
-              borderRadius: '0.75rem'
+        {/* منطقة القص */}
+        <div 
+          className="crop-modal-image-container"
+          style={{ 
+            position: 'relative',
+            width: '100%',
+            height: '400px',
+            backgroundColor: '#000',
+            borderRadius: '0.75rem',
+            overflow: 'hidden',
+            border: '2px solid #304B60'
+          }}
+        >
+          <Cropper
+            image={image}
+            crop={crop}
+            zoom={zoom}
+            aspect={1}
+            cropShape="round"
+            showGrid={false}
+            onCropChange={onCropChange}
+            onZoomChange={setZoom}
+            onCropComplete={onCropCompleteHandler}
+            style={{
+              containerStyle: {
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#000'
+              }
             }}
-          >
-            <ReactCrop 
-              crop={crop} 
-              onChange={handleCropChange}
-              onComplete={handleCropComplete}
-              aspect={1} 
-              circularCrop={true}
-              minWidth={100}
-              minHeight={100}
-              style={{
-                maxHeight: '60vh',
-                maxWidth: '100%'
-              }}
-            >
-              <img 
-                ref={imgRef} 
-                src={image}
-                onLoad={onImageLoad} 
-                alt="Crop preview" 
-                style={{ 
-                  maxHeight: '60vh', 
-                  maxWidth: '100%',
-                  transform: `scale(${scale})`,
-                  transformOrigin: 'center',
-                  transition: 'transform 0.1s ease-out'
-                }}
-              />
-            </ReactCrop>
-          </div>
-        )}
+          />
+        </div>
         
         {/* أزرار التحكم بالزووم */}
         <div 
-          className="flex justify-center items-center gap-3 my-3"
+          className="flex justify-center items-center gap-3 my-4"
           style={{ ...fontStyle }}
         >
           <button
-            onClick={handleZoomOut}
+            onClick={() => setZoom(Math.max(1, zoom - 0.1))}
             className="crop-zoom-btn"
             style={{
               backgroundColor: '#304B60',
@@ -222,10 +130,10 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
             className="text-sm font-bold"
             style={{ color: '#304B60', minWidth: '60px', textAlign: 'center', ...fontStyle }}
           >
-            {Math.round(scale * 100)}%
+            {Math.round(zoom * 100)}%
           </span>
           <button
-            onClick={handleZoomIn}
+            onClick={() => setZoom(Math.min(3, zoom + 0.1))}
             className="crop-zoom-btn"
             style={{
               backgroundColor: '#304B60',
@@ -241,7 +149,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
             +
           </button>
           <button
-            onClick={handleResetZoom}
+            onClick={() => setZoom(1)}
             className="text-xs"
             style={{
               backgroundColor: '#D48161',
@@ -258,6 +166,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
           </button>
         </div>
         
+        {/* أزرار الحفظ والإلغاء */}
         <div className="crop-modal-buttons-container">
           <button 
             onClick={onClose} 
@@ -274,12 +183,13 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
           <button 
             onClick={handleSave} 
             className="crop-modal-btn crop-modal-btn-primary"
-            disabled={!completedCrop || !completedCrop.width}
+            disabled={!croppedAreaPixels}
             style={{
               backgroundColor: '#304B60',
               color: '#E3DAD1',
               border: '2px solid #304B60',
-              opacity: (!completedCrop || !completedCrop.width) ? 0.5 : 1,
+              opacity: !croppedAreaPixels ? 0.5 : 1,
+              cursor: !croppedAreaPixels ? 'not-allowed' : 'pointer',
               ...fontStyle
             }}
           >

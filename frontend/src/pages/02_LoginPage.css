@@ -32,19 +32,19 @@
 
 .login-input {
   @apply w-full p-6 bg-secondary text-primary rounded-[2.5rem] outline-none font-black text-center transition-all placeholder-hint shadow-sm;
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم مظلم دائماً */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت (50% شفافية) دائماً */
 }
 
 .login-input:focus {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم حتى عند التركيز */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت حتى عند التركيز */
 }
 
 .login-input:hover {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند hover */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند hover */
 }
 
 .login-input:active {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند active */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند active */
 }
 
 .login-password-wrapper {

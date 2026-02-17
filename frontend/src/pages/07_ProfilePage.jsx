@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './07_ProfilePage.css';
 
 const ProfilePage = () => {
     const { user, language, updateUser, logout, startBgMusic } = useApp(); // Corrected hook

@@ -10,11 +10,11 @@
 }
 
 .lang-page-logo-container {
-  @apply mb-8;
+  @apply mb-8 relative; /* ✅ إضافة relative للتحكم في موضع الشفافية */
 }
 
 .lang-page-logo {
-  @apply w-48 h-48 rounded-full border-4 border-primary bg-secondary shadow-lg overflow-hidden;
+  @apply w-48 h-48 rounded-full border-4 border-primary bg-secondary shadow-lg overflow-hidden relative z-10; /* ✅ z-10 لتكون فوق الشفافية */
 }
 
 .lang-page-logo-img {
@@ -41,32 +41,34 @@
 }
 
 .lang-page-glow-effect {
-  @apply absolute inset-0 flex items-center justify-center pointer-events-none;
-  /* تحديد موقع الشفافية لتكون خلف اللوجو */
+  /* ✅ موضع مطلق خلف اللوجو مباشرة */
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  pointer-events: none;
+  z-index: 0; /* ✅ خلف اللوجو */
 }
 
 .lang-page-glow-dot {
   @apply rounded-full;
-  /* البدء من حجم اللوجو (48 = 12rem = 192px) */
+  /* ✅ البدء من حجم اللوجو (w-48 h-48 = 192px) */
   width: 192px;
   height: 192px;
-  /* لون كحلي مع شفافية */
+  /* ✅ لون كحلي مائل أكثر مع شفافية */
   background-color: rgba(48, 75, 96, 0.15);
   animation: expand-glow-from-logo 3s ease-out infinite;
 }
 
 @keyframes expand-glow-from-logo {
   0% {
+    /* ✅ يبدأ من محيط إطار اللوجو (192px × 192px) */
     width: 192px;
     height: 192px;
     opacity: 0.15;
   }
   100% {
+    /* ✅ يتوسع إلى 800px مع تلاشي تدريجي */
     width: 800px;
     height: 800px;
     opacity: 0;

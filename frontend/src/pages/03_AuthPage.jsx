@@ -74,9 +74,8 @@ export default function AuthPage() {
   // Image States
   const [profileImage, setProfileImage] = useState(null);
   const [tempImage, setTempImage] = useState(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 }); // موقع القص
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null); // معاملات القص بالبكسل
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
 
@@ -238,6 +237,7 @@ export default function AuthPage() {
   };
 
   const onCropComplete = useCallback((_, croppedPixels) => {
+    console.log('✂️ Crop complete, pixels:', croppedPixels);
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
@@ -494,9 +494,7 @@ export default function AuthPage() {
             t={t}
             image={tempImage}
             crop={crop}
-            zoom={zoom}
             setCrop={setCrop}
-            setZoom={setZoom}
             onCropComplete={onCropComplete}
             onSave={handleCropSave}
             onClose={() => setShowCropModal(false)}

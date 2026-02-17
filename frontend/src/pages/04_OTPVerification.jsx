@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useApp } from "../context/AppContext";
+import './04_OTPVerification.css';
 
 const OTPVerification = () => {
   const { language, login: performLogin, user: tempUser, startBgMusic } =

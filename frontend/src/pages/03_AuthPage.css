@@ -64,19 +64,19 @@
 
 .auth-input-base {
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg outline-none text-primary placeholder-hint transition-all;
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم مظلم دائماً */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت (50% شفافية) دائماً */
 }
 
 .auth-input-base:focus {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم حتى عند التركيز */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت حتى عند التركيز */
 }
 
 .auth-input-base:hover {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند hover */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند hover */
 }
 
 .auth-input-base:active {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند active */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند active */
 }
 
 /* تنسيق خاص لحقل التاريخ */
@@ -84,19 +84,19 @@ input[type="date"].auth-input-base {
   position: relative;
   color: #9CA3AF !important; /* رمادي للهينت */
   text-align: center;
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم مظلم دائماً - حتى لحقل التاريخ */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت (50% شفافية) دائماً - حتى لحقل التاريخ */
 }
 
 input[type="date"].auth-input-base:focus {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند التركيز */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند التركيز */
 }
 
 input[type="date"].auth-input-base:hover {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند hover */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند hover */
 }
 
 input[type="date"].auth-input-base:active {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند active */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند active */
 }
 
 /* عندما يتم اختيار تاريخ، يتغير اللون للكحلي */
@@ -201,20 +201,20 @@ textarea::-moz-validation-bubble-message {
 
 .auth-select-base {
   @apply w-full p-4 bg-secondary-light rounded-2xl font-bold text-center shadow-lg outline-none transition-all;
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم مظلم دائماً */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت (50% شفافية) دائماً */
   color: #9CA3AF !important; /* ✅ رمادي دائماً للهينت - نفس لون hints الحقول */
 }
 
 .auth-select-base:focus {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند التركيز */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند التركيز */
 }
 
 .auth-select-base:hover {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند hover */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند hover */
 }
 
 .auth-select-base:active {
-  border: 2px solid #8B4513 !important; /* نحاسي قاتم عند active */
+  border: 2px solid #D4816180 !important; /* نحاسي باهت عند active */
 }
 
 /* لون الهينت في القوائم المنسدلة (الخيار الأول المعطل) */

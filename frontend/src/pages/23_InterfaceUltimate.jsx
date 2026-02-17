@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
+import './23_InterfaceUltimate.css';
 
 const InterfaceUltimate = () => {
     const { language, user, startBgMusic } = useApp(); // Corrected hook
