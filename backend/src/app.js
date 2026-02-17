@@ -22,6 +22,36 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
+// 🌐 CORS Configuration - يجب أن يكون أول شيء!
+const corsOptions = {
+  origin: function (origin, callback) {
+    // السماح بجميع الأصول في التطوير
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'https://careerak-vsc.vercel.app',
+      'https://careerak.vercel.app'
+    ];
+    
+    // السماح بالطلبات بدون origin (مثل Postman أو mobile apps)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true); // السماح بجميع الأصول مؤقتاً
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400 // 24 ساعة
+};
+
+app.use(cors(corsOptions));
+
+// معالجة preflight requests
+app.options('*', cors(corsOptions));
+
 // 🔒 Security Middleware
 app.use(helmet({
   contentSecurityPolicy: false, // تعطيل CSP للتطوير
@@ -94,17 +124,6 @@ app.use(statisticsCollection);
 app.use(attackDetection);
 
 app.use('/api/upload', uploadRoutes);
-
-// ✅ الحل الجذري لمشكلة CORS: السماح الكامل واليدوي
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));

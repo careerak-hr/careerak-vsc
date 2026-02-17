@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import useTranslate from '../hooks/useTranslate';
 import adminDashboardTranslations from '../data/adminDashboard.json';
 import api from '../services/api';
 import './18_AdminDashboard.css';
@@ -64,12 +63,9 @@ const AdminDashboard = () => {
             
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
-            // عرض رسالة الخطأ فقط إذا كان هناك خطأ في الاتصال
-            if (error.response?.status >= 500 || error.message === 'Network Error') {
-                setError(error.response?.data?.error || 'فشل تحميل البيانات');
-            }
+            setError(error.response?.data?.error || 'فشل تحميل البيانات');
             
-            // في حالة الفشل، استخدم بيانات افتراضية بدون عرض خطأ
+            // في حالة الفشل، استخدم بيانات افتراضية
             setStats({
                 totalUsers: 0,
                 totalJobs: 0,

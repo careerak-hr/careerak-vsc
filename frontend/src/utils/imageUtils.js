@@ -134,37 +134,6 @@ export const compressImage = async (imageSrc, maxWidth = 1024, maxHeight = 1024,
 };
 
 /**
- * كشف الوجوه في الصورة باستخدام Face Detection API
- * @param {string} imageSrc - مصدر الصورة
- * @returns {Promise<object>} - نتيجة كشف الوجوه
- */
-const detectFaces = async (imageSrc) => {
-  try {
-    // التحقق من دعم المتصفح لـ Face Detection API
-    if (!('FaceDetector' in window)) {
-      console.warn('⚠️ Face Detection API not supported, using fallback');
-      return null;
-    }
-
-    const image = await loadImage(imageSrc);
-    const faceDetector = new window.FaceDetector({ maxDetectedFaces: 5, fastMode: false });
-    const faces = await faceDetector.detect(image);
-    
-    console.log('👤 Faces detected:', faces.length);
-    return {
-      count: faces.length,
-      faces: faces.map(face => ({
-        confidence: face.confidence || 0,
-        boundingBox: face.boundingBox
-      }))
-    };
-  } catch (error) {
-    console.warn('⚠️ Face detection failed:', error.message);
-    return null;
-  }
-};
-
-/**
  * تحميل الصورة كعنصر Image
  */
 const loadImage = (src) => {
@@ -178,117 +147,6 @@ const loadImage = (src) => {
 };
 
 /**
- * تحليل متقدم للصورة - كشف الوجوه والخصائص
- */
-const advancedImageAnalysis = async (imageSrc) => {
-  const image = await loadImage(imageSrc);
-  const canvas = document.createElement('canvas');
-  canvas.width = image.width;
-  canvas.height = image.height;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(image, 0, 0);
-  
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  const data = imageData.data;
-  const pixelCount = data.length / 4;
-  
-  // تحليل متقدم للخصائص
-  let totalBrightness = 0;
-  let minBrightness = 255;
-  let maxBrightness = 0;
-  let totalSaturation = 0;
-  let skinTonePixels = 0;
-  let edgeCount = 0;
-  let colorVariance = 0;
-  
-  // مصفوفة لحساب توزيع الألوان
-  const colorBuckets = new Array(8).fill(0);
-  
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    
-    // السطوع
-    const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
-    totalBrightness += brightness;
-    minBrightness = Math.min(minBrightness, brightness);
-    maxBrightness = Math.max(maxBrightness, brightness);
-    
-    // التشبع (Saturation)
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const saturation = max === 0 ? 0 : (max - min) / max;
-    totalSaturation += saturation;
-    
-    // كشف ألوان البشرة (Skin tone detection)
-    if (r > 95 && g > 40 && b > 20 && 
-        r > g && r > b && 
-        Math.abs(r - g) > 15 &&
-        max - min > 15) {
-      skinTonePixels++;
-    }
-    
-    // توزيع الألوان
-    const bucket = Math.floor((r + g + b) / 96);
-    colorBuckets[Math.min(bucket, 7)]++;
-    
-    // تباين الألوان
-    colorVariance += Math.abs(r - g) + Math.abs(g - b) + Math.abs(b - r);
-  }
-  
-  // كشف الحواف المتقدم (Sobel operator)
-  for (let y = 1; y < canvas.height - 1; y++) {
-    for (let x = 1; x < canvas.width - 1; x++) {
-      const idx = (y * canvas.width + x) * 4;
-      
-      // Sobel X
-      const gx = 
-        -data[((y-1) * canvas.width + (x-1)) * 4] + data[((y-1) * canvas.width + (x+1)) * 4] +
-        -2 * data[(y * canvas.width + (x-1)) * 4] + 2 * data[(y * canvas.width + (x+1)) * 4] +
-        -data[((y+1) * canvas.width + (x-1)) * 4] + data[((y+1) * canvas.width + (x+1)) * 4];
-      
-      // Sobel Y
-      const gy = 
-        -data[((y-1) * canvas.width + (x-1)) * 4] - 2 * data[((y-1) * canvas.width + x) * 4] - data[((y-1) * canvas.width + (x+1)) * 4] +
-        data[((y+1) * canvas.width + (x-1)) * 4] + 2 * data[((y+1) * canvas.width + x) * 4] + data[((y+1) * canvas.width + (x+1)) * 4];
-      
-      const magnitude = Math.sqrt(gx * gx + gy * gy);
-      if (magnitude > 100) edgeCount++;
-    }
-  }
-  
-  // حساب المتوسطات
-  const avgBrightness = totalBrightness / pixelCount;
-  const contrast = maxBrightness - minBrightness;
-  const avgSaturation = totalSaturation / pixelCount;
-  const skinToneRatio = skinTonePixels / pixelCount;
-  const edgeRatio = edgeCount / pixelCount;
-  const avgColorVariance = colorVariance / pixelCount;
-  
-  // حساب توزيع الألوان (Color distribution entropy)
-  let colorEntropy = 0;
-  for (const count of colorBuckets) {
-    if (count > 0) {
-      const p = count / pixelCount;
-      colorEntropy -= p * Math.log2(p);
-    }
-  }
-  
-  return {
-    brightness: avgBrightness,
-    contrast,
-    saturation: avgSaturation,
-    skinToneRatio,
-    edgeRatio,
-    colorVariance: avgColorVariance,
-    colorEntropy,
-    width: canvas.width,
-    height: canvas.height
-  };
-};
-
-/**
  * تحليل بسيط وموثوق للصورة - بدون AI معقد
  * @param {string} imageSrc - مصدر الصورة
  * @param {string} userType - نوع المستخدم ('individual' أو 'company')
@@ -298,63 +156,13 @@ export const analyzeImage = async (imageSrc, userType) => {
   try {
     console.log('🔍 Starting simple image validation for:', userType);
     
-    // تحليل بسيط للصورة
-    const image = await loadImage(imageSrc);
-    const canvas = document.createElement('canvas');
-    canvas.width = image.width;
-    canvas.height = image.height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(image, 0, 0);
+    // استيراد النظام الذكي
+    const { analyzeImageWithAI } = await import('./smartImageAnalyzer.js');
     
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-    const pixelCount = data.length / 4;
+    // استخدام التحليل الذكي
+    const result = await analyzeImageWithAI(imageSrc, userType);
     
-    // حساب السطوع المتوسط
-    let totalBrightness = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      const brightness = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-      totalBrightness += brightness;
-    }
-    const avgBrightness = totalBrightness / pixelCount;
-    
-    console.log('📊 Image brightness:', avgBrightness);
-    
-    // ✅ قبول الصورة إذا كانت ليست سوداء تماماً
-    if (avgBrightness < 10) {
-      console.log('❌ Image is too dark (black)');
-      return {
-        isValid: false,
-        reason: 'عذراً، حدث خطأ في معالجة الصورة. يرجى المحاولة مرة أخرى',
-        confidence: 0,
-        details: { brightness: avgBrightness }
-      };
-    }
-    
-    // ✅ قبول الصورة إذا كانت ليست بيضاء تماماً
-    if (avgBrightness > 245) {
-      console.log('❌ Image is too bright (white)');
-      return {
-        isValid: false,
-        reason: 'عذراً، الصورة ساطعة جداً',
-        confidence: 0,
-        details: { brightness: avgBrightness }
-      };
-    }
-    
-    // ✅ قبول جميع الصور الأخرى
-    console.log('✅ Image is valid');
-    
-    const successMessage = userType === 'individual' 
-      ? 'تم قبول الصورة الشخصية' 
-      : 'تم قبول صورة اللوجو';
-    
-    return {
-      isValid: true,
-      reason: successMessage,
-      confidence: 100,
-      details: { brightness: avgBrightness }
-    };
+    return result;
     
   } catch (error) {
     console.error('❌ Analysis error:', error);

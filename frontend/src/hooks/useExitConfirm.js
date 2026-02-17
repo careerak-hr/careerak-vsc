@@ -35,12 +35,12 @@ const useExitConfirm = () => {
   // التحقق من أننا في صفحة خروج
   const isExitPage = useCallback(() => {
     return exitPages.some(page => location.pathname === page || location.pathname.startsWith(page));
-  }, [location.pathname]);
+  }, [location.pathname, exitPages]);
 
   // التحقق من أننا في صفحة يجب الرجوع منها
   const isBackPage = useCallback(() => {
     return backPages.some(page => location.pathname === page || location.pathname.startsWith(page));
-  }, [location.pathname]);
+  }, [location.pathname, backPages]);
 
   // معالجة زر الخلف في الهاتف
   useEffect(() => {
@@ -111,7 +111,7 @@ const useExitConfirm = () => {
       }
       isHandlingBack.current = false;
     };
-  }, [location.pathname, navigate, isExitPage]);
+  }, [location.pathname, navigate, isExitPage, isBackPage]);
 
   // دالة لإظهار رسالة التأكيد يدوياً (للأزرار في الواجهة)
   const requestExit = useCallback(() => {

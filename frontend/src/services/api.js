@@ -30,11 +30,18 @@ const api = axios.create({
   },
 });
 
-// 📊 Interceptor لتتبع الأداء
+// 📊 Interceptor لتتبع الأداء وإضافة Token
 api.interceptors.request.use(
   (config) => {
     // إضافة وقت بداية الطلب
     config.metadata = { startTime: Date.now() };
+    
+    // ✅ إضافة token من localStorage إذا كان موجوداً
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    
     return config;
   },
   (error) => {

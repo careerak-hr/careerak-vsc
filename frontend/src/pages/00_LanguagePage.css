@@ -14,7 +14,7 @@
 }
 
 .lang-page-logo {
-  @apply w-48 h-48 rounded-full border-4 border-primary bg-secondary shadow-lg overflow-hidden relative z-10; /* ✅ z-10 لتكون فوق الشفافية */
+  @apply w-56 h-56 rounded-full border-4 border-primary bg-secondary shadow-lg overflow-hidden relative z-10; /* ✅ تكبير من w-48 h-48 إلى w-56 h-56 */
 }
 
 .lang-page-logo-img {
@@ -52,20 +52,20 @@
 
 .lang-page-glow-dot {
   @apply rounded-full;
-  /* ✅ البدء من حجم اللوجو (w-48 h-48 = 192px) */
-  width: 192px;
-  height: 192px;
-  /* ✅ لون كحلي مائل أكثر مع شفافية */
-  background-color: rgba(48, 75, 96, 0.15);
+  /* ✅ البدء من حجم اللوجو الجديد (w-56 h-56 = 224px) */
+  width: 224px;
+  height: 224px;
+  /* ✅ لون كحلي أغمق مع شفافية أقوى */
+  background-color: rgba(48, 75, 96, 0.35);
   animation: expand-glow-from-logo 3s ease-out infinite;
 }
 
 @keyframes expand-glow-from-logo {
   0% {
-    /* ✅ يبدأ من محيط إطار اللوجو (192px × 192px) */
-    width: 192px;
-    height: 192px;
-    opacity: 0.15;
+    /* ✅ يبدأ من محيط إطار اللوجو الجديد (224px × 224px) */
+    width: 224px;
+    height: 224px;
+    opacity: 0.35;
   }
   100% {
     /* ✅ يتوسع إلى 800px مع تلاشي تدريجي */
