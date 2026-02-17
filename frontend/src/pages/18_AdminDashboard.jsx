@@ -207,6 +207,8 @@ const AdminDashboard = () => {
                              language === 'fr' ? 'Choisir une page...' : 
                              'Select a page...'}
                         </option>
+                        
+                        {/* الصفحات العامة */}
                         <option value="/entry">
                             {language === 'ar' ? '🏠 الصفحة الرئيسية' : 
                              language === 'fr' ? '🏠 Page d\'accueil' : 
@@ -227,6 +229,40 @@ const AdminDashboard = () => {
                              language === 'fr' ? '📝 Inscription' : 
                              '📝 Registration'}
                         </option>
+                        <option value="/otp-verify">
+                            {language === 'ar' ? '🔢 التحقق من OTP' : 
+                             language === 'fr' ? '🔢 Vérification OTP' : 
+                             '🔢 OTP Verification'}
+                        </option>
+                        
+                        {/* صفحات التهيئة */}
+                        <option value="/onboarding-individuals">
+                            {language === 'ar' ? '🚀 تهيئة الأفراد' : 
+                             language === 'fr' ? '🚀 Intégration Individus' : 
+                             '🚀 Individuals Onboarding'}
+                        </option>
+                        <option value="/onboarding-companies">
+                            {language === 'ar' ? '🚀 تهيئة الشركات' : 
+                             language === 'fr' ? '🚀 Intégration Entreprises' : 
+                             '🚀 Companies Onboarding'}
+                        </option>
+                        <option value="/onboarding-illiterate">
+                            {language === 'ar' ? '🚀 تهيئة الأميين' : 
+                             language === 'fr' ? '🚀 Intégration Analphabètes' : 
+                             '🚀 Illiterate Onboarding'}
+                        </option>
+                        <option value="/onboarding-visual">
+                            {language === 'ar' ? '🚀 تهيئة المكفوفين' : 
+                             language === 'fr' ? '🚀 Intégration Malvoyants' : 
+                             '🚀 Visual Onboarding'}
+                        </option>
+                        <option value="/onboarding-ultimate">
+                            {language === 'ar' ? '🚀 التهيئة المتقدمة' : 
+                             language === 'fr' ? '🚀 Intégration Ultime' : 
+                             '🚀 Ultimate Onboarding'}
+                        </option>
+                        
+                        {/* الواجهات */}
                         <option value="/interface-individuals">
                             {language === 'ar' ? '👤 واجهة الأفراد' : 
                              language === 'fr' ? '👤 Interface Individus' : 
@@ -262,10 +298,76 @@ const AdminDashboard = () => {
                              language === 'fr' ? '🔧 Interface Ateliers' : 
                              '🔧 Workshops Interface'}
                         </option>
+                        
+                        {/* الوظائف والدورات */}
+                        <option value="/job-postings">
+                            {language === 'ar' ? '💼 الوظائف' : 
+                             language === 'fr' ? '💼 Emplois' : 
+                             '💼 Job Postings'}
+                        </option>
+                        <option value="/post-job">
+                            {language === 'ar' ? '➕ نشر وظيفة' : 
+                             language === 'fr' ? '➕ Publier Emploi' : 
+                             '➕ Post Job'}
+                        </option>
+                        <option value="/courses">
+                            {language === 'ar' ? '🎓 الدورات' : 
+                             language === 'fr' ? '🎓 Cours' : 
+                             '🎓 Courses'}
+                        </option>
+                        <option value="/post-course">
+                            {language === 'ar' ? '➕ نشر دورة' : 
+                             language === 'fr' ? '➕ Publier Cours' : 
+                             '➕ Post Course'}
+                        </option>
+                        
+                        {/* الإعدادات والملف الشخصي */}
                         <option value="/profile">
                             {language === 'ar' ? '👤 الملف الشخصي' : 
                              language === 'fr' ? '👤 Profil' : 
                              '👤 Profile'}
+                        </option>
+                        <option value="/settings">
+                            {language === 'ar' ? '⚙️ الإعدادات' : 
+                             language === 'fr' ? '⚙️ Paramètres' : 
+                             '⚙️ Settings'}
+                        </option>
+                        <option value="/policy">
+                            {language === 'ar' ? '🔒 سياسة الخصوصية' : 
+                             language === 'fr' ? '🔒 Politique de Confidentialité' : 
+                             '🔒 Privacy Policy'}
+                        </option>
+                        
+                        {/* صفحات الأدمن */}
+                        <option value="/admin-dashboard">
+                            {language === 'ar' ? '📊 لوحة التحكم الرئيسية' : 
+                             language === 'fr' ? '📊 Tableau de Bord Principal' : 
+                             '📊 Main Dashboard'}
+                        </option>
+                        <option value="/admin-sub-dashboard">
+                            {language === 'ar' ? '📈 لوحة التحكم الفرعية' : 
+                             language === 'fr' ? '📈 Sous-Tableau de Bord' : 
+                             '📈 Sub Dashboard'}
+                        </option>
+                        <option value="/admin-pages">
+                            {language === 'ar' ? '📄 متصفح الصفحات' : 
+                             language === 'fr' ? '📄 Navigateur de Pages' : 
+                             '📄 Pages Navigator'}
+                        </option>
+                        <option value="/admin-system">
+                            {language === 'ar' ? '🖥️ التحكم بالنظام' : 
+                             language === 'fr' ? '🖥️ Contrôle Système' : 
+                             '🖥️ System Control'}
+                        </option>
+                        <option value="/admin-database">
+                            {language === 'ar' ? '🗄️ إدارة قاعدة البيانات' : 
+                             language === 'fr' ? '🗄️ Gestion Base de Données' : 
+                             '🗄️ Database Manager'}
+                        </option>
+                        <option value="/admin-code-editor">
+                            {language === 'ar' ? '💻 محرر الأكواد' : 
+                             language === 'fr' ? '💻 Éditeur de Code' : 
+                             '💻 Code Editor'}
                         </option>
                     </select>
                 </div>
