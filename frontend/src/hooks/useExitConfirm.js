@@ -27,9 +27,19 @@ const useExitConfirm = () => {
     '/interface-workshops'
   ];
 
+  // ✅ صفحات يجب الرجوع منها للصفحة السابقة (بدون تأكيد خروج)
+  const backPages = [
+    '/auth' // عند الضغط على زر العودة في AuthPage، يرجع لصفحة Login
+  ];
+
   // التحقق من أننا في صفحة خروج
   const isExitPage = useCallback(() => {
     return exitPages.some(page => location.pathname === page || location.pathname.startsWith(page));
+  }, [location.pathname]);
+
+  // التحقق من أننا في صفحة يجب الرجوع منها
+  const isBackPage = useCallback(() => {
+    return backPages.some(page => location.pathname === page || location.pathname.startsWith(page));
   }, [location.pathname]);
 
   // معالجة زر الخلف في الهاتف
@@ -49,8 +59,16 @@ const useExitConfirm = () => {
           isHandlingBack.current = true;
           console.log('🔙 Back button pressed, canGoBack:', event.canGoBack, 'current path:', location.pathname);
 
+          // ✅ إذا كنا في صفحة يجب الرجوع منها (مثل /auth)، نرجع للصفحة السابقة
+          if (isBackPage()) {
+            console.log('⬅️ On back page, navigating to previous page');
+            navigate(-1);
+            setTimeout(() => {
+              isHandlingBack.current = false;
+            }, 300);
+          }
           // إذا كنا في صفحة خروج، نعرض رسالة التأكيد ونمنع السلوك الافتراضي
-          if (isExitPage()) {
+          else if (isExitPage()) {
             console.log('📍 On exit page, showing confirmation modal');
             // ✅ عرض الرسالة مباشرة بدون setTimeout
             setShowExitModal(true);

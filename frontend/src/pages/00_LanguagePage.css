@@ -14,7 +14,7 @@
 }
 
 .lang-page-logo {
-  @apply w-40 h-40 rounded-full border-4 border-primary bg-secondary shadow-lg overflow-hidden;
+  @apply w-48 h-48 rounded-full border-4 border-primary bg-secondary shadow-lg overflow-hidden;
 }
 
 .lang-page-logo-img {
@@ -42,8 +42,33 @@
 
 .lang-page-glow-effect {
   @apply absolute inset-0 flex items-center justify-center pointer-events-none;
+  /* تحديد موقع الشفافية لتكون خلف اللوجو */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
 }
 
 .lang-page-glow-dot {
-  @apply w-2 h-2 bg-primary rounded-full animate-expand-glow opacity-10;
+  @apply rounded-full;
+  /* البدء من حجم اللوجو (48 = 12rem = 192px) */
+  width: 192px;
+  height: 192px;
+  /* لون كحلي مع شفافية */
+  background-color: rgba(48, 75, 96, 0.15);
+  animation: expand-glow-from-logo 3s ease-out infinite;
+}
+
+@keyframes expand-glow-from-logo {
+  0% {
+    width: 192px;
+    height: 192px;
+    opacity: 0.15;
+  }
+  100% {
+    width: 800px;
+    height: 800px;
+    opacity: 0;
+  }
 }

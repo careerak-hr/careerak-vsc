@@ -44,12 +44,11 @@ public class MainActivity extends BridgeActivity {
     public void onBackPressed() {
         // Let Capacitor's bridge handle the back button event first
         // This will trigger our JavaScript listener in useExitConfirm.js
-        // If JavaScript doesn't handle it, the default behavior will occur
         Log.d(TAG, "Back button pressed - delegating to Capacitor bridge");
         
-        // Don't call super.onBackPressed() immediately
-        // Let the bridge handle it through the backButton event
-        // The JavaScript side will decide what to do
+        // ✅ Call super to let Capacitor's BridgeActivity handle the event
+        // This will trigger the 'backButton' event in JavaScript
+        super.onBackPressed();
     }
 
     private void configureWebView() {
