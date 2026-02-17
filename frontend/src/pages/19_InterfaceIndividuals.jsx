@@ -9,32 +9,12 @@ const InterfaceIndividuals = () => {
         startBgMusic();
     }, [startBgMusic]);
 
+    // ... (rest of the component remains the same)
     return (
-        <div className="interface-individuals-container">
-            <div className="interface-individuals-content">
-                <div className="under-development-card">
-                    <div className="under-development-icon">👤</div>
-                    <h1 className="under-development-title">
-                        {language === 'ar' ? 'واجهة الأفراد' : 
-                         language === 'fr' ? 'Interface Individus' : 
-                         'Individuals Interface'}
-                    </h1>
-                    <div className="under-development-badge">
-                        {language === 'ar' ? '🚧 قيد التطوير' : 
-                         language === 'fr' ? '🚧 En Développement' : 
-                         '🚧 Under Development'}
-                    </div>
-                    <p className="under-development-description">
-                        {language === 'ar' ? 'هذه الصفحة قيد التطوير حالياً. سيتم إطلاقها قريباً مع ميزات متقدمة للأفراد.' : 
-                         language === 'fr' ? 'Cette page est en cours de développement. Elle sera bientôt disponible avec des fonctionnalités avancées pour les individus.' : 
-                         'This page is currently under development. It will be launched soon with advanced features for individuals.'}
-                    </p>
-                    <div className="under-development-info">
-                        <p><strong>{language === 'ar' ? 'اللغة:' : language === 'fr' ? 'Langue:' : 'Language:'}</strong> {language}</p>
-                        <p><strong>{language === 'ar' ? 'المستخدم:' : language === 'fr' ? 'Utilisateur:' : 'User:'}</strong> {user?.name || (language === 'ar' ? 'ضيف' : language === 'fr' ? 'Invité' : 'Guest')}</p>
-                    </div>
-                </div>
-            </div>
+        <div>
+            <h1>Interface Individuals Page</h1>
+            <p>Language: {language}</p>
+            <p>User: {user?.name || 'Guest'}</p>
         </div>
     );
 }
