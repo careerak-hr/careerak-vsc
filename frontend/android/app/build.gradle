@@ -66,6 +66,9 @@ dependencies {
 
     // Desugaring dependency
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.5"
+    
+    // Pusher dependency for real-time chat
+    implementation 'com.pusher:pusher-java-client:2.4.2'
 }
 
 apply from: "capacitor.build.gradle"

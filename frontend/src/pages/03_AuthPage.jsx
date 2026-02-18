@@ -22,6 +22,14 @@ import ConfirmationModal from '../components/modals/ConfirmationModal';
 // Form Components
 import IndividualForm from '../components/auth/IndividualForm';
 import CompanyForm from '../components/auth/CompanyForm';
+import OAuthButtons from '../components/auth/OAuthButtons';
+import ProgressRestoration from '../components/auth/ProgressRestoration';
+
+// OAuth Styles
+import '../components/auth/OAuthButtons.css';
+
+// Progress Saver
+import { saveProgress, loadProgress, clearProgress, getProgressInfo } from '../utils/progressSaver';
 
 // Main Component
 export default function AuthPage() {
@@ -39,6 +47,8 @@ export default function AuthPage() {
   const [showAgeCheck, setShowAgeCheck] = useState(true);
   const [showGoodbyeModal, setShowGoodbyeModal] = useState(false);
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
+  const [showProgressRestoration, setShowProgressRestoration] = useState(false);
+  const [progressInfo, setProgressInfo] = useState(null);
 
   // Form States
   const [formData, setFormData] = useState({
@@ -87,6 +97,17 @@ export default function AuthPage() {
   const [showAIAnalysis, setShowAIAnalysis] = useState(false);
 
   useEffect(() => setIsVisible(true), []);
+
+  // تحميل التقدم المحفوظ عند تحميل الصفحة (Requirement 6.2)
+  useEffect(() => {
+    const savedProgress = loadProgress();
+    if (savedProgress) {
+      const info = getProgressInfo();
+      setProgressInfo(info);
+      setShowProgressRestoration(true);
+      console.log('📦 Saved progress found:', info);
+    }
+  }, []);
 
   // التحقق من حالة الأذونات عند تحميل الصفحة
   useEffect(() => {
@@ -144,6 +165,12 @@ export default function AuthPage() {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     if (fieldErrors[name]) setFieldErrors(prev => ({ ...prev, [name]: '' }));
+    
+    // حفظ التقدم تلقائياً بعد كل تغيير (Requirement 6.1)
+    if (userType) {
+      const updatedData = { ...formData, [name]: value };
+      saveProgress(1, { userType, ...updatedData });
+    }
   };
 
   const handleUserTypeChange = (type) => {
@@ -176,6 +203,9 @@ export default function AuthPage() {
       agreed: false
     }));
     setFieldErrors({});
+    
+    // حفظ نوع المستخدم (Requirement 6.1)
+    saveProgress(1, { userType: type });
   };
 
   const getPhoto = async (source) => {
@@ -355,6 +385,42 @@ export default function AuthPage() {
 
   const handleFinalRegister = async () => {
     console.log('Registering user:', { userType, formData, profileImage });
+    
+    // مسح التقدم المحفوظ بعد إكمال التسجيل (Requirement 6.5)
+    clearProgress();
+    console.log('🗑️ Progress cleared after successful registration');
+  };
+
+  // استرجاع التقدم المحفوظ (Requirement 6.3)
+  const handleRestoreProgress = () => {
+    const savedProgress = loadProgress();
+    if (savedProgress && savedProgress.data) {
+      const { userType: savedUserType, ...savedData } = savedProgress.data;
+      
+      // استرجاع نوع المستخدم
+      if (savedUserType) {
+        setUserType(savedUserType);
+      }
+      
+      // استرجاع البيانات (بدون كلمة المرور - Requirement 6.7)
+      setFormData(prev => ({
+        ...prev,
+        ...savedData,
+        password: '', // لا نسترجع كلمة المرور
+        confirmPassword: '' // لا نسترجع تأكيد كلمة المرور
+      }));
+      
+      setShowProgressRestoration(false);
+      console.log('✅ Progress restored successfully');
+    }
+  };
+
+  // بدء من جديد (Requirement 6.4)
+  const handleStartOver = () => {
+    clearProgress();
+    setShowProgressRestoration(false);
+    setProgressInfo(null);
+    console.log('🔄 Starting over - progress cleared');
   };
 
   if (showAgeCheck) {
@@ -400,8 +466,21 @@ export default function AuthPage() {
           </button>
         </div>
 
+        {/* Progress Restoration Component */}
+        {showProgressRestoration && progressInfo && (
+          <ProgressRestoration
+            progressInfo={progressInfo}
+            onRestore={handleRestoreProgress}
+            onClear={handleStartOver}
+            language={language}
+          />
+        )}
+
         {userType && (
           <form onSubmit={handleRegisterClick} noValidate className="auth-form" style={{ fontFamily }}>
+
+            {/* OAuth Buttons - at the top */}
+            <OAuthButtons mode="register" />
 
             <div className="auth-photo-upload-container">
               <div

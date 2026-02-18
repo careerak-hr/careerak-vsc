@@ -1,0 +1,285 @@
+/* RegistrationSteps.css */
+/* تصميم خطوات التسجيل */
+
+.registration-step {
+  width: 100%;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Step Title */
+.step-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Form Field */
+.form-field {
+  margin-bottom: 1rem;
+}
+
+/* Password Input Wrapper */
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 3rem;
+}
+
+[dir="rtl"] .password-input-wrapper input {
+  padding-right: 1rem;
+  padding-left: 3rem;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+[dir="rtl"] .password-toggle-btn {
+  right: auto;
+  left: 1rem;
+}
+
+.password-toggle-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Account Type Grid */
+.account-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.account-type-card {
+  position: relative;
+  padding: 2rem 1.5rem;
+  border: 2px solid #E3DAD1;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  background-color: white;
+}
+
+.account-type-card:hover {
+  border-color: #D48161;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(212, 129, 97, 0.2);
+}
+
+.account-type-card.selected {
+  border-color: #304B60;
+  background-color: rgba(48, 75, 96, 0.05);
+  box-shadow: 0 8px 16px rgba(48, 75, 96, 0.2);
+}
+
+.account-type-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.account-type-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.account-type-description {
+  font-size: 0.875rem;
+  color: #8B7355;
+  line-height: 1.4;
+}
+
+.account-type-check {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  background-color: #10b981;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+[dir="rtl"] .account-type-check {
+  right: auto;
+  left: 1rem;
+}
+
+/* Photo Upload */
+.auth-photo-upload-box {
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #D4816180;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 auto 1rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.auth-photo-upload-box:hover {
+  border-color: #D48161;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.2);
+}
+
+.auth-photo-upload-placeholder {
+  font-size: 3rem;
+}
+
+.auth-photo-upload-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auth-photo-upload-label {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #8B7355;
+  margin-bottom: 1rem;
+}
+
+/* Grid Utilities */
+.grid {
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.col-span-2 {
+  grid-column: span 2;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .registration-step {
+    padding: 0.5rem;
+  }
+  
+  .step-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .account-type-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .account-type-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .account-type-icon {
+    font-size: 2.5rem;
+  }
+  
+  .account-type-title {
+    font-size: 1.125rem;
+  }
+  
+  .account-type-description {
+    font-size: 0.8125rem;
+  }
+  
+  .auth-photo-upload-box {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .auth-photo-upload-placeholder {
+    font-size: 2.5rem;
+  }
+  
+  .grid-cols-2,
+  .grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .col-span-2 {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 374px) {
+  .step-title {
+    font-size: 1.125rem;
+  }
+  
+  .account-type-card {
+    padding: 1.25rem 0.75rem;
+  }
+  
+  .account-type-icon {
+    font-size: 2rem;
+  }
+  
+  .account-type-title {
+    font-size: 1rem;
+  }
+  
+  .auth-photo-upload-box {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+/* Input Error Styles */
+.auth-input-base.error,
+.auth-select-base.error {
+  border-color: #ef4444;
+}
+
+.auth-input-error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}

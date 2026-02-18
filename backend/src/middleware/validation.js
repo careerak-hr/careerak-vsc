@@ -83,8 +83,29 @@ const validateLogin = (req, res, next) => {
   next();
 };
 
+// 🛡️ Middleware عام للتحقق من أي schema
+const validate = (schema) => {
+  return (req, res, next) => {
+    const { error } = schema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const errors = error.details.map(detail => ({
+        field: detail.path.join('.'),
+        message: detail.message
+      }));
+      
+      return res.status(400).json({ 
+        success: false,
+        message: 'خطأ في البيانات المدخلة',
+        errors
+      });
+    }
+    next();
+  };
+};
+
 module.exports = {
   validateRegister,
   validateUpdateProfile,
-  validateLogin
+  validateLogin,
+  validate
 };

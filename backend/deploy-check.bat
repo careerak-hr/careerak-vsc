@@ -1,36 +1,29 @@
 @echo off
-echo ========================================
-echo   Careerak Backend - Deploy Check
-echo ========================================
-echo.
-
-echo [1/5] Checking Git status...
-git status
-echo.
-
-echo [2/5] Checking for uncommitted changes...
-git diff --stat
-echo.
-
-echo [3/5] Checking last commit...
-git log -1 --oneline
-echo.
-
-echo [4/5] Checking remote status...
-git fetch origin
-git status
-echo.
-
-echo [5/5] Summary:
-echo ========================================
-echo.
-echo If you see uncommitted changes above, run:
-echo   git add .
-echo   git commit -m "fix: CORS and authentication"
-echo   git push origin main
-echo.
-echo If everything is committed, Vercel should auto-deploy.
-echo Check: https://vercel.com/dashboard
+chcp 65001 >nul
 echo.
 echo ========================================
+echo   🔍 فحص حالة Backend
+echo ========================================
+echo.
+
+REM التحقق من تشغيل Backend
+echo 🔄 جاري فحص Backend...
+curl -s http://localhost:5000/health >nul 2>nul
+if %errorlevel% equ 0 (
+    echo ✅ Backend يعمل بنجاح!
+    echo.
+    echo 📊 معلومات السيرفر:
+    curl -s http://localhost:5000/health
+    echo.
+) else (
+    echo ❌ Backend لا يعمل!
+    echo.
+    echo 💡 لتشغيل Backend:
+    echo    1. start-backend.bat (مع PM2)
+    echo    2. start-backend-simple.bat (بدون PM2)
+    echo    3. npm start (تشغيل عادي)
+    echo.
+)
+
+echo.
 pause

@@ -1,65 +1,67 @@
-# HR Management System Backend
+# 🚀 Careerak Backend
 
-## Installation
+Backend لتطبيق Careerak - نظام إدارة الموارد البشرية والتوظيف.
 
-1. Install dependencies:
+---
+
+## ⚡ البدء السريع
+
+### Backend يعمل الآن!
 ```bash
-npm install
+pm2 status
 ```
 
-2. Create `.env` file from `.env.example`:
+### فحص الحالة
 ```bash
-cp .env.example .env
+.\deploy-check.bat
 ```
 
-3. Update `.env` with your configuration:
-- MongoDB URI
-- JWT Secret
-- Port
-
-## Running the Server
-
-### Development
+### إعداد بدء التشغيل التلقائي مع Windows
 ```bash
-npm run dev
+# انقر بزر الماوس الأيمن على setup-autostart.bat
+# اختر "Run as administrator"
 ```
 
-### Production
+---
+
+## 📋 الأوامر الأساسية
+
 ```bash
-npm start
+pm2 status                    # عرض الحالة
+pm2 logs careerak-backend     # عرض Logs
+pm2 restart careerak-backend  # إعادة تشغيل
+pm2 stop careerak-backend     # إيقاف
+pm2 monit                     # مراقبة الأداء
 ```
 
-## API Endpoints
+---
 
-### Users
-- `POST /api/users/register` - Register new user
-- `POST /api/users/login` - Login user
-- `GET /api/users/profile` - Get user profile
-- `PUT /api/users/profile` - Update user profile
+## 🌐 الروابط
 
-### Job Postings
-- `POST /api/job-postings` - Create job posting (HR/Manager only)
-- `GET /api/job-postings` - Get all job postings
-- `GET /api/job-postings/:id` - Get specific job posting
-- `PUT /api/job-postings/:id` - Update job posting
-- `DELETE /api/job-postings/:id` - Delete job posting
+- Backend: `http://localhost:5000`
+- Health Check: `http://localhost:5000/health`
 
-### Job Applications
-- `POST /api/job-applications` - Apply for job
-- `GET /api/job-applications/job/:jobPostingId` - Get applications for job
-- `GET /api/job-applications/my-applications` - Get my applications
-- `PUT /api/job-applications/:id/status` - Update application status
+---
 
-### Educational Courses
-- `POST /api/educational-courses` - Create course
-- `GET /api/educational-courses` - Get all courses
-- `GET /api/educational-courses/:id` - Get specific course
-- `POST /api/educational-courses/:id/enroll` - Enroll in course
-- `PUT /api/educational-courses/:id` - Update course
+## 📚 التوثيق الكامل
 
-### Training Courses
-- `POST /api/training-courses` - Create training course
-- `GET /api/training-courses` - Get all training courses
-- `GET /api/training-courses/:id` - Get specific training course
-- `POST /api/training-courses/:id/enroll` - Enroll trainee
-- `PUT /api/training-courses/:id/status` - Update course status
+- 📄 [START_HERE.txt](START_HERE.txt) - دليل سريع جداً
+- 📄 [docs/HOW_TO_START.md](../docs/HOW_TO_START.md) - دليل مفصل
+- 📄 [docs/BACKEND_NOW_RUNNING.md](../docs/BACKEND_NOW_RUNNING.md) - الحالة الحالية
+- 📄 [docs/BACKEND_PERMANENT_RUNNING.md](../docs/BACKEND_PERMANENT_RUNNING.md) - دليل شامل
+- 📄 [docs/PM2_QUICK_START.md](../docs/PM2_QUICK_START.md) - دليل PM2
+
+---
+
+## 🔧 الملفات المهمة
+
+- `ecosystem.config.js` - تكوين PM2
+- `.env` - متغيرات البيئة
+- `package.json` - تبعيات Node.js
+- `setup-autostart.bat` - إعداد بدء التشغيل التلقائي
+- `deploy-check.bat` - فحص الحالة
+
+---
+
+**المطور**: Eng.AlaaUddien  
+**البريد**: careerak.hr@gmail.com

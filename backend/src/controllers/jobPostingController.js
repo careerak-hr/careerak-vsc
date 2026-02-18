@@ -1,4 +1,5 @@
 const JobPosting = require('../models/JobPosting');
+const notificationService = require('../services/notificationService');
 
 exports.createJobPosting = async (req, res) => {
   try {
@@ -16,6 +17,19 @@ exports.createJobPosting = async (req, res) => {
     });
 
     await jobPosting.save();
+    
+    // البحث عن المستخدمين المناسبين وإرسال إشعارات لهم
+    const matchingUsers = await notificationService.findMatchingUsersForJob(jobPosting._id);
+    
+    // إرسال إشعارات للمستخدمين المناسبين (بشكل غير متزامن)
+    if (matchingUsers.length > 0) {
+      Promise.all(
+        matchingUsers.map(userId => 
+          notificationService.notifyJobMatch(userId, jobPosting._id)
+        )
+      ).catch(err => console.error('Error sending job match notifications:', err));
+    }
+    
     res.status(201).json({ message: 'Job posting created successfully', data: jobPosting });
   } catch (error) {
     res.status(500).json({ error: error.message });

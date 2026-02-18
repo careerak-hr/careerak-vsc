@@ -27,6 +27,44 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['none', 'visual', 'auditory', 'physical', 'ultimate', 'illiterate'],
     default: 'none'
+  },
+  // إحصائيات التقييمات
+  reviewStats: {
+    averageRating: { type: Number, default: 0, min: 0, max: 5 },
+    totalReviews: { type: Number, default: 0, min: 0 },
+    ratingDistribution: {
+      1: { type: Number, default: 0 },
+      2: { type: Number, default: 0 },
+      3: { type: Number, default: 0 },
+      4: { type: Number, default: 0 },
+      5: { type: Number, default: 0 }
+    }
+  },
+  // حسابات OAuth المرتبطة
+  oauthAccounts: [{
+    provider: { type: String, enum: ['google', 'facebook', 'linkedin'] },
+    providerId: String,
+    email: String,
+    connectedAt: { type: Date, default: Date.now }
+  }],
+  // قوة كلمة المرور
+  passwordStrength: {
+    score: { type: Number, min: 0, max: 4, default: 0 },
+    label: { type: String, enum: ['none', 'weak', 'fair', 'good', 'strong'], default: 'none' }
+  },
+  // تأكيد البريد الإلكتروني
+  emailVerified: { type: Boolean, default: false },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
+  // المصادقة الثنائية
+  twoFactorEnabled: { type: Boolean, default: false },
+  twoFactorSecret: String,
+  // تقدم التسجيل
+  registrationProgress: {
+    step: { type: Number, min: 1, max: 4, default: 1 },
+    completed: { type: Boolean, default: false },
+    lastSaved: Date,
+    data: mongoose.Schema.Types.Mixed
   }
 }, baseOptions);
 

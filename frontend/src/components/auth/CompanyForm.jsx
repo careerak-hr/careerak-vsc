@@ -1,8 +1,16 @@
 import React from 'react';
 import countries from '../../data/countries.json';
+import PasswordStrengthIndicator from './PasswordStrengthIndicator';
+import PasswordGenerator from './PasswordGenerator';
+import EmailValidator from './EmailValidator';
 import '../../pages/03_AuthPage.css';
 
 const CompanyForm = ({ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL }) => {
+
+  // معالج تغيير البريد الإلكتروني
+  const handleEmailChange = (email) => {
+    handleInputChange({ target: { name: 'email', value: email } });
+  };
 
   return (
     <>
@@ -102,13 +110,13 @@ const CompanyForm = ({ t, formData, handleInputChange, fieldErrors, showPassword
       {fieldErrors.countryCode && <p className="auth-input-error">{fieldErrors.countryCode}</p>}
       {fieldErrors.phone && <p className="auth-input-error">{fieldErrors.phone}</p>}
 
-      <input
-        type="email"
-        name="email"
-        placeholder={t.email}
+      <EmailValidator
         value={formData.email}
-        onChange={handleInputChange}
-        className="auth-input-base"
+        onChange={handleEmailChange}
+        onValidation={(result) => {
+          // يمكن استخدام النتيجة لتحديث حالة التحقق
+          console.log('Email validation result:', result);
+        }}
       />
       {fieldErrors.email && <p className="auth-input-error">{fieldErrors.email}</p>}
 
@@ -129,6 +137,27 @@ const CompanyForm = ({ t, formData, handleInputChange, fieldErrors, showPassword
           {showPassword ? '👁️' : '🙈'}
         </button>
       </div>
+      {/* Password Strength Indicator */}
+      {formData.password && (
+        <PasswordStrengthIndicator 
+          password={formData.password}
+          onStrengthChange={(strength) => {
+            console.log('Password strength:', strength);
+          }}
+        />
+      )}
+      {/* Password Generator */}
+      <PasswordGenerator 
+        onPasswordGenerated={(password) => {
+          // تعبئة حقل كلمة المرور بالكلمة المولدة
+          handleInputChange({
+            target: {
+              name: 'password',
+              value: password
+            }
+          });
+        }}
+      />
       {fieldErrors.password && <p className="auth-input-error">{fieldErrors.password}</p>}
 
       <div className="auth-password-wrapper">

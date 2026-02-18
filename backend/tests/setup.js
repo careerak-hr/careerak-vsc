@@ -20,12 +20,13 @@ beforeAll(async () => {
       await mongoose.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
       });
     } catch (error) {
       console.warn('MongoDB connection failed for tests, using memory database');
     }
   }
-});
+}, 30000); // Increased timeout for beforeAll
 
 afterAll(async () => {
   // تنظيف قاعدة البيانات وإغلاق الاتصال
@@ -33,7 +34,7 @@ afterAll(async () => {
     await mongoose.connection.db.dropDatabase();
     await mongoose.connection.close();
   }
-});
+}, 30000); // Increased timeout for afterAll
 
 beforeEach(async () => {
   // تنظيف البيانات قبل كل اختبار

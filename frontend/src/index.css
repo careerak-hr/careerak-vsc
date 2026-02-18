@@ -2,6 +2,7 @@
 @import './assets/fonts/fonts.css'; /* Import local fonts */
 @import './styles/fontEnforcement.css'; /* Import font enforcement */
 @import './styles/dynamicFontEnforcement.css'; /* Import dynamic font enforcement */
+@import './styles/responsiveFixes.css'; /* Import responsive design fixes */
 
 @tailwind base;
 @tailwind components;

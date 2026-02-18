@@ -5,6 +5,8 @@ import { useApp } from '../context/AppContext';
 import loginTranslations from '../data/loginTranslations.json';
 import useExitConfirm from '../hooks/useExitConfirm';
 import ExitConfirmModal from '../components/modals/ExitConfirmModal';
+import OAuthButtons from '../components/auth/OAuthButtons';
+import '../components/auth/OAuthButtons.css';
 import './02_LoginPage.css';
 
 export default function LoginPage() {
@@ -147,6 +149,9 @@ export default function LoginPage() {
             {loading ? <div className="login-loading-spinner"></div> : t.loginBtn}
           </button>
         </form>
+
+        {/* OAuth Buttons */}
+        <OAuthButtons mode="login" />
 
         <div className="login-no-account-container">
           <p className="login-no-account-text">

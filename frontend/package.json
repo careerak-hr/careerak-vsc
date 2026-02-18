@@ -20,6 +20,7 @@
     "crypto-js": "^4.2.0",
     "i18next": "^23.16.8",
     "i18next-browser-languagedetector": "^8.2.0",
+    "mailcheck": "^1.1.1",
     "react": "^18.3.1",
     "react-confetti": "^6.4.0",
     "react-dom": "^18.2.0",
@@ -31,7 +32,8 @@
     "tailwindcss": "^3.2.7",
     "tailwindcss-animate": "^1.0.7",
     "tar": "^7.5.6",
-    "web-vitals": "^3.5.2"
+    "web-vitals": "^3.5.2",
+    "zxcvbn": "^4.4.2"
   },
   "scripts": {
     "start": "craco start",

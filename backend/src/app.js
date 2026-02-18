@@ -1,3 +1,6 @@
+// تحميل متغيرات البيئة من .env
+require('dotenv').config();
+
 const uploadRoutes = require('./routes/uploadRoutes');
 const express = require('express');
 const cors = require('cors');
@@ -7,6 +10,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const session = require('express-session');
 // const csrf = require('csurf'); // معطل مؤقتاً لحل مشكلة الموبايل
+const passport = require('./config/passport');
 const connectDB = require('./config/database');
 const logger = require('./utils/logger');
 const {
@@ -19,6 +23,10 @@ const {
 
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const oauthRoutes = require('./routes/oauthRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
@@ -87,6 +95,10 @@ app.use(session({
   }
 }));
 
+// 🔐 Passport Initialization
+app.use(passport.initialize());
+app.use(passport.session());
+
 // 🚦 Rate Limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 دقيقة
@@ -131,6 +143,11 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // المسارات (بدون حماية CSRF مؤقتاً)
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/chat', chatRoutes);
+app.use('/reviews', require('./routes/reviewRoutes'));
+app.use('/auth', authRoutes);
+app.use('/oauth', oauthRoutes);
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

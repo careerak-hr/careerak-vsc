@@ -1,0 +1,779 @@
+/* 
+ * ملف إصلاح التصميم المتجاوب الشامل
+ * يحل جميع مشاكل التصميم على الهواتف المحمولة
+ * تاريخ الإنشاء: 2026-02-17
+ */
+
+/* ========================================
+   1. إصلاحات عامة للشاشات الصغيرة
+   ======================================== */
+
+/* الشاشات الصغيرة جداً (أقل من 375px) */
+@media (max-width: 374px) {
+  html {
+    font-size: 14px;
+  }
+  
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* تصغير الأزرار */
+  button, .btn {
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* تصغير العناوين */
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.25rem !important; }
+  h3 { font-size: 1.1rem !important; }
+}
+
+/* الهواتف الصغيرة (375px - 639px) */
+@media (max-width: 639px) {
+  /* منع التمرير الأفقي */
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  /* تحسين المسافات */
+  .container, .page-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* تحسين الصور */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ========================================
+   2. إصلاح صفحة اللغة (LanguagePage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .lang-page-logo {
+    width: 10rem !important;
+    height: 10rem !important;
+  }
+  
+  .lang-page-title {
+    font-size: 1.25rem !important;
+  }
+  
+  .lang-page-buttons-container {
+    max-width: 100% !important;
+    padding: 0 1rem;
+  }
+  
+  .lang-page-btn {
+    padding: 0.875rem !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* ========================================
+   3. إصلاح صفحة الدخول (EntryPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .entry-page-logo {
+    height: 12rem !important;
+    width: 12rem !important;
+  }
+  
+  .entry-page-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .entry-page-slogan-text {
+    font-size: 0.75rem !important;
+  }
+  
+  .entry-page-slogan-line {
+    width: 2rem !important;
+  }
+  
+  .entry-page-progress-bar-container {
+    width: 10rem !important;
+    bottom: 2.5rem !important;
+  }
+}
+
+/* ========================================
+   4. إصلاح صفحة تسجيل الدخول (LoginPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .login-page-content {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    max-width: 100% !important;
+  }
+  
+  .login-logo {
+    width: 8rem !important;
+    height: 8rem !important;
+  }
+  
+  .login-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .login-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .login-input {
+    padding: 1rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .login-submit-btn {
+    padding: 1.25rem !important;
+    font-size: 1.25rem !important;
+  }
+  
+  .login-remember-me-container {
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+/* ========================================
+   5. إصلاح صفحة التسجيل (AuthPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .auth-page-content {
+    padding: 1.5rem 1rem !important;
+    padding-top: 2rem !important;
+  }
+  
+  .auth-logo {
+    width: 6rem !important;
+    height: 6rem !important;
+  }
+  
+  .auth-user-type-selector {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  .auth-user-type-btn {
+    padding: 0.875rem !important;
+    font-size: 1rem !important;
+  }
+  
+  .auth-form {
+    max-width: 100% !important;
+  }
+  
+  .auth-input-base,
+  .auth-select-base {
+    padding: 0.875rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .auth-submit-btn {
+    padding: 1.25rem !important;
+    font-size: 1.125rem !important;
+  }
+  
+  .auth-photo-upload-box {
+    width: 5rem !important;
+    height: 5rem !important;
+  }
+}
+
+/* ========================================
+   6. إصلاح صفحة OTP
+   ======================================== */
+
+@media (max-width: 639px) {
+  .otp-page-content {
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .otp-input-container {
+    gap: 0.5rem !important;
+  }
+  
+  .otp-input {
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    font-size: 1.25rem !important;
+  }
+}
+
+/* ========================================
+   7. إصلاح صفحة الملف الشخصي (ProfilePage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .profile-page-container {
+    padding: 1rem !important;
+  }
+  
+  .profile-header {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+  
+  .profile-avatar {
+    width: 6rem !important;
+    height: 6rem !important;
+    margin: 0 auto 1rem !important;
+  }
+  
+  .profile-info-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+  
+  .profile-section {
+    padding: 1rem !important;
+  }
+  
+  .profile-section-title {
+    font-size: 1.125rem !important;
+  }
+}
+
+/* ========================================
+   8. إصلاح صفحة الوظائف (JobPostingsPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .job-postings-container {
+    padding: 1rem !important;
+  }
+  
+  .job-card {
+    padding: 1rem !important;
+  }
+  
+  .job-card-title {
+    font-size: 1.125rem !important;
+  }
+  
+  .job-card-company {
+    font-size: 0.875rem !important;
+  }
+  
+  .job-card-details {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  
+  .job-card-btn {
+    width: 100% !important;
+    padding: 0.75rem !important;
+  }
+  
+  .job-filters {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  .job-filter-select {
+    width: 100% !important;
+  }
+}
+
+/* ========================================
+   9. إصلاح صفحة نشر الوظائف (PostJobPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .post-job-container {
+    padding: 1rem !important;
+  }
+  
+  .post-job-form {
+    padding: 1rem !important;
+  }
+  
+  .post-job-input,
+  .post-job-textarea,
+  .post-job-select {
+    padding: 0.875rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .post-job-submit-btn {
+    padding: 1rem !important;
+    font-size: 1rem !important;
+  }
+  
+  .post-job-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ========================================
+   10. إصلاح صفحة الدورات (CoursesPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .courses-container {
+    padding: 1rem !important;
+  }
+  
+  .course-card {
+    padding: 1rem !important;
+  }
+  
+  .course-card-image {
+    height: 10rem !important;
+  }
+  
+  .course-card-title {
+    font-size: 1.125rem !important;
+  }
+  
+  .course-card-price {
+    font-size: 1.25rem !important;
+  }
+  
+  .course-card-btn {
+    width: 100% !important;
+    padding: 0.75rem !important;
+  }
+}
+
+/* ========================================
+   11. إصلاح صفحة الإعدادات (SettingsPage)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .settings-container {
+    padding: 1rem !important;
+  }
+  
+  .settings-section {
+    padding: 1rem !important;
+  }
+  
+  .settings-option {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+  }
+  
+  .settings-toggle {
+    margin-left: 0 !important;
+  }
+}
+
+/* ========================================
+   12. إصلاح Navbar
+   ======================================== */
+
+@media (max-width: 639px) {
+  .navbar {
+    padding: 0.75rem 1rem !important;
+  }
+  
+  .navbar-logo {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+  
+  .navbar-title {
+    font-size: 1.125rem !important;
+  }
+  
+  .navbar-menu {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(48, 75, 96, 0.95) !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 2rem !important;
+    z-index: 9999 !important;
+  }
+  
+  .navbar-menu-item {
+    font-size: 1.5rem !important;
+    padding: 1rem 2rem !important;
+  }
+  
+  .navbar-hamburger {
+    display: block !important;
+    z-index: 10000 !important;
+  }
+}
+
+/* ========================================
+   13. إصلاح Footer
+   ======================================== */
+
+@media (max-width: 639px) {
+  .footer {
+    padding: 2rem 1rem !important;
+  }
+  
+  .footer-content {
+    flex-direction: column !important;
+    gap: 2rem !important;
+    text-align: center !important;
+  }
+  
+  .footer-section {
+    width: 100% !important;
+  }
+  
+  .footer-links {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+}
+
+/* ========================================
+   14. إصلاح Modals
+   ======================================== */
+
+@media (max-width: 639px) {
+  .modal-overlay {
+    padding: 1rem !important;
+  }
+  
+  .modal-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 1.5rem 1rem !important;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem !important;
+  }
+  
+  .modal-close-btn {
+    top: 0.5rem !important;
+    right: 0.5rem !important;
+  }
+  
+  .modal-btn {
+    width: 100% !important;
+    padding: 0.875rem !important;
+  }
+}
+
+/* ========================================
+   15. إصلاح الجداول (Tables)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .table-container {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  table {
+    min-width: 600px !important;
+  }
+  
+  th, td {
+    padding: 0.5rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  /* تحويل الجداول إلى cards على الموبايل */
+  .responsive-table {
+    display: block !important;
+  }
+  
+  .responsive-table thead {
+    display: none !important;
+  }
+  
+  .responsive-table tbody {
+    display: block !important;
+  }
+  
+  .responsive-table tr {
+    display: block !important;
+    margin-bottom: 1rem !important;
+    border: 2px solid #D4816180 !important;
+    border-radius: 0.5rem !important;
+    padding: 1rem !important;
+  }
+  
+  .responsive-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 0.5rem 0 !important;
+    border-bottom: 1px solid #E3DAD1 !important;
+  }
+  
+  .responsive-table td:last-child {
+    border-bottom: none !important;
+  }
+  
+  .responsive-table td::before {
+    content: attr(data-label) !important;
+    font-weight: bold !important;
+    color: #304B60 !important;
+  }
+}
+
+/* ========================================
+   16. إصلاح النماذج (Forms)
+   ======================================== */
+
+@media (max-width: 639px) {
+  .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .form-row {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100% !important;
+    padding: 0.875rem !important;
+    font-size: 0.875rem !important;
+  }
+  
+  .form-label {
+    font-size: 0.875rem !important;
+  }
+  
+  .form-submit-btn {
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+}
+
+/* ========================================
+   17. إصلاح الأزرار العائمة
+   ======================================== */
+
+@media (max-width: 639px) {
+  .floating-btn {
+    bottom: 1rem !important;
+    right: 1rem !important;
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+  
+  .floating-whatsapp {
+    bottom: 5rem !important;
+    right: 1rem !important;
+  }
+}
+
+/* ========================================
+   18. إصلاح Admin Dashboard
+   ======================================== */
+
+@media (max-width: 639px) {
+  .admin-dashboard-container {
+    padding: 1rem !important;
+  }
+  
+  .admin-quick-nav-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .admin-card {
+    padding: 1rem !important;
+  }
+  
+  .admin-card-title {
+    font-size: 1rem !important;
+  }
+  
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ========================================
+   19. إصلاح Onboarding Pages
+   ======================================== */
+
+@media (max-width: 639px) {
+  .onboarding-container {
+    padding: 1rem !important;
+  }
+  
+  .onboarding-step {
+    padding: 1rem !important;
+  }
+  
+  .onboarding-progress {
+    height: 0.25rem !important;
+  }
+  
+  .onboarding-btn {
+    width: 100% !important;
+    padding: 1rem !important;
+  }
+  
+  .onboarding-input {
+    padding: 0.875rem !important;
+    font-size: 0.875rem !important;
+  }
+}
+
+/* ========================================
+   20. إصلاح Interface Pages
+   ======================================== */
+
+@media (max-width: 639px) {
+  .interface-container {
+    padding: 1rem !important;
+  }
+  
+  .interface-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  .interface-card {
+    padding: 1rem !important;
+  }
+  
+  .interface-icon {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+  
+  .interface-title {
+    font-size: 1.125rem !important;
+  }
+}
+
+/* ========================================
+   21. إصلاحات إضافية
+   ======================================== */
+
+/* منع zoom عند التركيز على input في iOS */
+@media (max-width: 639px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* تحسين scrollbar على الموبايل */
+@media (max-width: 639px) {
+  ::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: #D48161 !important;
+    border-radius: 2px !important;
+  }
+}
+
+/* تحسين touch targets */
+@media (max-width: 639px) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  .clickable {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+}
+
+/* منع text selection على الموبايل */
+@media (max-width: 639px) {
+  .no-select {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+  }
+}
+
+/* تحسين safe area للأجهزة الحديثة */
+@media (max-width: 639px) {
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top) !important;
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom) !important;
+  }
+  
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left) !important;
+  }
+  
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right) !important;
+  }
+}
+
+/* ========================================
+   22. إصلاحات للأجهزة اللوحية (Tablets)
+   ======================================== */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .container {
+    max-width: 100% !important;
+    padding: 0 2rem !important;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .grid-cols-4 {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+/* ========================================
+   23. إصلاحات landscape mode
+   ======================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .page-container {
+    min-height: auto !important;
+  }
+  
+  .logo {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
+  
+  .title {
+    font-size: 1.25rem !important;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem !important;
+  }
+}

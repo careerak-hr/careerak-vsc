@@ -1,5 +1,6 @@
 const JobApplication = require('../models/JobApplication');
 const JobPosting = require('../models/JobPosting');
+const notificationService = require('../services/notificationService');
 
 exports.applyForJob = async (req, res) => {
   try {
@@ -20,9 +21,19 @@ exports.applyForJob = async (req, res) => {
     await jobApplication.save();
     
     // Add application to job posting
-    await JobPosting.findByIdAndUpdate(jobPostingId, {
+    const jobPosting = await JobPosting.findByIdAndUpdate(jobPostingId, {
       $push: { applicants: jobApplication._id }
-    });
+    }, { new: true });
+
+    // إرسال إشعار للشركة بطلب جديد
+    if (jobPosting && jobPosting.postedBy) {
+      await notificationService.notifyNewApplication(
+        jobPosting.postedBy,
+        jobApplication._id,
+        fullName,
+        jobPosting.title
+      );
+    }
 
     res.status(201).json({ message: 'Application submitted successfully', data: jobApplication });
   } catch (error) {
@@ -47,7 +58,33 @@ exports.updateApplicationStatus = async (req, res) => {
       req.params.id,
       { status, reviewedAt: Date.now(), reviewedBy: req.user.id },
       { new: true }
-    );
+    ).populate('jobPosting', 'title').populate('applicant', '_id');
+    
+    // إرسال إشعار للمتقدم حسب حالة الطلب
+    if (application && application.applicant) {
+      const jobTitle = application.jobPosting?.title || 'الوظيفة';
+      
+      if (status === 'Accepted') {
+        await notificationService.notifyApplicationAccepted(
+          application.applicant._id,
+          application._id,
+          jobTitle
+        );
+      } else if (status === 'Rejected') {
+        await notificationService.notifyApplicationRejected(
+          application.applicant._id,
+          application._id,
+          jobTitle
+        );
+      } else if (status === 'Reviewed' || status === 'Shortlisted') {
+        await notificationService.notifyApplicationReviewed(
+          application.applicant._id,
+          application._id,
+          jobTitle
+        );
+      }
+    }
+    
     res.status(200).json({ message: 'Application status updated', data: application });
   } catch (error) {
     res.status(500).json({ error: error.message });
