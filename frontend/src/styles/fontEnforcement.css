@@ -104,7 +104,7 @@ time, progress, meter {
 }
 
 /* فرض خاص للعناصر المخصصة */
-[is], [data-*], [aria-*],
+[is],
 custom-element, web-component {
   font-family: inherit !important;
 }

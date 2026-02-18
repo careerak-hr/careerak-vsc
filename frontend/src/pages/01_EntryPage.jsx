@@ -93,10 +93,10 @@ export default function EntryPage() {
   };
 
   return (
-    <div className="entry-page-container">
+    <div className="entry-page-container" role="main">
       <div className={`entry-page-gradient ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`}></div>
 
-      <div className="entry-page-main-content">
+      <main className="entry-page-main-content">
         <div className="entry-page-logo-wrapper">
           <div className={`entry-page-glowing-circle ${phase >= 2 ? 'scale-150' : 'scale-0'}`}></div>
 
@@ -116,7 +116,7 @@ export default function EntryPage() {
             <div className="entry-page-slogan-line"></div>
           </div>
         </div>
-      </div>
+      </main>
 
       <div className="entry-page-progress-bar-container">
         <div

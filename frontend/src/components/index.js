@@ -8,6 +8,16 @@ export { default as AppRoutes } from './AppRoutes';
 export { default as SmartHomeRoute } from './SmartHomeRoute';
 export { default as GlobalLoader, SuspenseWrapper } from './GlobalLoaders';
 
+// تصدير Skeleton Loaders
+export {
+  ProfileSkeleton,
+  JobListSkeleton,
+  CourseListSkeleton,
+  FormSkeleton,
+  DashboardSkeleton,
+  TableSkeleton
+} from './SkeletonLoaders';
+
 // تصدير مكونات حماية المسارات
 export { 
   default as ProtectedRoute,
@@ -22,7 +32,7 @@ export {
 export { default as LuxuryCheckbox, PremiumCheckbox } from './LuxuryCheckbox';
 
 // تصدير المكونات الأخرى
-export { Navbar } from './Navbar';
+export { default as Navbar } from './Navbar';
 export { Footer } from './Footer';
 export { default as SplashScreen } from './SplashScreen';
 export { FloatingWhatsApp } from './FloatingWhatsApp';

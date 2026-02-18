@@ -12,7 +12,8 @@ const OTPVerification = () => {
   }, [startBgMusic]);
 
   return (
-    <div>
+    <div role="main">
+      <main>
       {/* عنوان الصفحة حسب اللغة */}
       <h2>
         {language === "ar"
@@ -27,6 +28,7 @@ const OTPVerification = () => {
       <button onClick={() => performLogin()}>
         Confirm OTP
       </button>
+      </main>
     </div>
   );
 };

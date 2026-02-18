@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './PhotoOptionsModal.css';
 
 const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, language = 'ar' }) => {
@@ -14,6 +15,9 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
     fontWeight: 'inherit',
     fontStyle: 'inherit'
   };
+
+  // Focus trap for accessibility - Escape key closes modal
+  const modalRef = useFocusTrap(true, onClose);
   
   const handleGalleryClick = () => {
     console.log('📱 User selected gallery option');
@@ -28,7 +32,8 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
   return (
     <div className="photo-options-backdrop" dir={dir}>
       <div 
-        className="photo-options-content"
+        ref={modalRef}
+        className="photo-options-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300"
         style={{
           border: '4px solid #304B60',
           backgroundColor: '#E3DAD1',
@@ -39,7 +44,7 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
         }}
       >
         <h3 
-          className="photo-options-title"
+          className="photo-options-title dark:text-[#e0e0e0] transition-colors duration-300"
           style={{ 
             color: '#304B60', 
             fontSize: '1.5rem',
@@ -55,7 +60,7 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
         <div className="photo-options-buttons-container">
           <button 
             onClick={handleGalleryClick} 
-            className="photo-options-btn"
+            className="photo-options-btn dark:bg-[#D48161] dark:text-[#1a1a1a] dark:border-[#D48161] transition-all duration-300"
             style={{
               backgroundColor: '#304B60',
               color: '#E3DAD1',
@@ -65,7 +70,6 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
               fontSize: '1.1rem',
               fontWeight: 'bold',
               cursor: 'pointer',
-              transition: 'all 0.3s ease',
               marginBottom: '0.75rem',
               width: '100%',
               ...fontStyle
@@ -85,7 +89,7 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
           </button>
           <button 
             onClick={handleCameraClick} 
-            className="photo-options-btn"
+            className="photo-options-btn dark:bg-[#D48161] dark:text-[#1a1a1a] dark:border-[#D48161] transition-all duration-300"
             style={{
               backgroundColor: '#304B60',
               color: '#E3DAD1',
@@ -95,7 +99,6 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
               fontSize: '1.1rem',
               fontWeight: 'bold',
               cursor: 'pointer',
-              transition: 'all 0.3s ease',
               marginBottom: '0.75rem',
               width: '100%',
               ...fontStyle
@@ -115,7 +118,7 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
           </button>
           <button 
             onClick={onClose} 
-            className="photo-options-cancel-btn"
+            className="photo-options-cancel-btn dark:bg-[#1a1a1a] dark:text-[#e0e0e0] dark:border-[#D48161] transition-all duration-300"
             style={{
               backgroundColor: '#FFFFFF',
               color: '#304B60',
@@ -125,7 +128,6 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
               fontSize: '1rem',
               fontWeight: 'bold',
               cursor: 'pointer',
-              transition: 'all 0.3s ease',
               width: '100%',
               ...fontStyle
             }}

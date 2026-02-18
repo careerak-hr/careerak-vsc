@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './AuthModals.css';
 
 const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisResult, userType, language }) => {
@@ -14,6 +15,10 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
     fontWeight: 'inherit',
     fontStyle: 'inherit'
   };
+
+  // Focus trap for accessibility - Escape key closes modal
+  // Note: AIAnalysisModal auto-closes, no manual close needed
+  const modalRef = useFocusTrap(true);
   
   // رسائل مخصصة حسب نوع المستخدم
   const getExpectedImageType = () => {
@@ -78,7 +83,8 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
   return (
     <div className="auth-modal-backdrop" dir={dir}>
       <div 
-        className="auth-modal-content" 
+        ref={modalRef}
+        className="auth-modal-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300" 
         dir={dir}
         style={{
           border: '4px solid #304B60',
@@ -89,7 +95,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
         }}
       >
         <h3 
-          className="text-xl font-black mb-4"
+          className="text-xl font-black mb-4 dark:text-[#e0e0e0] transition-colors duration-300"
           style={{ color: '#304B60', ...fontStyle }}
         >
           {isAnalyzing ? getAnalyzingMessage() : (
@@ -108,7 +114,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
             <img
               src={image}
               alt="AI Analysis Preview"
-              className="ai-modal-img"
+              className="ai-modal-img dark:border-[#D48161] transition-all duration-300"
               style={{
                 filter: isAnalyzing ? 'blur(2px)' : 'none',
                 transition: 'filter 0.3s ease',
@@ -117,7 +123,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
             />
             {!isAnalyzing && analysisResult && (
               <div 
-                className="ai-modal-check-mark"
+                className="ai-modal-check-mark dark:bg-[#D48161] dark:text-[#1a1a1a] transition-all duration-300"
                 style={{
                   backgroundColor: analysisResult.isValid ? '#2ecc71' : '#e74c3c',
                   color: '#FFFFFF',
@@ -134,7 +140,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
         {!isAnalyzing && analysisResult && (
           <>
             <p 
-              className="ai-modal-message whitespace-pre-line"
+              className="ai-modal-message whitespace-pre-line dark:text-[#e0e0e0] transition-colors duration-300"
               style={{ 
                 color: analysisResult.isValid ? '#304B60' : '#e74c3c',
                 fontSize: '1.1rem',
@@ -149,7 +155,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-2">
                   <span 
-                    className="text-sm font-bold"
+                    className="text-sm font-bold dark:text-[#e0e0e0] transition-colors duration-300"
                     style={{ color: '#304B60', ...fontStyle }}
                   >
                     {language === 'ar' ? 'مستوى الثقة' : 
@@ -157,14 +163,14 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
                      'Confidence Level'}
                   </span>
                   <span 
-                    className="text-sm font-black" 
+                    className="text-sm font-black transition-colors duration-300" 
                     style={{ color: getConfidenceColor(), ...fontStyle }}
                   >
                     {analysisResult.confidence}%
                   </span>
                 </div>
                 <div 
-                  className="w-full rounded-full h-2"
+                  className="w-full rounded-full h-2 dark:bg-[#1a1a1a] transition-colors duration-300"
                   style={{ backgroundColor: '#D4C5B9' }}
                 >
                   <div 
@@ -180,7 +186,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
             
             {!analysisResult.isValid && (
               <p 
-                className="text-sm mt-3"
+                className="text-sm mt-3 dark:text-[#e0e0e0]/80 transition-colors duration-300"
                 style={{ color: '#304B60', opacity: 0.8, ...fontStyle }}
               >
                 {language === 'ar' ? 'يرجى اختيار صورة أخرى...' :

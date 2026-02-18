@@ -53,7 +53,7 @@ export default function OAuthButtons({ mode = 'register' }) {
    * Opens OAuth provider in popup window
    */
   const handleOAuthLogin = (provider) => {
-    const backendUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     const oauthUrl = `${backendUrl}/auth/${provider}`;
     
     // Popup dimensions
@@ -85,7 +85,7 @@ export default function OAuthButtons({ mode = 'register' }) {
   useEffect(() => {
     const handleMessage = (event) => {
       // Verify origin for security
-      const backendUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const frontendUrl = window.location.origin;
       
       if (event.origin !== frontendUrl && event.origin !== backendUrl) {

@@ -15,10 +15,12 @@ const OnboardingUltimate = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Onboarding Ultimate Page</h1>
             <p>Language: {language}</p>
             <button onClick={() => handleUpdateUser({ type: 'ultimate' })}>Continue</button>
+            </main>
         </div>
     );
 }

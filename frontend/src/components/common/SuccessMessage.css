@@ -1,0 +1,210 @@
+.success-message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.success-message-visible {
+  opacity: 1;
+}
+
+.success-message-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.success-message-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: bounce 0.6s ease-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.success-message-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #10b981;
+  margin: 0 0 1rem 0;
+}
+
+.success-message-text {
+  font-size: 1rem;
+  color: #666;
+  margin: 0 0 1.5rem 0;
+  line-height: 1.6;
+}
+
+.success-message-countdown {
+  margin: 1.5rem 0;
+}
+
+.success-message-countdown-circle {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+}
+
+.success-message-countdown-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.success-message-countdown-bg {
+  fill: none;
+  stroke: #e0e0e0;
+  stroke-width: 2;
+}
+
+.success-message-countdown-progress {
+  fill: none;
+  stroke: #10b981;
+  stroke-width: 2;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s linear;
+}
+
+.success-message-countdown-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.success-message-countdown-text {
+  font-size: 0.875rem;
+  color: #999;
+  margin: 0;
+}
+
+.success-message-button {
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.success-message-button:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.success-message-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 639px) {
+  .success-message-card {
+    padding: 2rem 1.5rem;
+    max-width: 90%;
+  }
+
+  .success-message-icon {
+    font-size: 3rem;
+  }
+
+  .success-message-title {
+    font-size: 1.5rem;
+  }
+
+  .success-message-text {
+    font-size: 0.875rem;
+  }
+
+  .success-message-countdown-circle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .success-message-countdown-number {
+    font-size: 1.5rem;
+  }
+
+  .success-message-button {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .success-message-countdown-svg {
+  transform: rotate(90deg);
+}
+
+/* Dark Mode Support */
+.dark .success-message-card {
+  background: #2d2d2d;
+  border: 2px solid rgba(212, 129, 97, 0.3);
+}
+
+.dark .success-message-title {
+  color: #10b981;
+}
+
+.dark .success-message-text {
+  color: #e0e0e0;
+}
+
+.dark .success-message-countdown-bg {
+  stroke: #3a3a3a;
+}
+
+.dark .success-message-countdown-text {
+  color: #e0e0e0;
+}
+
+.dark .success-message-button {
+  background-color: #D48161;
+}
+
+.dark .success-message-button:hover {
+  background-color: #c57050;
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}

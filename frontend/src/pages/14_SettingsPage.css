@@ -1,83 +1,51 @@
 .settings-page-container {
-  @apply min-h-screen bg-secondary transition-opacity duration-1000;
-}
-
-.settings-page-main {
-  @apply max-w-3xl mx-auto px-4 py-24 pb-32;
-}
-
-.settings-card {
-  @apply bg-secondary rounded-[4rem] shadow-2xl p-10 md:p-16 border-2 border-primary/5;
-}
-
-.settings-title {
-  @apply text-3xl font-black text-primary mb-12;
+  @apply min-h-screen bg-secondary transition-all duration-300;
 }
 
 .settings-content {
-  @apply space-y-10;
+  @apply max-w-3xl mx-auto px-4 py-24 pb-32;
+}
+
+.settings-title {
+  @apply text-3xl font-black text-primary mb-12 transition-colors duration-300;
 }
 
 .settings-section {
-  @apply p-8 bg-primary/5 rounded-[2.5rem] border border-accent/10 flex flex-col md:flex-row justify-between items-center gap-6;
-}
-
-.settings-section-text-content {
-  @apply text-center md:text-right;
+  @apply p-8 bg-primary/5 rounded-[2.5rem] border border-accent/10 mb-6 transition-all duration-300;
 }
 
 .settings-section-title {
-  @apply text-primary font-black text-lg;
+  @apply text-primary font-black text-lg mb-4 transition-colors duration-300;
 }
 
-.settings-section-description {
-  @apply text-xs text-primary/40 font-bold mt-1;
+.settings-section-text {
+  @apply text-primary/60 font-bold text-sm mb-4 transition-colors duration-300;
 }
 
-.settings-lang-buttons {
-  @apply flex gap-2;
+.settings-buttons {
+  @apply flex gap-3 flex-wrap;
 }
 
-.settings-lang-btn {
-  @apply px-6 py-3 rounded-2xl font-black text-xs transition-all;
+.settings-btn {
+  @apply px-6 py-3 rounded-2xl font-black text-sm transition-all duration-300 bg-primary text-accent;
 }
 
-.settings-lang-btn-active {
-  @apply bg-primary text-accent shadow-lg;
+.settings-btn:hover {
+  @apply scale-105 shadow-lg;
 }
 
-.settings-lang-btn-inactive {
-  @apply bg-secondary text-primary border border-accent/20;
+.settings-btn-active {
+  @apply ring-2 ring-accent shadow-lg;
 }
 
-.settings-toggle-btn {
-  @apply w-24 h-12 rounded-full relative transition-all duration-300;
+.settings-btn-toggle {
+  @apply w-full mt-4 px-6 py-4 rounded-2xl font-black text-sm transition-all duration-300 bg-accent text-white;
 }
 
-.settings-toggle-knob {
-  @apply absolute top-1 w-10 h-10 bg-accent rounded-full shadow-md transition-all duration-300;
+.settings-btn-logout {
+  @apply w-full px-6 py-4 rounded-2xl font-black text-sm transition-all duration-300 bg-danger text-white;
 }
 
-.settings-toggle-text {
-    @apply absolute inset-0 flex items-center justify-center text-[10px] font-black;
-}
-
-.settings-danger-zone {
-    @apply pt-10 border-t border-primary/10;
-}
-
-.settings-danger-zone-title {
-    @apply text-danger font-black text-sm uppercase tracking-widest mb-6 px-4;
-}
-
-.settings-danger-zone-buttons {
-    @apply space-y-4;
-}
-
-.settings-logout-btn {
-    @apply w-full p-6 bg-primary/5 rounded-[2rem] text-primary font-black text-sm flex justify-between items-center hover:bg-primary/10 transition-all border border-accent/10;
-}
-
-.settings-delete-btn {
-    @apply w-full p-6 bg-danger text-white rounded-[2rem] font-black text-sm flex justify-between items-center shadow-lg;
+.settings-btn-logout:hover {
+  @apply scale-105 shadow-lg;
 }

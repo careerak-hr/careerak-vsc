@@ -1,5 +1,7 @@
 .footer-container {
   @apply fixed bottom-0 left-0 right-0 z-[5000] bg-secondary/90 backdrop-blur-lg border-t border-primary/10 px-2 pb-6 pt-3 shadow-[0_-10px_40px_rgba(0,0,0,0.05)];
+  @apply dark:bg-[#2d2d2d]/90 dark:border-white/10 dark:shadow-[0_-10px_40px_rgba(0,0,0,0.3)];
+  @apply transition-colors duration-300 ease-in-out;
 }
 
 .footer-content {
@@ -7,19 +9,19 @@
 }
 
 .footer-btn {
-  @apply flex flex-col items-center gap-1 w-16 transition-all;
+  @apply flex flex-col items-center gap-1 w-16 transition-all duration-300 ease-in-out;
 }
 
 .footer-btn-active {
-  @apply text-primary;
+  @apply text-primary dark:text-accent;
 }
 
 .footer-btn-inactive {
-  @apply text-hint;
+  @apply text-hint dark:text-gray-400;
 }
 
 .footer-icon {
-  @apply text-2xl transition-transform;
+  @apply text-2xl transition-transform duration-300 ease-in-out;
 }
 
 .footer-icon-active {
@@ -27,7 +29,7 @@
 }
 
 .footer-label {
-  @apply text-[9px] font-black uppercase;
+  @apply text-[9px] font-black uppercase transition-colors duration-300 ease-in-out;
 }
 
 .footer-center-btn-wrapper {
@@ -35,15 +37,17 @@
 }
 
 .footer-center-btn {
-  @apply w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-2xl border-4 border-white active:scale-90 transition-all;
+  @apply w-16 h-16 bg-primary rounded-full flex items-center justify-center shadow-2xl border-4 border-white active:scale-90 transition-all duration-300 ease-in-out;
+  @apply dark:bg-accent dark:border-[#2d2d2d];
 }
 
 .footer-center-btn-icon {
-  @apply text-3xl text-white font-light;
+  @apply text-3xl text-white font-light transition-colors duration-300 ease-in-out;
 }
 
 .footer-center-label {
-  @apply absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-black text-primary w-max uppercase;
+  @apply absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] font-black text-primary w-max uppercase transition-colors duration-300 ease-in-out;
+  @apply dark:text-accent;
 }
 
 .footer-notification-badge-container {
@@ -51,5 +55,6 @@
 }
 
 .footer-notification-badge {
-  @apply absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full border-2 border-white text-[8px] text-white flex items-center justify-center font-bold;
+  @apply absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full border-2 border-white text-[8px] text-white flex items-center justify-center font-bold transition-colors duration-300 ease-in-out;
+  @apply dark:border-[#2d2d2d];
 }

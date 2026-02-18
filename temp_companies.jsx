@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
+import { handleButtonKeyDown } from '../utils/keyboardUtils';
 
 export default function InterfaceCompanies() {
   const navigate = useNavigate();
@@ -62,52 +63,94 @@ export default function InterfaceCompanies() {
     }
   }[language || 'ar'];
 
-  const cardCls = "bg-[#E3DAD1] rounded-[3rem] shadow-xl border border-[#304B60]/10 p-8 text-center hover:scale-[1.02] transition-all cursor-pointer";
+  const cardCls = "bg-[#E3DAD1] dark:bg-[#2d2d2d] rounded-[3rem] shadow-xl border border-[#304B60]/10 dark:border-[#D48161]/30 p-8 text-center hover:scale-[1.02] transition-all cursor-pointer dark:hover:bg-[#3a3a3a] dark:hover:border-[#D48161]";
 
   return (
-    <div className={`min-h-screen bg-[#E3DAD1] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className={`min-h-screen bg-[#E3DAD1] dark:bg-[#1a1a1a] transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <Navbar />
       <main className="max-w-6xl mx-auto px-4 py-24 pb-32">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-black text-[#304B60] mb-4 italic">{t.welcome}</h2>
-          <p className="text-[#304B60]/40 font-bold text-lg">{t.sub}</p>
+          <h2 className="text-4xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4 italic">{t.welcome}</h2>
+          <p className="text-[#304B60]/40 dark:text-[#e0e0e0]/60 font-bold text-lg">{t.sub}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className={cardCls} onClick={() => navigate('/post-job')}>
-            <div className="text-6xl mb-4 opacity-20">📝</div>
-            <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.postJob}</h3>
-            <p className="text-[#304B60]/60 font-bold">{t.jobDesc}</p>
+          <div 
+            className={cardCls} 
+            onClick={() => navigate('/post-job')}
+            onKeyDown={(e) => handleButtonKeyDown(e, () => navigate('/post-job'))}
+            role="button"
+            tabIndex={0}
+            aria-label={t.postJob}
+          >
+            <div className="text-6xl mb-4 opacity-20 dark:opacity-30">📝</div>
+            <h3 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4">{t.postJob}</h3>
+            <p className="text-[#304B60]/60 dark:text-[#e0e0e0]/70 font-bold">{t.jobDesc}</p>
           </div>
 
-          <div className={cardCls} onClick={() => navigate('/post-course')}>
-            <div className="text-6xl mb-4 opacity-20">🎓</div>
-            <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.postCourse}</h3>
-            <p className="text-[#304B60]/60 font-bold">{t.courseDesc}</p>
+          <div 
+            className={cardCls} 
+            onClick={() => navigate('/post-course')}
+            onKeyDown={(e) => handleButtonKeyDown(e, () => navigate('/post-course'))}
+            role="button"
+            tabIndex={0}
+            aria-label={t.postCourse}
+          >
+            <div className="text-6xl mb-4 opacity-20 dark:opacity-30">🎓</div>
+            <h3 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4">{t.postCourse}</h3>
+            <p className="text-[#304B60]/60 dark:text-[#e0e0e0]/70 font-bold">{t.courseDesc}</p>
           </div>
 
-          <div className={cardCls} onClick={() => navigate('/manage-jobs')}>
-            <div className="text-6xl mb-4 opacity-20">💼</div>
-            <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.manageJobs}</h3>
-            <p className="text-[#304B60]/60 font-bold">{t.manageJobsDesc}</p>
+          <div 
+            className={cardCls} 
+            onClick={() => navigate('/manage-jobs')}
+            onKeyDown={(e) => handleButtonKeyDown(e, () => navigate('/manage-jobs'))}
+            role="button"
+            tabIndex={0}
+            aria-label={t.manageJobs}
+          >
+            <div className="text-6xl mb-4 opacity-20 dark:opacity-30">💼</div>
+            <h3 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4">{t.manageJobs}</h3>
+            <p className="text-[#304B60]/60 dark:text-[#e0e0e0]/70 font-bold">{t.manageJobsDesc}</p>
           </div>
 
-          <div className={cardCls} onClick={() => navigate('/manage-courses')}>
-            <div className="text-6xl mb-4 opacity-20">📚</div>
-            <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.manageCourses}</h3>
-            <p className="text-[#304B60]/60 font-bold">{t.manageCoursesDesc}</p>
+          <div 
+            className={cardCls} 
+            onClick={() => navigate('/manage-courses')}
+            onKeyDown={(e) => handleButtonKeyDown(e, () => navigate('/manage-courses'))}
+            role="button"
+            tabIndex={0}
+            aria-label={t.manageCourses}
+          >
+            <div className="text-6xl mb-4 opacity-20 dark:opacity-30">📚</div>
+            <h3 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4">{t.manageCourses}</h3>
+            <p className="text-[#304B60]/60 dark:text-[#e0e0e0]/70 font-bold">{t.manageCoursesDesc}</p>
           </div>
 
-          <div className={cardCls} onClick={() => navigate('/profile')}>
-            <div className="text-6xl mb-4 opacity-20">🏢</div>
-            <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.companyProfile}</h3>
-            <p className="text-[#304B60]/60 font-bold">{t.profileDesc}</p>
+          <div 
+            className={cardCls} 
+            onClick={() => navigate('/profile')}
+            onKeyDown={(e) => handleButtonKeyDown(e, () => navigate('/profile'))}
+            role="button"
+            tabIndex={0}
+            aria-label={t.companyProfile}
+          >
+            <div className="text-6xl mb-4 opacity-20 dark:opacity-30">🏢</div>
+            <h3 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4">{t.companyProfile}</h3>
+            <p className="text-[#304B60]/60 dark:text-[#e0e0e0]/70 font-bold">{t.profileDesc}</p>
           </div>
 
-          <div className={cardCls} onClick={() => navigate('/analytics')}>
-            <div className="text-6xl mb-4 opacity-20">📊</div>
-            <h3 className="text-2xl font-black text-[#304B60] mb-4">{t.analytics}</h3>
-            <p className="text-[#304B60]/60 font-bold">{t.analyticsDesc}</p>
+          <div 
+            className={cardCls} 
+            onClick={() => navigate('/analytics')}
+            onKeyDown={(e) => handleButtonKeyDown(e, () => navigate('/analytics'))}
+            role="button"
+            tabIndex={0}
+            aria-label={t.analytics}
+          >
+            <div className="text-6xl mb-4 opacity-20 dark:opacity-30">📊</div>
+            <h3 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] mb-4">{t.analytics}</h3>
+            <p className="text-[#304B60]/60 dark:text-[#e0e0e0]/70 font-bold">{t.analyticsDesc}</p>
           </div>
         </div>
       </main>

@@ -15,10 +15,12 @@ const OnboardingVisual = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Onboarding Visual Page</h1>
             <p>Language: {language}</p>
             <button onClick={() => handleUpdateUser({ type: 'visual' })}>Continue</button>
+            </main>
         </div>
     );
 }

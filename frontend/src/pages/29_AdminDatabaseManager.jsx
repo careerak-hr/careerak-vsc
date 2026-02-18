@@ -83,7 +83,7 @@ const AdminDatabaseManager = () => {
   };
 
   return (
-    <div className="admin-database-manager">
+    <div className="admin-database-manager" role="main">
       <div className="adb-header">
         <button onClick={() => navigate('/admin-dashboard')} className="adb-back-btn">
           ← {language === 'ar' ? 'العودة' : 'Back'}
@@ -114,7 +114,7 @@ const AdminDatabaseManager = () => {
               </button>
             ))}
           </div>
-          <button onClick={loadCollectionsCounts} className="adb-refresh-btn">
+          <button onClick={loadCollectionsCounts} className="adb-refresh-btn" aria-label={language === 'ar' ? 'تحديث المجموعات' : 'Refresh collections'}>
             🔄 {language === 'ar' ? 'تحديث' : 'Refresh'}
           </button>
         </div>
@@ -134,7 +134,7 @@ const AdminDatabaseManager = () => {
             <>
               <div className="adb-documents-header">
                 <h2 className="adb-panel-title">{selectedCollection}</h2>
-                <button onClick={() => exportCollection(selectedCollection)} className="adb-export-btn">
+                <button onClick={() => exportCollection(selectedCollection)} className="adb-export-btn" aria-label={language === 'ar' ? 'تصدير المجموعة' : 'Export collection'}>
                   💾 {language === 'ar' ? 'تصدير' : 'Export'}
                 </button>
               </div>
@@ -153,6 +153,7 @@ const AdminDatabaseManager = () => {
                         <button
                           onClick={() => deleteDocument(selectedCollection, doc._id)}
                           className="adb-delete-btn"
+                          aria-label={language === 'ar' ? 'حذف المستند' : 'Delete document'}
                         >
                           🗑️ {language === 'ar' ? 'حذف' : 'Delete'}
                         </button>

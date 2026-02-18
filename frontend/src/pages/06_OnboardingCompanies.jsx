@@ -18,10 +18,12 @@ const OnboardingCompanies = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Onboarding Companies Page</h1>
             <p>Language: {language}</p>
             <button onClick={() => handleUpdateUser({ companyName: 'Test' })}>Update Company</button>
+            </main>
         </div>
     );
 }

@@ -1,13 +1,16 @@
 .photo-options-backdrop {
-  @apply fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50;
+  @apply fixed inset-0 bg-black/40 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center z-50;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .photo-options-content {
-  @apply bg-secondary p-6 rounded-[2rem] shadow-2xl w-full max-w-xs border-4 border-primary;
+  @apply bg-secondary dark:bg-[#2d2d2d] p-6 rounded-[2rem] shadow-2xl w-full max-w-xs border-4 border-primary dark:border-accent;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .photo-options-title {
-  @apply text-lg font-black text-primary text-center mb-4;
+  @apply text-lg font-black text-primary dark:text-[#e0e0e0] text-center mb-4;
+  transition: color 0.3s ease-in-out;
 }
 
 .photo-options-buttons-container {
@@ -15,9 +18,9 @@
 }
 
 .photo-options-btn {
-  @apply py-4 bg-primary text-accent rounded-xl font-black hover:bg-primary-dark transition-colors;
+  @apply py-4 bg-primary dark:bg-accent text-accent dark:text-[#1a1a1a] rounded-xl font-black hover:bg-primary-dark dark:hover:bg-[#c97151] transition-all duration-300;
 }
 
 .photo-options-cancel-btn {
-  @apply mt-2 py-2 text-xs text-danger hover:text-danger-dark transition-colors;
+  @apply mt-2 py-2 text-xs text-danger dark:text-[#e0e0e0] hover:text-danger-dark dark:hover:text-[#c0c0c0] transition-all duration-300;
 }

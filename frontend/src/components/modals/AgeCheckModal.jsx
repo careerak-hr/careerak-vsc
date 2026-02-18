@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './AuthModals.css';
 
 const AgeCheckModal = ({ t, onResponse, language }) => {
@@ -15,10 +16,14 @@ const AgeCheckModal = ({ t, onResponse, language }) => {
     fontWeight: 'inherit',
     fontStyle: 'inherit'
   };
+
+  // Focus trap for accessibility - Escape key closes modal
+  // Note: AgeCheckModal doesn't have onClose, but user must make a choice
+  const modalRef = useFocusTrap(true);
   
   return (
     <div className="auth-modal-backdrop" dir={dir} style={fontStyle}>
-      <div className="auth-modal-content" dir={dir} style={fontStyle}>
+      <div ref={modalRef} className="auth-modal-content" dir={dir} style={fontStyle}>
         <h2 className="auth-modal-title" style={fontStyle}>{t.ageCheckTitle}</h2>
         <p className="auth-modal-message" style={fontStyle}>{t.ageCheckMessage}</p>
         <div className="auth-modal-buttons" style={fontStyle}>

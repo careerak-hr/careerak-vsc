@@ -1,0 +1,562 @@
+/* ============================================
+   DARK MODE FOR ALL FORMS - Careerak
+   ============================================
+   
+   CRITICAL RULE: Input borders MUST remain #D4816180 in ALL modes
+   محرّم تغيير لون إطارات الحقول - #D4816180 دائماً
+   ============================================ */
+
+/* ============================================
+   1. LOGIN PAGE FORMS - Dark Mode
+   ============================================ */
+
+.dark .login-page-container {
+  background-color: #1a1a1a;
+}
+
+.dark .login-logo {
+  border-color: #e0e0e0;
+  background-color: #2d2d2d;
+}
+
+.dark .login-title {
+  color: #e0e0e0;
+}
+
+.dark .login-subtitle {
+  color: rgba(224, 224, 224, 0.5);
+}
+
+.dark .login-input {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت في الوضع الداكن */
+}
+
+.dark .login-input::placeholder {
+  color: rgba(224, 224, 224, 0.4);
+}
+
+.dark .login-input:focus {
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+.dark .login-input:hover {
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+.dark .login-input:active {
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+.dark .login-password-toggle {
+  color: rgba(224, 224, 224, 0.3);
+}
+
+.dark .login-password-toggle:hover {
+  color: #e0e0e0;
+}
+
+.dark .login-error-text {
+  color: #f87171; /* red-400 */
+}
+
+.dark .login-remember-me-checkbox {
+  @apply bg-dark-surface border-dark-text/30;
+}
+
+.dark .login-remember-me-checkbox:checked {
+  @apply bg-dark-text border-dark-text;
+}
+
+.dark .login-remember-me-checkbox:hover {
+  @apply border-dark-text;
+}
+
+.dark .login-remember-me-label {
+  @apply text-dark-text/60;
+}
+
+.dark .login-submit-btn {
+  @apply bg-dark-text text-accent;
+}
+
+.dark .login-loading-spinner {
+  @apply border-accent/30 border-t-accent;
+}
+
+.dark .login-no-account-text {
+  @apply text-dark-text/40;
+}
+
+.dark .login-create-account-link {
+  @apply text-dark-text;
+}
+
+/* ============================================
+   2. AUTH PAGE FORMS - Dark Mode
+   ============================================ */
+
+.dark .auth-page-container {
+  @apply bg-dark-bg;
+}
+
+.dark .auth-logo {
+  @apply border-dark-text;
+}
+
+.dark .auth-user-type-btn-active {
+  @apply bg-dark-text text-accent;
+}
+
+.dark .auth-user-type-btn-inactive {
+  @apply bg-dark-surface text-dark-text border-accent/20;
+}
+
+.dark .auth-photo-upload-box {
+  @apply border-dark-text bg-dark-surface;
+}
+
+.dark .auth-photo-upload-placeholder {
+  @apply text-dark-text;
+}
+
+.dark .auth-photo-upload-label {
+  @apply text-dark-text/60;
+}
+
+.dark .auth-input-error {
+  @apply text-red-400;
+}
+
+.dark .auth-input-base {
+  @apply bg-dark-surface text-dark-text placeholder-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت في الوضع الداكن */
+}
+
+.dark .auth-input-base:focus {
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+.dark .auth-input-base:hover {
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+.dark .auth-input-base:active {
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+/* Date input dark mode */
+.dark input[type="date"].auth-input-base {
+  @apply text-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark input[type="date"].auth-input-base:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark input[type="date"].auth-input-base:hover {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark input[type="date"].auth-input-base:valid:not([value=""]),
+.dark input[type="date"].auth-input-base:not(:placeholder-shown) {
+  @apply text-dark-text;
+}
+
+.dark input[type="date"].auth-input-base::-webkit-datetime-edit-text,
+.dark input[type="date"].auth-input-base::-webkit-datetime-edit-month-field,
+.dark input[type="date"].auth-input-base::-webkit-datetime-edit-day-field,
+.dark input[type="date"].auth-input-base::-webkit-datetime-edit-year-field {
+  @apply text-dark-text/40;
+}
+
+.dark input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-text,
+.dark input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-month-field,
+.dark input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-day-field,
+.dark input[type="date"].auth-input-base:valid:not([value=""])::-webkit-datetime-edit-year-field {
+  @apply text-dark-text;
+}
+
+/* Autofill dark mode */
+.dark .auth-input-base:-webkit-autofill,
+.dark .auth-input-base:-webkit-autofill:hover,
+.dark .auth-input-base:-webkit-autofill:focus,
+.dark .auth-input-base:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #2d2d2d inset !important;
+  -webkit-text-fill-color: #e0e0e0 !important;
+}
+
+.dark .auth-input-base:focus,
+.dark .auth-input-base:active {
+  @apply bg-dark-surface text-dark-text;
+}
+
+.dark .auth-select-base {
+  @apply bg-dark-surface text-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark .auth-select-base:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .auth-select-base:hover {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .auth-select-base option[disabled] {
+  @apply text-dark-text/40;
+}
+
+.dark .auth-select-base option:not([disabled]) {
+  @apply text-dark-text bg-dark-surface;
+}
+
+.dark .auth-select-base:-webkit-autofill,
+.dark .auth-select-base:-webkit-autofill:hover,
+.dark .auth-select-base:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #2d2d2d inset !important;
+  -webkit-text-fill-color: #e0e0e0 !important;
+}
+
+.dark .auth-password-toggle {
+  @apply text-dark-text/40 hover:text-dark-text;
+}
+
+.dark .auth-checkbox {
+  @apply bg-dark-surface border-dark-text/30;
+}
+
+.dark .auth-checkbox:checked {
+  @apply bg-dark-text border-dark-text;
+}
+
+.dark .auth-checkbox:hover {
+  @apply border-dark-text;
+}
+
+.dark .auth-checkbox-label {
+  @apply text-dark-text/80;
+}
+
+.dark .auth-policy-link {
+  @apply text-dark-text;
+}
+
+.dark .auth-submit-btn {
+  @apply bg-dark-text text-accent;
+}
+
+/* ============================================
+   3. AUTH STEPS FORMS - Dark Mode
+   ============================================ */
+
+.dark .form-field input,
+.dark .form-field select,
+.dark .form-field textarea {
+  @apply bg-dark-surface text-dark-text placeholder-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark .form-field input:focus,
+.dark .form-field select:focus,
+.dark .form-field textarea:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .form-field input:hover,
+.dark .form-field select:hover,
+.dark .form-field textarea:hover {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .form-field label {
+  @apply text-dark-text/80;
+}
+
+.dark .password-input-wrapper input {
+  @apply bg-dark-surface text-dark-text;
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .password-toggle-btn {
+  @apply text-dark-text/40 hover:text-dark-text;
+}
+
+/* ============================================
+   4. ADMIN FORMS - Dark Mode
+   ============================================ */
+
+.dark .admin-pages-dropdown {
+  @apply bg-dark-surface text-dark-text border-dark-text/20;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark .admin-pages-dropdown:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .apn-search-bar input {
+  @apply bg-dark-surface text-dark-text placeholder-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark .apn-search-bar input:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .ace-current-file {
+  @apply text-dark-text;
+}
+
+.dark textarea {
+  @apply bg-dark-surface text-dark-text;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark textarea:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+/* ============================================
+   5. MODAL FORMS - Dark Mode
+   ============================================ */
+
+.dark .report-modal-select,
+.dark .report-modal-textarea {
+  @apply bg-dark-surface text-dark-text placeholder-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark .report-modal-select:focus,
+.dark .report-modal-textarea:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+.dark .report-modal-label {
+  @apply text-dark-text/80;
+}
+
+/* ============================================
+   6. IMAGE CROPPER FORMS - Dark Mode
+   ============================================ */
+
+.dark .image-cropper-zoom-container input[type="range"] {
+  @apply bg-dark-surface;
+}
+
+.dark .image-cropper-zoom-label {
+  @apply text-dark-text;
+}
+
+/* ============================================
+   7. EMAIL VALIDATOR - Dark Mode
+   ============================================ */
+
+.dark .email-validator-input-wrapper input {
+  @apply bg-dark-surface text-dark-text placeholder-dark-text/40;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت - ثابت */
+}
+
+.dark .email-validator-input-wrapper input:focus {
+  border: 2px solid #D4816180 !important;
+}
+
+/* ============================================
+   8. GENERIC FORM ELEMENTS - Dark Mode
+   ============================================ */
+
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="tel"],
+.dark input[type="number"],
+.dark input[type="url"],
+.dark input[type="search"],
+.dark input[type="date"],
+.dark input[type="time"],
+.dark input[type="datetime-local"],
+.dark select,
+.dark textarea {
+  @apply bg-dark-surface text-dark-text placeholder-dark-text/40;
+  border-color: #D4816180 !important; /* نحاسي باهت - ثابت */
+  transition: all 300ms ease-in-out;
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="tel"]:focus,
+.dark input[type="number"]:focus,
+.dark input[type="url"]:focus,
+.dark input[type="search"]:focus,
+.dark input[type="date"]:focus,
+.dark input[type="time"]:focus,
+.dark input[type="datetime-local"]:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #D4816180 !important; /* نحاسي باهت - لا يتغير */
+  @apply outline-none;
+}
+
+.dark input[type="text"]:hover,
+.dark input[type="email"]:hover,
+.dark input[type="password"]:hover,
+.dark input[type="tel"]:hover,
+.dark input[type="number"]:hover,
+.dark input[type="url"]:hover,
+.dark input[type="search"]:hover,
+.dark input[type="date"]:hover,
+.dark input[type="time"]:hover,
+.dark input[type="datetime-local"]:hover,
+.dark select:hover,
+.dark textarea:hover {
+  border-color: #D4816180 !important; /* نحاسي باهت - لا يتغير */
+}
+
+/* Checkbox and Radio dark mode */
+.dark input[type="checkbox"],
+.dark input[type="radio"] {
+  @apply bg-dark-surface border-dark-text/30;
+}
+
+.dark input[type="checkbox"]:checked,
+.dark input[type="radio"]:checked {
+  @apply bg-dark-text border-dark-text;
+}
+
+/* Form labels dark mode */
+.dark label {
+  @apply text-dark-text/80;
+}
+
+/* Form error messages dark mode */
+.dark .error-message,
+.dark .field-error,
+.dark .validation-error {
+  @apply text-red-400;
+}
+
+/* Form success messages dark mode */
+.dark .success-message {
+  @apply text-green-400;
+}
+
+/* Disabled inputs dark mode */
+.dark input:disabled,
+.dark select:disabled,
+.dark textarea:disabled {
+  @apply bg-dark-surface/50 text-dark-text/30 cursor-not-allowed;
+  border-color: #D4816180 !important; /* نحاسي باهت حتى عند التعطيل */
+}
+
+/* Placeholder dark mode */
+.dark ::placeholder {
+  @apply text-dark-text/40;
+}
+
+/* Select dropdown options dark mode */
+.dark select option {
+  @apply bg-dark-surface text-dark-text;
+}
+
+/* ============================================
+   9. FORM BUTTONS - Dark Mode
+   ============================================ */
+
+.dark button[type="submit"],
+.dark .submit-btn,
+.dark .primary-btn {
+  @apply bg-accent text-dark-bg;
+}
+
+.dark button[type="submit"]:hover,
+.dark .submit-btn:hover,
+.dark .primary-btn:hover {
+  @apply bg-accent/90;
+}
+
+.dark button[type="button"],
+.dark .secondary-btn {
+  @apply bg-dark-surface text-dark-text border-dark-text/20;
+}
+
+.dark button[type="button"]:hover,
+.dark .secondary-btn:hover {
+  @apply bg-dark-surface/80;
+}
+
+/* ============================================
+   10. FORM VALIDATION STATES - Dark Mode
+   ============================================ */
+
+.dark input.error,
+.dark select.error,
+.dark textarea.error {
+  @apply border-red-400/50;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت حتى مع الخطأ */
+}
+
+.dark input.success,
+.dark select.success,
+.dark textarea.success {
+  @apply border-green-400/50;
+  border: 2px solid #D4816180 !important; /* نحاسي باهت حتى مع النجاح */
+}
+
+/* ============================================
+   11. SMOOTH TRANSITIONS
+   ============================================ */
+
+.dark input,
+.dark select,
+.dark textarea,
+.dark button,
+.dark label {
+  transition: all 300ms ease-in-out;
+}
+
+/* ============================================
+   12. RTL SUPPORT FOR DARK MODE
+   ============================================ */
+
+[dir="rtl"].dark input,
+[dir="rtl"].dark select,
+[dir="rtl"].dark textarea {
+  @apply text-right;
+}
+
+[dir="ltr"].dark input,
+[dir="ltr"].dark select,
+[dir="ltr"].dark textarea {
+  @apply text-left;
+}
+
+/* ============================================
+   13. ACCESSIBILITY - FOCUS INDICATORS
+   ============================================ */
+
+.dark input:focus-visible,
+.dark select:focus-visible,
+.dark textarea:focus-visible,
+.dark button:focus-visible {
+  @apply outline-none ring-2 ring-accent/50 ring-offset-2 ring-offset-dark-bg;
+}
+
+/* ============================================
+   14. MOBILE OPTIMIZATIONS
+   ============================================ */
+
+@media (max-width: 639px) {
+  .dark input,
+  .dark select,
+  .dark textarea {
+    @apply text-base; /* Prevent zoom on iOS */
+  }
+}
+
+/* ============================================
+   END OF DARK MODE FORMS
+   ============================================ */

@@ -83,7 +83,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border: none;
-  outline: none;
+  /* Focus indicator handled by focusIndicators.css */
 }
 
 .progress-btn-primary {

@@ -12,12 +12,13 @@
 }
 
 .modal-backdrop {
-  @apply fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 transition-opacity;
+  @apply fixed inset-0 bg-black bg-opacity-60 dark:bg-black dark:bg-opacity-80 flex items-center justify-center z-50 p-4 transition-all duration-300;
 }
 
 .modal-content {
-  @apply bg-secondary rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto border-4 border-primary;
+  @apply bg-secondary dark:bg-[#2d2d2d] rounded-2xl shadow-2xl p-6 w-full max-w-sm mx-auto border-4 border-primary dark:border-accent;
   animation: modal-enter 0.3s ease-out forwards;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .modal-body {
@@ -25,11 +26,13 @@
 }
 
 .modal-title {
-  @apply text-2xl font-bold text-primary mb-2;
+  @apply text-2xl font-bold text-primary dark:text-[#e0e0e0] mb-2;
+  transition: color 0.3s ease-in-out;
 }
 
 .modal-description {
-  @apply text-primary text-opacity-80 mb-6;
+  @apply text-primary text-opacity-80 dark:text-[#e0e0e0] dark:text-opacity-90 mb-6;
+  transition: color 0.3s ease-in-out;
 }
 
 /* إجبار الخط على modal-description */
@@ -46,15 +49,15 @@
 
 .modal-confirm-btn,
 .modal-cancel-btn {
-  @apply w-full py-3 rounded-lg font-semibold transition-transform;
+  @apply w-full py-3 rounded-lg font-semibold transition-all duration-300;
 }
 
 .modal-confirm-btn {
-  @apply bg-primary text-white hover:bg-primary-dark active:scale-95;
+  @apply bg-primary dark:bg-accent text-white dark:text-[#1a1a1a] hover:bg-primary-dark dark:hover:bg-[#c97151] active:scale-95;
 }
 
 .modal-cancel-btn {
-  @apply bg-secondary text-primary border border-primary hover:bg-primary-light hover:text-white active:scale-95;
+  @apply bg-secondary dark:bg-[#1a1a1a] text-primary dark:text-[#e0e0e0] border border-primary dark:border-accent hover:bg-primary-light dark:hover:bg-[#3d3d3d] hover:text-white dark:hover:text-[#e0e0e0] active:scale-95;
 }
 
 /* تطبيق الخطوط حسب اللغة - بأولوية عالية */

@@ -188,6 +188,7 @@ export default function OAuthCallback() {
   return (
     <div 
       className="oauth-callback-container"
+      role="main"
       style={{ 
         fontFamily,
         minHeight: '100vh',

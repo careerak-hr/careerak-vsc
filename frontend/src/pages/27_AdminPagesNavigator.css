@@ -53,7 +53,7 @@
   font-size: 1.1rem;
   font-weight: bold;
   color: #304B60;
-  outline: none;
+  /* Focus indicator handled by focusIndicators.css */
   transition: all 0.3s;
 }
 

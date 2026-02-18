@@ -1,21 +1,38 @@
 .auth-modal-backdrop {
-  @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4;
+  @apply fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .auth-modal-content {
-  background-color: #E3DAD1 !important; /* البيج الملكي */
-  border: 4px solid #304B60 !important; /* إطار كحلي سميك */
+  background-color: #E3DAD1 !important;
+  border: 4px solid #304B60 !important;
   @apply rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.dark .auth-modal-content {
+  background-color: #2d2d2d !important;
+  border-color: #D48161 !important;
 }
 
 .auth-modal-title {
-  color: #304B60 !important; /* الكحلي الوقور */
+  color: #304B60 !important;
   @apply text-2xl font-black mb-6;
+  transition: color 0.3s ease-in-out;
+}
+
+.dark .auth-modal-title {
+  color: #e0e0e0 !important;
 }
 
 .auth-modal-message {
-  color: #304B60 !important; /* الكحلي الوقور */
+  color: #304B60 !important;
   @apply text-lg font-bold mb-8;
+  transition: color 0.3s ease-in-out;
+}
+
+.dark .auth-modal-message {
+  color: #e0e0e0 !important;
 }
 
 .auth-modal-buttons {
@@ -27,9 +44,16 @@
 }
 
 .auth-modal-btn-primary {
-  background-color: #304B60 !important; /* خلفية كحلي */
-  color: #D48161 !important; /* نص نحاسي */
+  background-color: #304B60 !important;
+  color: #D48161 !important;
   border: 2px solid #304B60 !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.dark .auth-modal-btn-primary {
+  background-color: #D48161 !important;
+  color: #1a1a1a !important;
+  border-color: #D48161 !important;
 }
 
 .auth-modal-btn-primary:hover {
@@ -37,10 +61,21 @@
   transform: scale(1.02);
 }
 
+.dark .auth-modal-btn-primary:hover {
+  background-color: #c97151 !important;
+}
+
 .auth-modal-btn-danger {
-  background-color: #304B60 !important; /* خلفية كحلي */
-  color: #D48161 !important; /* نص نحاسي */
+  background-color: #304B60 !important;
+  color: #D48161 !important;
   border: 2px solid #304B60 !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.dark .auth-modal-btn-danger {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+  border-color: #D48161 !important;
 }
 
 .auth-modal-btn-danger:hover {
@@ -48,16 +83,31 @@
   transform: scale(1.02);
 }
 
+.dark .auth-modal-btn-danger:hover {
+  background-color: #3d3d3d !important;
+}
+
 /* AI Analysis Modal Styles */
 .ai-modal-spinner {
   border-color: #304B60 !important;
   border-top-color: #D48161 !important;
   @apply w-24 h-24 rounded-full border-4 animate-spin mx-auto mb-6;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.dark .ai-modal-spinner {
+  border-color: #D48161 !important;
+  border-top-color: #e0e0e0 !important;
 }
 
 .ai-modal-img {
   border-color: #304B60 !important;
   @apply w-32 h-32 rounded-full object-cover mx-auto mb-6 border-4;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.dark .ai-modal-img {
+  border-color: #D48161 !important;
 }
 
 .ai-modal-image-wrapper {
@@ -68,11 +118,22 @@
   @apply absolute -top-2 -right-2 w-10 h-10 rounded-full flex items-center justify-center text-2xl font-black shadow-lg;
   background-color: #304B60 !important;
   color: #D48161 !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.dark .ai-modal-check-mark {
+  background-color: #D48161 !important;
+  color: #1a1a1a !important;
 }
 
 .ai-modal-message {
   color: #304B60 !important;
   @apply text-base font-bold mb-6;
+  transition: color 0.3s ease-in-out;
+}
+
+.dark .ai-modal-message {
+  color: #e0e0e0 !important;
 }
 
 .ai-modal-btn {

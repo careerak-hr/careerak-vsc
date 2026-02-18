@@ -42,7 +42,7 @@ const AdminCodeEditor = () => {
   };
 
   return (
-    <div className="admin-code-editor">
+    <div className="admin-code-editor" role="main">
       <div className="ace-header">
         <button onClick={() => navigate('/admin-dashboard')} className="ace-back-btn">
           ← {language === 'ar' ? 'العودة' : 'Back'}
@@ -50,7 +50,7 @@ const AdminCodeEditor = () => {
         <h1 className="ace-title">
           {language === 'ar' ? '💻 محرر الأكواد' : '💻 Code Editor'}
         </h1>
-        <button onClick={saveFile} className="ace-save-btn">
+        <button onClick={saveFile} className="ace-save-btn" aria-label={language === 'ar' ? 'حفظ الملف' : 'Save file'}>
           💾 {language === 'ar' ? 'حفظ' : 'Save'}
         </button>
       </div>

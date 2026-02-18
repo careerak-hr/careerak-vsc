@@ -1,0 +1,247 @@
+/* ============================================
+   Dark Mode & Light Mode CSS Variables
+   ============================================
+   
+   This file defines CSS variables for both light and dark modes.
+   Light mode is the default, dark mode can be toggled via .dark class.
+   
+   Color Palette (from project-standards.md):
+   - Primary (كحلي): #304B60
+   - Secondary (بيج): #E3DAD1
+   - Accent (نحاسي): #D48161
+   
+   CRITICAL: Input borders MUST remain #D4816180 in both modes (محرّم تغييرها)
+   ============================================ */
+
+/* ============================================
+   LIGHT MODE (Default)
+   ============================================ */
+:root {
+  /* Background Colors */
+  --bg-primary: #E3DAD1;           /* البيج الملكي - Main background */
+  --bg-secondary: #E8DFD6;         /* بيج أفتح - Secondary background */
+  --bg-tertiary: #F0EBE5;          /* بيج أفتح جداً - Tertiary background */
+  --bg-hover: #DDD4CB;             /* بيج أغمق قليلاً - Hover state */
+  
+  /* Text Colors */
+  --text-primary: #304B60;         /* الكحلي الوقور - Primary text */
+  --text-secondary: #4A6B82;       /* كحلي أفتح - Secondary text */
+  --text-tertiary: #6B8BA3;        /* كحلي أفتح جداً - Tertiary text */
+  --text-muted: #8FA9BE;           /* كحلي باهت - Muted text */
+  --text-inverse: #FFFFFF;         /* أبيض - Text on dark backgrounds */
+  
+  /* Accent Colors */
+  --accent-primary: #D48161;       /* نحاسي - Primary accent */
+  --accent-secondary: #E09A7A;     /* نحاسي أفتح - Secondary accent */
+  --accent-hover: #C26F50;         /* نحاسي أغمق - Hover state */
+  
+  /* Border Colors */
+  --border-primary: #D4816180;     /* نحاسي باهت - Primary borders (CONSTANT) */
+  --border-secondary: #304B6040;   /* كحلي شفاف - Secondary borders */
+  --border-light: #E3DAD180;       /* بيج شفاف - Light borders */
+  
+  /* Input Colors (CRITICAL - DO NOT CHANGE) */
+  --input-border: #D4816180;       /* نحاسي باهت - Input borders (محرّم تغييرها) */
+  --input-bg: #E8DFD6;             /* بيج أفتح - Input background */
+  --input-focus-bg: #E8DFD6;       /* نفس اللون - Focus background */
+  --input-text: #304B60;           /* كحلي - Input text */
+  
+  /* Shadow Colors */
+  --shadow-sm: rgba(48, 75, 96, 0.1);
+  --shadow-md: rgba(48, 75, 96, 0.15);
+  --shadow-lg: rgba(48, 75, 96, 0.2);
+  --shadow-xl: rgba(48, 75, 96, 0.25);
+  
+  /* Modal Colors */
+  --modal-bg: #E3DAD1;             /* بيج - Modal background */
+  --modal-border: #304B60;         /* كحلي - Modal border (4px solid) */
+  --modal-overlay: rgba(48, 75, 96, 0.5);
+  
+  /* Status Colors */
+  --success: #4CAF50;
+  --success-light: #81C784;
+  --warning: #FF9800;
+  --warning-light: #FFB74D;
+  --error: #F44336;
+  --error-light: #E57373;
+  --info: #2196F3;
+  --info-light: #64B5F6;
+  
+  /* Scrollbar Colors */
+  --scrollbar-track: rgba(227, 218, 209, 0.3);
+  --scrollbar-thumb: linear-gradient(to bottom, #304B60, #D48161);
+  --scrollbar-thumb-hover: linear-gradient(to bottom, #D48161, #304B60);
+}
+
+/* ============================================
+   DARK MODE
+   ============================================ */
+.dark {
+  /* Background Colors */
+  --bg-primary: #1A2332;           /* كحلي غامق جداً - Main background */
+  --bg-secondary: #243447;         /* كحلي غامق - Secondary background */
+  --bg-tertiary: #2E3F54;          /* كحلي متوسط - Tertiary background */
+  --bg-hover: #384A61;             /* كحلي أفتح - Hover state */
+  
+  /* Text Colors */
+  --text-primary: #E3DAD1;         /* بيج - Primary text */
+  --text-secondary: #D4CCC3;       /* بيج أغمق - Secondary text */
+  --text-tertiary: #C5BDB4;        /* بيج أغمق جداً - Tertiary text */
+  --text-muted: #A39A91;           /* بيج باهت - Muted text */
+  --text-inverse: #1A2332;         /* كحلي غامق - Text on light backgrounds */
+  
+  /* Accent Colors (same as light mode) */
+  --accent-primary: #D48161;       /* نحاسي - Primary accent */
+  --accent-secondary: #E09A7A;     /* نحاسي أفتح - Secondary accent */
+  --accent-hover: #C26F50;         /* نحاسي أغمق - Hover state */
+  
+  /* Border Colors */
+  --border-primary: #D4816180;     /* نحاسي باهت - Primary borders (CONSTANT) */
+  --border-secondary: #E3DAD140;   /* بيج شفاف - Secondary borders */
+  --border-light: #304B6080;       /* كحلي شفاف - Light borders */
+  
+  /* Input Colors (CRITICAL - Border MUST remain constant) */
+  --input-border: #D4816180;       /* نحاسي باهت - Input borders (محرّم تغييرها) */
+  --input-bg: #243447;             /* كحلي غامق - Input background */
+  --input-focus-bg: #243447;       /* نفس اللون - Focus background */
+  --input-text: #E3DAD1;           /* بيج - Input text */
+  
+  /* Shadow Colors */
+  --shadow-sm: rgba(0, 0, 0, 0.2);
+  --shadow-md: rgba(0, 0, 0, 0.3);
+  --shadow-lg: rgba(0, 0, 0, 0.4);
+  --shadow-xl: rgba(0, 0, 0, 0.5);
+  
+  /* Modal Colors */
+  --modal-bg: #243447;             /* كحلي غامق - Modal background */
+  --modal-border: #D48161;         /* نحاسي - Modal border (4px solid) */
+  --modal-overlay: rgba(0, 0, 0, 0.7);
+  
+  /* Status Colors (slightly adjusted for dark mode) */
+  --success: #66BB6A;
+  --success-light: #81C784;
+  --warning: #FFA726;
+  --warning-light: #FFB74D;
+  --error: #EF5350;
+  --error-light: #E57373;
+  --info: #42A5F5;
+  --info-light: #64B5F6;
+  
+  /* Scrollbar Colors */
+  --scrollbar-track: rgba(36, 52, 71, 0.5);
+  --scrollbar-thumb: linear-gradient(to bottom, #D48161, #E3DAD1);
+  --scrollbar-thumb-hover: linear-gradient(to bottom, #E3DAD1, #D48161);
+}
+
+/* ============================================
+   APPLY VARIABLES TO ELEMENTS
+   ============================================ */
+
+/* Body & Root */
+body {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Inputs, Selects, Textareas */
+input,
+select,
+textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  background-color: var(--input-focus-bg) !important;
+  border-color: var(--input-border) !important; /* CONSTANT - Never changes */
+}
+
+/* Autofill (Light Mode) */
+:root input:-webkit-autofill,
+:root input:-webkit-autofill:hover,
+:root input:-webkit-autofill:focus,
+:root input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-text) !important;
+}
+
+/* Autofill (Dark Mode) */
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--input-text) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+/* Background utilities */
+.bg-primary { background-color: var(--bg-primary) !important; }
+.bg-secondary { background-color: var(--bg-secondary) !important; }
+.bg-tertiary { background-color: var(--bg-tertiary) !important; }
+.bg-hover:hover { background-color: var(--bg-hover) !important; }
+
+/* Text utilities */
+.text-primary { color: var(--text-primary) !important; }
+.text-secondary { color: var(--text-secondary) !important; }
+.text-tertiary { color: var(--text-tertiary) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.text-inverse { color: var(--text-inverse) !important; }
+
+/* Accent utilities */
+.text-accent { color: var(--accent-primary) !important; }
+.bg-accent { background-color: var(--accent-primary) !important; }
+.border-accent { border-color: var(--accent-primary) !important; }
+
+/* Border utilities */
+.border-primary { border-color: var(--border-primary) !important; }
+.border-secondary { border-color: var(--border-secondary) !important; }
+.border-light { border-color: var(--border-light) !important; }
+
+/* Status utilities */
+.text-success { color: var(--success) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-error { color: var(--error) !important; }
+.text-info { color: var(--info) !important; }
+
+.bg-success { background-color: var(--success) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+.bg-error { background-color: var(--error) !important; }
+.bg-info { background-color: var(--info) !important; }
+
+/* ============================================
+   NOTES
+   ============================================
+   
+   1. Input border color (#D4816180) is CONSTANT in both modes
+   2. Light mode uses بيج backgrounds with كحلي text
+   3. Dark mode uses كحلي backgrounds with بيج text
+   4. Accent color (نحاسي) remains the same in both modes
+   5. All variables can be used with var(--variable-name)
+   6. To enable dark mode, add class="dark" to <html> or <body>
+   
+   Example usage:
+   <div style="background-color: var(--bg-primary); color: var(--text-primary);">
+     Content
+   </div>
+   
+   ============================================ */

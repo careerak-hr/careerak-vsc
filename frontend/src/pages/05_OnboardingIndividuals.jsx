@@ -19,11 +19,13 @@ const OnboardingIndividuals = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Onboarding Individuals Page</h1>
             <p>Language: {language}</p>
             <p>User: {tempUser?.name || 'Guest'}</p>
             <button onClick={() => handleUpdateUser({ name: 'Test' })}>Update User</button>
+            </main>
         </div>
     );
 }

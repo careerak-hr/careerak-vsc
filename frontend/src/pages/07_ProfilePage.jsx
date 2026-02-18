@@ -19,12 +19,14 @@ const ProfilePage = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Profile Page</h1>
             <p>Language: {language}</p>
             <p>User: {user?.name || 'Guest'}</p>
             <button onClick={() => handleUpdateProfile({ name: 'Updated' })}>Update Profile</button>
             <button onClick={handleLogout}>Logout</button>
+            </main>
         </div>
     );
 }

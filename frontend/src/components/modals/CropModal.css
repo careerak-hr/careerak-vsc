@@ -1,17 +1,21 @@
 .crop-modal-backdrop {
-  @apply fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4;
+  @apply fixed inset-0 bg-black/70 dark:bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .crop-modal-content {
-  @apply bg-secondary p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-primary;
+  @apply bg-secondary dark:bg-[#2d2d2d] p-6 rounded-[2rem] shadow-2xl w-full max-w-md text-center border-4 border-primary dark:border-accent;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .crop-modal-title {
-  @apply text-2xl font-black text-primary mb-4;
+  @apply text-2xl font-black text-primary dark:text-[#e0e0e0] mb-4;
+  transition: color 0.3s ease-in-out;
 }
 
 .crop-modal-subtitle {
-  @apply text-sm font-bold text-primary/70 mb-4;
+  @apply text-sm font-bold text-primary/70 dark:text-[#e0e0e0]/80 mb-4;
+  transition: color 0.3s ease-in-out;
 }
 
 .crop-modal-image-container {
@@ -24,14 +28,15 @@
 
 .crop-modal-btn {
   @apply flex-1 py-3 rounded-xl font-black;
+  transition: all 0.3s ease-in-out;
 }
 
 .crop-modal-btn-primary {
-  @apply bg-primary text-secondary;
+  @apply bg-primary dark:bg-accent text-secondary dark:text-[#1a1a1a];
 }
 
 .crop-modal-btn-secondary {
-  @apply border-2 border-danger text-danger;
+  @apply border-2 border-danger dark:border-accent text-danger dark:text-[#e0e0e0] bg-transparent dark:bg-[#1a1a1a];
 }
 
 /* تطبيق الخطوط حسب اللغة */

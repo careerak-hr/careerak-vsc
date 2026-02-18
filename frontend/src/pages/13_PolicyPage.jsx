@@ -208,16 +208,17 @@ const PolicyPage = ({ isModal }) => {
             dir={isRTL ? 'rtl' : 'ltr'} 
             style={{ fontFamily }}
             className={`${isModal ? '' : 'min-h-screen bg-[#E3DAD1] p-6'}`}
+            role="main"
         >
             {!isModal && (
-                <div className="max-w-4xl mx-auto">
+                <header className="max-w-4xl mx-auto">
                     <h1 className="text-4xl font-black text-[#304B60] mb-6" style={{ fontFamily }}>
                         {currentContent.title}
                     </h1>
-                </div>
+                </header>
             )}
             
-            <div className={`${isModal ? '' : 'max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg'}`}>
+            <main className={`${isModal ? '' : 'max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg'}`}>
                 <p className="text-xl font-black text-[#304B60] mb-4 leading-relaxed" style={{ fontFamily }}>
                     {currentContent.welcome}
                 </p>
@@ -240,7 +241,7 @@ const PolicyPage = ({ isModal }) => {
                         </p>
                     </div>
                 ))}
-            </div>
+            </main>
         </div>
     );
 }

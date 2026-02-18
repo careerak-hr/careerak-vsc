@@ -55,6 +55,7 @@ const LuxuryCheckbox = ({
           onChange={onChange}
           disabled={disabled}
           className="sr-only"
+          aria-checked={checked}
           {...props}
         />
         
@@ -153,6 +154,7 @@ export const PremiumCheckbox = ({
           onChange={onChange}
           disabled={disabled}
           className="sr-only"
+          aria-checked={checked}
           {...props}
         />
         

@@ -3,6 +3,10 @@
 @import './styles/fontEnforcement.css'; /* Import font enforcement */
 @import './styles/dynamicFontEnforcement.css'; /* Import dynamic font enforcement */
 @import './styles/responsiveFixes.css'; /* Import responsive design fixes */
+@import './styles/darkMode.css'; /* Import dark mode & light mode CSS variables */
+@import './styles/darkModePages.css'; /* Import dark mode support for all pages */
+@import './styles/formsDarkMode.css'; /* Import dark mode support for all forms */
+@import './styles/focusIndicators.css'; /* Import WCAG 2.1 AA compliant focus indicators */
 
 @tailwind base;
 @tailwind components;
@@ -113,7 +117,7 @@ textarea:invalid,
 button:invalid,
 form:invalid {
   box-shadow: none !important;
-  outline: none !important;
+  /* Focus indicator handled by focusIndicators.css */
 }
 
 /* إخفاء البالونة المنبثقة البشعة - Webkit (Chrome, Safari, Edge) */

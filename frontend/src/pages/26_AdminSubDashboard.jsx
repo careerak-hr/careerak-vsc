@@ -14,10 +14,12 @@ const AdminSubDashboard = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Admin Sub Dashboard Page</h1>
             <p>Language: {language}</p>
             <p>Admin: {user?.name || 'Admin'}</p>
+            </main>
         </div>
     );
 }

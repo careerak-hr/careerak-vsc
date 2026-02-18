@@ -20,6 +20,21 @@
 
 .navbar-action-btn {
   @apply p-2 text-hint hover:text-primary transition-colors;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+}
+
+.navbar-action-btn:hover {
+  @apply bg-primary/5;
+}
+
+.navbar-action-btn:active {
+  @apply scale-95;
+  transition: transform 0.1s ease;
 }
 
 .navbar-notifications-badge {
@@ -140,4 +155,79 @@
 
 .search-result-subtitle {
     @apply text-sm text-hint;
+}
+
+/* Dark Mode Toggle Specific Styles */
+.navbar-action-btn[aria-label*="Toggle theme"] {
+  @apply relative;
+}
+
+.navbar-action-btn[aria-label*="Toggle theme"]:hover {
+  @apply bg-accent/10;
+}
+
+/* Responsive adjustments */
+@media (max-width: 639px) {
+  .navbar-container {
+    @apply px-4 py-3;
+  }
+
+  .navbar-logo-text {
+    @apply text-lg;
+  }
+
+  .navbar-logo {
+    @apply w-8 h-8;
+  }
+
+  .navbar-actions-container {
+    @apply space-x-2;
+  }
+
+  .navbar-action-btn {
+    @apply p-1.5;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  .navbar-settings-btn {
+    @apply w-10 h-10 text-xl;
+  }
+
+  .settings-panel {
+    @apply w-full;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .navbar-actions-container {
+  @apply space-x-reverse;
+}
+
+[dir="rtl"] .navbar-logo-container {
+  @apply flex-row-reverse;
+}
+
+/* Dark mode enhancements */
+.dark .navbar-action-btn {
+  @apply text-secondary/70 hover:text-accent;
+}
+
+.dark .navbar-action-btn:hover {
+  @apply bg-accent/10;
+}
+
+.dark .settings-panel-btn:hover {
+  @apply bg-accent/10;
+}
+
+/* Animation for theme toggle */
+@keyframes theme-switch {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg); }
+}
+
+.navbar-action-btn[aria-label*="Toggle theme"]:active span {
+  animation: theme-switch 0.5s ease;
 }

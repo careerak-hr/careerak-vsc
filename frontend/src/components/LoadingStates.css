@@ -97,3 +97,58 @@
 .progress-bar-fill {
     @apply bg-primary h-2 rounded-full transition-all duration-300;
 }
+
+/* Dark Mode Support */
+.dark .loading-screen-container {
+  @apply bg-[#1a1a1a];
+}
+
+.dark .loading-logo {
+  @apply bg-[#2d2d2d];
+}
+
+.dark .loading-title,
+.dark .loading-subtitle,
+.dark .loading-message {
+  @apply text-[#e0e0e0];
+}
+
+.dark .loading-dot {
+  @apply bg-[#D48161];
+}
+
+.dark .error-screen-container {
+  @apply bg-[#1a1a1a];
+}
+
+.dark .error-card {
+  @apply bg-[#2d2d2d] border border-[#D48161]/30;
+}
+
+.dark .error-title {
+  @apply text-[#e0e0e0];
+}
+
+.dark .error-message {
+  @apply text-[#e0e0e0]/70;
+}
+
+.dark .error-details-content {
+  @apply bg-[#1a1a1a] border-[#D48161]/30;
+}
+
+.dark .simple-loader-spinner {
+  @apply border-[#D48161];
+}
+
+.dark .progress-loader-container {
+  @apply bg-[#1a1a1a];
+}
+
+.dark .progress-bar-container {
+  @apply bg-[#2d2d2d];
+}
+
+.dark .progress-bar-fill {
+  @apply bg-[#D48161];
+}

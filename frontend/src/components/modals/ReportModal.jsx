@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './ReportModal.css';
 
 const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
@@ -8,6 +9,9 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Focus trap for accessibility - Escape key closes modal
+  const modalRef = useFocusTrap(isOpen, onClose);
 
   const reportReasons = [
     'harassment',
@@ -50,7 +54,7 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
 
   return (
     <div className="report-modal-backdrop">
-      <div className="report-modal-container">
+      <div ref={modalRef} className="report-modal-container">
         <div className="report-modal-content">
           <h2 className="report-modal-title">
             {t.report} {targetName || t.report_content}

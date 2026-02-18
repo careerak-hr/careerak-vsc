@@ -80,7 +80,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`login-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`login-page-container dark:bg-primary transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} role="main">
       {/* رسالة تأكيد الخروج */}
       <ExitConfirmModal 
         isOpen={showExitModal}
@@ -88,7 +88,7 @@ export default function LoginPage() {
         onCancel={cancelExit}
       />
 
-      <div className="login-page-content">
+      <main className="login-page-content dark:text-primary transition-colors duration-300">
 
         <div className="login-logo-container">
           <div className="login-logo">
@@ -97,15 +97,15 @@ export default function LoginPage() {
         </div>
 
         <div className="login-title-container">
-          <h1 className="login-title" style={{ fontFamily: 'serif' }}>Careerak</h1>
-          <p className="login-subtitle">{t.subtitle}</p>
+          <h1 className="login-title dark:text-primary transition-colors duration-300" style={{ fontFamily: 'serif' }}>Careerak</h1>
+          <p className="login-subtitle dark:text-secondary transition-colors duration-300">{t.subtitle}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           <input
             type="text"
             placeholder={t.userPlaceholder}
-            className="login-input"
+            className="login-input dark:bg-secondary dark:text-primary transition-all duration-300"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             required
@@ -115,7 +115,7 @@ export default function LoginPage() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder={t.passPlaceholder}
-              className="login-input"
+              className="login-input dark:bg-secondary dark:text-primary transition-all duration-300"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -123,7 +123,7 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className={`login-password-toggle ${isRTL ? 'left-6' : 'right-6'}`}>
+              className={`login-password-toggle dark:text-muted dark:hover:text-primary transition-colors duration-300 ${isRTL ? 'left-6' : 'right-6'}`}>
               {showPassword ? '👁️' : '🙈'}
             </button>
           </div>
@@ -140,13 +140,14 @@ export default function LoginPage() {
               id="remember"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="login-remember-me-checkbox"
+              className="login-remember-me-checkbox dark:bg-secondary dark:border-secondary transition-all duration-300"
+              aria-checked={rememberMe}
             />
-            <label htmlFor="remember" className="login-remember-me-label">{t.rememberMe}</label>
+            <label htmlFor="remember" className="login-remember-me-label dark:text-secondary transition-colors duration-300">{t.rememberMe}</label>
           </div>
 
-          <button type="submit" disabled={loading} className="login-submit-btn">
-            {loading ? <div className="login-loading-spinner"></div> : t.loginBtn}
+          <button type="submit" disabled={loading} className="login-submit-btn dark:bg-accent dark:text-inverse transition-all duration-300">
+            {loading ? <div className="login-loading-spinner dark:border-accent transition-colors duration-300"></div> : t.loginBtn}
           </button>
         </form>
 
@@ -154,11 +155,11 @@ export default function LoginPage() {
         <OAuthButtons mode="login" />
 
         <div className="login-no-account-container">
-          <p className="login-no-account-text">
-            {t.noAccount} <span onClick={() => navigate('/auth')} className="login-create-account-link">{t.createAccount}</span>
+          <p className="login-no-account-text dark:text-secondary transition-colors duration-300">
+            {t.noAccount} <span onClick={() => navigate('/auth')} className="login-create-account-link dark:text-accent dark:hover:text-accent-hover transition-colors duration-300">{t.createAccount}</span>
           </p>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

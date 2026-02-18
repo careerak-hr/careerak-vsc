@@ -18,6 +18,37 @@ const AdminSystemControl = () => {
   const [logs, setLogs] = useState([]);
   const [activeTab, setActiveTab] = useState('info');
 
+  // Tab navigation order
+  const tabs = ['info', 'actions', 'logs'];
+
+  // Keyboard navigation for tabs
+  const handleTabKeyDown = (e) => {
+    const currentIndex = tabs.indexOf(activeTab);
+    let newIndex = currentIndex;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      newIndex = (currentIndex + 1) % tabs.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      newIndex = tabs.length - 1;
+    }
+
+    if (newIndex !== currentIndex) {
+      setActiveTab(tabs[newIndex]);
+      // Focus the new tab
+      setTimeout(() => {
+        document.getElementById(`${tabs[newIndex]}-tab`)?.focus();
+      }, 0);
+    }
+  };
+
   // تشغيل الموسيقى عند فتح الصفحة
   useEffect(() => {
     if (startBgMusic) startBgMusic();
@@ -87,7 +118,7 @@ const AdminSystemControl = () => {
   };
 
   const renderInfoTab = () => (
-    <div className="asc-tab-content">
+    <div className="asc-tab-content" role="tabpanel" id="info-panel" aria-labelledby="info-tab">
       <h2 className="asc-section-title">
         {language === 'ar' ? '📊 معلومات النظام' : 'System Information'}
       </h2>
@@ -123,33 +154,33 @@ const AdminSystemControl = () => {
   );
 
   const renderActionsTab = () => (
-    <div className="asc-tab-content">
+    <div className="asc-tab-content" role="tabpanel" id="actions-panel" aria-labelledby="actions-tab">
       <h2 className="asc-section-title">
         {language === 'ar' ? '⚡ إجراءات النظام' : 'System Actions'}
       </h2>
       <div className="asc-actions-grid">
-        <button onClick={reloadApp} className="asc-action-btn reload">
+        <button onClick={reloadApp} className="asc-action-btn reload" aria-label={language === 'ar' ? 'إعادة تحميل التطبيق' : 'Reload App'}>
           🔄 {language === 'ar' ? 'إعادة تحميل التطبيق' : 'Reload App'}
         </button>
-        <button onClick={clearCache} className="asc-action-btn cache">
+        <button onClick={clearCache} className="asc-action-btn cache" aria-label={language === 'ar' ? 'مسح الذاكرة المؤقتة' : 'Clear Cache'}>
           🗑️ {language === 'ar' ? 'مسح الذاكرة المؤقتة' : 'Clear Cache'}
         </button>
-        <button onClick={clearLocalStorage} className="asc-action-btn danger">
+        <button onClick={clearLocalStorage} className="asc-action-btn danger" aria-label={language === 'ar' ? 'مسح جميع البيانات' : 'Clear All Data'}>
           ⚠️ {language === 'ar' ? 'مسح جميع البيانات' : 'Clear All Data'}
         </button>
-        <button onClick={loadLogs} className="asc-action-btn info">
+        <button onClick={loadLogs} className="asc-action-btn info" aria-label={language === 'ar' ? 'تحديث السجلات' : 'Refresh Logs'}>
           📋 {language === 'ar' ? 'تحديث السجلات' : 'Refresh Logs'}
         </button>
-        <button onClick={exportLogs} className="asc-action-btn export">
+        <button onClick={exportLogs} className="asc-action-btn export" aria-label={language === 'ar' ? 'تصدير السجلات' : 'Export Logs'}>
           💾 {language === 'ar' ? 'تصدير السجلات' : 'Export Logs'}
         </button>
-        <button onClick={() => navigate('/admin-database')} className="asc-action-btn database">
+        <button onClick={() => navigate('/admin-database')} className="asc-action-btn database" aria-label={language === 'ar' ? 'إدارة قاعدة البيانات' : 'Database Manager'}>
           🗄️ {language === 'ar' ? 'إدارة قاعدة البيانات' : 'Database Manager'}
         </button>
-        <button onClick={() => navigate('/admin-code-editor')} className="asc-action-btn code">
+        <button onClick={() => navigate('/admin-code-editor')} className="asc-action-btn code" aria-label={language === 'ar' ? 'محرر الأكواد' : 'Code Editor'}>
           💻 {language === 'ar' ? 'محرر الأكواد' : 'Code Editor'}
         </button>
-        <button onClick={() => navigate('/admin-pages')} className="asc-action-btn pages">
+        <button onClick={() => navigate('/admin-pages')} className="asc-action-btn pages" aria-label={language === 'ar' ? 'متصفح الصفحات' : 'Pages Navigator'}>
           🗺️ {language === 'ar' ? 'متصفح الصفحات' : 'Pages Navigator'}
         </button>
       </div>
@@ -157,7 +188,7 @@ const AdminSystemControl = () => {
   );
 
   const renderLogsTab = () => (
-    <div className="asc-tab-content">
+    <div className="asc-tab-content" role="tabpanel" id="logs-panel" aria-labelledby="logs-tab">
       <h2 className="asc-section-title">
         {language === 'ar' ? '📝 سجلات LocalStorage' : 'LocalStorage Logs'}
       </h2>
@@ -179,7 +210,7 @@ const AdminSystemControl = () => {
   );
 
   return (
-    <div className="admin-system-control">
+    <div className="admin-system-control" role="main">
       <div className="asc-header">
         <button onClick={() => navigate('/admin-dashboard')} className="asc-back-btn">
           ← {language === 'ar' ? 'العودة' : 'Back'}
@@ -189,22 +220,40 @@ const AdminSystemControl = () => {
         </h1>
       </div>
 
-      <div className="asc-tabs">
+      <div className="asc-tabs" role="tablist">
         <button
           onClick={() => setActiveTab('info')}
+          onKeyDown={handleTabKeyDown}
           className={`asc-tab-btn ${activeTab === 'info' ? 'active' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'info'}
+          aria-controls="info-panel"
+          id="info-tab"
+          tabIndex={activeTab === 'info' ? 0 : -1}
         >
           📊 {language === 'ar' ? 'المعلومات' : 'Info'}
         </button>
         <button
           onClick={() => setActiveTab('actions')}
+          onKeyDown={handleTabKeyDown}
           className={`asc-tab-btn ${activeTab === 'actions' ? 'active' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'actions'}
+          aria-controls="actions-panel"
+          id="actions-tab"
+          tabIndex={activeTab === 'actions' ? 0 : -1}
         >
           ⚡ {language === 'ar' ? 'الإجراءات' : 'Actions'}
         </button>
         <button
           onClick={() => setActiveTab('logs')}
+          onKeyDown={handleTabKeyDown}
           className={`asc-tab-btn ${activeTab === 'logs' ? 'active' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'logs'}
+          aria-controls="logs-panel"
+          id="logs-tab"
+          tabIndex={activeTab === 'logs' ? 0 : -1}
         >
           📝 {language === 'ar' ? 'السجلات' : 'Logs'}
         </button>

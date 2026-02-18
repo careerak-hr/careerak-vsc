@@ -1,0 +1,825 @@
+/* ============================================
+   Dark Mode Support for All Page Components
+   ============================================
+   
+   This file applies dark mode styling to all page components
+   using Tailwind dark: classes and CSS variables.
+   
+   CRITICAL RULES:
+   - Input borders MUST remain #D4816180 in both modes
+   - Smooth transitions (300ms ease-in-out)
+   - Support RTL/LTR layouts
+   - Maintain existing color palette
+   
+   ============================================ */
+
+/* ============================================
+   GLOBAL PAGE CONTAINERS
+   ============================================ */
+
+/* All page containers */
+.dark [class*="-page-container"],
+.dark [class*="-container"] {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+/* Content areas */
+.dark [class*="-content"],
+.dark [class*="-page-content"] {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+
+/* Titles and headings */
+.dark [class*="-title"],
+.dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+  color: var(--text-primary) !important;
+  transition: color 300ms ease-in-out;
+}
+
+/* Subtitles */
+.dark [class*="-subtitle"] {
+  color: var(--text-secondary) !important;
+  transition: color 300ms ease-in-out;
+}
+
+/* Paragraphs and text */
+.dark p, .dark span, .dark div {
+  color: var(--text-primary);
+  transition: color 300ms ease-in-out;
+}
+
+/* Muted text */
+.dark [class*="-muted"],
+.dark [class*="-hint"] {
+  color: var(--text-muted) !important;
+  transition: color 300ms ease-in-out;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+/* Primary buttons */
+.dark [class*="-btn"],
+.dark [class*="-button"],
+.dark button:not([class*="oauth"]) {
+  background-color: var(--accent-primary) !important;
+  color: var(--text-inverse) !important;
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out, transform 200ms ease-in-out;
+}
+
+.dark [class*="-btn"]:hover,
+.dark [class*="-button"]:hover,
+.dark button:not([class*="oauth"]):hover {
+  background-color: var(--accent-hover) !important;
+}
+
+/* Submit buttons */
+.dark [class*="-submit-btn"] {
+  background-color: var(--accent-primary) !important;
+  color: var(--text-inverse) !important;
+}
+
+/* ============================================
+   FORMS & INPUTS (CRITICAL)
+   ============================================ */
+
+/* All inputs - Border color MUST remain constant */
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important; /* CONSTANT - Never changes */
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  background-color: var(--input-focus-bg) !important;
+  border-color: var(--input-border) !important; /* CONSTANT - Never changes */
+}
+
+.dark input:hover,
+.dark select:hover,
+.dark textarea:hover {
+  border-color: var(--input-border) !important; /* CONSTANT - Never changes */
+}
+
+.dark input:active,
+.dark select:active,
+.dark textarea:active {
+  border-color: var(--input-border) !important; /* CONSTANT - Never changes */
+}
+
+/* Placeholder text */
+.dark input::placeholder,
+.dark select::placeholder,
+.dark textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.6;
+}
+
+/* Form labels */
+.dark label {
+  color: var(--text-secondary) !important;
+  transition: color 300ms ease-in-out;
+}
+
+/* Checkboxes and radio buttons */
+.dark input[type="checkbox"],
+.dark input[type="radio"] {
+  border-color: var(--border-secondary) !important;
+  background-color: var(--input-bg) !important;
+}
+
+.dark input[type="checkbox"]:checked,
+.dark input[type="radio"]:checked {
+  background-color: var(--accent-primary) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* ============================================
+   CARDS & CONTAINERS
+   ============================================ */
+
+/* Cards - Generic pattern matching */
+.dark [class*="-card"] {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+.dark [class*="-card"]:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Specific card types */
+.dark .admin-welcome-card {
+  background-color: var(--bg-tertiary) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .admin-stat-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-stat-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .admin-quick-nav-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-user-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-user-card:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.dark .apn-page-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .apn-page-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .asc-info-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .adb-document-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-sub-dashboard-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-sub-dashboard-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .interface-card,
+.dark .interface-workshops-card,
+.dark .interface-shops-card,
+.dark .interface-ultimate-card,
+.dark .interface-visual-card,
+.dark .interface-illiterate-card,
+.dark .interface-companies-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .interface-card:hover,
+.dark .interface-workshops-card:hover,
+.dark .interface-shops-card:hover,
+.dark .interface-ultimate-card:hover,
+.dark .interface-visual-card:hover,
+.dark .interface-illiterate-card:hover,
+.dark .interface-companies-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .error-boundary-card,
+.dark .error-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--error) !important;
+}
+
+.dark .success-message-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--success) !important;
+}
+
+.dark .account-type-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .account-type-card.selected {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .account-type-card:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.dark .progress-restoration-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .oauth-callback-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+/* Job and Course cards */
+.dark .job-card,
+.dark .course-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .job-card:hover,
+.dark .course-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* Card titles and content */
+.dark [class*="-card-title"] {
+  color: var(--text-primary) !important;
+}
+
+.dark [class*="-card-subtitle"],
+.dark [class*="-card-description"],
+.dark [class*="-card-details"] {
+  color: var(--text-secondary) !important;
+}
+
+.dark [class*="-card-value"] {
+  color: var(--text-primary) !important;
+}
+
+/* Boxes and panels */
+.dark [class*="-box"],
+.dark [class*="-panel"] {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out;
+}
+
+/* ============================================
+   LOGO & BRANDING
+   ============================================ */
+
+/* Logo containers */
+.dark [class*="-logo-container"] {
+  background-color: transparent !important;
+}
+
+.dark [class*="-logo"] {
+  border-color: var(--accent-primary) !important;
+  background-color: var(--bg-secondary) !important;
+  transition: border-color 300ms ease-in-out, background-color 300ms ease-in-out;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+
+/* Navigation bars */
+.dark nav,
+.dark [class*="-nav"],
+.dark [class*="-navbar"] {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out;
+}
+
+/* Navigation links */
+.dark nav a,
+.dark [class*="-nav"] a,
+.dark [class*="-navbar"] a {
+  color: var(--text-primary) !important;
+  transition: color 300ms ease-in-out;
+}
+
+.dark nav a:hover,
+.dark [class*="-nav"] a:hover,
+.dark [class*="-navbar"] a:hover {
+  color: var(--accent-primary) !important;
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+
+/* Modal overlays */
+.dark [class*="-modal-overlay"],
+.dark [class*="-backdrop"] {
+  background-color: var(--modal-overlay) !important;
+  transition: background-color 300ms ease-in-out;
+}
+
+/* Modal content */
+.dark [class*="-modal"],
+.dark [class*="-dialog"] {
+  background-color: var(--modal-bg) !important;
+  border-color: var(--modal-border) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 300ms ease-in-out, border-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+/* Tables */
+.dark table {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+}
+
+.dark th {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark td {
+  border-color: var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark tr:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* ============================================
+   LISTS
+   ============================================ */
+
+/* List items */
+.dark li {
+  color: var(--text-primary) !important;
+  transition: color 300ms ease-in-out;
+}
+
+.dark ul, .dark ol {
+  color: var(--text-primary) !important;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+/* Links */
+.dark a {
+  color: var(--accent-primary) !important;
+  transition: color 300ms ease-in-out;
+}
+
+.dark a:hover {
+  color: var(--accent-hover) !important;
+}
+
+/* ============================================
+   BORDERS & DIVIDERS
+   ============================================ */
+
+/* Borders */
+.dark [class*="-border"] {
+  border-color: var(--border-secondary) !important;
+  transition: border-color 300ms ease-in-out;
+}
+
+/* Dividers */
+.dark hr,
+.dark [class*="-divider"] {
+  border-color: var(--border-secondary) !important;
+  transition: border-color 300ms ease-in-out;
+}
+
+/* ============================================
+   SHADOWS
+   ============================================ */
+
+/* Shadows - adjusted for dark mode */
+.dark [class*="shadow"] {
+  box-shadow: 0 4px 6px var(--shadow-md), 0 2px 4px var(--shadow-sm);
+}
+
+.dark [class*="shadow-lg"] {
+  box-shadow: 0 10px 15px var(--shadow-lg), 0 4px 6px var(--shadow-md);
+}
+
+.dark [class*="shadow-xl"] {
+  box-shadow: 0 20px 25px var(--shadow-xl), 0 10px 10px var(--shadow-lg);
+}
+
+/* ============================================
+   STATUS MESSAGES
+   ============================================ */
+
+/* Error messages */
+.dark [class*="-error"] {
+  color: var(--error) !important;
+  background-color: rgba(244, 67, 54, 0.1) !important;
+  transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+}
+
+/* Success messages */
+.dark [class*="-success"] {
+  color: var(--success) !important;
+  background-color: rgba(76, 175, 80, 0.1) !important;
+  transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+}
+
+/* Warning messages */
+.dark [class*="-warning"] {
+  color: var(--warning) !important;
+  background-color: rgba(255, 152, 0, 0.1) !important;
+  transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+}
+
+/* Info messages */
+.dark [class*="-info"] {
+  color: var(--info) !important;
+  background-color: rgba(33, 150, 243, 0.1) !important;
+  transition: color 300ms ease-in-out, background-color 300ms ease-in-out;
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+/* Loading spinners */
+.dark [class*="-spinner"],
+.dark [class*="-loading"] {
+  border-color: var(--accent-primary) !important;
+  transition: border-color 300ms ease-in-out;
+}
+
+/* ============================================
+   SPECIFIC PAGE OVERRIDES
+   ============================================ */
+
+/* Language Page */
+.dark .lang-page-glow-dot {
+  background-color: rgba(212, 129, 97, 0.35) !important; /* نحاسي مع شفافية */
+}
+
+/* Login Page */
+.dark .login-password-toggle {
+  color: var(--text-muted) !important;
+}
+
+.dark .login-password-toggle:hover {
+  color: var(--text-primary) !important;
+}
+
+/* Profile Page */
+.dark .profile-avatar {
+  border-color: var(--accent-primary) !important;
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Job Postings Page */
+.dark .job-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .job-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .job-card-title {
+  color: var(--text-primary) !important;
+}
+
+.dark .job-card-company,
+.dark .job-card-details {
+  color: var(--text-secondary) !important;
+}
+
+/* Courses Page */
+.dark .course-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .course-card:hover {
+  background-color: var(--bg-hover) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.dark .course-card-title {
+  color: var(--text-primary) !important;
+}
+
+.dark .course-card-price {
+  color: var(--accent-primary) !important;
+}
+
+/* Settings Page */
+.dark .settings-section {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+/* Admin Dashboard */
+.dark .admin-sidebar {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-card {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+}
+
+.dark .admin-welcome-card-content {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-welcome-title {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-welcome-subtitle {
+  color: var(--text-secondary) !important;
+}
+
+.dark .admin-stat-card-title {
+  color: var(--text-secondary) !important;
+}
+
+.dark .admin-stat-card-value {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-user-card-name {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-user-card-details,
+.dark .admin-user-card-phone {
+  color: var(--text-secondary) !important;
+}
+
+.dark .admin-content-count {
+  background-color: rgba(212, 129, 97, 0.2) !important;
+  color: var(--accent-primary) !important;
+}
+
+/* Admin Pages Navigator */
+.dark .apn-page-name {
+  color: var(--text-primary) !important;
+}
+
+.dark .apn-page-path {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Admin System Control */
+.dark .asc-info-label {
+  color: var(--text-secondary) !important;
+}
+
+.dark .asc-info-value {
+  color: var(--text-primary) !important;
+}
+
+/* Admin Database Manager */
+.dark .adb-document-json {
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  border: 1px solid var(--border-secondary) !important;
+}
+
+.dark .adb-collection-btn {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.dark .adb-collection-btn:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.dark .adb-collection-btn.active {
+  background-color: var(--accent-primary) !important;
+  color: var(--text-inverse) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* Admin Sub Dashboard */
+.dark .admin-sub-dashboard-card-icon {
+  opacity: 0.3 !important;
+}
+
+.dark .admin-sub-dashboard-card-title {
+  color: var(--text-primary) !important;
+}
+
+.dark .admin-sub-dashboard-card-description {
+  color: var(--text-secondary) !important;
+}
+
+/* Interface Cards (all variants) */
+.dark .interface-workshops-card-icon,
+.dark .interface-shops-card-icon,
+.dark .interface-ultimate-card-icon,
+.dark .interface-visual-card-icon,
+.dark .interface-illiterate-card-icon,
+.dark .interface-companies-card-icon {
+  opacity: 0.3 !important;
+}
+
+.dark .interface-workshops-card-title,
+.dark .interface-shops-card-title,
+.dark .interface-ultimate-card-title,
+.dark .interface-visual-card-title,
+.dark .interface-illiterate-card-title,
+.dark .interface-companies-card-title {
+  color: var(--text-primary) !important;
+}
+
+.dark .interface-workshops-card-description,
+.dark .interface-shops-card-description,
+.dark .interface-ultimate-card-description,
+.dark .interface-visual-card-description,
+.dark .interface-illiterate-card-description,
+.dark .interface-companies-card-description {
+  color: var(--text-secondary) !important;
+}
+
+/* Error Boundary Cards */
+.dark .error-boundary-title {
+  color: var(--text-primary) !important;
+}
+
+.dark .error-boundary-message {
+  color: var(--text-secondary) !important;
+}
+
+.dark .error-boundary-details {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-secondary) !important;
+}
+
+.dark .error-boundary-stack {
+  background-color: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  border: 1px solid var(--border-secondary) !important;
+}
+
+/* Success Message Cards */
+.dark .success-message-icon {
+  color: var(--success) !important;
+}
+
+/* Account Type Cards */
+.dark .account-type-icon {
+  opacity: 0.8 !important;
+}
+
+/* Progress Restoration Cards */
+.dark .progress-restoration-header {
+  color: var(--text-primary) !important;
+}
+
+.dark .progress-restoration-icon {
+  color: var(--accent-primary) !important;
+}
+
+/* ============================================
+   TAILWIND DARK MODE UTILITIES
+   ============================================ */
+
+/* Background colors */
+.dark .dark\:bg-primary { background-color: var(--bg-primary) !important; }
+.dark .dark\:bg-secondary { background-color: var(--bg-secondary) !important; }
+.dark .dark\:bg-tertiary { background-color: var(--bg-tertiary) !important; }
+
+/* Text colors */
+.dark .dark\:text-primary { color: var(--text-primary) !important; }
+.dark .dark\:text-secondary { color: var(--text-secondary) !important; }
+.dark .dark\:text-tertiary { color: var(--text-tertiary) !important; }
+.dark .dark\:text-muted { color: var(--text-muted) !important; }
+
+/* Border colors */
+.dark .dark\:border-primary { border-color: var(--border-primary) !important; }
+.dark .dark\:border-secondary { border-color: var(--border-secondary) !important; }
+
+/* ============================================
+   RTL SUPPORT
+   ============================================ */
+
+/* RTL-specific adjustments for dark mode */
+.dark [dir="rtl"] {
+  /* RTL styles remain the same, just with dark mode colors */
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Focus states */
+.dark *:focus {
+  outline-color: var(--accent-primary) !important;
+  outline-width: 2px;
+  outline-style: solid;
+  outline-offset: 2px;
+}
+
+/* Focus visible (keyboard navigation) */
+.dark *:focus-visible {
+  outline-color: var(--accent-primary) !important;
+  outline-width: 2px;
+  outline-style: solid;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* Ensure all transitions respect dark mode */
+.dark * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease-in-out;
+  transition-duration: 300ms;
+}
+
+/* Disable transitions for elements that shouldn't animate */
+.dark [class*="-no-transition"],
+.dark .no-transition {
+  transition: none !important;
+}
+
+/* ============================================
+   NOTES
+   ============================================
+   
+   1. This file is automatically applied when .dark class is on <html>
+   2. Input borders remain #D4816180 in both modes (CRITICAL)
+   3. All transitions are 300ms ease-in-out
+   4. Supports RTL/LTR layouts
+   5. Maintains accessibility with proper focus states
+   6. Compatible with existing Tailwind classes
+   
+   ============================================ */

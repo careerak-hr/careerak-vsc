@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 
 // ✅ إضافة الأنيميشن في head مباشرة
 if (typeof document !== 'undefined') {
@@ -30,7 +31,7 @@ if (typeof document !== 'undefined') {
 const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
   const { language } = useApp();
 
-  // الترجمات
+  //ترجمات
   const translations = {
     ar: {
       title: 'تأكيد الخروج',
@@ -68,11 +69,14 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
     fontStyle: 'inherit'
   };
 
+  // Focus trap for accessibility - Escape key closes modal
+  const modalRef = useFocusTrap(isOpen, onCancel);
+
   if (!isOpen) return null;
 
   return (
     <div 
-      className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-all duration-300"
       onClick={onCancel}
       dir={isRTL ? 'rtl' : 'ltr'}
       style={{ 
@@ -82,9 +86,9 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
       }}
     >
       <div 
-        className="bg-secondary rounded-3xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden"
+        ref={modalRef}
+        className="bg-secondary dark:bg-[#2d2d2d] rounded-3xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden border-4 border-[#304B60] dark:border-[#D48161] transition-all duration-300"
         style={{ 
-          border: '4px solid #304B60',
           animation: 'scaleIn 0.2s ease-out',
           WebkitBackfaceVisibility: 'hidden',
           backfaceVisibility: 'hidden',
@@ -97,7 +101,7 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
         <div className="p-8 text-center">
           {/* العنوان */}
           <h2 
-            className="text-2xl font-black text-primary mb-4"
+            className="text-2xl font-black text-primary dark:text-[#e0e0e0] mb-4 transition-colors duration-300"
             style={fontStyle}
           >
             {t.title}
@@ -105,7 +109,7 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
 
           {/* الرسالة */}
           <p 
-            className="text-lg font-bold text-primary/80 mb-8"
+            className="text-lg font-bold text-primary/80 dark:text-[#e0e0e0]/90 mb-8 transition-colors duration-300"
             style={fontStyle}
           >
             {t.message}
@@ -116,7 +120,7 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
             {/* زر لا */}
             <button
               onClick={onCancel}
-              className="flex-1 py-4 rounded-2xl font-black text-lg transition-all shadow-lg bg-secondary-light text-primary border-2 border-accent hover:bg-accent hover:text-secondary active:scale-95"
+              className="flex-1 py-4 rounded-2xl font-black text-lg transition-all shadow-lg bg-secondary-light dark:bg-[#1a1a1a] text-primary dark:text-[#e0e0e0] border-2 border-accent hover:bg-accent dark:hover:bg-[#3d3d3d] hover:text-secondary dark:hover:text-[#e0e0e0] active:scale-95 duration-300"
               style={fontStyle}
             >
               {t.no}
@@ -125,7 +129,7 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
             {/* زر نعم */}
             <button
               onClick={onConfirm}
-              className="flex-1 py-4 rounded-2xl font-black text-lg transition-all shadow-lg bg-primary text-accent hover:bg-primary/90 active:scale-95"
+              className="flex-1 py-4 rounded-2xl font-black text-lg transition-all shadow-lg bg-primary dark:bg-accent text-accent dark:text-[#1a1a1a] hover:bg-primary/90 dark:hover:bg-[#c97151] active:scale-95 duration-300"
               style={fontStyle}
             >
               {t.yes}

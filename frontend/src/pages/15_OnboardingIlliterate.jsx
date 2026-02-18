@@ -15,10 +15,12 @@ const OnboardingIlliterate = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Onboarding Illiterate Page</h1>
             <p>Language: {language}</p>
             <button onClick={() => handleUpdateUser({ type: 'illiterate' })}>Continue</button>
+            </main>
         </div>
     );
 }

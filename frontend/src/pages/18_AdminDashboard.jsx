@@ -21,6 +21,37 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
+    // Tab navigation order
+    const tabs = ['overview', 'users', 'content', 'settings'];
+
+    // Keyboard navigation for tabs
+    const handleTabKeyDown = (e) => {
+        const currentIndex = tabs.indexOf(activeTab);
+        let newIndex = currentIndex;
+
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            newIndex = (currentIndex + 1) % tabs.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            newIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1;
+        } else if (e.key === 'Home') {
+            e.preventDefault();
+            newIndex = 0;
+        } else if (e.key === 'End') {
+            e.preventDefault();
+            newIndex = tabs.length - 1;
+        }
+
+        if (newIndex !== currentIndex) {
+            setActiveTab(tabs[newIndex]);
+            // Focus the new tab
+            setTimeout(() => {
+                document.getElementById(`${tabs[newIndex]}-tab`)?.focus();
+            }, 0);
+        }
+    };
+
     // تشغيل الموسيقى عند فتح الصفحة
     useEffect(() => {
         if (startBgMusic) startBgMusic();
@@ -111,7 +142,7 @@ const AdminDashboard = () => {
     };
 
     const renderOverviewTab = () => (
-        <div className="admin-tab-content">
+        <div className="admin-tab-content" role="tabpanel" id="overview-panel" aria-labelledby="overview-tab">
             {/* بطاقة الترحيب */}
             <div className="admin-welcome-card">
                 <div className="admin-welcome-card-content">
@@ -479,7 +510,7 @@ const AdminDashboard = () => {
     );
 
     const renderUsersTab = () => (
-        <div className="admin-tab-content">
+        <div className="admin-tab-content" role="tabpanel" id="users-panel" aria-labelledby="users-tab">
             <div className="admin-users-header">
                 <h2 className="admin-users-title">
                     {language === 'ar' ? 'إدارة المستخدمين' : 
@@ -489,6 +520,9 @@ const AdminDashboard = () => {
                 <button 
                     onClick={fetchDashboardData}
                     className="admin-refresh-btn"
+                    aria-label={language === 'ar' ? 'تحديث البيانات' : 
+                        language === 'fr' ? 'Actualiser les données' : 
+                        'Refresh data'}
                 >
                     🔄 {language === 'ar' ? 'تحديث' : 
                         language === 'fr' ? 'Actualiser' : 
@@ -534,6 +568,9 @@ const AdminDashboard = () => {
                                     onClick={() => handleDeleteUser(user._id)}
                                     className="admin-user-card-delete-btn"
                                     disabled={user.role === 'Admin'}
+                                    aria-label={language === 'ar' ? 'حذف المستخدم' : 
+                                        language === 'fr' ? 'Supprimer l\'utilisateur' : 
+                                        'Delete user'}
                                 >
                                     🗑️ {language === 'ar' ? 'حذف' : 
                                         language === 'fr' ? 'Supprimer' : 
@@ -548,7 +585,7 @@ const AdminDashboard = () => {
     );
 
     const renderContentTab = () => (
-        <div className="admin-tab-content">
+        <div className="admin-tab-content" role="tabpanel" id="content-panel" aria-labelledby="content-tab">
             <h2 className="admin-section-title">
                 {language === 'ar' ? 'إدارة المحتوى' : 
                  language === 'fr' ? 'Gestion du Contenu' : 
@@ -594,7 +631,7 @@ const AdminDashboard = () => {
     );
 
     const renderSettingsTab = () => (
-        <div className="admin-tab-content">
+        <div className="admin-tab-content" role="tabpanel" id="settings-panel" aria-labelledby="settings-tab">
             <h2 className="admin-section-title">
                 {language === 'ar' ? 'إعدادات النظام' : 
                  language === 'fr' ? 'Paramètres Système' : 
@@ -639,23 +676,23 @@ const AdminDashboard = () => {
 
     if (loading) {
         return (
-            <div className="admin-dashboard-container">
-                <div className="admin-loading">
+            <div className="admin-dashboard-container" role="main">
+                <main className="admin-loading">
                     <div className="admin-loading-spinner"></div>
                     <p className="text-primary text-xl font-black mt-4">
                         {language === 'ar' ? 'جاري التحميل...' : 
                          language === 'fr' ? 'Chargement...' : 
                          'Loading...'}
                     </p>
-                </div>
+                </main>
             </div>
         );
     }
 
     return (
-        <div className="admin-dashboard-container">
+        <div className="admin-dashboard-container" role="main">
             {/* الهيدر */}
-            <div className="admin-header">
+            <header className="admin-header">
                 <div className="admin-header-logo-container">
                     <img 
                         src="/logo.jpg" 
@@ -681,24 +718,32 @@ const AdminDashboard = () => {
                     >
                         ⚙️
                     </button>
-                    <button onClick={handleLogout} className="admin-logout-btn">
+                    <button onClick={handleLogout} className="admin-logout-btn" aria-label={language === 'ar' ? 'تسجيل الخروج' : 
+                            language === 'fr' ? 'Déconnexion' : 
+                            'Logout'}>
                         🚪 {language === 'ar' ? 'تسجيل الخروج' : 
                             language === 'fr' ? 'Déconnexion' : 
                             'Logout'}
                     </button>
                 </div>
-            </div>
+            </header>
 
             {/* التبويبات */}
-            <div className="admin-tabs-container">
-                <div className="admin-tabs">
+            <nav className="admin-tabs-container" role="navigation" aria-label="Admin sections">
+                <div className="admin-tabs" role="tablist">
                     <button
                         onClick={() => setActiveTab('overview')}
+                        onKeyDown={handleTabKeyDown}
                         className={`admin-tab-btn ${
                             activeTab === 'overview' 
                                 ? 'admin-tab-btn-active' 
                                 : 'admin-tab-btn-inactive'
                         }`}
+                        role="tab"
+                        aria-selected={activeTab === 'overview'}
+                        aria-controls="overview-panel"
+                        id="overview-tab"
+                        tabIndex={activeTab === 'overview' ? 0 : -1}
                     >
                         <span>📊</span>
                         <span>
@@ -710,11 +755,17 @@ const AdminDashboard = () => {
                     
                     <button
                         onClick={() => setActiveTab('users')}
+                        onKeyDown={handleTabKeyDown}
                         className={`admin-tab-btn ${
                             activeTab === 'users' 
                                 ? 'admin-tab-btn-active' 
                                 : 'admin-tab-btn-inactive'
                         }`}
+                        role="tab"
+                        aria-selected={activeTab === 'users'}
+                        aria-controls="users-panel"
+                        id="users-tab"
+                        tabIndex={activeTab === 'users' ? 0 : -1}
                     >
                         <span>👥</span>
                         <span>
@@ -726,11 +777,17 @@ const AdminDashboard = () => {
                     
                     <button
                         onClick={() => setActiveTab('content')}
+                        onKeyDown={handleTabKeyDown}
                         className={`admin-tab-btn ${
                             activeTab === 'content' 
                                 ? 'admin-tab-btn-active' 
                                 : 'admin-tab-btn-inactive'
                         }`}
+                        role="tab"
+                        aria-selected={activeTab === 'content'}
+                        aria-controls="content-panel"
+                        id="content-tab"
+                        tabIndex={activeTab === 'content' ? 0 : -1}
                     >
                         <span>📝</span>
                         <span>
@@ -742,11 +799,17 @@ const AdminDashboard = () => {
                     
                     <button
                         onClick={() => setActiveTab('settings')}
+                        onKeyDown={handleTabKeyDown}
                         className={`admin-tab-btn ${
                             activeTab === 'settings' 
                                 ? 'admin-tab-btn-active' 
                                 : 'admin-tab-btn-inactive'
                         }`}
+                        role="tab"
+                        aria-selected={activeTab === 'settings'}
+                        aria-controls="settings-panel"
+                        id="settings-tab"
+                        tabIndex={activeTab === 'settings' ? 0 : -1}
                     >
                         <span>⚙️</span>
                         <span>
@@ -756,13 +819,15 @@ const AdminDashboard = () => {
                         </span>
                     </button>
                 </div>
-            </div>
+            </nav>
 
             {/* محتوى التبويبات */}
+            <main>
             {activeTab === 'overview' && renderOverviewTab()}
             {activeTab === 'users' && renderUsersTab()}
             {activeTab === 'content' && renderContentTab()}
             {activeTab === 'settings' && renderSettingsTab()}
+            </main>
         </div>
     );
 };

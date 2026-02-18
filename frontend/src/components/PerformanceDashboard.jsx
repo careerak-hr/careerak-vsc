@@ -188,6 +188,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
             <button
               onClick={updateReport}
               className="performance-dashboard-action-btn performance-dashboard-action-btn-primary"
+              aria-label="تحديث التقرير"
             >
               🔄 تحديث
             </button>
@@ -203,6 +204,7 @@ const PerformanceDashboard = ({ isVisible, onClose }) => {
                 URL.revokeObjectURL(url);
               }}
               className="performance-dashboard-action-btn performance-dashboard-action-btn-secondary"
+              aria-label="تحميل التقرير"
             >
               💾 تحميل التقرير
             </button>

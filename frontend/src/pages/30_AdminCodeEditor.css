@@ -141,7 +141,7 @@
   font-size: 0.95rem;
   line-height: 1.6;
   resize: none;
-  outline: none;
+  /* Focus indicator handled by focusIndicators.css */
 }
 
 .ace-code-textarea::-webkit-scrollbar {

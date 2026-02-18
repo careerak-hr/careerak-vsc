@@ -1,9 +1,11 @@
 .report-modal-backdrop {
-  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4;
+  @apply fixed inset-0 bg-black bg-opacity-50 dark:bg-black dark:bg-opacity-70 flex items-center justify-center z-50 p-4;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .report-modal-container {
-  @apply bg-secondary rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto;
+  @apply bg-secondary dark:bg-[#2d2d2d] rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto border-4 border-primary dark:border-accent;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .report-modal-content {
@@ -11,23 +13,46 @@
 }
 
 .report-modal-title {
-  @apply text-xl font-bold text-primary mb-4;
+  @apply text-xl font-bold text-primary dark:text-[#e0e0e0] mb-4;
+  transition: color 0.3s ease-in-out;
 }
 
 .report-modal-label {
-  @apply block text-sm font-medium text-primary mb-2;
+  @apply block text-sm font-medium text-primary dark:text-[#e0e0e0] mb-2;
+  transition: color 0.3s ease-in-out;
 }
 
 .report-modal-select {
-  @apply w-full p-3 border border-secondary-dark rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent;
+  @apply w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-accent focus:border-transparent;
+  border-color: #D4816180 !important;
+  background-color: white;
+  color: #304B60;
+  transition: all 0.3s ease-in-out;
+}
+
+.dark .report-modal-select {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+  border-color: #D4816180 !important;
 }
 
 .report-modal-textarea {
-  @apply w-full p-3 border border-secondary-dark rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none;
+  @apply w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary dark:focus:ring-accent focus:border-transparent resize-none;
+  border-color: #D4816180 !important;
+  background-color: white;
+  color: #304B60;
+  transition: all 0.3s ease-in-out;
+}
+
+.dark .report-modal-textarea {
+  background-color: #1a1a1a !important;
+  color: #e0e0e0 !important;
+  border-color: #D4816180 !important;
 }
 
 .report-modal-char-counter {
-  @apply text-xs text-hint mt-1;
+  @apply text-xs text-hint dark:text-[#a0a0a0] mt-1;
+  transition: color 0.3s ease-in-out;
 }
 
 .report-modal-actions {
@@ -35,13 +60,13 @@
 }
 
 .report-modal-btn {
-  @apply flex-1 px-4 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  @apply flex-1 px-4 py-2 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 .report-modal-btn-primary {
-  @apply bg-danger text-white hover:bg-danger-dark;
+  @apply bg-danger dark:bg-accent text-white dark:text-[#1a1a1a] hover:bg-danger-dark dark:hover:bg-[#c97151];
 }
 
 .report-modal-btn-secondary {
-  @apply text-primary border border-secondary-dark hover:bg-secondary-light;
+  @apply text-primary dark:text-[#e0e0e0] border border-secondary-dark dark:border-accent hover:bg-secondary-light dark:hover:bg-[#3d3d3d];
 }

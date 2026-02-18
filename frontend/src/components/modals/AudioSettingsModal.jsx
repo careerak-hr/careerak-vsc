@@ -1,8 +1,12 @@
 
 import React from 'react';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './Modal.css'; // Use the unified modal CSS
 
 const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
+  // Focus trap for accessibility - Escape key closes modal
+  const modalRef = useFocusTrap(isOpen, () => onConfirm(false));
+
   if (!isOpen) return null;
 
   // Use the correct translation keys from the t object
@@ -29,7 +33,7 @@ const AudioSettingsModal = ({ isOpen, onConfirm, language, t }) => {
 
   return (
     <div className="modal-backdrop" dir={dir} style={fontStyle}>
-      <div className="modal-content" dir={dir} style={fontStyle}>
+      <div ref={modalRef} className="modal-content" dir={dir} style={fontStyle}>
         <div className="modal-body" style={fontStyle}>
           <h2 className="modal-title" style={fontStyle}>{texts.title}</h2>
           <p className="modal-description" style={fontStyle}>{texts.description}</p>

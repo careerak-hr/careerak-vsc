@@ -432,8 +432,8 @@ export default function AuthPage() {
   }
 
   return (
-    <div className={`auth-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} style={{ fontFamily }}>
-      <div className="auth-page-content" style={{ fontFamily }}>
+    <div className={`auth-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} style={{ fontFamily }} role="main">
+      <main className="auth-page-content" style={{ fontFamily }}>
 
         <div className="auth-logo-container">
           <div className="auth-logo">
@@ -486,11 +486,20 @@ export default function AuthPage() {
               <div
                 onClick={() => setShowPhotoModal(true)}
                 className="auth-photo-upload-box"
+                role="button"
+                tabIndex={0}
+                aria-label={language === 'ar' ? 'رفع صورة الملف الشخصي' : language === 'fr' ? 'Télécharger une photo de profil' : 'Upload profile photo'}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setShowPhotoModal(true);
+                  }
+                }}
               >
                 {profileImage ? (
                   <img src={profileImage} alt="Profile" className="auth-photo-upload-img" />
                 ) : (
-                  <span className="auth-photo-upload-placeholder">📷</span>
+                  <span className="auth-photo-upload-placeholder" aria-hidden="true">📷</span>
                 )}
               </div>
               <p className="auth-photo-upload-label" style={{ fontFamily }}>{t.uploadPhoto}</p>
@@ -538,6 +547,7 @@ export default function AuthPage() {
                 checked={formData.agreed}
                 onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
                 className="auth-checkbox"
+                aria-checked={formData.agreed}
               />
               <label htmlFor="agreePolicy" className="auth-checkbox-label">
                 <span
@@ -615,7 +625,7 @@ export default function AuthPage() {
             language={language}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 }

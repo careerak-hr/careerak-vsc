@@ -206,6 +206,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           checked={formData.isSpecialNeeds}
           onChange={(e) => handleInputChange({ target: { name: 'isSpecialNeeds', value: e.target.checked } })}
           className="auth-checkbox"
+          aria-checked={formData.isSpecialNeeds}
         />
         <label htmlFor="specialNeeds" className="auth-checkbox-label">
           {t.disabilities}

@@ -11,9 +11,11 @@ const ApplyPage = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Apply Page</h1>
             <p>Language: {language}</p>
+            </main>
         </div>
     );
 }

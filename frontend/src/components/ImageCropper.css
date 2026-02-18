@@ -7,7 +7,8 @@
 }
 
 .image-cropper-controls-container {
-  @apply p-6 bg-secondary rounded-t-[2.5rem] flex flex-col gap-4;
+  @apply p-6 bg-secondary dark:bg-dark-surface rounded-t-[2.5rem] flex flex-col gap-4;
+  transition: background-color 300ms ease-in-out;
 }
 
 .image-cropper-zoom-container {
@@ -15,11 +16,13 @@
 }
 
 .image-cropper-zoom-label {
-  @apply font-bold text-hint;
+  @apply font-bold text-hint dark:text-dark-text;
+  transition: color 300ms ease-in-out;
 }
 
 .image-cropper-zoom-slider {
-  @apply w-2/3 h-2 bg-secondary-dark rounded-lg appearance-none cursor-pointer;
+  @apply w-2/3 h-2 bg-secondary-dark dark:bg-dark-surface rounded-lg appearance-none cursor-pointer;
+  transition: background-color 300ms ease-in-out;
 }
 
 .image-cropper-buttons-container {
@@ -31,9 +34,11 @@
 }
 
 .image-cropper-btn-primary {
-  @apply text-white bg-primary;
+  @apply text-white bg-primary dark:bg-accent dark:text-dark-bg;
+  transition: all 300ms ease-in-out;
 }
 
 .image-cropper-btn-secondary {
-  @apply text-hint bg-secondary-light;
+  @apply text-hint dark:text-dark-text bg-secondary-light dark:bg-dark-surface;
+  transition: all 300ms ease-in-out;
 }

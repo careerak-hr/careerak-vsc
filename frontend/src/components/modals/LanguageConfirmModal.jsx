@@ -1,8 +1,12 @@
 
 import React from 'react';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './Modal.css'; // Use the unified modal CSS
 
 const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
+  // Focus trap for accessibility - Escape key closes modal
+  const modalRef = useFocusTrap(isOpen, onCancel);
+
   if (!isOpen) return null;
 
   const dir = language === 'ar' ? 'rtl' : 'ltr';
@@ -21,7 +25,7 @@ const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
 
   return (
     <div className="modal-backdrop" dir={dir} style={fontStyle}>
-      <div className="modal-content" dir={dir} style={fontStyle}>
+      <div ref={modalRef} className="modal-content" dir={dir} style={fontStyle}>
         <div className="modal-body" style={fontStyle}>
           <h2 className="modal-title" style={fontStyle}>{t.confirmLangTitle}</h2>
           <p className="modal-description" style={fontStyle}>{t.confirmLangDesc}</p>

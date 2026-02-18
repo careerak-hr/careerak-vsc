@@ -19,7 +19,7 @@ try {
 }
 
 // ✅ استخدام متغير البيئة مع fallback للرابط المستقر
-const BASE_URL = process.env.REACT_APP_API_URL || 'https://careerak-vsc.vercel.app';
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://careerak-vsc.vercel.app';
 
 const api = axios.create({
   baseURL: BASE_URL,

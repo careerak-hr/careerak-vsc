@@ -22,10 +22,20 @@
   font-family: inherit;
 }
 
+.dark .email-validator-input {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  border: 2px solid #D4816180 !important;
+}
+
 .email-validator-input:focus {
-  outline: none;
-  border-color: #D4816180;
+  /* Focus indicator handled by focusIndicators.css */
+  border-color: #D4816180 !important;
   box-shadow: 0 0 0 3px rgba(212, 129, 97, 0.1);
+}
+
+.dark .email-validator-input:focus {
+  border-color: #D4816180 !important;
 }
 
 .email-validator-input.invalid {
@@ -38,6 +48,10 @@
 
 .email-validator-input::placeholder {
   color: #304B6080;
+}
+
+.dark .email-validator-input::placeholder {
+  color: #e0e0e080;
 }
 
 /* RTL Support */
@@ -97,12 +111,26 @@
   background-color: #fee2e2;
   color: #991b1b;
   border: 1px solid #fecaca;
+  transition: all 300ms ease-in-out;
+}
+
+.dark .email-validator-message.error {
+  background-color: #7f1d1d;
+  color: #fecaca;
+  border-color: #991b1b;
 }
 
 .email-validator-message.success {
   background-color: #d1fae5;
   color: #065f46;
   border: 1px solid #a7f3d0;
+  transition: all 300ms ease-in-out;
+}
+
+.dark .email-validator-message.success {
+  background-color: #064e3b;
+  color: #a7f3d0;
+  border-color: #065f46;
 }
 
 /* Suggestion Button */
@@ -174,29 +202,4 @@
 
 .email-validator-icon.checking circle {
   animation: spin 1s linear infinite;
-}
-
-/* Dark Mode Support (optional) */
-@media (prefers-color-scheme: dark) {
-  .email-validator-input {
-    background-color: #1f2937;
-    color: #f3f4f6;
-    border-color: #D4816180;
-  }
-  
-  .email-validator-input::placeholder {
-    color: #9ca3af;
-  }
-  
-  .email-validator-message.error {
-    background-color: #7f1d1d;
-    color: #fecaca;
-    border-color: #991b1b;
-  }
-  
-  .email-validator-message.success {
-    background-color: #064e3b;
-    color: #a7f3d0;
-    border-color: #065f46;
-  }
 }

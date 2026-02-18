@@ -9,6 +9,33 @@ const AdminPagesNavigator = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
+  // Category IDs for keyboard navigation
+  const categoryIds = ['all', 'auth', 'onboarding', 'interfaces', 'jobs', 'courses', 'settings', 'admin'];
+
+  // Keyboard navigation for categories
+  const handleCategoryKeyDown = (e) => {
+    const currentIndex = categoryIds.indexOf(selectedCategory);
+    let newIndex = currentIndex;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      newIndex = (currentIndex + 1) % categoryIds.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      newIndex = currentIndex === 0 ? categoryIds.length - 1 : currentIndex - 1;
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      newIndex = 0;
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      newIndex = categoryIds.length - 1;
+    }
+
+    if (newIndex !== currentIndex) {
+      setSelectedCategory(categoryIds[newIndex]);
+    }
+  };
+
   // تشغيل الموسيقى عند فتح الصفحة
   useEffect(() => {
     console.log('🗺️ AdminPagesNavigator mounted');
@@ -114,9 +141,9 @@ const AdminPagesNavigator = () => {
   };
 
   return (
-    <div className="admin-pages-navigator">
+    <div className="admin-pages-navigator" role="main">
       {/* الهيدر */}
-      <div className="apn-header">
+      <header className="apn-header">
         <button onClick={() => navigate('/admin-dashboard')} className="apn-back-btn">
           ← {language === 'ar' ? 'العودة' : language === 'fr' ? 'Retour' : 'Back'}
         </button>
@@ -125,7 +152,7 @@ const AdminPagesNavigator = () => {
            language === 'fr' ? '🗺️ Navigateur de Pages' : 
            '🗺️ App Pages Navigator'}
         </h1>
-      </div>
+      </header>
 
       {/* شريط البحث */}
       <div className="apn-search-bar">
@@ -141,12 +168,16 @@ const AdminPagesNavigator = () => {
       </div>
 
       {/* فلاتر الفئات */}
-      <div className="apn-categories">
+      <div className="apn-categories" role="listbox" aria-label={language === 'ar' ? 'فئات الصفحات' : language === 'fr' ? 'Catégories de pages' : 'Page categories'}>
         {categories.map(cat => (
           <button
             key={cat.id}
             onClick={() => setSelectedCategory(cat.id)}
+            onKeyDown={handleCategoryKeyDown}
             className={`apn-category-btn ${selectedCategory === cat.id ? 'active' : ''}`}
+            role="option"
+            aria-selected={selectedCategory === cat.id}
+            tabIndex={selectedCategory === cat.id ? 0 : -1}
           >
             <span>{cat.icon}</span>
             <span>{getCategoryName(cat)}</span>

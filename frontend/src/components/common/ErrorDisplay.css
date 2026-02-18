@@ -1,0 +1,101 @@
+.error-display {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-display-error {
+  background-color: #fee;
+  border: 1px solid #fcc;
+}
+
+.error-display-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+}
+
+.error-display-info {
+  background-color: #e7f3ff;
+  border: 1px solid #90caf9;
+}
+
+.error-display-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.error-display-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.error-display-text {
+  flex: 1;
+}
+
+.error-display-message {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #d32f2f;
+}
+
+.error-display-warning .error-display-message {
+  color: #f57c00;
+}
+
+.error-display-info .error-display-message {
+  color: #1976d2;
+}
+
+.error-display-suggestion {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.8125rem;
+  color: #666;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.error-display-suggestion-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+/* RTL Support */
+[dir="rtl"] .error-display-content {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .error-display-suggestion {
+  flex-direction: row-reverse;
+}
+
+/* Responsive */
+@media (max-width: 639px) {
+  .error-display {
+    padding: 0.625rem;
+  }
+
+  .error-display-message {
+    font-size: 0.8125rem;
+  }
+
+  .error-display-suggestion {
+    font-size: 0.75rem;
+  }
+}

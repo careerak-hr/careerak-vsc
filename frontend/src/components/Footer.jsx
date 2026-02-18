@@ -9,12 +9,18 @@ export const Footer = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <footer className="footer-container" dir="rtl">
-      <div className="footer-content">
+    <footer 
+      className="footer-container" 
+      dir="rtl"
+      role="navigation"
+      aria-label="التنقل السفلي"
+    >
+      <nav className="footer-content">
         
         <button
           onClick={() => navigate('/profile')}
           className={`footer-btn ${isActive('/profile') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
+          aria-label="بروفايلي"
         >
           <span className={`footer-icon ${isActive('/profile') ? 'footer-icon-active' : ''}`}>👤</span>
           <span className="footer-label">بروفايلي</span>
@@ -23,6 +29,7 @@ export const Footer = () => {
         <button
           onClick={() => navigate('/dashboard')}
           className={`footer-btn ${isActive('/dashboard') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
+          aria-label="الرئيسية"
         >
           <span className={`footer-icon ${isActive('/dashboard') ? 'footer-icon-active' : ''}`}>🏠</span>
           <span className="footer-label">الرئيسية</span>
@@ -32,6 +39,7 @@ export const Footer = () => {
             <button
               onClick={() => navigate('/search-jobs')}
               className="footer-center-btn"
+              aria-label="بحث وظيفة"
             >
               <span className="footer-center-btn-icon">+</span>
             </button>
@@ -41,6 +49,7 @@ export const Footer = () => {
         <button
           onClick={() => navigate('/notifications')}
           className={`footer-btn ${isActive('/notifications') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
+          aria-label="تنبيهات"
         >
           <div className="footer-notification-badge-container">
             <span className={`footer-icon ${isActive('/notifications') ? 'footer-icon-active' : ''}`}>🔔</span>
@@ -52,12 +61,13 @@ export const Footer = () => {
         <button
           onClick={() => navigate('/applications-status')}
           className={`footer-btn ${isActive('/applications-status') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
+          aria-label="طلباتي"
         >
           <span className={`footer-icon ${isActive('/applications-status') ? 'footer-icon-active' : ''}`}>⌛</span>
           <span className="footer-label">طلباتي</span>
         </button>
 
-      </div>
+      </nav>
     </footer>
   );
 };

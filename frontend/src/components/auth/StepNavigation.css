@@ -166,7 +166,7 @@
 
 /* Focus States for Accessibility */
 .step-nav-btn:focus {
-  outline: none;
+  /* Focus indicator handled by focusIndicators.css */
   box-shadow: 0 0 0 3px rgba(48, 75, 96, 0.3);
 }
 

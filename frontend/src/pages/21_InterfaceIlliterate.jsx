@@ -11,10 +11,12 @@ const InterfaceIlliterate = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Interface Illiterate Page</h1>
             <p>Language: {language}</p>
             <p>User: {user?.name || 'Guest'}</p>
+            </main>
         </div>
     );
 }

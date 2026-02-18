@@ -1,13 +1,16 @@
 .lang-confirm-modal-backdrop {
-  @apply fixed inset-0 bg-primary/40 backdrop-blur-sm flex items-center justify-center p-6 z-[1000];
+  @apply fixed inset-0 bg-primary/40 dark:bg-black/70 backdrop-blur-sm flex items-center justify-center p-6 z-[1000];
+  transition: background-color 0.3s ease-in-out;
 }
 
 .lang-confirm-modal-content {
-  @apply bg-secondary p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-primary animate-modal-enter;
+  @apply bg-secondary dark:bg-[#2d2d2d] p-8 rounded-[2.5rem] shadow-2xl text-center max-w-sm border-4 border-primary dark:border-accent animate-modal-enter;
+  transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
 }
 
 .lang-confirm-modal-text {
-  @apply text-primary font-bold text-lg mb-6 leading-relaxed;
+  @apply text-primary dark:text-[#e0e0e0] font-bold text-lg mb-6 leading-relaxed;
+  transition: color 0.3s ease-in-out;
 }
 
 .lang-confirm-modal-buttons {
@@ -15,5 +18,5 @@
 }
 
 .lang-confirm-modal-btn {
-  @apply flex-1 py-3 bg-primary text-secondary rounded-2xl font-bold shadow-lg border-2 border-primary hover:scale-105 transition-all text-lg;
+  @apply flex-1 py-3 bg-primary dark:bg-accent text-secondary dark:text-[#1a1a1a] rounded-2xl font-bold shadow-lg border-2 border-primary dark:border-accent hover:scale-105 transition-all text-lg;
 }

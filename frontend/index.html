@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1A365D" />
+    <meta name="color-scheme" content="light">
+    <meta name="description" content="Careerak - The Future of HR" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <title>Careerak</title>
+    
+    <style>
+      :root {
+        color-scheme: light !important;
+      }
+      body {
+        background-color: #E3DAD0 !important;
+        color: #1A365D !important;
+        margin: 0;
+        padding: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow-x: hidden;
+        -webkit-tap-highlight-color: transparent;
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    
+    <script src="/input-fix.js"></script>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('contextmenu', function(e) {
+          if (e.target && typeof e.target.matches === 'function' && !e.target.matches('input, select, textarea')) {
+            e.preventDefault();
+            return false;
+          }
+        });
+        
+        document.addEventListener('selectstart', function(e) {
+          if (e.target && typeof e.target.matches === 'function' && !e.target.matches('input, select, textarea')) {
+            e.preventDefault();
+            return false;
+          }
+        });
+        
+        document.addEventListener('dragstart', function(e) {
+          if (e.target && typeof e.target.matches === 'function' && !e.target.matches('input, select, textarea')) {
+            e.preventDefault();
+            return false;
+          }
+        });
+      });
+      
+      window.addEventListener('load', function() {
+        const allElements = document.querySelectorAll('*:not(input):not(select):not(textarea)');
+        allElements.forEach(function(element) {
+          element.style.webkitUserSelect = 'none';
+          element.style.mozUserSelect = 'none';
+          element.style.msUserSelect = 'none';
+          element.style.userSelect = 'none';
+          element.style.webkitTouchCallout = 'none';
+          element.oncontextmenu = function() { return false; };
+          element.onselectstart = function() { return false; };
+          element.ondragstart = function() { return false; };
+        });
+        
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(function(input) {
+          input.style.webkitUserSelect = 'text';
+          input.style.mozUserSelect = 'text';
+          input.style.msUserSelect = 'text';
+          input.style.userSelect = 'text';
+          input.style.webkitTouchCallout = 'default';
+          input.style.pointerEvents = 'auto';
+          input.style.cursor = input.tagName === 'SELECT' ? 'pointer' : 'text';
+          input.oncontextmenu = null;
+          input.onselectstart = null;
+          input.ondragstart = null;
+        });
+      });
+    </script>
+    
+    <!-- Vite entry point -->
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
+</html>

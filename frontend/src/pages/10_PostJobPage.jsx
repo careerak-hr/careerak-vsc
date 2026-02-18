@@ -11,9 +11,11 @@ const PostJobPage = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div>
+        <div role="main">
+            <main>
             <h1>Post Job Page</h1>
             <p>Language: {language}</p>
+            </main>
         </div>
     );
 }

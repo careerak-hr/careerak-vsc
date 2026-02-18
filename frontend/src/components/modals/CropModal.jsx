@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
+import { useFocusTrap } from '../Accessibility/FocusTrap';
 import './CropModal.css';
 
 const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, language }) => {
@@ -17,6 +18,9 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
     fontWeight: 'inherit',
     fontStyle: 'inherit'
   };
+
+  // Focus trap for accessibility - Escape key closes modal
+  const modalRef = useFocusTrap(true, onClose);
 
   // دالة تُستدعى عند تغيير منطقة القص
   const onCropChange = (location) => {
@@ -45,7 +49,8 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
   return (
     <div className="crop-modal-backdrop" dir={dir}>
       <div 
-        className="crop-modal-content" 
+        ref={modalRef}
+        className="crop-modal-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300" 
         dir={dir}
         style={{
           border: '4px solid #304B60',
@@ -56,7 +61,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
         }}
       >
         <h3 
-          className="crop-modal-title"
+          className="crop-modal-title dark:text-[#e0e0e0] transition-colors duration-300"
           style={{ color: '#304B60', ...fontStyle }}
         >
           {language === 'ar' ? '✂️ قص الصورة' :
@@ -64,7 +69,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
            '✂️ Crop Image'}
         </h3>
         <p 
-          className="crop-modal-subtitle"
+          className="crop-modal-subtitle dark:text-[#e0e0e0]/80 transition-colors duration-300"
           style={{ color: '#304B60', opacity: 0.8, ...fontStyle }}
         >
           {language === 'ar' ? 'اسحب لتحديد المنطقة • استخدم إصبعين للتكبير/التصغير' :
@@ -74,7 +79,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
         
         {/* منطقة القص */}
         <div 
-          className="crop-modal-image-container"
+          className="crop-modal-image-container dark:border-[#D48161] transition-all duration-300"
           style={{ 
             position: 'relative',
             width: '100%',
@@ -112,7 +117,8 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
         >
           <button
             onClick={() => setZoom(Math.max(1, zoom - 0.1))}
-            className="crop-zoom-btn"
+            className="crop-zoom-btn dark:bg-[#D48161] dark:text-[#1a1a1a] transition-all duration-300"
+            aria-label={language === 'ar' ? 'تصغير' : language === 'fr' ? 'Dézoomer' : 'Zoom out'}
             style={{
               backgroundColor: '#304B60',
               color: '#E3DAD1',
@@ -127,14 +133,16 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
             −
           </button>
           <span 
-            className="text-sm font-bold"
+            className="text-sm font-bold dark:text-[#e0e0e0] transition-colors duration-300"
             style={{ color: '#304B60', minWidth: '60px', textAlign: 'center', ...fontStyle }}
+            aria-live="polite"
           >
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => setZoom(Math.min(3, zoom + 0.1))}
-            className="crop-zoom-btn"
+            className="crop-zoom-btn dark:bg-[#D48161] dark:text-[#1a1a1a] transition-all duration-300"
+            aria-label={language === 'ar' ? 'تكبير' : language === 'fr' ? 'Zoomer' : 'Zoom in'}
             style={{
               backgroundColor: '#304B60',
               color: '#E3DAD1',
@@ -150,7 +158,8 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
           </button>
           <button
             onClick={() => setZoom(1)}
-            className="text-xs"
+            className="text-xs dark:bg-[#c97151] transition-all duration-300"
+            aria-label={language === 'ar' ? 'إعادة تعيين التكبير' : language === 'fr' ? 'Réinitialiser le zoom' : 'Reset zoom'}
             style={{
               backgroundColor: '#D48161',
               color: '#FFFFFF',
@@ -170,7 +179,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
         <div className="crop-modal-buttons-container">
           <button 
             onClick={onClose} 
-            className="crop-modal-btn crop-modal-btn-secondary"
+            className="crop-modal-btn crop-modal-btn-secondary dark:bg-[#1a1a1a] dark:text-[#e0e0e0] dark:border-[#D48161] transition-all duration-300"
             style={{
               backgroundColor: '#FFFFFF',
               color: '#304B60',
@@ -182,7 +191,7 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
           </button>
           <button 
             onClick={handleSave} 
-            className="crop-modal-btn crop-modal-btn-primary"
+            className="crop-modal-btn crop-modal-btn-primary dark:bg-[#D48161] dark:text-[#1a1a1a] dark:border-[#D48161] transition-all duration-300"
             disabled={!croppedAreaPixels}
             style={{
               backgroundColor: '#304B60',

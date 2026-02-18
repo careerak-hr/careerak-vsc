@@ -5,7 +5,7 @@ import CryptoJS from 'crypto-js';
 // --- Centralized App Context ---
 const AppContext = createContext();
 
-const SECRET_KEY = process.env.REACT_APP_ENCRYPTION_KEY || 'careerak_secure_key_2024';
+const SECRET_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'careerak_secure_key_2024';
 
 export const AppProvider = ({ children }) => {
   // --- State from AuthContext ---

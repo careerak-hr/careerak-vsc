@@ -17,6 +17,31 @@ export default function LanguagePage() {
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [isAudioModalOpen, setIsAudioModalOpen] = useState(false);
+
+  // Language options for keyboard navigation
+  const languages = ['ar', 'en', 'fr'];
+
+  // Keyboard navigation for language selection
+  const handleLanguageKeyDown = (e, currentLang) => {
+    const currentIndex = languages.indexOf(currentLang);
+    let newIndex = currentIndex;
+
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      newIndex = (currentIndex + 1) % languages.length;
+      document.getElementById(`lang-btn-${languages[newIndex]}`)?.focus();
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      newIndex = currentIndex === 0 ? languages.length - 1 : currentIndex - 1;
+      document.getElementById(`lang-btn-${languages[newIndex]}`)?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      document.getElementById(`lang-btn-${languages[0]}`)?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      document.getElementById(`lang-btn-${languages[languages.length - 1]}`)?.focus();
+    }
+  };
   const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [audioConsent, setAudioConsent] = useState(false);
@@ -76,8 +101,8 @@ export default function LanguagePage() {
   }
 
   return (
-    <div className="lang-page-container">
-      <div className="lang-page-content">
+    <div className="lang-page-container dark:bg-primary transition-colors duration-300" role="main">
+      <main className="lang-page-content dark:text-primary transition-colors duration-300">
         <div className="lang-page-logo-container">
           {/* ✅ الشفافية خلف اللوجو مباشرة */}
           <div className="lang-page-glow-effect">
@@ -88,16 +113,43 @@ export default function LanguagePage() {
           </div>
         </div>
 
-        <h1 className="lang-page-title">
+        <h1 className="lang-page-title dark:text-primary transition-colors duration-300">
           Choose Language / Choisir la langue / اختر اللغة
         </h1>
 
-        <div className="lang-page-buttons-container">
-          <button onClick={() => handleLangPick("ar")} className="lang-page-btn">العربية</button>
-          <button onClick={() => handleLangPick("en")} className="lang-page-btn">English</button>
-          <button onClick={() => handleLangPick("fr")} className="lang-page-btn">Français</button>
+        <div className="lang-page-buttons-container" role="listbox" aria-label="Language selection">
+          <button 
+            id="lang-btn-ar"
+            onClick={() => handleLangPick("ar")} 
+            onKeyDown={(e) => handleLanguageKeyDown(e, "ar")}
+            className="lang-page-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+            role="option"
+            aria-selected={selectedLang === "ar"}
+          >
+            العربية
+          </button>
+          <button 
+            id="lang-btn-en"
+            onClick={() => handleLangPick("en")} 
+            onKeyDown={(e) => handleLanguageKeyDown(e, "en")}
+            className="lang-page-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+            role="option"
+            aria-selected={selectedLang === "en"}
+          >
+            English
+          </button>
+          <button 
+            id="lang-btn-fr"
+            onClick={() => handleLangPick("fr")} 
+            onKeyDown={(e) => handleLanguageKeyDown(e, "fr")}
+            className="lang-page-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+            role="option"
+            aria-selected={selectedLang === "fr"}
+          >
+            Français
+          </button>
         </div>
-      </div>
+      </main>
 
       {isConfirmModalOpen && (
         <LanguageConfirmModal

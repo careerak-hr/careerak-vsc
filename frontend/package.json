@@ -21,6 +21,7 @@
     "i18next": "^23.16.8",
     "i18next-browser-languagedetector": "^8.2.0",
     "mailcheck": "^1.1.1",
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-confetti": "^6.4.0",
     "react-dom": "^18.2.0",
@@ -28,7 +29,6 @@
     "react-i18next": "^14.1.3",
     "react-image-crop": "^11.0.10",
     "react-router-dom": "^6.10.0",
-    "react-scripts": "^5.0.1",
     "tailwindcss": "^3.2.7",
     "tailwindcss-animate": "^1.0.7",
     "tar": "^7.5.6",
@@ -36,9 +36,11 @@
     "zxcvbn": "^4.4.2"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
-    "test": "craco test",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
     "cap:sync": "npx cap sync android",
     "download-fonts": "node ../scripts/download-fonts.js",
     "setup-fonts": "npm run download-fonts"
@@ -62,8 +64,15 @@
   },
   "devDependencies": {
     "@capacitor/cli": "8.0.2",
-    "@craco/craco": "^5.9.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.24"
+    "fast-check": "^4.5.3",
+    "postcss": "^8.4.24",
+    "rollup-plugin-visualizer": "^6.0.5",
+    "terser": "^5.46.0",
+    "vite": "^5.4.21",
+    "vitest": "^1.6.1"
   }
 }

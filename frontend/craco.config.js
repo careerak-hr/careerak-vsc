@@ -9,5 +9,15 @@ module.exports = {
       }
       return webpackConfig;
     }
+  },
+  jest: {
+    configure: {
+      transformIgnorePatterns: [
+        'node_modules/(?!(fast-check)/)'
+      ],
+      moduleNameMapper: {
+        '^fast-check$': '<rootDir>/node_modules/fast-check/lib/fast-check.js'
+      }
+    }
   }
 };
