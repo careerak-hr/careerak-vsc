@@ -152,7 +152,7 @@ public class MainActivity extends BridgeActivity {
     }
     
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         // Disconnect Pusher when activity is destroyed
         if (pusher != null) {
