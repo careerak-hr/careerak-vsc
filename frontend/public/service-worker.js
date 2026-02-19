@@ -133,26 +133,32 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// Listen for skip waiting message
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-});
-
 // Push notification support (FR-PWA-10)
 // Integration with existing Pusher system
+// Task 3.5.4: Display notifications with actions
 self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'Careerak Notification';
+  
+  // Determine notification type and set appropriate actions
+  const notificationType = data.type || 'system';
+  const actions = getNotificationActions(notificationType, data);
+  
   const options = {
     body: data.body || 'You have a new notification',
-    icon: '/logo.png',
+    icon: data.icon || '/logo.png',
     badge: '/logo.png',
-    data: data.data || {},
-    actions: data.actions || [],
-    tag: data.tag || 'default',
+    data: {
+      ...data.data,
+      type: notificationType,
+      url: data.url || '/',
+    },
+    actions: actions,
+    tag: data.tag || `notification-${Date.now()}`,
     requireInteraction: data.requireInteraction || false,
+    vibrate: [200, 100, 200], // Vibration pattern
+    timestamp: Date.now(),
+    silent: data.silent || false,
   };
 
   event.waitUntil(
@@ -160,21 +166,188 @@ self.addEventListener('push', (event) => {
   );
 });
 
+// Helper function to get notification actions based on type
+// Task 3.5.4: Define actions for different notification types
+function getNotificationActions(type, data) {
+  switch (type) {
+    case 'job_match':
+      return [
+        { action: 'view', title: 'View Job', icon: '/icons/view.png' },
+        { action: 'apply', title: 'Apply Now', icon: '/icons/apply.png' },
+      ];
+    
+    case 'application_accepted':
+      return [
+        { action: 'view', title: 'View Details', icon: '/icons/view.png' },
+        { action: 'message', title: 'Send Message', icon: '/icons/message.png' },
+      ];
+    
+    case 'application_rejected':
+      return [
+        { action: 'view', title: 'View Feedback', icon: '/icons/view.png' },
+        { action: 'dismiss', title: 'Dismiss', icon: '/icons/close.png' },
+      ];
+    
+    case 'application_reviewed':
+      return [
+        { action: 'view', title: 'View Status', icon: '/icons/view.png' },
+        { action: 'dismiss', title: 'Dismiss', icon: '/icons/close.png' },
+      ];
+    
+    case 'new_application':
+      return [
+        { action: 'review', title: 'Review Now', icon: '/icons/review.png' },
+        { action: 'later', title: 'Review Later', icon: '/icons/clock.png' },
+      ];
+    
+    case 'job_closed':
+      return [
+        { action: 'view', title: 'View Details', icon: '/icons/view.png' },
+        { action: 'dismiss', title: 'Dismiss', icon: '/icons/close.png' },
+      ];
+    
+    case 'course_match':
+      return [
+        { action: 'view', title: 'View Course', icon: '/icons/view.png' },
+        { action: 'enroll', title: 'Enroll Now', icon: '/icons/enroll.png' },
+      ];
+    
+    case 'new_message':
+      return [
+        { action: 'reply', title: 'Reply', icon: '/icons/reply.png' },
+        { action: 'view', title: 'View Chat', icon: '/icons/message.png' },
+      ];
+    
+    case 'system':
+    default:
+      return [
+        { action: 'view', title: 'View', icon: '/icons/view.png' },
+        { action: 'dismiss', title: 'Dismiss', icon: '/icons/close.png' },
+      ];
+  }
+}
+
+// Listen for messages from the main thread (Pusher integration)
+// Task 3.5.4: Support actions in Pusher notifications
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'PUSH_NOTIFICATION') {
+    const { notification } = event.data;
+    
+    // Determine notification type and get appropriate actions
+    const notificationType = notification.type || 'system';
+    const actions = notification.actions || getNotificationActions(notificationType, notification);
+    
+    event.waitUntil(
+      self.registration.showNotification(
+        notification.title,
+        {
+          body: notification.body,
+          icon: notification.icon || '/logo.png',
+          badge: notification.badge || '/logo.png',
+          data: {
+            ...notification.data,
+            type: notificationType,
+            url: notification.url || '/',
+          },
+          actions: actions,
+          tag: notification.tag || `pusher-${Date.now()}`,
+          requireInteraction: notification.requireInteraction || false,
+          vibrate: [200, 100, 200],
+          timestamp: Date.now(),
+          silent: notification.silent || false,
+        }
+      )
+    );
+  }
+  
+  // Handle skip waiting message
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 // Handle notification clicks
+// Task 3.5.4: Comprehensive action handling for notifications
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
 
-  const urlToOpen = event.notification.data?.url || '/';
+  const notificationData = event.notification.data || {};
+  const action = event.action;
+  const notificationType = notificationData.type || 'system';
+  
+  // Determine URL based on action and notification type
+  let urlToOpen = notificationData.url || '/';
+  
+  // Handle specific actions
+  if (action) {
+    console.log('Notification action clicked:', action, 'Type:', notificationType);
+    
+    switch (action) {
+      case 'view':
+        // Use the URL from notification data or default
+        urlToOpen = notificationData.url || getDefaultUrlForType(notificationType);
+        break;
+      
+      case 'apply':
+        // Navigate to job application page
+        urlToOpen = notificationData.jobUrl || `/jobs/${notificationData.jobId}/apply`;
+        break;
+      
+      case 'message':
+      case 'reply':
+        // Navigate to chat/messaging page
+        urlToOpen = notificationData.chatUrl || `/chat/${notificationData.conversationId || notificationData.userId}`;
+        break;
+      
+      case 'review':
+        // Navigate to application review page
+        urlToOpen = notificationData.applicationUrl || `/applications/${notificationData.applicationId}`;
+        break;
+      
+      case 'enroll':
+        // Navigate to course enrollment page
+        urlToOpen = notificationData.courseUrl || `/courses/${notificationData.courseId}/enroll`;
+        break;
+      
+      case 'later':
+        // Mark notification for later review (don't open window)
+        event.waitUntil(
+          markNotificationForLater(notificationData)
+        );
+        return; // Don't open window
+      
+      case 'dismiss':
+        // Just close notification (already closed above)
+        return; // Don't open window
+      
+      default:
+        console.log('Unknown action:', action);
+        urlToOpen = notificationData.url || '/';
+    }
+  } else {
+    // No action clicked, use default URL for notification type
+    urlToOpen = notificationData.url || getDefaultUrlForType(notificationType);
+  }
 
+  // Open or focus window
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true })
       .then((clientList) => {
-        // Check if there's already a window open
+        // Check if there's already a window open with the target URL
         for (const client of clientList) {
           if (client.url === urlToOpen && 'focus' in client) {
             return client.focus();
           }
         }
+        
+        // Check if there's any window open that we can navigate
+        if (clientList.length > 0) {
+          const client = clientList[0];
+          if ('navigate' in client) {
+            return client.navigate(urlToOpen).then(client => client.focus());
+          }
+        }
+        
         // Open new window if none exists
         if (clients.openWindow) {
           return clients.openWindow(urlToOpen);
@@ -182,6 +355,56 @@ self.addEventListener('notificationclick', (event) => {
       })
   );
 });
+
+// Helper function to get default URL based on notification type
+function getDefaultUrlForType(type) {
+  switch (type) {
+    case 'job_match':
+      return '/jobs';
+    case 'application_accepted':
+    case 'application_rejected':
+    case 'application_reviewed':
+      return '/applications';
+    case 'new_application':
+      return '/admin/applications';
+    case 'job_closed':
+      return '/jobs';
+    case 'course_match':
+      return '/courses';
+    case 'new_message':
+      return '/chat';
+    case 'system':
+    default:
+      return '/notifications';
+  }
+}
+
+// Helper function to mark notification for later review
+async function markNotificationForLater(notificationData) {
+  try {
+    // Store in IndexedDB or send to backend
+    const cache = await caches.open('notification-queue');
+    const request = new Request('/api/notifications/mark-later', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(notificationData),
+    });
+    
+    // Try to send to backend
+    try {
+      const response = await fetch(request);
+      if (response.ok) {
+        console.log('Notification marked for later review');
+      }
+    } catch (error) {
+      // If offline, cache the request for later sync
+      await cache.put(request, new Response(JSON.stringify({ queued: true })));
+      console.log('Notification queued for later sync');
+    }
+  } catch (error) {
+    console.error('Failed to mark notification for later:', error);
+  }
+}
 
 // Background sync for offline requests (FR-PWA-9)
 self.addEventListener('sync', (event) => {

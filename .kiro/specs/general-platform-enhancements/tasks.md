@@ -117,14 +117,14 @@
 - [x] 3.4.5 Test offline functionality for key features
 
 ### 3.5 Push Notifications
-- [ ] 3.5.1 Integrate with existing Pusher system
-- [ ] 3.5.2 Add push event listener in service worker
-- [ ] 3.5.3 Request notification permission
-- [ ] 3.5.4 Display notifications with actions
-- [ ] 3.5.5 Handle notification clicks
+- [x] 3.5.1 Integrate with existing Pusher system
+- [x] 3.5.2 Add push event listener in service worker
+- [x] 3.5.3 Request notification permission
+- [x] 3.5.4 Display notifications with actions
+- [x] 3.5.5 Handle notification clicks
 
 ### 3.6 Testing
-- [ ] 3.6.1 Write property-based test for service worker registration (100 iterations)
+- [x] 3.6.1 Write property-based test for service worker registration (100 iterations)
 - [ ] 3.6.2 Write property-based test for offline caching (100 iterations)
 - [ ] 3.6.3 Write property-based test for cache strategy (100 iterations)
 - [ ] 3.6.4 Write property-based test for update notification (100 iterations)
