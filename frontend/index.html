@@ -10,6 +10,23 @@
     <link rel="apple-touch-icon" href="/logo.png" />
     <link rel="manifest" href="/manifest.json" />
 
+    <!-- Preload critical fonts for faster rendering -->
+    <!-- Arabic - Amiri Regular (most commonly used) -->
+    <link rel="preload" href="/src/assets/fonts/amiri/Amiri-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    
+    <!-- English - Cormorant Garamond Regular -->
+    <link rel="preload" href="/src/assets/fonts/cormorant-garamond/CormorantGaramond-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+    
+    <!-- French - EB Garamond Regular -->
+    <link rel="preload" href="/src/assets/fonts/eb-garamond/EBGaramond-Regular.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+    <!-- Preload critical CSS for faster First Contentful Paint (FCP) -->
+    <!-- Primary CSS bundle will be injected by Vite during build -->
+    <link rel="preload" href="/src/index.css" as="style" />
+    
+    <!-- Preload critical JavaScript entry point -->
+    <link rel="modulepreload" href="/src/index.jsx" />
+
     <title>Careerak</title>
     
     <style>

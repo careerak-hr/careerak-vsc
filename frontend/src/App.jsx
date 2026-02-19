@@ -5,6 +5,8 @@ import {
   InitialLoadingScreen, 
   InitializationErrorScreen 
 } from "./components/LoadingStates";
+import ServiceWorkerManager from "./components/ServiceWorkerManager";
+import OfflineQueueStatus from "./components/OfflineQueueStatus";
 
 /**
  * المكون الرئيسي للتطبيق - Application Entry Point
@@ -44,5 +46,11 @@ export default function App() {
   }
 
   // عرض التطبيق مباشرة (حتى أثناء التحميل)
-  return <ApplicationShell />;
+  return (
+    <>
+      <ApplicationShell />
+      <ServiceWorkerManager />
+      <OfflineQueueStatus />
+    </>
+  );
 }

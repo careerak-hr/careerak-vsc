@@ -5,6 +5,7 @@ const uploadRoutes = require('./routes/uploadRoutes');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
@@ -59,6 +60,33 @@ app.use(cors(corsOptions));
 
 // معالجة preflight requests
 app.options('*', cors(corsOptions));
+
+// 🗜️ Compression Middleware (gzip/brotli)
+// Enable compression for all responses
+app.use(compression({
+  // Compression level (0-9, default: 6)
+  // Higher = better compression but slower
+  level: 6,
+  
+  // Minimum response size to compress (in bytes)
+  // Don't compress responses smaller than 1KB
+  threshold: 1024,
+  
+  // Filter function to determine what to compress
+  filter: (req, res) => {
+    // Don't compress if client doesn't support it
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    
+    // Use compression filter function
+    return compression.filter(req, res);
+  },
+  
+  // Memory level (1-9, default: 8)
+  // Higher = more memory but better compression
+  memLevel: 8,
+}));
 
 // 🔒 Security Middleware
 app.use(helmet({

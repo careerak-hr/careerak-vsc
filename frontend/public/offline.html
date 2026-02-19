@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#304B60" />
+    <title>غير متصل - Careerak</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Amiri', 'Cairo', serif;
+            background: linear-gradient(135deg, #E3DAD1 0%, #D48161 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 4px solid #304B60;
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        h1 {
+            color: #304B60;
+            font-size: 32px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background: #304B60;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background: #D48161;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(212, 129, 97, 0.3);
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* LTR support */
+        [dir="ltr"] body {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/logo.png" alt="Careerak Logo" class="logo" onerror="this.style.display='none'" />
+        
+        <div class="icon">📡</div>
+        
+        <h1 id="title">غير متصل بالإنترنت</h1>
+        
+        <p id="message">
+            يبدو أنك غير متصل بالإنترنت حالياً. يرجى التحقق من اتصالك بالشبكة والمحاولة مرة أخرى.
+        </p>
+
+        <button class="button" onclick="retry()" id="retryBtn">
+            إعادة المحاولة
+        </button>
+
+        <div class="status" id="status">
+            جاري التحقق من الاتصال...
+        </div>
+    </div>
+
+    <script>
+        // Multi-language support
+        const translations = {
+            ar: {
+                title: 'غير متصل بالإنترنت',
+                message: 'يبدو أنك غير متصل بالإنترنت حالياً. يرجى التحقق من اتصالك بالشبكة والمحاولة مرة أخرى.',
+                retry: 'إعادة المحاولة',
+                checking: 'جاري التحقق من الاتصال...',
+                online: '✓ متصل بالإنترنت! جاري إعادة التحميل...',
+                offline: '✗ لا يزال غير متصل'
+            },
+            en: {
+                title: 'You are offline',
+                message: 'It looks like you are currently offline. Please check your network connection and try again.',
+                retry: 'Retry',
+                checking: 'Checking connection...',
+                online: '✓ Back online! Reloading...',
+                offline: '✗ Still offline'
+            },
+            fr: {
+                title: 'Vous êtes hors ligne',
+                message: 'Il semble que vous soyez actuellement hors ligne. Veuillez vérifier votre connexion réseau et réessayer.',
+                retry: 'Réessayer',
+                checking: 'Vérification de la connexion...',
+                online: '✓ De retour en ligne! Rechargement...',
+                offline: '✗ Toujours hors ligne'
+            }
+        };
+
+        // Detect language from localStorage or browser
+        const lang = localStorage.getItem('language') || 
+                     navigator.language.split('-')[0] || 
+                     'ar';
+        const t = translations[lang] || translations.ar;
+
+        // Set direction based on language
+        if (lang === 'ar') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.documentElement.setAttribute('lang', 'ar');
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.documentElement.setAttribute('lang', lang);
+        }
+
+        // Apply translations
+        document.getElementById('title').textContent = t.title;
+        document.getElementById('message').textContent = t.message;
+        document.getElementById('retryBtn').textContent = t.retry;
+        document.getElementById('status').textContent = t.checking;
+
+        // Check online status
+        function checkOnlineStatus() {
+            const status = document.getElementById('status');
+            
+            if (navigator.onLine) {
+                status.textContent = t.online;
+                status.classList.add('online');
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 1000);
+            } else {
+                status.textContent = t.offline;
+                status.classList.remove('online');
+            }
+        }
+
+        // Retry function
+        function retry() {
+            checkOnlineStatus();
+            
+            if (navigator.onLine) {
+                window.location.href = '/';
+            }
+        }
+
+        // Listen for online event
+        window.addEventListener('online', () => {
+            checkOnlineStatus();
+        });
+
+        // Check status on load
+        setTimeout(checkOnlineStatus, 1000);
+
+        // Periodic check every 5 seconds
+        setInterval(checkOnlineStatus, 5000);
+    </script>
+</body>
+</html>

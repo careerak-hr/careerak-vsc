@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { staleWhileRevalidate } from '../utils/apiCache';
+import { queueRequest, RequestPriority } from '../utils/offlineRequestQueue';
 
 // تحميل monitoring بشكل آمن
 // مراقب الأداء (تعليق لتجنب تحذير ESLint)
@@ -103,6 +105,41 @@ api.interceptors.response.use(
       });
     }
     
+    // ✅ Queue request if offline (network error)
+    // Only queue POST, PUT, PATCH, DELETE requests
+    const isNetworkError = !error.response && error.message === 'Network Error';
+    const isOffline = !navigator.onLine;
+    const shouldQueue = isNetworkError || isOffline;
+    
+    if (shouldQueue && error.config) {
+      const method = error.config.method?.toUpperCase();
+      const queueableMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
+      
+      if (queueableMethods.includes(method)) {
+        console.log('[API] Queueing failed request for retry when online:', {
+          method,
+          url: error.config.url
+        });
+        
+        // Determine priority based on URL patterns
+        let priority = RequestPriority.MEDIUM;
+        if (error.config.url?.includes('/auth/') || error.config.url?.includes('/login')) {
+          priority = RequestPriority.URGENT;
+        } else if (error.config.url?.includes('/job') || error.config.url?.includes('/application')) {
+          priority = RequestPriority.HIGH;
+        }
+        
+        // Queue the request
+        queueRequest({
+          method: error.config.method,
+          url: error.config.url,
+          data: error.config.data ? JSON.parse(error.config.data) : undefined,
+          headers: error.config.headers,
+          priority
+        });
+      }
+    }
+    
     return Promise.reject(error);
   }
 );
@@ -110,6 +147,49 @@ api.interceptors.response.use(
 export const discoverBestServer = async () => {
   // إرجاع Promise محلول مباشرة
   return Promise.resolve(BASE_URL);
+};
+
+/**
+ * Make a cached GET request with stale-while-revalidate strategy
+ * 
+ * @param {string} url - API endpoint URL
+ * @param {Object} config - Axios config + cache options
+ * @param {number} config.maxAge - Cache max age in milliseconds (default: 5 minutes)
+ * @param {boolean} config.forceRefresh - Force refresh ignoring cache
+ * @returns {Promise} Promise that resolves with the response data
+ */
+export const getCached = async (url, config = {}) => {
+  const { maxAge, forceRefresh, ...axiosConfig } = config;
+  
+  const fetchFn = () => api.get(url, axiosConfig).then(res => res.data);
+  
+  return staleWhileRevalidate(fetchFn, {
+    maxAge,
+    forceRefresh,
+    cacheKey: { method: 'GET', url, params: axiosConfig.params }
+  });
+};
+
+/**
+ * Make a cached POST request with stale-while-revalidate strategy
+ * Note: Use with caution - POST requests are typically not cacheable
+ * Only use for idempotent POST requests that fetch data
+ * 
+ * @param {string} url - API endpoint URL
+ * @param {Object} data - Request body data
+ * @param {Object} config - Axios config + cache options
+ * @returns {Promise} Promise that resolves with the response data
+ */
+export const postCached = async (url, data, config = {}) => {
+  const { maxAge, forceRefresh, ...axiosConfig } = config;
+  
+  const fetchFn = () => api.post(url, data, axiosConfig).then(res => res.data);
+  
+  return staleWhileRevalidate(fetchFn, {
+    maxAge,
+    forceRefresh,
+    cacheKey: { method: 'POST', url, data, params: axiosConfig.params }
+  });
 };
 
 export default api;

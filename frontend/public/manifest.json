@@ -1,6 +1,7 @@
 {
   "short_name": "Careerak",
   "name": "Careerak - The Future of HR",
+  "description": "Careerak is a comprehensive platform for HR, recruitment, job opportunities, training courses, online courses, and professional career development consultations serving users across the Arab world.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,19 +9,82 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo.png",
+      "src": "icon-192x192.png",
       "type": "image/png",
-      "sizes": "512x512",
-      "purpose": "any maskable"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
-      "src": "logo.jpg",
-      "type": "image/jpeg",
-      "sizes": "512x512"
+      "src": "icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192x192-maskable.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512x512-maskable.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "theme_color": "#304B60",
-  "background_color": "#E3DAD1"
+  "background_color": "#E3DAD1",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": [
+    "business",
+    "education",
+    "productivity"
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false,
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "Jobs",
+      "short_name": "Jobs",
+      "description": "Browse job opportunities",
+      "url": "/jobs",
+      "icons": [
+        {
+          "src": "icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "short_name": "Courses",
+      "description": "Explore training courses",
+      "url": "/courses",
+      "icons": [
+        {
+          "src": "icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "short_name": "Profile",
+      "description": "View your profile",
+      "url": "/profile",
+      "icons": [
+        {
+          "src": "icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }

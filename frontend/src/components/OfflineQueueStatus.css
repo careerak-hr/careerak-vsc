@@ -1,0 +1,264 @@
+/**
+ * OfflineQueueStatus Component Styles
+ * 
+ * Styles for the offline request queue status indicator
+ */
+
+.offline-queue-status {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* Queue Indicator */
+.queue-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #304B60;
+  color: #E3DAD1;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.3s ease-out;
+}
+
+.queue-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(227, 218, 209, 0.1);
+  border-radius: 8px;
+  color: #D48161;
+}
+
+.queue-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.queue-count {
+  font-size: 18px;
+  font-weight: 600;
+  color: #E3DAD1;
+}
+
+.queue-label {
+  font-size: 13px;
+  color: rgba(227, 218, 209, 0.7);
+}
+
+.queue-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.retry-button,
+.clear-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(227, 218, 209, 0.1);
+  border: 1px solid rgba(227, 218, 209, 0.2);
+  border-radius: 6px;
+  color: #E3DAD1;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.retry-button:hover {
+  background: rgba(227, 218, 209, 0.2);
+  border-color: rgba(227, 218, 209, 0.3);
+}
+
+.clear-button {
+  padding: 6px;
+}
+
+.clear-button:hover {
+  background: rgba(212, 129, 97, 0.2);
+  border-color: rgba(212, 129, 97, 0.3);
+  color: #D48161;
+}
+
+/* Processing Indicator */
+.processing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #304B60;
+  color: #E3DAD1;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.3s ease-out;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(227, 218, 209, 0.2);
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Retry Results */
+.retry-results {
+  margin-top: 8px;
+  padding: 12px 16px;
+  background: #304B60;
+  color: #E3DAD1;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.3s ease-out;
+}
+
+.results-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.result-item.success {
+  color: #4ade80;
+}
+
+.result-item.failed {
+  color: #f87171;
+}
+
+.result-item.retry {
+  color: #fbbf24;
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .queue-indicator,
+  .processing-indicator,
+  .retry-results {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+
+  .queue-icon {
+    background: rgba(224, 224, 224, 0.1);
+  }
+
+  .queue-count {
+    color: #e0e0e0;
+  }
+
+  .queue-label {
+    color: rgba(224, 224, 224, 0.7);
+  }
+
+  .retry-button,
+  .clear-button {
+    background: rgba(224, 224, 224, 0.1);
+    border-color: rgba(224, 224, 224, 0.2);
+    color: #e0e0e0;
+  }
+
+  .retry-button:hover {
+    background: rgba(224, 224, 224, 0.2);
+    border-color: rgba(224, 224, 224, 0.3);
+  }
+
+  .spinner {
+    border-color: rgba(224, 224, 224, 0.2);
+    border-top-color: #D48161;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .offline-queue-status {
+    bottom: 70px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .queue-indicator,
+  .processing-indicator,
+  .retry-results {
+    padding: 10px 12px;
+  }
+
+  .queue-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .queue-count {
+    font-size: 16px;
+  }
+
+  .queue-label {
+    font-size: 12px;
+  }
+
+  .retry-button {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .result-item {
+    font-size: 13px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .offline-queue-status {
+  right: auto;
+  left: 20px;
+}
+
+[dir="rtl"] .queue-indicator,
+[dir="rtl"] .processing-indicator,
+[dir="rtl"] .retry-results {
+  direction: rtl;
+}
+
+@media (max-width: 639px) {
+  [dir="rtl"] .offline-queue-status {
+    left: 10px;
+    right: 10px;
+  }
+}

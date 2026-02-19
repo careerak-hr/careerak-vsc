@@ -31,6 +31,9 @@ export {
 // تصدير مكونات مربعات التشيك الفاخرة
 export { default as LuxuryCheckbox, PremiumCheckbox } from './LuxuryCheckbox';
 
+// تصدير مكونات PWA
+export { default as OfflineIndicator } from './OfflineIndicator';
+
 // تصدير المكونات الأخرى
 export { default as Navbar } from './Navbar';
 export { Footer } from './Footer';

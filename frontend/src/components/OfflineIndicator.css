@@ -1,0 +1,223 @@
+/**
+ * Offline Indicator Styles
+ * 
+ * Requirements:
+ * - Task 3.4.2: Show offline indicator in UI
+ * - DS-COLOR-1: Follow color palette (Primary #304B60, Accent #D48161)
+ * - DS-LAYOUT-2: Support RTL layout for Arabic
+ * - NFR-A11Y-3: Maintain color contrast ratio of at least 4.5:1
+ * 
+ * Features:
+ * - Fixed position at top of viewport
+ * - Smooth slide-in animation
+ * - High contrast for accessibility
+ * - RTL/LTR support
+ * - Responsive design
+ * - Dark mode support
+ */
+
+/* Base styles for offline indicator */
+.offline-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  padding: 12px 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.3s ease-out;
+  font-family: inherit;
+}
+
+/* Offline banner (red) */
+.offline-banner {
+  background-color: #d32f2f;
+  color: #ffffff;
+  border-bottom: 3px solid #b71c1c;
+}
+
+/* Reconnected banner (green) */
+.reconnected-banner {
+  background-color: #388e3c;
+  color: #ffffff;
+  border-bottom: 3px solid #2e7d32;
+}
+
+/* Content container */
+.offline-indicator-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Icon styles */
+.offline-indicator-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+/* Text container */
+.offline-indicator-text {
+  flex: 1;
+  text-align: center;
+}
+
+/* Title text */
+.offline-indicator-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+/* Description text */
+.offline-indicator-description {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+/* Close button */
+.offline-indicator-close {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.offline-indicator-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.offline-indicator-close:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* RTL support */
+[dir="rtl"] .offline-indicator-close {
+  right: auto;
+  left: 8px;
+}
+
+/* Slide down animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive design for mobile */
+@media (max-width: 639px) {
+  .offline-indicator {
+    padding: 10px 12px;
+  }
+
+  .offline-indicator-content {
+    gap: 8px;
+  }
+
+  .offline-indicator-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .offline-indicator-title {
+    font-size: 14px;
+  }
+
+  .offline-indicator-description {
+    font-size: 12px;
+  }
+
+  .offline-indicator-close {
+    right: 4px;
+  }
+
+  [dir="rtl"] .offline-indicator-close {
+    right: auto;
+    left: 4px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 374px) {
+  .offline-indicator {
+    padding: 8px 10px;
+  }
+
+  .offline-indicator-content {
+    gap: 6px;
+  }
+
+  .offline-indicator-title {
+    font-size: 13px;
+  }
+
+  .offline-indicator-description {
+    font-size: 11px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .offline-banner {
+    background-color: #c62828;
+    border-bottom-color: #b71c1c;
+  }
+
+  .reconnected-banner {
+    background-color: #2e7d32;
+    border-bottom-color: #1b5e20;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .offline-indicator {
+    border: 2px solid currentColor;
+  }
+
+  .offline-indicator-title {
+    font-weight: 700;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .offline-indicator {
+    animation: none;
+  }
+
+  .offline-indicator-close {
+    transition: none;
+  }
+}
+
+/* Print styles - hide offline indicator */
+@media print {
+  .offline-indicator {
+    display: none !important;
+  }
+}

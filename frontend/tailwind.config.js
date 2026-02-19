@@ -3,7 +3,29 @@ module.exports = {
   darkMode: 'class', // Enable dark mode with class strategy
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html"
+    "./public/index.html",
+    "./index.html"
+  ],
+  // Safelist for dynamically generated classes
+  safelist: [
+    // Preserve important utility classes that might be added dynamically
+    {
+      pattern: /^(bg|text|border)-(primary|secondary|accent|danger|success|hint|dark-bg|dark-surface|dark-text)/,
+      variants: ['hover', 'focus', 'active', 'dark'],
+    },
+    {
+      pattern: /^(animate|transition|duration|ease)/,
+    },
+    {
+      pattern: /^font-(arabic|english|french|heading|body)/,
+    },
+    // RTL/LTR specific classes
+    'rtl',
+    'ltr',
+    'text-right',
+    'text-left',
+    // Dark mode classes
+    'dark',
   ],
   theme: {
     colors: {
