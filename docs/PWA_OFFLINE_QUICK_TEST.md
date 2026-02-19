@@ -1,182 +1,223 @@
 # PWA Offline Functionality - Quick Test Checklist
 
+**Task**: 3.6.7 Test offline functionality manually  
+**Time Required**: 15-20 minutes  
+**Status**: ✅ Ready
+
+---
+
 ## 🚀 Quick Start (5 Minutes)
 
-This is a condensed version of the full testing guide for rapid verification of offline functionality.
-
-**Task:** 3.4.5 - Test offline functionality for key features  
-**Requirements:** FR-PWA-2, FR-PWA-3, FR-PWA-9
-
----
-
-## Prerequisites
-
+### 1. Setup
 ```bash
-# Build and run
-cd frontend
+# Build production version
 npm run build
+
+# Serve production build
 npm run preview
+# OR deploy to Vercel and test there
 ```
 
-Open browser: http://localhost:4173  
-Open DevTools: F12
+### 2. Open DevTools
+- Press F12
+- Go to Application tab
+- Check Service Workers section
+
+### 3. Basic Verification
+- ✅ Service worker is "activated and is running"
+- ✅ No errors in console
+- ✅ Cache Storage shows multiple caches
 
 ---
 
-## ✅ Essential Tests (Must Pass)
+## ⚡ Essential Tests (10 Minutes)
 
-### 1. Service Worker Active
-- [ ] DevTools → Application → Service Workers shows "activated"
+### Test 1: Offline Pages (2 min)
+1. Visit homepage, jobs page, courses page
+2. Toggle offline: DevTools → Network → ☑️ Offline
+3. Navigate back to visited pages
+4. **Expected**: Pages load successfully offline
 
-### 2. Offline Indicator Works
-- [ ] Go offline (DevTools → Network → Offline)
-- [ ] Red banner appears: "You are offline"
-- [ ] Go online
-- [ ] Green banner appears: "Connection restored"
+### Test 2: Offline Fallback (1 min)
+1. Clear cache: DevTools → Application → Clear storage
+2. Go offline
+3. Visit a new page
+4. **Expected**: Custom offline page appears
 
-### 3. Cached Pages Load Offline
-- [ ] Visit homepage while online
-- [ ] Go offline
-- [ ] Refresh page → Page loads from cache ✅
-- [ ] Visit profile page while online
-- [ ] Go offline
-- [ ] Navigate to profile → Page loads ✅
+### Test 3: Offline Indicator (1 min)
+1. Go offline
+2. **Expected**: Red banner appears at top
+3. Go online
+4. **Expected**: Green "Connection restored" message
 
-### 4. Uncached Pages Show Fallback
-- [ ] Clear cache (DevTools → Application → Clear storage)
-- [ ] Visit homepage while online
-- [ ] Go offline
-- [ ] Try to visit /admin → Offline fallback page shows ✅
+### Test 4: Request Queue (3 min)
+1. Log in
+2. Go offline
+3. Try to update profile or apply to job
+4. Check console for "Queueing request"
+5. Go online
+6. **Expected**: Request automatically retries
 
-### 5. Request Queuing Works
-- [ ] Go offline
-- [ ] Try to submit a form (e.g., update profile)
-- [ ] Console shows: "Queueing request" ✅
-- [ ] localStorage has `careerak_offline_queue` key ✅
+### Test 5: Update Notification (2 min)
+1. Keep app open
+2. Make small change to service-worker.js
+3. Rebuild: `npm run build`
+4. Reload page
+5. **Expected**: Update notification appears at bottom
 
-### 6. Request Retry Works
-- [ ] With queued request from step 5
-- [ ] Go online
-- [ ] Wait 2-3 seconds
-- [ ] Console shows: "Processing queued requests" ✅
-- [ ] Request succeeds ✅
-- [ ] Queue is empty ✅
-
-### 7. Static Assets Cached
-- [ ] Visit site while online
-- [ ] Go offline
-- [ ] Refresh page
-- [ ] Network tab shows "(from ServiceWorker)" for JS/CSS ✅
-- [ ] Images load from cache ✅
-
-### 8. Dark Mode Works Offline
-- [ ] Go offline
-- [ ] Toggle dark mode in settings
-- [ ] Dark mode applies ✅
-- [ ] Navigate between pages → Dark mode persists ✅
+### Test 6: PWA Install (1 min)
+1. Open on mobile or use device emulation
+2. Look for install prompt
+3. **Expected**: Install option available
 
 ---
 
-## 🔍 Quick Verification Commands
+## 🎯 Pass/Fail Criteria
 
-### Check Service Worker
-```javascript
-// In browser console
-navigator.serviceWorker.getRegistration().then(reg => {
-  console.log('Service Worker:', reg.active ? 'Active ✅' : 'Not Active ❌');
-});
-```
+### ✅ PASS if:
+- All 6 essential tests pass
+- No console errors
+- Service worker is active
+- Offline indicator works
+- Request queue works
 
-### Check Cache
-```javascript
-// In browser console
-caches.keys().then(keys => {
-  console.log('Caches:', keys);
-  keys.forEach(key => {
-    caches.open(key).then(cache => {
-      cache.keys().then(requests => {
-        console.log(`${key}: ${requests.length} items`);
-      });
-    });
-  });
-});
-```
-
-### Check Queue
-```javascript
-// In browser console
-const queue = localStorage.getItem('careerak_offline_queue');
-console.log('Queue:', queue ? JSON.parse(queue) : 'Empty');
-```
-
-### Check Offline Status
-```javascript
-// In browser console
-console.log('Online:', navigator.onLine);
-```
+### ❌ FAIL if:
+- Service worker not registered
+- Offline pages don't load
+- No offline fallback page
+- Requests not queued
+- Console shows errors
 
 ---
 
-## 📊 Quick Test Results
+## 🔧 Quick Troubleshooting
 
-**Date:** _____________  
-**Tester:** _____________  
-**Browser:** _____________
-
-| Test | Status | Notes |
-|------|--------|-------|
-| 1. Service Worker Active | ☐ Pass ☐ Fail | |
-| 2. Offline Indicator | ☐ Pass ☐ Fail | |
-| 3. Cached Pages Load | ☐ Pass ☐ Fail | |
-| 4. Offline Fallback | ☐ Pass ☐ Fail | |
-| 5. Request Queuing | ☐ Pass ☐ Fail | |
-| 6. Request Retry | ☐ Pass ☐ Fail | |
-| 7. Static Assets Cached | ☐ Pass ☐ Fail | |
-| 8. Dark Mode Offline | ☐ Pass ☐ Fail | |
-
-**Overall:** ☐ All Pass ☐ Some Fail
-
----
-
-## 🐛 Common Issues
-
-### Service Worker Not Active
+### Service Worker Not Working?
 ```bash
-# Clear and rebuild
-rm -rf frontend/build
-cd frontend
-npm run build
-npm run preview
+# Clear everything and restart
+1. DevTools → Application → Clear storage → Clear site data
+2. Close all tabs
+3. Rebuild: npm run build
+4. Open fresh tab
 ```
 
-### Offline Indicator Not Showing
-- Check OfflineContext is in App.jsx
-- Check OfflineIndicator is rendered
-- Try actual offline (not just DevTools)
+### Offline Page Not Showing?
+```bash
+# Check if offline.html exists
+ls frontend/public/offline.html
 
-### Requests Not Queuing
-- Only POST/PUT/PATCH/DELETE queue
-- Check console for errors
-- Verify offlineRequestQueue is imported
+# Verify it's in cache
+DevTools → Application → Cache Storage → critical-assets-v1
+```
 
-### Cache Not Working
-- Must visit pages while online first
-- Check HTTPS (required for service workers)
-- Clear cache and try again
-
----
-
-## 🔗 Full Testing Guide
-
-For comprehensive testing, see: `docs/PWA_OFFLINE_TESTING_GUIDE.md`
+### Request Queue Not Working?
+```javascript
+// Check console for these logs:
+"[OfflineContext] Queueing request for retry"
+"[OfflineContext] Processing X queued requests"
+```
 
 ---
 
-## ✅ Sign-Off
+## 📱 Mobile Quick Test (5 Minutes)
 
-**Quick Test Complete:** ☐ Yes ☐ No  
-**Ready for Full Testing:** ☐ Yes ☐ No  
-**Issues Found:** _____________________________________________
+### Android Chrome
+1. Open app on phone
+2. Menu → Install app
+3. Open installed app
+4. Turn on Airplane mode
+5. Navigate app
+6. **Expected**: Works offline
 
-**Tester:** _____________  
-**Date:** _____________
+### iOS Safari
+1. Open app in Safari
+2. Share → Add to Home Screen
+3. Open from home screen
+4. Turn on Airplane mode
+5. Navigate app
+6. **Expected**: Works offline
+
+---
+
+## 🌍 Language Quick Test (3 Minutes)
+
+### Arabic
+1. Set language to Arabic
+2. Go offline
+3. **Expected**: Offline messages in Arabic, RTL layout
+
+### English
+1. Set language to English
+2. Go offline
+3. **Expected**: Offline messages in English, LTR layout
+
+### French
+1. Set language to French
+2. Go offline
+3. **Expected**: Offline messages in French, LTR layout
+
+---
+
+## 📊 Quick Metrics Check
+
+### DevTools → Lighthouse
+1. Run Lighthouse audit
+2. Check scores:
+   - ✅ Performance: 90+
+   - ✅ PWA: 100
+   - ✅ Accessibility: 95+
+
+### DevTools → Network
+1. Reload page
+2. Check "Size" column
+3. **Expected**: Most resources show "ServiceWorker"
+
+### DevTools → Application → Cache Storage
+1. Check cache sizes
+2. **Expected**:
+   - critical-assets-v1: ~5 items
+   - static-assets: ~20-30 items
+   - pages: ~5-10 items
+   - images: varies
+   - api-cache: varies
+
+---
+
+## ✅ Quick Sign-Off Checklist
+
+- [ ] Service worker active
+- [ ] Offline pages work
+- [ ] Offline fallback shows
+- [ ] Offline indicator works
+- [ ] Request queue works
+- [ ] Update notification works
+- [ ] PWA installable
+- [ ] All languages work
+- [ ] No console errors
+- [ ] Lighthouse PWA: 100
+
+---
+
+## 🎉 Success!
+
+If all checkboxes are ticked, Task 3.6.7 is complete!
+
+**Next Steps**:
+1. Document any issues found
+2. Create test report (use template in PWA_OFFLINE_TESTING_GUIDE.md)
+3. Get stakeholder approval
+4. Mark task as complete
+
+---
+
+## 📞 Need Help?
+
+**Full Testing Guide**: `docs/PWA_OFFLINE_TESTING_GUIDE.md`  
+**Implementation Details**: `docs/PWA_IMPLEMENTATION_SUMMARY.md`  
+**Requirements**: `.kiro/specs/general-platform-enhancements/requirements.md`
+
+---
+
+**Last Updated**: 2026-02-19  
+**Version**: 1.0  
+**Estimated Time**: 15-20 minutes

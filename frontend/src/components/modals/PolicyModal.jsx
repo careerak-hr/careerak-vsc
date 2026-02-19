@@ -1,7 +1,9 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PolicyPage from '../../pages/13_PolicyPage.jsx';
 import { useApp } from '../../context/AppContext';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 
 const PolicyModal = ({ onClose, onAgree }) => {
   const { language } = useApp();
@@ -28,10 +30,28 @@ const PolicyModal = ({ onClose, onAgree }) => {
 
   // Focus trap for accessibility - Escape key closes modal
   const modalRef = useFocusTrap(true, onClose);
+  
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 dark:bg-black/70 flex items-center justify-center p-4 transition-all duration-300" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div ref={modalRef} className="bg-[#E3DAD1] dark:bg-[#2d2d2d] rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border-4 border-[#304B60] dark:border-[#D48161] overflow-hidden transition-all duration-300">
+    <AnimatePresence mode="wait">
+      <motion.div 
+        className="fixed inset-0 z-50 bg-black/50 dark:bg-black/70 flex items-center justify-center p-4 transition-all duration-300" 
+        dir={isRTL ? 'rtl' : 'ltr'}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
+      >
+        <motion.div 
+          ref={modalRef} 
+          className="bg-[#E3DAD1] dark:bg-[#2d2d2d] rounded-3xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl border-4 border-[#304B60] dark:border-[#D48161] overflow-hidden transition-all duration-300"
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+        >
         {/* Header - Fixed */}
         <div className="flex items-center justify-between p-6 border-b border-[#304B60]/10 dark:border-[#D48161]/20 bg-[#E3DAD1] dark:bg-[#2d2d2d] flex-shrink-0 transition-all duration-300">
           <h2 className="text-2xl font-black text-[#304B60] dark:text-[#e0e0e0] transition-colors duration-300" style={fontStyle}>{t.title}</h2>
@@ -74,8 +94,9 @@ const PolicyModal = ({ onClose, onAgree }) => {
             {t.close}
           </button>
         </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

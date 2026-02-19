@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 import './AuthModals.css';
 
 const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisResult, userType, language }) => {
@@ -19,6 +21,9 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
   // Focus trap for accessibility - Escape key closes modal
   // Note: AIAnalysisModal auto-closes, no manual close needed
   const modalRef = useFocusTrap(true);
+  
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
   
   // رسائل مخصصة حسب نوع المستخدم
   const getExpectedImageType = () => {
@@ -81,19 +86,31 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
   }, [isAnalyzing, analysisResult, onReject, onAccept]);
   
   return (
-    <div className="auth-modal-backdrop" dir={dir}>
-      <div 
-        ref={modalRef}
-        className="auth-modal-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300" 
+    <AnimatePresence mode="wait">
+      <motion.div 
+        className="auth-modal-backdrop" 
         dir={dir}
-        style={{
-          border: '4px solid #304B60',
-          backgroundColor: '#E3DAD1',
-          borderRadius: '1.5rem',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          ...fontStyle
-        }}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
       >
+        <motion.div 
+          ref={modalRef}
+          className="auth-modal-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300" 
+          dir={dir}
+          style={{
+            border: '4px solid #304B60',
+            backgroundColor: '#E3DAD1',
+            borderRadius: '1.5rem',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            ...fontStyle
+          }}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+        >
         <h3 
           className="text-xl font-black mb-4 dark:text-[#e0e0e0] transition-colors duration-300"
           style={{ color: '#304B60', ...fontStyle }}
@@ -196,8 +213,9 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
             )}
           </>
         )}
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

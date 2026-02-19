@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careerak PWA Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #E3DAD1 0%, #D48161 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      padding: 32px;
+    }
+
+    h1 {
+      color: #304B60;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    .test-section {
+      margin-bottom: 32px;
+      padding: 20px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border-left: 4px solid #304B60;
+    }
+
+    .test-section h2 {
+      color: #304B60;
+      font-size: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .test-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+
+    .test-item:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .status {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .status.pass {
+      background: #10b981;
+      color: white;
+    }
+
+    .status.fail {
+      background: #ef4444;
+      color: white;
+    }
+
+    .status.pending {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .test-label {
+      flex: 1;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .test-value {
+      color: #666;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      background: #f1f5f9;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .button {
+      background: #304B60;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .button:hover {
+      background: #243a4d;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+    }
+
+    .button:active {
+      transform: translateY(0);
+    }
+
+    .button.secondary {
+      background: #D48161;
+    }
+
+    .button.secondary:hover {
+      background: #c06d4f;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .summary-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .summary-value {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .summary-value.pass {
+      color: #10b981;
+    }
+
+    .summary-value.fail {
+      color: #ef4444;
+    }
+
+    .summary-value.pending {
+      color: #f59e0b;
+    }
+
+    .summary-label {
+      color: #666;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .icon {
+      font-size: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Careerak PWA Test</h1>
+    <p class="subtitle">Progressive Web App Installation & Feature Testing</p>
+
+    <div class="summary">
+      <div class="summary-card">
+        <div class="summary-value pass" id="passCount">0</div>
+        <div class="summary-label">Passed</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-value fail" id="failCount">0</div>
+        <div class="summary-label">Failed</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-value pending" id="pendingCount">0</div>
+        <div class="summary-label">Pending</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-value" id="totalCount">0</div>
+        <div class="summary-label">Total Tests</div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2><span class="icon">📱</span> PWA Requirements</h2>
+      <div id="pwaTests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2><span class="icon">⚙️</span> Service Worker</h2>
+      <div id="swTests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2><span class="icon">📄</span> Manifest</h2>
+      <div id="manifestTests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2><span class="icon">🔔</span> Notifications</h2>
+      <div id="notificationTests"></div>
+    </div>
+
+    <div class="test-section">
+      <h2><span class="icon">💾</span> Cache & Offline</h2>
+      <div id="cacheTests"></div>
+    </div>
+
+    <div class="actions">
+      <button class="button" onclick="runAllTests()">🔄 Run All Tests</button>
+      <button class="button secondary" onclick="testInstallPrompt()">📥 Test Install Prompt</button>
+      <button class="button secondary" onclick="testNotifications()">🔔 Test Notifications</button>
+      <button class="button secondary" onclick="testOffline()">✈️ Test Offline</button>
+      <button class="button secondary" onclick="exportResults()">📊 Export Results</button>
+    </div>
+  </div>
+
+  <script>
+    let testResults = {
+      pass: 0,
+      fail: 0,
+      pending: 0,
+      total: 0,
+      tests: []
+    };
+
+    function addTest(category, label, status, value = '') {
+      const container = document.getElementById(category);
+      const testItem = document.createElement('div');
+      testItem.className = 'test-item';
+      
+      const statusIcon = status === 'pass' ? '✓' : status === 'fail' ? '✗' : '⋯';
+      
+      testItem.innerHTML = `
+        <div class="status ${status}">${statusIcon}</div>
+        <div class="test-label">${label}</div>
+        ${value ? `<div class="test-value">${value}</div>` : ''}
+      `;
+      
+      container.appendChild(testItem);
+      
+      testResults.tests.push({ category, label, status, value });
+      testResults[status]++;
+      testResults.total++;
+      
+      updateSummary();
+    }
+
+    function updateSummary() {
+      document.getElementById('passCount').textContent = testResults.pass;
+      document.getElementById('failCount').textContent = testResults.fail;
+      document.getElementById('pendingCount').textContent = testResults.pending;
+      document.getElementById('totalCount').textContent = testResults.total;
+    }
+
+    async function runAllTests() {
+      // Clear previous results
+      ['pwaTests', 'swTests', 'manifestTests', 'notificationTests', 'cacheTests'].forEach(id => {
+        document.getElementById(id).innerHTML = '';
+      });
+      testResults = { pass: 0, fail: 0, pending: 0, total: 0, tests: [] };
+      updateSummary();
+
+      // PWA Requirements
+      addTest('pwaTests', 'HTTPS Enabled', window.location.protocol === 'https:' ? 'pass' : 'fail', window.location.protocol);
+      addTest('pwaTests', 'Service Worker API', 'serviceWorker' in navigator ? 'pass' : 'fail');
+      addTest('pwaTests', 'Fetch API', 'fetch' in window ? 'pass' : 'fail');
+      addTest('pwaTests', 'Cache API', 'caches' in window ? 'pass' : 'fail');
+      addTest('pwaTests', 'Notification API', 'Notification' in window ? 'pass' : 'fail');
+
+      // Service Worker Tests
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.getRegistration();
+          addTest('swTests', 'Service Worker Registered', registration ? 'pass' : 'fail', registration ? registration.scope : 'Not registered');
+          
+          if (registration) {
+            addTest('swTests', 'Active Service Worker', registration.active ? 'pass' : 'fail');
+            addTest('swTests', 'Update Available', registration.waiting ? 'pending' : 'pass', registration.waiting ? 'Update pending' : 'Up to date');
+          }
+        } catch (error) {
+          addTest('swTests', 'Service Worker Check', 'fail', error.message);
+        }
+      } else {
+        addTest('swTests', 'Service Worker Not Supported', 'fail');
+      }
+
+      // Manifest Tests
+      try {
+        const manifestLink = document.querySelector('link[rel="manifest"]');
+        addTest('manifestTests', 'Manifest Link Present', manifestLink ? 'pass' : 'fail', manifestLink ? manifestLink.href : 'Not found');
+        
+        if (manifestLink) {
+          const response = await fetch(manifestLink.href);
+          const manifest = await response.json();
+          
+          addTest('manifestTests', 'Manifest Valid JSON', 'pass');
+          addTest('manifestTests', 'App Name', manifest.name ? 'pass' : 'fail', manifest.name || 'Missing');
+          addTest('manifestTests', 'Short Name', manifest.short_name ? 'pass' : 'fail', manifest.short_name || 'Missing');
+          addTest('manifestTests', 'Start URL', manifest.start_url ? 'pass' : 'fail', manifest.start_url || 'Missing');
+          addTest('manifestTests', 'Display Mode', manifest.display === 'standalone' ? 'pass' : 'fail', manifest.display || 'Missing');
+          addTest('manifestTests', 'Theme Color', manifest.theme_color ? 'pass' : 'fail', manifest.theme_color || 'Missing');
+          addTest('manifestTests', 'Background Color', manifest.background_color ? 'pass' : 'fail', manifest.background_color || 'Missing');
+          addTest('manifestTests', 'Icons Present', manifest.icons && manifest.icons.length > 0 ? 'pass' : 'fail', `${manifest.icons?.length || 0} icons`);
+          
+          if (manifest.icons && manifest.icons.length > 0) {
+            const has192 = manifest.icons.some(icon => icon.sizes.includes('192x192'));
+            const has512 = manifest.icons.some(icon => icon.sizes.includes('512x512'));
+            addTest('manifestTests', '192x192 Icon', has192 ? 'pass' : 'fail');
+            addTest('manifestTests', '512x512 Icon', has512 ? 'pass' : 'fail');
+          }
+        }
+      } catch (error) {
+        addTest('manifestTests', 'Manifest Fetch Failed', 'fail', error.message);
+      }
+
+      // Notification Tests
+      if ('Notification' in window) {
+        addTest('notificationTests', 'Notification Permission', 'pending', Notification.permission);
+        addTest('notificationTests', 'Push API', 'PushManager' in window ? 'pass' : 'fail');
+      } else {
+        addTest('notificationTests', 'Notifications Not Supported', 'fail');
+      }
+
+      // Cache Tests
+      if ('caches' in window) {
+        try {
+          const cacheNames = await caches.keys();
+          addTest('cacheTests', 'Cache Storage Available', 'pass', `${cacheNames.length} caches`);
+          
+          for (const cacheName of cacheNames) {
+            const cache = await caches.open(cacheName);
+            const keys = await cache.keys();
+            addTest('cacheTests', `Cache: ${cacheName}`, 'pass', `${keys.length} entries`);
+          }
+        } catch (error) {
+          addTest('cacheTests', 'Cache Check Failed', 'fail', error.message);
+        }
+      } else {
+        addTest('cacheTests', 'Cache Storage Not Supported', 'fail');
+      }
+    }
+
+    async function testInstallPrompt() {
+      alert('Install prompt testing:\n\n1. On Android Chrome: Look for banner at bottom or tap menu → "Add to Home screen"\n2. On iOS Safari: Tap Share button → "Add to Home Screen"\n\nNote: Install prompt may not appear if app is already installed or doesn\'t meet PWA criteria.');
+    }
+
+    async function testNotifications() {
+      if (!('Notification' in window)) {
+        alert('Notifications are not supported in this browser.');
+        return;
+      }
+
+      if (Notification.permission === 'granted') {
+        new Notification('Careerak PWA Test', {
+          body: 'Notifications are working! 🎉',
+          icon: '/logo.png',
+          badge: '/logo.png',
+          tag: 'test-notification',
+          requireInteraction: false
+        });
+      } else if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          new Notification('Careerak PWA Test', {
+            body: 'Notifications are now enabled! 🎉',
+            icon: '/logo.png',
+            badge: '/logo.png',
+            tag: 'test-notification',
+            requireInteraction: false
+          });
+        } else {
+          alert('Notification permission denied.');
+        }
+      } else {
+        alert('Notification permission was previously denied. Please enable it in browser settings.');
+      }
+    }
+
+    async function testOffline() {
+      alert('Offline testing:\n\n1. Visit a few pages in the app\n2. Enable Airplane Mode on your device\n3. Try navigating to previously visited pages\n4. Check if pages load from cache\n5. Try visiting a new page (should show offline fallback)\n\nNote: You must visit pages while online first for them to be cached.');
+    }
+
+    function exportResults() {
+      const report = {
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        results: testResults
+      };
+
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `pwa-test-results-${Date.now()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Run tests on page load
+    window.addEventListener('load', () => {
+      setTimeout(runAllTests, 500);
+    });
+  </script>
+</body>
+</html>

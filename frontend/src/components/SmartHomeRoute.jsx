@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { isOnboardingComplete } from '../utils/onboardingUtils';
 import { SuspenseWrapper, GlobalLoader } from './GlobalLoaders';
+import PageTransition from './PageTransition';
 
 // Lazy load LanguagePage
 const LanguagePage = React.lazy(() => import('../pages/00_LanguagePage'));
@@ -49,7 +50,9 @@ function SmartHomeRoute() {
   console.log("🆕 Onboarding not complete, showing LanguagePage.");
   return (
     <SuspenseWrapper>
-      <LanguagePage />
+      <PageTransition variant="fadeIn">
+        <LanguagePage />
+      </PageTransition>
     </SuspenseWrapper>
   );
 }

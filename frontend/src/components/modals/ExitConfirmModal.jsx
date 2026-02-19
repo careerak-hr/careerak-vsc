@@ -1,6 +1,8 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 
 // ✅ إضافة الأنيميشن في head مباشرة
 if (typeof document !== 'undefined') {
@@ -71,32 +73,33 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
 
   // Focus trap for accessibility - Escape key closes modal
   const modalRef = useFocusTrap(isOpen, onCancel);
+  
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
 
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-all duration-300"
-      onClick={onCancel}
-      dir={isRTL ? 'rtl' : 'ltr'}
-      style={{ 
-        animation: 'fadeIn 0.15s ease-out',
-        WebkitBackfaceVisibility: 'hidden',
-        backfaceVisibility: 'hidden'
-      }}
-    >
-      <div 
-        ref={modalRef}
-        className="bg-secondary dark:bg-[#2d2d2d] rounded-3xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden border-4 border-[#304B60] dark:border-[#D48161] transition-all duration-300"
-        style={{ 
-          animation: 'scaleIn 0.2s ease-out',
-          WebkitBackfaceVisibility: 'hidden',
-          backfaceVisibility: 'hidden',
-          transform: 'translateZ(0)',
-          willChange: 'transform, opacity'
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div 
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-all duration-300"
+          onClick={onCancel}
+          dir={isRTL ? 'rtl' : 'ltr'}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
+        >
+          <motion.div 
+            ref={modalRef}
+            className="bg-secondary dark:bg-[#2d2d2d] rounded-3xl shadow-2xl w-[90%] max-w-md mx-4 overflow-hidden border-4 border-[#304B60] dark:border-[#D48161] transition-all duration-300"
+            onClick={(e) => e.stopPropagation()}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+          >
         {/* المحتوى */}
         <div className="p-8 text-center">
           {/* العنوان */}
@@ -136,8 +139,10 @@ const ExitConfirmModal = ({ isOpen, onConfirm, onCancel }) => {
             </button>
           </div>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

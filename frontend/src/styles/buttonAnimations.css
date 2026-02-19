@@ -1,0 +1,585 @@
+/**
+ * Button Hover Animations
+ * Task: 4.5.1 - Add hover animations to buttons (scale, color)
+ * 
+ * Features:
+ * - Scale animations on hover
+ * - Color transitions
+ * - GPU-accelerated (transform, opacity)
+ * - Respects prefers-reduced-motion
+ * - 200ms duration for fast, responsive feel
+ * 
+ * Applied to:
+ * - All button elements
+ * - Elements with button-like classes
+ * - Interactive elements with role="button"
+ */
+
+/* ============================================================================
+   BASE BUTTON ANIMATIONS
+   ============================================================================ */
+
+/* All buttons get smooth transitions */
+button,
+[role="button"],
+[class*="-btn"],
+[class*="-button"],
+.btn {
+  transition: transform 0.2s ease-in-out, 
+              background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out,
+              opacity 0.2s ease-in-out;
+  will-change: transform;
+}
+
+/* Hover scale up (default) */
+button:hover:not(:disabled),
+[role="button"]:hover:not([aria-disabled="true"]),
+[class*="-btn"]:hover:not(:disabled),
+[class*="-button"]:hover:not(:disabled),
+.btn:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+/* Active/tap scale down */
+button:active:not(:disabled),
+[role="button"]:active:not([aria-disabled="true"]),
+[class*="-btn"]:active:not(:disabled),
+[class*="-button"]:active:not(:disabled),
+.btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* Disabled state - no animation */
+button:disabled,
+[role="button"][aria-disabled="true"],
+[class*="-btn"]:disabled,
+[class*="-button"]:disabled,
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+/* ============================================================================
+   PRIMARY BUTTONS (Accent Color)
+   ============================================================================ */
+
+/* Primary buttons with accent color */
+button[type="submit"],
+[class*="submit-btn"],
+[class*="primary-btn"],
+[class*="action-btn"]:not([class*="secondary"]) {
+  background-color: #D48161;
+  color: white;
+}
+
+button[type="submit"]:hover:not(:disabled),
+[class*="submit-btn"]:hover:not(:disabled),
+[class*="primary-btn"]:hover:not(:disabled),
+[class*="action-btn"]:not([class*="secondary"]):hover:not(:disabled) {
+  background-color: #c07050;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+button[type="submit"]:active:not(:disabled),
+[class*="submit-btn"]:active:not(:disabled),
+[class*="primary-btn"]:active:not(:disabled),
+[class*="action-btn"]:not([class*="secondary"]):active:not(:disabled) {
+  background-color: #b06040;
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   SECONDARY BUTTONS
+   ============================================================================ */
+
+/* Secondary buttons with subtle hover */
+button[type="button"]:not([class*="primary"]):not([class*="submit"]),
+[class*="secondary-btn"],
+[class*="cancel-btn"],
+[class*="back-btn"] {
+  background-color: #E3DAD1;
+  color: #304B60;
+}
+
+button[type="button"]:not([class*="primary"]):not([class*="submit"]):hover:not(:disabled),
+[class*="secondary-btn"]:hover:not(:disabled),
+[class*="cancel-btn"]:hover:not(:disabled),
+[class*="back-btn"]:hover:not(:disabled) {
+  background-color: #d4cbc2;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.15);
+}
+
+/* ============================================================================
+   ICON BUTTONS
+   ============================================================================ */
+
+/* Icon buttons (smaller scale) */
+[class*="icon-btn"],
+[class*="close-btn"],
+[class*="delete-btn"],
+[class*="edit-btn"] {
+  transition: transform 0.2s ease-in-out, 
+              color 0.2s ease-in-out,
+              background-color 0.2s ease-in-out;
+}
+
+[class*="icon-btn"]:hover:not(:disabled),
+[class*="close-btn"]:hover:not(:disabled),
+[class*="delete-btn"]:hover:not(:disabled),
+[class*="edit-btn"]:hover:not(:disabled) {
+  transform: scale(1.1);
+}
+
+[class*="icon-btn"]:active:not(:disabled),
+[class*="close-btn"]:active:not(:disabled),
+[class*="delete-btn"]:active:not(:disabled),
+[class*="edit-btn"]:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
+/* ============================================================================
+   DANGER BUTTONS
+   ============================================================================ */
+
+/* Danger buttons (delete, remove, etc.) */
+[class*="danger-btn"],
+[class*="delete-btn"],
+[class*="remove-btn"] {
+  background-color: #dc2626;
+  color: white;
+}
+
+[class*="danger-btn"]:hover:not(:disabled),
+[class*="delete-btn"]:hover:not(:disabled),
+[class*="remove-btn"]:hover:not(:disabled) {
+  background-color: #b91c1c;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* ============================================================================
+   LANGUAGE PAGE BUTTONS
+   ============================================================================ */
+
+.lang-page-btn {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.lang-page-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(212, 129, 97, 0.3);
+}
+
+.lang-page-btn:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   AUTH PAGE BUTTONS
+   ============================================================================ */
+
+.auth-user-type-btn {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              border-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.auth-user-type-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.2);
+}
+
+.auth-user-type-btn:active {
+  transform: scale(0.95);
+}
+
+.auth-submit-btn {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  background-color: #c07050;
+  box-shadow: 0 6px 16px rgba(212, 129, 97, 0.4);
+}
+
+.auth-submit-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   LOGIN PAGE BUTTONS
+   ============================================================================ */
+
+.login-submit-btn {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.login-submit-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  background-color: #c07050;
+  box-shadow: 0 6px 16px rgba(212, 129, 97, 0.4);
+}
+
+.login-submit-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   ADMIN DASHBOARD BUTTONS
+   ============================================================================ */
+
+.admin-quick-nav-simple-btn {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.admin-quick-nav-simple-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.2);
+}
+
+.admin-quick-nav-simple-btn:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   TAB BUTTONS
+   ============================================================================ */
+
+[class*="tab-btn"],
+[role="tab"] {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              border-color 0.2s ease-in-out;
+}
+
+[class*="tab-btn"]:hover,
+[role="tab"]:hover {
+  transform: scale(1.02);
+}
+
+[class*="tab-btn"]:active,
+[role="tab"]:active {
+  transform: scale(0.98);
+}
+
+/* Active tabs - no scale on hover */
+[class*="tab-btn"].active:hover,
+[role="tab"][aria-selected="true"]:hover {
+  transform: none;
+}
+
+/* ============================================================================
+   FILTER BUTTONS
+   ============================================================================ */
+
+[class*="filter-btn"] {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out;
+}
+
+[class*="filter-btn"]:hover {
+  transform: scale(1.05);
+}
+
+[class*="filter-btn"]:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   CARD BUTTONS
+   ============================================================================ */
+
+[class*="card-btn"],
+[class*="job-card"] button,
+[class*="course-card"] button {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+[class*="card-btn"]:hover:not(:disabled),
+[class*="job-card"] button:hover:not(:disabled),
+[class*="course-card"] button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+/* ============================================================================
+   MODAL BUTTONS
+   ============================================================================ */
+
+[class*="modal-btn"],
+[class*="modal"] button {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+[class*="modal-btn"]:hover:not(:disabled),
+[class*="modal"] button:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+[class*="modal-close-btn"]:hover {
+  transform: scale(1.1) rotate(90deg);
+}
+
+/* ============================================================================
+   FLOATING ACTION BUTTONS
+   ============================================================================ */
+
+[class*="floating-btn"],
+[class*="fab"] {
+  transition: transform 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+[class*="floating-btn"]:hover,
+[class*="fab"]:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(212, 129, 97, 0.4);
+}
+
+[class*="floating-btn"]:active,
+[class*="fab"]:active {
+  transform: scale(0.9);
+}
+
+/* ============================================================================
+   NOTIFICATION BUTTONS
+   ============================================================================ */
+
+.notifications-mark-all-btn,
+.notifications-filter-btn {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out;
+}
+
+.notifications-mark-all-btn:hover,
+.notifications-filter-btn:hover {
+  transform: scale(1.05);
+}
+
+.notifications-mark-all-btn:active,
+.notifications-filter-btn:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   OAUTH BUTTONS
+   ============================================================================ */
+
+[class*="oauth-button"] {
+  transition: transform 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+[class*="oauth-button"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+[class*="oauth-button"]:active {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   LOADING BUTTONS
+   ============================================================================ */
+
+.loading-button {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.loading-button:hover:not(.loading-button-disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.loading-button:active:not(.loading-button-disabled) {
+  transform: scale(0.95);
+}
+
+/* Loading state - no hover animation */
+.loading-button.loading-button-disabled {
+  transform: none !important;
+}
+
+/* ============================================================================
+   TAILWIND BUTTONS
+   ============================================================================ */
+
+/* Buttons with Tailwind classes */
+.bg-\[\#D48161\]:hover,
+.bg-accent:hover {
+  background-color: #c07050 !important;
+  transform: scale(1.05);
+}
+
+.bg-\[\#D48161\]:active,
+.bg-accent:active {
+  background-color: #b06040 !important;
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   PREFERS REDUCED MOTION
+   ============================================================================ */
+
+/* Disable all animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  button,
+  [role="button"],
+  [class*="-btn"],
+  [class*="-button"],
+  .btn,
+  [class*="tab-btn"],
+  [class*="filter-btn"],
+  [class*="card-btn"],
+  [class*="modal-btn"],
+  [class*="floating-btn"],
+  [class*="oauth-button"],
+  .loading-button,
+  .lang-page-btn,
+  .auth-user-type-btn,
+  .auth-submit-btn,
+  .login-submit-btn,
+  .admin-quick-nav-simple-btn,
+  .notifications-mark-all-btn,
+  .notifications-filter-btn {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  button:hover,
+  [role="button"]:hover,
+  [class*="-btn"]:hover,
+  [class*="-button"]:hover,
+  .btn:hover {
+    transform: none !important;
+  }
+
+  button:active,
+  [role="button"]:active,
+  [class*="-btn"]:active,
+  [class*="-button"]:active,
+  .btn:active {
+    transform: none !important;
+  }
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT
+   ============================================================================ */
+
+/* Ensure animations work in dark mode */
+.dark button:hover:not(:disabled),
+.dark [role="button"]:hover:not([aria-disabled="true"]),
+.dark [class*="-btn"]:hover:not(:disabled),
+.dark [class*="-button"]:hover:not(:disabled),
+.dark .btn:hover:not(:disabled) {
+  transform: scale(1.05);
+}
+
+.dark button:active:not(:disabled),
+.dark [role="button"]:active:not([aria-disabled="true"]),
+.dark [class*="-btn"]:active:not(:disabled),
+.dark [class*="-button"]:active:not(:disabled),
+.dark .btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+/* Ensure focus indicators are visible during animations */
+button:focus-visible,
+[role="button"]:focus-visible,
+[class*="-btn"]:focus-visible,
+[class*="-button"]:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid #D48161 !important;
+  outline-offset: 2px !important;
+}
+
+/* Focus + hover */
+button:focus-visible:hover:not(:disabled),
+[role="button"]:focus-visible:hover:not([aria-disabled="true"]),
+[class*="-btn"]:focus-visible:hover:not(:disabled),
+[class*="-button"]:focus-visible:hover:not(:disabled),
+.btn:focus-visible:hover:not(:disabled) {
+  outline: 2px solid #D48161 !important;
+  outline-offset: 2px !important;
+  transform: scale(1.05);
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATION
+   ============================================================================ */
+
+/* Use GPU acceleration for transforms */
+button,
+[role="button"],
+[class*="-btn"],
+[class*="-button"],
+.btn {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* ============================================================================
+   NOTES
+   ============================================================================ */
+
+/*
+ * Implementation Notes:
+ * 
+ * 1. All animations use transform for GPU acceleration
+ * 2. Duration is 200ms for fast, responsive feel
+ * 3. Scale values: 1.05 for hover, 0.95 for active
+ * 4. Respects prefers-reduced-motion
+ * 5. Works in both light and dark modes
+ * 6. Maintains accessibility (focus indicators)
+ * 7. Disabled buttons have no animations
+ * 8. Loading buttons have no hover animations
+ * 
+ * Color Transitions:
+ * - Primary buttons: #D48161 → #c07050 (hover) → #b06040 (active)
+ * - Secondary buttons: #E3DAD1 → #d4cbc2 (hover)
+ * - Danger buttons: #dc2626 → #b91c1c (hover)
+ * 
+ * Scale Values:
+ * - Default buttons: 1.05 (hover), 0.95 (active)
+ * - Icon buttons: 1.1 (hover), 0.9 (active)
+ * - Floating buttons: 1.1 (hover), 0.9 (active)
+ * - Tab buttons: 1.02 (hover), 0.98 (active) - subtle
+ * 
+ * Box Shadow:
+ * - Primary: 0 4px 12px rgba(212, 129, 97, 0.3)
+ * - Secondary: 0 2px 8px rgba(48, 75, 96, 0.15)
+ * - Danger: 0 4px 12px rgba(220, 38, 38, 0.3)
+ * - Floating: 0 8px 24px rgba(212, 129, 97, 0.4)
+ */

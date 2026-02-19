@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Cropper from 'react-easy-crop';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 import './CropModal.css';
 
 const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, language }) => {
@@ -21,6 +23,9 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
 
   // Focus trap for accessibility - Escape key closes modal
   const modalRef = useFocusTrap(true, onClose);
+  
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
 
   // دالة تُستدعى عند تغيير منطقة القص
   const onCropChange = (location) => {
@@ -47,19 +52,31 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
   };
 
   return (
-    <div className="crop-modal-backdrop" dir={dir}>
-      <div 
-        ref={modalRef}
-        className="crop-modal-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300" 
+    <AnimatePresence mode="wait">
+      <motion.div 
+        className="crop-modal-backdrop" 
         dir={dir}
-        style={{
-          border: '4px solid #304B60',
-          backgroundColor: '#E3DAD1',
-          borderRadius: '1.5rem',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          ...fontStyle
-        }}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
       >
+        <motion.div 
+          ref={modalRef}
+          className="crop-modal-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300" 
+          dir={dir}
+          style={{
+            border: '4px solid #304B60',
+            backgroundColor: '#E3DAD1',
+            borderRadius: '1.5rem',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            ...fontStyle
+          }}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+        >
         <h3 
           className="crop-modal-title dark:text-[#e0e0e0] transition-colors duration-300"
           style={{ color: '#304B60', ...fontStyle }}
@@ -205,8 +222,9 @@ const CropModal = ({ t, image, crop, setCrop, onCropComplete, onSave, onClose, l
             {language === 'ar' ? '✓ تم' : language === 'fr' ? '✓ Terminé' : '✓ Done'}
           </button>
         </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 import './ReportModal.css';
 
 const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
@@ -12,6 +14,9 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
 
   // Focus trap for accessibility - Escape key closes modal
   const modalRef = useFocusTrap(isOpen, onClose);
+  
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
 
   const reportReasons = [
     'harassment',
@@ -53,8 +58,23 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="report-modal-backdrop">
-      <div ref={modalRef} className="report-modal-container">
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div 
+          className="report-modal-backdrop"
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
+        >
+          <motion.div 
+            ref={modalRef} 
+            className="report-modal-container"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+          >
         <div className="report-modal-content">
           <h2 className="report-modal-title">
             {t.report} {targetName || t.report_content}
@@ -116,8 +136,10 @@ const ReportModal = ({ isOpen, onClose, targetType, targetId, targetName }) => {
             </div>
           </form>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

@@ -1,1107 +1,606 @@
-# PWA Offline Functionality Testing Guide
+# PWA Offline Functionality - Manual Testing Guide
 
-## Overview
-This document provides comprehensive manual testing procedures for verifying offline functionality in the Careerak PWA. It covers all key features that should work offline as specified in task 3.4.5.
-
-**Related Requirements:**
-- FR-PWA-2: Serve cached pages for previously visited routes when offline
-- FR-PWA-3: Display custom offline fallback page for uncached pages
-- FR-PWA-9: Queue failed API requests and retry when online
-- NFR-REL-2: Maintain offline functionality for previously visited pages
-- NFR-REL-3: Queue failed API requests when offline and retry when online
-
-**Test Date:** _____________  
-**Tester:** _____________  
-**Browser:** _____________  
-**Device:** _____________
+**Feature**: General Platform Enhancements - PWA Support  
+**Task**: 3.6.7 Test offline functionality manually  
+**Date**: 2026-02-19  
+**Status**: ✅ Ready for Testing
 
 ---
 
-## Prerequisites
+## 📋 Overview
 
-### 1. Build and Deploy
-```bash
-cd frontend
-npm run build
-npm run preview  # Or deploy to staging/production
-```
-
-### 2. Service Worker Registration
-1. Open browser DevTools (F12)
-2. Go to Application tab → Service Workers
-3. Verify service worker is registered and activated
-4. Status should show "activated and is running"
-
-### 3. Enable Offline Mode
-**Chrome/Edge:**
-- DevTools → Network tab → Throttling dropdown → Offline
-
-**Firefox:**
-- DevTools → Network tab → Throttling dropdown → Offline
-
-**Safari:**
-- Develop → Network Conditions → Offline
+This guide provides comprehensive manual testing procedures for the PWA offline functionality implemented in Careerak. The testing covers all requirements from FR-PWA-1 through FR-PWA-10 and NFR-REL-2 through NFR-REL-4.
 
 ---
 
-## Test Suite 1: Cached Page Access (FR-PWA-2)
+## 🎯 Testing Objectives
 
-### Test 1.1: Homepage Offline Access
-**Objective:** Verify homepage loads from cache when offline
-
-**Steps:**
-1. Visit homepage while online
-2. Wait for page to fully load
-3. Enable offline mode in DevTools
-4. Refresh the page (F5)
-
-**Expected Results:**
-- ✅ Page loads successfully from cache
-- ✅ No network errors in console
-- ✅ Offline indicator appears at top of page
-- ✅ All static assets (CSS, JS, images) load correctly
-- ✅ Page is fully functional
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
+Verify that:
+1. Service worker registers successfully
+2. Previously visited pages work offline
+3. Custom offline fallback page displays correctly
+4. Failed API requests are queued and retried
+5. Offline indicator shows appropriate status
+6. Update notifications work correctly
+7. Cache strategies are applied correctly
+8. PWA is installable on mobile devices
 
 ---
 
-### Test 1.2: Profile Page Offline Access
-**Objective:** Verify previously visited profile page loads offline
+## 🛠️ Prerequisites
 
-**Steps:**
-1. While online, navigate to Profile page (/profile)
-2. Wait for page to fully load
-3. Enable offline mode
-4. Navigate away (e.g., to homepage)
-5. Navigate back to Profile page
+### Required Tools
+- ✅ Modern browser (Chrome, Firefox, Safari, or Edge - latest 2 versions)
+- ✅ Browser DevTools (F12)
+- ✅ Mobile device or browser device emulation
+- ✅ Network throttling capability
 
-**Expected Results:**
-- ✅ Profile page loads from cache
-- ✅ Offline indicator is visible
-- ✅ Previously loaded user data is displayed
-- ✅ Page layout and styling are intact
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
+### Setup Steps
+1. Build the application: `npm run build`
+2. Serve the production build: `npm run preview` or deploy to Vercel
+3. Open browser DevTools (F12)
+4. Navigate to Application/Storage tab
 
 ---
 
-### Test 1.3: Job Postings Page Offline Access
-**Objective:** Verify job postings page works offline after initial visit
-
-**Steps:**
-1. While online, visit Job Postings page (/jobs)
-2. Scroll through several job listings
-3. Enable offline mode
-4. Refresh the page
-
-**Expected Results:**
-- ✅ Page loads from cache
-- ✅ Previously viewed job listings are visible
-- ✅ Images load from cache
-- ✅ Offline indicator shows
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 1.4: Courses Page Offline Access
-**Objective:** Verify courses page is accessible offline
-
-**Steps:**
-1. While online, visit Courses page (/courses)
-2. Browse several courses
-3. Enable offline mode
-4. Navigate to another page and back to courses
-
-**Expected Results:**
-- ✅ Courses page loads from cache
-- ✅ Previously viewed courses are displayed
-- ✅ Course images load from cache
-- ✅ Page is navigable
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 1.5: Settings Page Offline Access
-**Objective:** Verify settings page works offline
-
-**Steps:**
-1. While online, visit Settings page (/settings)
-2. View all settings sections
-3. Enable offline mode
-4. Refresh the page
-
-**Expected Results:**
-- ✅ Settings page loads from cache
-- ✅ All settings options are visible
-- ✅ Dark mode toggle works offline
-- ✅ Language selection is accessible
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 2: Offline Fallback Page (FR-PWA-3)
-
-### Test 2.1: Uncached Page Access
-**Objective:** Verify offline fallback page displays for uncached routes
-
-**Steps:**
-1. Clear browser cache and service worker
-2. Visit homepage while online
-3. Enable offline mode
-4. Try to navigate to a page you haven't visited (e.g., /admin)
-
-**Expected Results:**
-- ✅ Custom offline fallback page displays
-- ✅ Page shows "You are offline" message
-- ✅ Page provides helpful information
-- ✅ Navigation options are available
-- ✅ Page styling matches app theme
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 2.2: Offline Fallback Content
-**Objective:** Verify offline page has proper content and functionality
-
-**Steps:**
-1. Trigger offline fallback page (as in Test 2.1)
-2. Review page content
-3. Test any interactive elements
-
-**Expected Results:**
-- ✅ Clear offline message in multiple languages
-- ✅ Explanation of what happened
-- ✅ Suggestion to check connection
-- ✅ Link to return to homepage
-- ✅ Careerak branding is visible
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 3: Offline Indicator (Task 3.4.2)
-
-### Test 3.1: Offline Indicator Appearance
-**Objective:** Verify offline indicator shows when connection is lost
-
-**Steps:**
-1. Start with online connection
-2. Enable offline mode
-3. Observe the UI
-
-**Expected Results:**
-- ✅ Offline indicator appears at top of page
-- ✅ Indicator shows "You are offline" message
-- ✅ Indicator is clearly visible (contrasting colors)
-- ✅ Indicator includes offline icon
-- ✅ Message is in current language (ar/en/fr)
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 3.2: Reconnection Indicator
-**Objective:** Verify reconnection message appears when back online
-
-**Steps:**
-1. Start offline
-2. Disable offline mode (go back online)
-3. Observe the UI
-
-**Expected Results:**
-- ✅ "Connection restored" message appears
-- ✅ Message shows success icon (checkmark)
-- ✅ Message auto-dismisses after 5 seconds
-- ✅ User can manually dismiss message
-- ✅ Message is in current language
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 3.3: Offline Indicator Persistence
-**Objective:** Verify indicator remains visible while offline
-
-**Steps:**
-1. Go offline
-2. Navigate between multiple pages
-3. Observe offline indicator
-
-**Expected Results:**
-- ✅ Indicator remains visible on all pages
-- ✅ Indicator doesn't disappear during navigation
-- ✅ Indicator position is consistent
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 4: Request Queuing (FR-PWA-9, Task 3.4.3)
-
-### Test 4.1: Queue POST Request
-**Objective:** Verify POST requests are queued when offline
-
-**Steps:**
-1. Go offline
-2. Try to submit a form (e.g., job application)
-3. Check browser console for queue messages
-4. Check localStorage for queued requests
-
-**Expected Results:**
-- ✅ Form submission doesn't fail immediately
-- ✅ Console shows "Queueing request" message
-- ✅ localStorage contains queued request
-- ✅ User sees feedback that request will retry
-- ✅ Queue size indicator updates (if visible)
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 4.2: Queue Multiple Requests
-**Objective:** Verify multiple requests can be queued
-
-**Steps:**
-1. Go offline
-2. Perform multiple actions that trigger API calls:
-   - Update profile
-   - Apply to job
-   - Post comment
-3. Check queue size
-
-**Expected Results:**
-- ✅ All requests are queued
-- ✅ Queue size increases with each request
-- ✅ Requests are stored in localStorage
-- ✅ No duplicate requests in queue
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 4.3: Request Priority
-**Objective:** Verify high-priority requests are queued first
-
-**Steps:**
-1. Go offline
-2. Queue requests with different priorities:
-   - Low priority: Update settings
-   - High priority: Job application
-   - Urgent: Emergency contact update
-3. Check queue order in localStorage
-
-**Expected Results:**
-- ✅ Urgent requests appear first in queue
-- ✅ High priority requests come next
-- ✅ Low priority requests are last
-- ✅ Queue is sorted by priority
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 5: Request Retry (Task 3.4.4)
-
-### Test 5.1: Automatic Retry on Reconnection
-**Objective:** Verify queued requests retry automatically when online
-
-**Steps:**
-1. Go offline
-2. Queue 2-3 requests (e.g., form submissions)
-3. Verify requests are in queue
-4. Go back online
-5. Wait 2-3 seconds
-6. Check console and network tab
-
-**Expected Results:**
-- ✅ Requests automatically retry when online
-- ✅ Console shows "Processing queued requests" message
-- ✅ Network tab shows retry attempts
-- ✅ Successful requests are removed from queue
-- ✅ Queue size decreases to 0
-- ✅ User sees success notifications
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 5.2: Retry Success Handling
-**Objective:** Verify successful retries update UI correctly
-
-**Steps:**
-1. Go offline
-2. Submit a job application
-3. Go back online
-4. Wait for automatic retry
-5. Check application status
-
-**Expected Results:**
-- ✅ Request retries successfully
-- ✅ Application appears in "My Applications"
-- ✅ Success notification is shown
-- ✅ Request is removed from queue
-- ✅ UI updates with new data
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 5.3: Retry Failure Handling
-**Objective:** Verify failed retries are handled gracefully
-
-**Steps:**
-1. Go offline
-2. Queue a request
-3. Go online but simulate server error (use DevTools to block specific API)
-4. Observe retry behavior
-
-**Expected Results:**
-- ✅ Request retries up to 3 times
-- ✅ Exponential backoff between retries
-- ✅ After max retries, request is removed from queue
-- ✅ User sees error notification
-- ✅ Error is logged to console
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 5.4: Mixed Success/Failure Retry
-**Objective:** Verify queue handles mixed results correctly
-
-**Steps:**
-1. Go offline
-2. Queue 3 requests
-3. Go online
-4. Allow first request to succeed
-5. Block second request (simulate error)
-6. Allow third request to succeed
-
-**Expected Results:**
-- ✅ First request succeeds and is removed
-- ✅ Second request retries (stays in queue)
-- ✅ Third request succeeds and is removed
-- ✅ Queue size = 1 (only failed request remains)
-- ✅ User sees appropriate notifications
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 6: Static Asset Caching (FR-PWA-8)
-
-### Test 6.1: JavaScript Caching
-**Objective:** Verify JS files are cached and served offline
-
-**Steps:**
-1. Visit site while online
-2. Open DevTools → Network tab
-3. Enable offline mode
-4. Refresh page
-5. Check Network tab for JS files
-
-**Expected Results:**
-- ✅ All JS files load from cache
-- ✅ Network tab shows "(from ServiceWorker)"
-- ✅ No 404 errors for JS files
-- ✅ App functionality works correctly
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 6.2: CSS Caching
-**Objective:** Verify CSS files are cached and served offline
-
-**Steps:**
-1. Visit site while online
-2. Enable offline mode
-3. Refresh page
-4. Check styling and Network tab
-
-**Expected Results:**
-- ✅ All CSS files load from cache
-- ✅ Page styling is intact
-- ✅ Dark mode CSS works offline
-- ✅ Responsive styles work offline
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 6.3: Font Caching
-**Objective:** Verify custom fonts are cached
-
-**Steps:**
-1. Visit site while online (fonts load)
-2. Enable offline mode
-3. Refresh page
-4. Check font rendering
-
-**Expected Results:**
-- ✅ Custom fonts load from cache
-- ✅ Arabic fonts (Amiri/Cairo) display correctly
-- ✅ English fonts (Cormorant Garamond) display correctly
-- ✅ French fonts (EB Garamond) display correctly
-- ✅ No fallback to system fonts
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 6.4: Image Caching
-**Objective:** Verify images are cached with 50MB limit
-
-**Steps:**
-1. Browse site while online, viewing many images
-2. Enable offline mode
-3. Navigate to pages with images
-4. Check image loading
-
-**Expected Results:**
-- ✅ Previously viewed images load from cache
-- ✅ Images display correctly
-- ✅ Cloudinary optimized images work offline
-- ✅ Profile pictures load from cache
-- ✅ Logo and icons load from cache
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 7: API Response Caching
-
-### Test 7.1: API Cache Strategy
-**Objective:** Verify API responses use NetworkFirst strategy
-
-**Steps:**
-1. Visit page with API data while online
-2. Check Network tab for API calls
-3. Enable offline mode
-4. Refresh page
-5. Check if cached API data is used
-
-**Expected Results:**
-- ✅ API tries network first when online
-- ✅ Falls back to cache when offline
-- ✅ Cached data is displayed
-- ✅ Data is reasonably fresh (< 5 minutes old)
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 7.2: Stale Data Indication
-**Objective:** Verify users know when viewing cached data
-
-**Steps:**
-1. Load page with API data while online
-2. Go offline
-3. Refresh page
-4. Observe UI
-
-**Expected Results:**
-- ✅ Offline indicator shows
-- ✅ Data displays from cache
-- ✅ User understands data may be stale
-- ✅ No misleading "live" indicators
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 8: Dark Mode Offline
-
-### Test 8.1: Dark Mode Toggle Offline
-**Objective:** Verify dark mode works offline
-
-**Steps:**
-1. Go offline
-2. Navigate to Settings
-3. Toggle dark mode on/off
-4. Navigate between pages
-
-**Expected Results:**
-- ✅ Dark mode toggle works offline
-- ✅ Preference saves to localStorage
-- ✅ Dark mode applies across all pages
-- ✅ Transitions are smooth (300ms)
-- ✅ Input borders remain #D4816180
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 9: Multi-Language Offline
-
-### Test 9.1: Language Switching Offline
-**Objective:** Verify language switching works offline
-
-**Steps:**
-1. Go offline
-2. Navigate to Settings
-3. Switch between Arabic, English, French
-4. Navigate between pages
-
-**Expected Results:**
-- ✅ Language switching works offline
-- ✅ All UI text updates correctly
-- ✅ RTL/LTR layout switches properly
-- ✅ Fonts change appropriately
-- ✅ Preference saves to localStorage
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 10: Navigation Offline
-
-### Test 10.1: Client-Side Navigation
-**Objective:** Verify navigation works offline for cached pages
-
-**Steps:**
-1. Visit multiple pages while online
-2. Go offline
-3. Use navigation menu to switch between pages
-4. Use browser back/forward buttons
-
-**Expected Results:**
-- ✅ Navigation menu works offline
-- ✅ All cached pages are accessible
-- ✅ Back/forward buttons work
-- ✅ URL updates correctly
-- ✅ Page transitions work smoothly
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 11: Form Interactions Offline
-
-### Test 11.1: Form Validation Offline
-**Objective:** Verify client-side form validation works offline
-
-**Steps:**
-1. Go offline
-2. Navigate to a form (e.g., job application)
-3. Try to submit with invalid data
-4. Correct errors and submit
-
-**Expected Results:**
-- ✅ Client-side validation works offline
-- ✅ Error messages display correctly
-- ✅ Form prevents invalid submission
-- ✅ Valid form queues for submission
-- ✅ User sees "will retry when online" message
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 11.2: Form Data Persistence
-**Objective:** Verify form data persists offline
-
-**Steps:**
-1. Go offline
-2. Start filling out a form
-3. Navigate away
-4. Return to form
-
-**Expected Results:**
-- ✅ Form data is preserved (if implemented)
-- ✅ User doesn't lose work
-- ✅ Draft is saved to localStorage
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 12: Service Worker Updates
-
-### Test 12.1: Update Notification
-**Objective:** Verify update notification appears for new service worker
-
-**Steps:**
-1. Deploy new version of app
-2. Visit site with old version
-3. Wait for update check (or manually trigger)
-4. Observe UI
-
-**Expected Results:**
-- ✅ Update notification appears
-- ✅ Message says "New update available"
-- ✅ "Reload" button is present
-- ✅ "Later" button is present
-- ✅ Notification is dismissible
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 12.2: Update Installation
-**Objective:** Verify clicking reload installs update
-
-**Steps:**
-1. Trigger update notification (as in Test 12.1)
-2. Click "Reload" button
-3. Observe behavior
-
-**Expected Results:**
-- ✅ Page reloads automatically
-- ✅ New version is activated
-- ✅ Service worker updates in DevTools
-- ✅ New features/fixes are available
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 13: Performance Offline
-
-### Test 13.1: Offline Load Time
-**Objective:** Verify offline pages load quickly from cache
-
-**Steps:**
-1. Visit pages while online
-2. Go offline
-3. Use DevTools Performance tab
-4. Measure page load time
-
-**Expected Results:**
-- ✅ Cached pages load < 1 second
-- ✅ No network delays
-- ✅ Smooth user experience
-- ✅ No visible lag
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Load Time:** _________ ms
-
-**Notes:** _____________________________________________
-
----
-
-## Test Suite 14: Edge Cases
-
-### Test 14.1: Intermittent Connection
-**Objective:** Verify app handles flaky connection
-
-**Steps:**
-1. Toggle offline/online rapidly
-2. Try to perform actions during toggles
-3. Observe behavior
-
-**Expected Results:**
-- ✅ App doesn't crash
-- ✅ Requests queue/retry appropriately
-- ✅ UI updates correctly
-- ✅ No duplicate requests
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 14.2: Long Offline Period
-**Objective:** Verify app works after extended offline time
-
-**Steps:**
-1. Go offline
-2. Wait 30+ minutes
-3. Try to use app
-4. Go back online
-
-**Expected Results:**
-- ✅ App still works offline
-- ✅ Cached data is still available
-- ✅ Queued requests are still in queue
-- ✅ Requests retry when online
-- ✅ No data loss
-
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
-
----
-
-### Test 14.3: Cache Quota Exceeded
-**Objective:** Verify app handles cache quota limits
-
-**Steps:**
-1. Browse site extensively (load many images)
-2. Check cache size in DevTools
-3. Continue browsing to exceed limits
-4. Observe behavior
-
-**Expected Results:**
-- ✅ Old cache entries are purged
-- ✅ App continues to function
+## 📝 Test Cases
+
+### Test Case 1: Service Worker Registration
+**Requirement**: FR-PWA-1  
+**Priority**: Critical
+
+**Steps**:
+1. Open the application in a browser
+2. Open DevTools → Application → Service Workers
+3. Verify service worker is registered and active
+
+**Expected Results**:
+- ✅ Service worker status shows "activated and is running"
+- ✅ Service worker URL is `/service-worker.js`
 - ✅ No errors in console
-- ✅ Most recent content is cached
 
-**Actual Results:**
-- [ ] Pass
-- [ ] Fail
-
-**Notes:** _____________________________________________
+**Pass Criteria**: Service worker is active with no errors
 
 ---
 
-## Test Suite 15: Cross-Browser Testing
+### Test Case 2: Offline Page Caching
+**Requirement**: FR-PWA-2, NFR-REL-2  
+**Priority**: Critical
 
-### Test 15.1: Chrome/Edge
-**Browser:** Chrome/Edge  
-**Version:** _____________
+**Steps**:
+1. Visit the homepage while online
+2. Navigate to at least 3 different pages (e.g., Jobs, Courses, Profile)
+3. Open DevTools → Application → Cache Storage
+4. Verify cached resources
+5. Go offline (DevTools → Network → Offline checkbox)
+6. Navigate back to previously visited pages
 
-Run all test suites above and record results.
+**Expected Results**:
+- ✅ Cache Storage shows multiple caches:
+  - `critical-assets-v1`
+  - `static-assets`
+  - `pages`
+  - `images`
+  - `api-cache`
+- ✅ Previously visited pages load successfully offline
+- ✅ Page content displays correctly
+- ✅ Images that were cached display correctly
+- ✅ Offline indicator appears at top of page
 
-**Overall Result:**
-- [ ] Pass
-- [ ] Fail
-
-**Issues Found:** _____________________________________________
-
----
-
-### Test 15.2: Firefox
-**Browser:** Firefox  
-**Version:** _____________
-
-Run all test suites above and record results.
-
-**Overall Result:**
-- [ ] Pass
-- [ ] Fail
-
-**Issues Found:** _____________________________________________
+**Pass Criteria**: All previously visited pages work offline
 
 ---
 
-### Test 15.3: Safari (Desktop)
-**Browser:** Safari  
-**Version:** _____________
+### Test Case 3: Offline Fallback Page
+**Requirement**: FR-PWA-3  
+**Priority**: High
 
-Run all test suites above and record results.
+**Steps**:
+1. Clear browser cache (DevTools → Application → Clear storage)
+2. Go offline (DevTools → Network → Offline)
+3. Try to visit a page you haven't visited before
+4. Observe the offline fallback page
 
-**Overall Result:**
-- [ ] Pass
-- [ ] Fail
+**Expected Results**:
+- ✅ Custom offline page (`/offline.html`) displays
+- ✅ Page shows appropriate message in current language (ar/en/fr)
+- ✅ "Retry" button is visible
+- ✅ Connection status indicator shows "offline"
+- ✅ Page styling matches Careerak design (colors, fonts)
+- ✅ Logo displays (if cached)
 
-**Issues Found:** _____________________________________________
-
----
-
-### Test 15.4: Safari (iOS)
-**Device:** _____________  
-**iOS Version:** _____________
-
-Run all test suites above and record results.
-
-**Overall Result:**
-- [ ] Pass
-- [ ] Fail
-
-**Issues Found:** _____________________________________________
+**Pass Criteria**: Offline fallback page displays with correct styling and language
 
 ---
 
-### Test 15.5: Chrome Mobile (Android)
-**Device:** _____________  
-**Android Version:** _____________
+### Test Case 4: Offline Indicator
+**Requirement**: Task 3.4.2  
+**Priority**: High
 
-Run all test suites above and record results.
+**Steps**:
+1. Start with online connection
+2. Go offline (DevTools → Network → Offline)
+3. Observe the offline indicator
+4. Go back online
+5. Observe the reconnection message
 
-**Overall Result:**
-- [ ] Pass
-- [ ] Fail
+**Expected Results**:
+- ✅ Offline banner appears at top when offline
+- ✅ Banner shows "You are offline" message in current language
+- ✅ Banner has appropriate icon (wifi-off)
+- ✅ Banner styling matches design (red/warning color)
+- ✅ When reconnected, "Connection restored" message appears
+- ✅ Reconnection message auto-dismisses after 5 seconds
+- ✅ User can manually dismiss reconnection message
 
-**Issues Found:** _____________________________________________
-
----
-
-## Summary
-
-### Test Results Overview
-
-| Test Suite | Total Tests | Passed | Failed | Pass Rate |
-|------------|-------------|--------|--------|-----------|
-| 1. Cached Page Access | 5 | ___ | ___ | ___% |
-| 2. Offline Fallback | 2 | ___ | ___ | ___% |
-| 3. Offline Indicator | 3 | ___ | ___ | ___% |
-| 4. Request Queuing | 3 | ___ | ___ | ___% |
-| 5. Request Retry | 4 | ___ | ___ | ___% |
-| 6. Static Asset Caching | 4 | ___ | ___ | ___% |
-| 7. API Response Caching | 2 | ___ | ___ | ___% |
-| 8. Dark Mode Offline | 1 | ___ | ___ | ___% |
-| 9. Multi-Language Offline | 1 | ___ | ___ | ___% |
-| 10. Navigation Offline | 1 | ___ | ___ | ___% |
-| 11. Form Interactions | 2 | ___ | ___ | ___% |
-| 12. Service Worker Updates | 2 | ___ | ___ | ___% |
-| 13. Performance Offline | 1 | ___ | ___ | ___% |
-| 14. Edge Cases | 3 | ___ | ___ | ___% |
-| 15. Cross-Browser | 5 | ___ | ___ | ___% |
-| **TOTAL** | **39** | **___** | **___** | **___%** |
-
-### Critical Issues Found
-1. _____________________________________________
-2. _____________________________________________
-3. _____________________________________________
-
-### Non-Critical Issues Found
-1. _____________________________________________
-2. _____________________________________________
-3. _____________________________________________
-
-### Recommendations
-1. _____________________________________________
-2. _____________________________________________
-3. _____________________________________________
-
-### Sign-Off
-
-**Tester:** _____________  
-**Date:** _____________  
-**Signature:** _____________
-
-**Reviewer:** _____________  
-**Date:** _____________  
-**Signature:** _____________
+**Pass Criteria**: Offline indicator shows correct status with smooth transitions
 
 ---
 
-## Appendix A: DevTools Tips
+### Test Case 5: Request Queueing and Retry
+**Requirement**: FR-PWA-9, NFR-REL-3  
+**Priority**: Critical
 
-### Checking Service Worker Status
-1. Open DevTools (F12)
-2. Go to Application tab
-3. Click "Service Workers" in left sidebar
-4. View registration status and version
+**Steps**:
+1. Log in to the application
+2. Go offline (DevTools → Network → Offline)
+3. Try to perform actions that require API calls:
+   - Update profile information
+   - Apply to a job
+   - Post a comment
+4. Observe console logs for queued requests
+5. Go back online
+6. Wait for automatic retry
+7. Verify actions completed successfully
 
-### Viewing Cache Contents
-1. Open DevTools (F12)
-2. Go to Application tab
-3. Click "Cache Storage" in left sidebar
-4. Expand to see cached files
+**Expected Results**:
+- ✅ Actions fail gracefully when offline
+- ✅ Console shows "[OfflineContext] Queueing request for retry"
+- ✅ Offline queue status component shows queued requests count
+- ✅ When back online, console shows "[OfflineContext] Processing X queued requests"
+- ✅ Queued requests are automatically retried
+- ✅ Success/failure results are displayed
+- ✅ Queue count updates correctly
+- ✅ Successfully completed requests are removed from queue
 
-### Checking localStorage
-1. Open DevTools (F12)
-2. Go to Application tab
-3. Click "Local Storage" in left sidebar
-4. Look for `careerak_offline_queue` key
-
-### Simulating Slow Network
-1. Open DevTools (F12)
-2. Go to Network tab
-3. Throttling dropdown → Slow 3G
-4. Test offline functionality with delays
-
-### Clearing Service Worker
-1. Open DevTools (F12)
-2. Go to Application tab
-3. Click "Service Workers"
-4. Click "Unregister"
-5. Refresh page
-
-### Forcing Service Worker Update
-1. Open DevTools (F12)
-2. Go to Application tab
-3. Click "Service Workers"
-4. Check "Update on reload"
-5. Refresh page
+**Pass Criteria**: Failed requests are queued and automatically retried when online
 
 ---
 
-## Appendix B: Common Issues and Solutions
+### Test Case 6: Cache Strategies
+**Requirement**: FR-PWA-7, FR-PWA-8, Task 3.2.1-3.2.3  
+**Priority**: High
 
-### Issue: Service Worker Not Registering
-**Solution:**
-- Check HTTPS (required for service workers)
+**Steps**:
+1. Clear browser cache
+2. Visit the application while online
+3. Open DevTools → Network tab
+4. Observe network requests and their sources
+5. Reload the page
+6. Check which resources come from cache vs network
+
+**Expected Results**:
+- ✅ Static assets (JS, CSS, fonts) use CacheFirst strategy
+  - First load: from network
+  - Subsequent loads: from cache (shows "from ServiceWorker")
+- ✅ API calls use NetworkFirst strategy
+  - Always try network first
+  - Fall back to cache if offline
+- ✅ Images use CacheFirst strategy
+  - Cached after first load
+- ✅ Navigation requests use NetworkFirst
+- ✅ Cache expiration times are correct:
+  - Static assets: 30 days
+  - API cache: 5 minutes
+  - Images: 30 days
+
+**Pass Criteria**: Correct cache strategy applied for each resource type
+
+---
+
+### Test Case 7: Service Worker Updates
+**Requirement**: FR-PWA-6, NFR-REL-4  
+**Priority**: High
+
+**Steps**:
+1. Have the application running with service worker active
+2. Make a small change to service worker code (e.g., add a comment)
+3. Rebuild the application
+4. Reload the page
+5. Observe update notification
+
+**Expected Results**:
+- ✅ Update notification appears at bottom of screen
+- ✅ Notification shows "New update available!" message
+- ✅ "Reload" button is visible
+- ✅ "Later" button is visible
+- ✅ Clicking "Reload" refreshes the page with new service worker
+- ✅ Clicking "Later" dismisses notification
+- ✅ Notification has smooth slide-up animation
+- ✅ Notification styling matches design
+
+**Pass Criteria**: Update notification appears and functions correctly
+
+---
+
+### Test Case 8: PWA Installability
+**Requirement**: FR-PWA-4, FR-PWA-5  
+**Priority**: High
+
+**Steps**:
+1. Open application on mobile device or use Chrome DevTools device emulation
+2. Look for install prompt or browser menu option
+3. Install the PWA
+4. Open the installed app
+5. Test offline functionality in installed app
+
+**Expected Results**:
+- ✅ Install prompt appears on mobile (or install option in browser menu)
+- ✅ Manifest.json is valid (check DevTools → Application → Manifest)
+- ✅ All required manifest fields are present:
+  - name: "Careerak - The Future of HR"
+  - short_name: "Careerak"
+  - icons: 192x192 and 512x512 (both regular and maskable)
+  - start_url: "/"
+  - display: "standalone"
+  - theme_color: "#304B60"
+  - background_color: "#E3DAD1"
+- ✅ After installation, app opens in standalone mode
+- ✅ Custom splash screen shows during launch
+- ✅ App icon appears on home screen
+- ✅ Offline functionality works in installed app
+
+**Pass Criteria**: PWA is installable and works correctly in standalone mode
+
+---
+
+### Test Case 9: Critical Assets Precaching
+**Requirement**: Task 3.2.4  
+**Priority**: High
+
+**Steps**:
+1. Clear browser cache completely
+2. Visit the application for the first time
+3. Open DevTools → Application → Cache Storage
+4. Check `critical-assets-v1` cache
+5. Go offline immediately
+6. Try to navigate the app
+
+**Expected Results**:
+- ✅ `critical-assets-v1` cache contains:
+  - `/` (index.html)
+  - `/index.html`
+  - `/manifest.json`
+  - `/logo.png`
+  - `/offline.html`
+- ✅ These assets are cached during service worker installation
+- ✅ App works offline even on first visit (for cached pages)
+
+**Pass Criteria**: Critical assets are precached and available immediately
+
+---
+
+### Test Case 10: Multi-Language Support
+**Requirement**: IR-7, NFR-COMPAT-5  
+**Priority**: Medium
+
+**Steps**:
+1. Test offline functionality in Arabic (ar)
+2. Change language to English (en)
+3. Test offline functionality in English
+4. Change language to French (fr)
+5. Test offline functionality in French
+
+**Expected Results**:
+- ✅ Offline indicator shows correct language
+- ✅ Offline fallback page shows correct language
+- ✅ Update notification shows correct language
+- ✅ Queue status messages show correct language
+- ✅ RTL layout works correctly for Arabic
+- ✅ LTR layout works correctly for English and French
+
+**Pass Criteria**: All offline features work correctly in all three languages
+
+---
+
+### Test Case 11: Network Throttling
+**Requirement**: NFR-PERF-3, NFR-PERF-4  
+**Priority**: Medium
+
+**Steps**:
+1. Open DevTools → Network tab
+2. Set throttling to "Slow 3G"
+3. Navigate through the application
+4. Observe loading behavior and cache usage
+
+**Expected Results**:
+- ✅ Cached resources load quickly even on slow network
+- ✅ Uncached resources show loading states
+- ✅ API calls timeout after 5 minutes (NetworkFirst strategy)
+- ✅ Cached API responses are used when network is slow
+- ✅ Images load progressively with placeholders
+- ✅ No layout shifts during loading (CLS < 0.1)
+
+**Pass Criteria**: App remains usable on slow network with good cache utilization
+
+---
+
+### Test Case 12: Cache Size Limits
+**Requirement**: Task 3.2.3  
+**Priority**: Medium
+
+**Steps**:
+1. Visit many pages with images
+2. Open DevTools → Application → Cache Storage
+3. Check `images` cache size
+4. Continue visiting pages until cache limit is approached
+5. Observe cache cleanup behavior
+
+**Expected Results**:
+- ✅ Images cache has maxEntries: 100 (~50MB)
+- ✅ Oldest images are automatically removed when limit reached
+- ✅ `purgeOnQuotaError: true` prevents quota errors
+- ✅ App continues to function normally
+- ✅ No errors in console related to quota
+
+**Pass Criteria**: Cache size is managed automatically without errors
+
+---
+
+## 🔍 Browser-Specific Testing
+
+### Chrome/Edge
+- ✅ Service worker registration
+- ✅ Cache Storage inspection
+- ✅ Network throttling
+- ✅ Offline mode simulation
+- ✅ PWA installation
+- ✅ Lighthouse audit
+
+### Firefox
+- ✅ Service worker registration
+- ✅ Storage inspection
+- ✅ Network throttling
+- ✅ Offline mode simulation
+- ✅ PWA installation (limited)
+
+### Safari (iOS)
+- ✅ Service worker registration
+- ✅ PWA installation (Add to Home Screen)
+- ✅ Offline functionality
+- ✅ Standalone mode
+- ⚠️ Note: Safari has some PWA limitations
+
+---
+
+## 📱 Mobile Device Testing
+
+### Android (Chrome)
+1. Open application on Android device
+2. Look for install banner or menu option
+3. Install PWA
+4. Test offline functionality
+5. Test push notifications (if enabled)
+
+### iOS (Safari)
+1. Open application in Safari
+2. Tap Share → Add to Home Screen
+3. Open installed app
+4. Test offline functionality
+5. ⚠️ Note: Push notifications not supported on iOS PWAs
+
+---
+
+## 🐛 Common Issues and Troubleshooting
+
+### Issue 1: Service Worker Not Registering
+**Symptoms**: No service worker in DevTools  
+**Solutions**:
+- Ensure HTTPS or localhost
 - Check console for registration errors
-- Verify service-worker.js path is correct
-- Clear browser cache and try again
+- Verify service-worker.js is accessible
+- Clear browser cache and reload
 
-### Issue: Offline Indicator Not Showing
-**Solution:**
-- Check OfflineContext is wrapped around App
-- Verify OfflineIndicator component is rendered
-- Check browser console for errors
-- Test with actual offline (not just DevTools)
+### Issue 2: Offline Page Not Showing
+**Symptoms**: Blank page or browser error when offline  
+**Solutions**:
+- Verify offline.html is in public folder
+- Check service worker precache list
+- Ensure offline.html is cached during install
+- Clear cache and reinstall service worker
 
-### Issue: Requests Not Queuing
-**Solution:**
-- Check request method (only POST/PUT/PATCH/DELETE queue)
-- Verify offlineRequestQueue is imported correctly
-- Check localStorage for queue data
-- Review console logs for queue messages
+### Issue 3: Cached Content Not Updating
+**Symptoms**: Old content shows after updates  
+**Solutions**:
+- Check service worker update mechanism
+- Verify cache expiration times
+- Use cache busting for critical assets
+- Implement update notification
 
-### Issue: Cached Pages Not Loading
-**Solution:**
-- Verify pages were visited while online first
-- Check cache storage in DevTools
-- Ensure service worker is activated
-- Try clearing cache and revisiting pages
+### Issue 4: Request Queue Not Working
+**Symptoms**: Requests not retried when back online  
+**Solutions**:
+- Check OfflineContext is properly wrapped
+- Verify online/offline event listeners
+- Check console for queue processing logs
+- Ensure API interceptor is configured
 
-### Issue: Images Not Caching
-**Solution:**
-- Check image URLs are from same origin
-- Verify cache size hasn't exceeded 50MB limit
-- Check Network tab for cache hits
-- Review service worker image caching strategy
+### Issue 5: PWA Not Installable
+**Symptoms**: No install prompt appears  
+**Solutions**:
+- Verify manifest.json is valid
+- Ensure HTTPS connection
+- Check all required manifest fields
+- Verify service worker is active
+- Test on different browsers/devices
 
 ---
 
-## Appendix C: Automated Test Commands
+## ✅ Testing Checklist
 
-```bash
-# Run offline retry tests
-cd frontend
-npm test -- offline-retry.test.js --run
+### Pre-Testing
+- [ ] Application built for production
+- [ ] Service worker enabled
+- [ ] HTTPS or localhost environment
+- [ ] DevTools ready
+- [ ] Test devices/browsers available
 
-# Run service worker precache tests
-npm test -- service-worker-precache.test.js --run
+### Core Functionality
+- [ ] Service worker registers successfully
+- [ ] Previously visited pages work offline
+- [ ] Offline fallback page displays correctly
+- [ ] Offline indicator shows/hides appropriately
+- [ ] Failed requests are queued
+- [ ] Queued requests retry when online
+- [ ] Update notifications appear
+- [ ] Cache strategies work correctly
 
-# Run all PWA tests
-npm test -- --grep "PWA|offline|cache" --run
+### Cross-Browser
+- [ ] Chrome/Edge tested
+- [ ] Firefox tested
+- [ ] Safari tested (desktop)
+- [ ] Safari tested (iOS)
+- [ ] Chrome tested (Android)
 
-# Run with coverage
-npm test -- --coverage --run
+### Languages
+- [ ] Arabic (ar) tested
+- [ ] English (en) tested
+- [ ] French (fr) tested
+- [ ] RTL layout works
+- [ ] LTR layout works
+
+### Performance
+- [ ] Lighthouse Performance score 90+
+- [ ] FCP under 1.8 seconds
+- [ ] TTI under 3.8 seconds
+- [ ] CLS under 0.1
+- [ ] Cache hit rate > 80%
+
+### Installation
+- [ ] PWA installable on mobile
+- [ ] Standalone mode works
+- [ ] Custom splash screen shows
+- [ ] App icon appears correctly
+- [ ] Offline works in installed app
+
+---
+
+## 📊 Success Metrics
+
+### Required Metrics
+- ✅ Service worker registration: 100%
+- ✅ Offline page availability: 100%
+- ✅ Request queue success rate: 95%+
+- ✅ Cache hit rate: 80%+
+- ✅ PWA installability: 100%
+- ✅ Update notification rate: 100%
+
+### Performance Metrics
+- ✅ Lighthouse Performance: 90+
+- ✅ Lighthouse PWA: 100
+- ✅ FCP: < 1.8s
+- ✅ TTI: < 3.8s
+- ✅ CLS: < 0.1
+
+---
+
+## 📝 Test Report Template
+
+```markdown
+# PWA Offline Functionality Test Report
+
+**Date**: [Date]  
+**Tester**: [Name]  
+**Environment**: [Browser/Device]  
+**Build Version**: [Version]
+
+## Test Results Summary
+- Total Tests: 12
+- Passed: [X]
+- Failed: [X]
+- Blocked: [X]
+
+## Detailed Results
+
+### Test Case 1: Service Worker Registration
+- Status: [Pass/Fail]
+- Notes: [Any observations]
+- Screenshots: [If applicable]
+
+[Continue for all test cases...]
+
+## Issues Found
+1. [Issue description]
+   - Severity: [Critical/High/Medium/Low]
+   - Steps to reproduce: [Steps]
+   - Expected: [Expected behavior]
+   - Actual: [Actual behavior]
+
+## Recommendations
+- [Recommendation 1]
+- [Recommendation 2]
+
+## Sign-off
+- Tester: [Name]
+- Date: [Date]
+- Status: [Approved/Needs Fixes]
 ```
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** 2026-02-19  
-**Related Tasks:** 3.4.5, 3.4.2, 3.4.3, 3.4.4  
-**Related Requirements:** FR-PWA-2, FR-PWA-3, FR-PWA-9, NFR-REL-2, NFR-REL-3
+## 🎓 Testing Best Practices
+
+1. **Always test in production mode** - Service workers behave differently in development
+2. **Clear cache between tests** - Ensures clean state for each test
+3. **Test on real devices** - Emulation doesn't catch all issues
+4. **Test all languages** - Verify translations and RTL/LTR layouts
+5. **Test slow networks** - Use throttling to simulate real conditions
+6. **Document everything** - Screenshots and detailed notes help debugging
+7. **Test edge cases** - What happens when cache is full? When quota is exceeded?
+8. **Test updates** - Verify service worker updates work smoothly
+9. **Test across browsers** - Each browser has different PWA support
+10. **Test installation** - Verify PWA installs and works in standalone mode
+
+---
+
+## 📚 Additional Resources
+
+### Documentation
+- [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
+- [Workbox Documentation](https://developers.google.com/web/tools/workbox)
+- [PWA Checklist](https://web.dev/pwa-checklist/)
+- [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache)
+
+### Tools
+- [Lighthouse](https://developers.google.com/web/tools/lighthouse)
+- [PWA Builder](https://www.pwabuilder.com/)
+- [Manifest Validator](https://manifest-validator.appspot.com/)
+- [Service Worker Detector](https://chrome.google.com/webstore/detail/service-worker-detector)
+
+### Careerak Docs
+- `docs/PWA_IMPLEMENTATION_SUMMARY.md` - Implementation details
+- `docs/OFFLINE_FUNCTIONALITY_GUIDE.md` - Developer guide
+- `.kiro/specs/general-platform-enhancements/requirements.md` - Requirements
+- `.kiro/specs/general-platform-enhancements/design.md` - Design document
+
+---
+
+## ✅ Completion Criteria
+
+Task 3.6.7 is considered complete when:
+
+1. ✅ All 12 test cases have been executed
+2. ✅ Test results documented in test report
+3. ✅ All critical and high priority tests pass
+4. ✅ Testing performed on at least 3 browsers
+5. ✅ Testing performed on at least 1 mobile device
+6. ✅ All 3 languages tested (ar, en, fr)
+7. ✅ Success metrics achieved
+8. ✅ Issues documented and prioritized
+9. ✅ Stakeholder sign-off obtained
+
+---
+
+**Last Updated**: 2026-02-19  
+**Version**: 1.0  
+**Status**: ✅ Ready for Testing

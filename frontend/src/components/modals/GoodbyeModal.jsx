@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 import './AuthModals.css';
 
 const GoodbyeModal = ({ t, onConfirm, language }) => {
@@ -9,9 +11,28 @@ const GoodbyeModal = ({ t, onConfirm, language }) => {
   // Note: GoodbyeModal requires user to click OK, no Escape close
   const modalRef = useFocusTrap(true);
   
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
+  
   return (
-    <div className="auth-modal-backdrop" dir={dir}>
-      <div ref={modalRef} className="auth-modal-content" dir={dir}>
+    <AnimatePresence mode="wait">
+      <motion.div 
+        className="auth-modal-backdrop" 
+        dir={dir}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
+      >
+        <motion.div 
+          ref={modalRef} 
+          className="auth-modal-content" 
+          dir={dir}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+        >
         <p className="auth-modal-message">{t.sorryMessage}</p>
         <button
           onClick={onConfirm}
@@ -19,8 +40,9 @@ const GoodbyeModal = ({ t, onConfirm, language }) => {
         >
           {t.goodbye}
         </button>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

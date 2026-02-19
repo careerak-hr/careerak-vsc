@@ -7,6 +7,7 @@ import "./index.css";
 import "./styles/fontEnforcement.css"; // Import font enforcement styles
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AnimationProvider } from "./context/AnimationContext";
 import { initPerformanceMeasurement } from "./utils/performanceMeasurement";
 
 // Initialize performance measurement (FCP, TTI, and other Core Web Vitals)
@@ -164,9 +165,11 @@ function showUpdateNotification(newWorker) {
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <AnimationProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </AnimationProvider>
     </ThemeProvider>
   </React.StrictMode>
 );

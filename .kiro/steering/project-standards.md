@@ -1013,3 +1013,62 @@ npm test -- cloudinary.test.js
 - التحويلات تُطبق على جانب الخادم (Cloudinary)
 - لا حاجة لتغييرات في الكود الموجود
 - متوافق مع جميع المتصفحات
+
+
+---
+
+## 🎬 Page Transitions (Smooth Animations)
+
+### معلومات النظام
+**تاريخ الإضافة**: 2026-02-19  
+**الحالة**: ✅ مكتمل ومفعّل  
+**المتطلبات**: FR-ANIM-1
+
+### الملفات الأساسية
+```
+frontend/src/
+├── components/
+│   └── PageTransition.jsx           # مكون wrapper للانتقالات
+├── context/
+│   └── AnimationContext.jsx         # سياق الانتقالات
+└── utils/
+    └── animationVariants.js         # مكتبة variants
+```
+
+### الميزات الرئيسية
+- ✅ انتقالات سلسة بين الصفحات (fadeIn, slideIn)
+- ✅ مدة 300ms لجميع الانتقالات
+- ✅ دعم `prefers-reduced-motion`
+- ✅ GPU-accelerated (transform, opacity)
+- ✅ لا layout shifts (CLS = 0)
+
+### أنواع الانتقالات
+1. **fadeIn** - fade in/out بسيط (الافتراضي)
+2. **slideInRight** - انزلاق من اليمين
+3. **slideInLeft** - انزلاق من اليسار
+4. **slideInTop** - انزلاق من الأعلى
+5. **slideInBottom** - انزلاق من الأسفل
+6. **scaleUp** - تكبير مع fade
+
+### الاستخدام
+```jsx
+import PageTransition from './components/PageTransition';
+
+<PageTransition variant="fadeIn">
+  <YourPageContent />
+</PageTransition>
+```
+
+### التكامل مع الأنظمة الموجودة
+- **AppRoutes**: إضافة AnimatePresence و PageTransition
+- **AnimationContext**: دعم prefers-reduced-motion
+- **All Pages**: جميع الصفحات تستخدم PageTransition
+
+### التوثيق الكامل
+📄 `docs/PAGE_TRANSITIONS_IMPLEMENTATION.md` - دليل شامل
+
+### ملاحظات مهمة
+- جميع الانتقالات تحترم `prefers-reduced-motion`
+- استخدام GPU-accelerated properties فقط
+- مدة قصيرة (300ms) لتجنب البطء
+- لا تستخدم width, height, top, left في animations

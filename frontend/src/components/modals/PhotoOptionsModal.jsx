@@ -1,5 +1,7 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 import './PhotoOptionsModal.css';
 
 const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, language = 'ar' }) => {
@@ -19,6 +21,9 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
   // Focus trap for accessibility - Escape key closes modal
   const modalRef = useFocusTrap(true, onClose);
   
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
+  
   const handleGalleryClick = () => {
     console.log('📱 User selected gallery option');
     onSelectFromGallery();
@@ -30,19 +35,31 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
   };
 
   return (
-    <div className="photo-options-backdrop" dir={dir}>
-      <div 
-        ref={modalRef}
-        className="photo-options-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300"
-        style={{
-          border: '4px solid #304B60',
-          backgroundColor: '#E3DAD1',
-          borderRadius: '1.5rem',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-          padding: '2rem',
-          ...fontStyle
-        }}
+    <AnimatePresence mode="wait">
+      <motion.div 
+        className="photo-options-backdrop" 
+        dir={dir}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
       >
+        <motion.div 
+          ref={modalRef}
+          className="photo-options-content dark:bg-[#2d2d2d] dark:border-[#D48161] transition-all duration-300"
+          style={{
+            border: '4px solid #304B60',
+            backgroundColor: '#E3DAD1',
+            borderRadius: '1.5rem',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            padding: '2rem',
+            ...fontStyle
+          }}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+        >
         <h3 
           className="photo-options-title dark:text-[#e0e0e0] transition-colors duration-300"
           style={{ 
@@ -143,8 +160,9 @@ const PhotoOptionsModal = ({ t, onSelectFromGallery, onTakePhoto, onClose, langu
              'Cancel'}
           </button>
         </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

@@ -1,11 +1,16 @@
 
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
+import { useAnimation } from '../../context/AnimationContext';
 import './Modal.css'; // Use the unified modal CSS
 
 const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
   // Focus trap for accessibility - Escape key closes modal
   const modalRef = useFocusTrap(isOpen, onCancel);
+  
+  // Get animation variants
+  const { variants, shouldAnimate } = useAnimation();
 
   if (!isOpen) return null;
 
@@ -24,8 +29,27 @@ const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
   };
 
   return (
-    <div className="modal-backdrop" dir={dir} style={fontStyle}>
-      <div ref={modalRef} className="modal-content" dir={dir} style={fontStyle}>
+    <AnimatePresence mode="wait">
+      {isOpen && (
+        <motion.div 
+          className="modal-backdrop" 
+          dir={dir} 
+          style={fontStyle}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={shouldAnimate ? variants.modalVariants.backdrop : {}}
+        >
+          <motion.div 
+            ref={modalRef} 
+            className="modal-content" 
+            dir={dir} 
+            style={fontStyle}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={shouldAnimate ? variants.modalVariants.scaleIn : {}}
+          >
         <div className="modal-body" style={fontStyle}>
           <h2 className="modal-title" style={fontStyle}>{t.confirmLangTitle}</h2>
           <p className="modal-description" style={fontStyle}>{t.confirmLangDesc}</p>
@@ -38,8 +62,10 @@ const LanguageConfirmModal = ({ isOpen, onConfirm, onCancel, language, t }) => {
             {t.no}
           </button>
         </div>
-      </div>
-    </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

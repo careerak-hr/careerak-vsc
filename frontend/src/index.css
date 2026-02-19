@@ -7,6 +7,7 @@
 @import './styles/darkModePages.css'; /* Import dark mode support for all pages */
 @import './styles/formsDarkMode.css'; /* Import dark mode support for all forms */
 @import './styles/focusIndicators.css'; /* Import WCAG 2.1 AA compliant focus indicators */
+@import './styles/buttonAnimations.css'; /* Import button hover animations (Task 4.5.1) */
 
 @tailwind base;
 @tailwind components;
