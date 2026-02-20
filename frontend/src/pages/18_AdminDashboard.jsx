@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import adminDashboardTranslations from '../data/adminDashboard.json';
 import api from '../services/api';
+import InteractiveElement from '../components/InteractiveElement';
 import './18_AdminDashboard.css';
 
 const AdminDashboard = () => {

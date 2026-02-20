@@ -1,6 +1,8 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import './ErrorBoundary.css';
 import AriaLiveRegion from './Accessibility/AriaLiveRegion';
+import { feedbackVariants } from '../utils/animationVariants';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -33,7 +35,12 @@ class ErrorBoundary extends React.Component {
           />
           
           <div className="error-boundary-container" role="alert">
-            <div className="error-boundary-card">
+            <motion.div 
+              className="error-boundary-card"
+              variants={feedbackVariants.shake}
+              initial="initial"
+              animate="animate"
+            >
               <div className="error-boundary-icon" aria-hidden="true">😵</div>
               
               <h2 className="error-boundary-title">
@@ -80,7 +87,7 @@ class ErrorBoundary extends React.Component {
                   </div>
                 </details>
               )}
-            </div>
+            </motion.div>
           </div>
         </>
       );

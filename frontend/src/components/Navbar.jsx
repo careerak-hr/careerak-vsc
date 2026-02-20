@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFocusTrap } from './Accessibility/FocusTrap';
+import InteractiveElement from './InteractiveElement';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -61,17 +62,21 @@ const Navbar = () => {
                 {/* Actions */}
                 <div className="navbar-actions-container">
                     {/* Dark Mode Toggle */}
-                    <button
+                    <InteractiveElement
+                        as="button"
+                        variant="icon"
                         onClick={toggleTheme}
                         className="navbar-action-btn dark:text-secondary dark:hover:text-accent transition-all duration-300"
                         aria-label={`Toggle theme (current: ${themeMode})`}
                         title={getThemeLabel()}
                     >
                         <span className="text-2xl">{getThemeIcon()}</span>
-                    </button>
+                    </InteractiveElement>
 
                     {/* Settings Button */}
-                    <button
+                    <InteractiveElement
+                        as="button"
+                        variant="icon"
                         onClick={() => setShowSettings(!showSettings)}
                         className="navbar-settings-btn dark:bg-secondary/10 dark:hover:bg-secondary/20 transition-all duration-300"
                         aria-label={language === 'ar' ? 'الإعدادات' : language === 'fr' ? 'Paramètres' : 'Settings'}
@@ -79,7 +84,7 @@ const Navbar = () => {
                         aria-controls="settings-panel"
                     >
                         ⚙️
-                    </button>
+                    </InteractiveElement>
                 </div>
             </nav>
 
@@ -110,13 +115,15 @@ const Navbar = () => {
                                  language === 'fr' ? 'Paramètres' : 
                                  'Settings'}
                             </h2>
-                            <button 
+                            <InteractiveElement
+                                as="button"
+                                variant="icon"
                                 onClick={() => setShowSettings(false)}
                                 className="settings-panel-close-btn dark:text-secondary transition-colors duration-300"
                                 aria-label={language === 'ar' ? 'إغلاق' : language === 'fr' ? 'Fermer' : 'Close'}
                             >
                                 ✕
-                            </button>
+                            </InteractiveElement>
                         </div>
 
                         {/* Content */}
@@ -131,7 +138,9 @@ const Navbar = () => {
                             )}
 
                             {/* Theme Toggle */}
-                            <button
+                            <InteractiveElement
+                                as="button"
+                                variant="subtle"
                                 onClick={toggleTheme}
                                 className="settings-panel-btn dark:bg-secondary/10 dark:hover:bg-secondary/20 transition-all duration-300"
                             >
@@ -144,10 +153,12 @@ const Navbar = () => {
                                     <span className="text-xl">{getThemeIcon()}</span>
                                     <span className="text-sm">{getThemeLabel()}</span>
                                 </span>
-                            </button>
+                            </InteractiveElement>
 
                             {/* Navigation Links */}
-                            <button
+                            <InteractiveElement
+                                as="button"
+                                variant="subtle"
                                 onClick={() => {
                                     navigate('/profile');
                                     setShowSettings(false);
@@ -160,9 +171,11 @@ const Navbar = () => {
                                      'Profile'}
                                 </span>
                                 <span className="dark:text-accent transition-colors duration-300">👤</span>
-                            </button>
+                            </InteractiveElement>
 
-                            <button
+                            <InteractiveElement
+                                as="button"
+                                variant="subtle"
                                 onClick={() => {
                                     navigate('/settings');
                                     setShowSettings(false);
@@ -175,12 +188,14 @@ const Navbar = () => {
                                      'Advanced Settings'}
                                 </span>
                                 <span className="dark:text-accent transition-colors duration-300">⚙️</span>
-                            </button>
+                            </InteractiveElement>
                         </div>
 
                         {/* Footer */}
                         <div className="settings-panel-footer">
-                            <button
+                            <InteractiveElement
+                                as="button"
+                                variant="danger"
                                 onClick={handleLogout}
                                 className="settings-panel-logout-btn dark:bg-danger/20 dark:text-danger transition-all duration-300"
                             >
@@ -190,7 +205,7 @@ const Navbar = () => {
                                      'Logout'}
                                 </span>
                                 <span>🚪</span>
-                            </button>
+                            </InteractiveElement>
                         </div>
                     </div>
                 </div>

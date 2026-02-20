@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import api from '../services/api';
+import InteractiveElement from '../components/InteractiveElement';
 import './28_AdminSystemControl.css';
 
 const AdminSystemControl = () => {
@@ -159,30 +160,30 @@ const AdminSystemControl = () => {
         {language === 'ar' ? '⚡ إجراءات النظام' : 'System Actions'}
       </h2>
       <div className="asc-actions-grid">
-        <button onClick={reloadApp} className="asc-action-btn reload" aria-label={language === 'ar' ? 'إعادة تحميل التطبيق' : 'Reload App'}>
+        <InteractiveElement as="button" variant="secondary" onClick={reloadApp} className="asc-action-btn reload" aria-label={language === 'ar' ? 'إعادة تحميل التطبيق' : 'Reload App'}>
           🔄 {language === 'ar' ? 'إعادة تحميل التطبيق' : 'Reload App'}
-        </button>
-        <button onClick={clearCache} className="asc-action-btn cache" aria-label={language === 'ar' ? 'مسح الذاكرة المؤقتة' : 'Clear Cache'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="secondary" onClick={clearCache} className="asc-action-btn cache" aria-label={language === 'ar' ? 'مسح الذاكرة المؤقتة' : 'Clear Cache'}>
           🗑️ {language === 'ar' ? 'مسح الذاكرة المؤقتة' : 'Clear Cache'}
-        </button>
-        <button onClick={clearLocalStorage} className="asc-action-btn danger" aria-label={language === 'ar' ? 'مسح جميع البيانات' : 'Clear All Data'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="danger" onClick={clearLocalStorage} className="asc-action-btn danger" aria-label={language === 'ar' ? 'مسح جميع البيانات' : 'Clear All Data'}>
           ⚠️ {language === 'ar' ? 'مسح جميع البيانات' : 'Clear All Data'}
-        </button>
-        <button onClick={loadLogs} className="asc-action-btn info" aria-label={language === 'ar' ? 'تحديث السجلات' : 'Refresh Logs'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="secondary" onClick={loadLogs} className="asc-action-btn info" aria-label={language === 'ar' ? 'تحديث السجلات' : 'Refresh Logs'}>
           📋 {language === 'ar' ? 'تحديث السجلات' : 'Refresh Logs'}
-        </button>
-        <button onClick={exportLogs} className="asc-action-btn export" aria-label={language === 'ar' ? 'تصدير السجلات' : 'Export Logs'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="secondary" onClick={exportLogs} className="asc-action-btn export" aria-label={language === 'ar' ? 'تصدير السجلات' : 'Export Logs'}>
           💾 {language === 'ar' ? 'تصدير السجلات' : 'Export Logs'}
-        </button>
-        <button onClick={() => navigate('/admin-database')} className="asc-action-btn database" aria-label={language === 'ar' ? 'إدارة قاعدة البيانات' : 'Database Manager'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="secondary" onClick={() => navigate('/admin-database')} className="asc-action-btn database" aria-label={language === 'ar' ? 'إدارة قاعدة البيانات' : 'Database Manager'}>
           🗄️ {language === 'ar' ? 'إدارة قاعدة البيانات' : 'Database Manager'}
-        </button>
-        <button onClick={() => navigate('/admin-code-editor')} className="asc-action-btn code" aria-label={language === 'ar' ? 'محرر الأكواد' : 'Code Editor'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="secondary" onClick={() => navigate('/admin-code-editor')} className="asc-action-btn code" aria-label={language === 'ar' ? 'محرر الأكواد' : 'Code Editor'}>
           💻 {language === 'ar' ? 'محرر الأكواد' : 'Code Editor'}
-        </button>
-        <button onClick={() => navigate('/admin-pages')} className="asc-action-btn pages" aria-label={language === 'ar' ? 'متصفح الصفحات' : 'Pages Navigator'}>
+        </InteractiveElement>
+        <InteractiveElement as="button" variant="secondary" onClick={() => navigate('/admin-pages')} className="asc-action-btn pages" aria-label={language === 'ar' ? 'متصفح الصفحات' : 'Pages Navigator'}>
           🗺️ {language === 'ar' ? 'متصفح الصفحات' : 'Pages Navigator'}
-        </button>
+        </InteractiveElement>
       </div>
     </div>
   );
@@ -221,7 +222,9 @@ const AdminSystemControl = () => {
       </div>
 
       <div className="asc-tabs" role="tablist">
-        <button
+        <InteractiveElement
+          as="button"
+          variant="subtle"
           onClick={() => setActiveTab('info')}
           onKeyDown={handleTabKeyDown}
           className={`asc-tab-btn ${activeTab === 'info' ? 'active' : ''}`}
@@ -232,8 +235,10 @@ const AdminSystemControl = () => {
           tabIndex={activeTab === 'info' ? 0 : -1}
         >
           📊 {language === 'ar' ? 'المعلومات' : 'Info'}
-        </button>
-        <button
+        </InteractiveElement>
+        <InteractiveElement
+          as="button"
+          variant="subtle"
           onClick={() => setActiveTab('actions')}
           onKeyDown={handleTabKeyDown}
           className={`asc-tab-btn ${activeTab === 'actions' ? 'active' : ''}`}
@@ -244,8 +249,10 @@ const AdminSystemControl = () => {
           tabIndex={activeTab === 'actions' ? 0 : -1}
         >
           ⚡ {language === 'ar' ? 'الإجراءات' : 'Actions'}
-        </button>
-        <button
+        </InteractiveElement>
+        <InteractiveElement
+          as="button"
+          variant="subtle"
           onClick={() => setActiveTab('logs')}
           onKeyDown={handleTabKeyDown}
           className={`asc-tab-btn ${activeTab === 'logs' ? 'active' : ''}`}
@@ -256,7 +263,7 @@ const AdminSystemControl = () => {
           tabIndex={activeTab === 'logs' ? 0 : -1}
         >
           📝 {language === 'ar' ? 'السجلات' : 'Logs'}
-        </button>
+        </InteractiveElement>
       </div>
 
       {activeTab === 'info' && renderInfoTab()}

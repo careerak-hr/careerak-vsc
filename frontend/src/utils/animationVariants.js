@@ -442,6 +442,121 @@ export const feedbackVariants = {
         ease: "easeInOut"
       }
     }
+  },
+
+  // Success fade in (simple fade for success messages)
+  successFade: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: defaultTransition
+  },
+
+  // Success fade with slide up
+  successFadeSlide: {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+    transition: defaultTransition
+  },
+
+  // Success checkmark draw animation (for SVG path)
+  successCheckmark: {
+    initial: { pathLength: 0, opacity: 0 },
+    animate: { 
+      pathLength: 1, 
+      opacity: 1,
+      transition: {
+        pathLength: { duration: 0.5, ease: "easeOut" },
+        opacity: { duration: 0.2 }
+      }
+    }
+  },
+
+  // Success checkmark with scale (for icon container)
+  successCheckmarkContainer: {
+    initial: { scale: 0, opacity: 0 },
+    animate: { 
+      scale: 1, 
+      opacity: 1,
+      transition: springTransition
+    },
+    exit: { 
+      scale: 0, 
+      opacity: 0,
+      transition: fastTransition
+    }
+  },
+
+  // Success checkmark with bounce
+  successCheckmarkBounce: {
+    initial: { scale: 0, opacity: 0 },
+    animate: { 
+      scale: [0, 1.2, 1], 
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  },
+
+  // Success with glow effect
+  successGlow: {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { 
+      opacity: 1, 
+      scale: 1,
+      boxShadow: [
+        "0 0 0 rgba(34, 197, 94, 0)",
+        "0 0 20px rgba(34, 197, 94, 0.4)",
+        "0 0 10px rgba(34, 197, 94, 0.2)"
+      ],
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    },
+    exit: { 
+      opacity: 0, 
+      scale: 0.8,
+      transition: fastTransition
+    }
+  },
+
+  // Success pulse (for success indicators)
+  successPulse: {
+    animate: {
+      scale: [1, 1.05, 1],
+      opacity: [1, 0.9, 1],
+      transition: {
+        duration: 1,
+        repeat: 2,
+        ease: "easeInOut"
+      }
+    }
+  },
+
+  // Success slide in from bottom
+  successSlideBottom: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: defaultTransition
+  },
+
+  // Success with rotation (for checkmark icon)
+  successRotate: {
+    initial: { opacity: 0, scale: 0, rotate: -180 },
+    animate: { 
+      opacity: 1, 
+      scale: 1, 
+      rotate: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
   }
 };
 
@@ -730,7 +845,13 @@ export const presets = {
   notification: notificationVariants.slideInRight,
   
   // Form error
-  formError: feedbackVariants.shake
+  formError: feedbackVariants.shake,
+
+  // Success animations
+  success: feedbackVariants.successFade,
+  successCheckmark: feedbackVariants.successCheckmarkContainer,
+  successMessage: feedbackVariants.successFadeSlide,
+  successGlow: feedbackVariants.successGlow
 };
 
 // Export all variants as default

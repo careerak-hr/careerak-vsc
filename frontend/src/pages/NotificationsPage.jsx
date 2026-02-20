@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import NotificationList from '../components/NotificationList';
 import PageTransition from '../components/PageTransition';
+import InteractiveElement from '../components/InteractiveElement';
 import './NotificationsPage.css';
 
 const NotificationsPage = () => {
@@ -195,20 +196,24 @@ const NotificationsPage = () => {
               )}
             </div>
             {unreadCount > 0 && (
-              <button
+              <InteractiveElement
+                as="button"
+                variant="primary"
                 onClick={handleMarkAllRead}
                 className="notifications-mark-all-btn"
                 aria-label={getMarkAllReadLabel()}
               >
                 {getMarkAllReadLabel()}
-              </button>
+              </InteractiveElement>
             )}
           </div>
 
           {/* Filters */}
           <div className="notifications-filters" role="tablist">
             {['all', 'unread', 'read'].map((filterType) => (
-              <button
+              <InteractiveElement
+                as="button"
+                variant="subtle"
                 key={filterType}
                 onClick={() => setFilter(filterType)}
                 className={`notifications-filter-btn ${filter === filterType ? 'active' : ''}`}
@@ -220,7 +225,7 @@ const NotificationsPage = () => {
                 {filterType === 'unread' && unreadCount > 0 && (
                   <span className="filter-badge">{unreadCount}</span>
                 )}
-              </button>
+              </InteractiveElement>
             ))}
           </div>
 
