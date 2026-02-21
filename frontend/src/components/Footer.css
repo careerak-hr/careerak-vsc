@@ -58,3 +58,44 @@
   @apply absolute -top-1 -right-1 w-4 h-4 bg-danger rounded-full border-2 border-white text-[8px] text-white flex items-center justify-center font-bold transition-colors duration-300 ease-in-out;
   @apply dark:border-[#2d2d2d];
 }
+
+/* SEO Footer Links - Hidden visually but accessible to crawlers */
+.footer-seo-links {
+  @apply sr-only;
+  /* Screen reader only - hidden from visual users but accessible to search engines */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.footer-seo-nav {
+  @apply flex flex-wrap gap-4;
+}
+
+.footer-seo-link {
+  @apply text-primary underline;
+  @apply dark:text-accent;
+}
+
+/* Alternative: Visible footer links section (uncomment if you want visible links) */
+/*
+.footer-seo-links {
+  @apply py-8 px-4 bg-secondary/50 border-t border-primary/10;
+  @apply dark:bg-[#1a1a1a]/50 dark:border-white/10;
+}
+
+.footer-seo-nav {
+  @apply max-w-6xl mx-auto flex flex-wrap justify-center gap-6;
+}
+
+.footer-seo-link {
+  @apply text-sm text-primary hover:text-accent transition-colors duration-200;
+  @apply dark:text-gray-300 dark:hover:text-accent;
+}
+*/

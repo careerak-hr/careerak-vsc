@@ -6,12 +6,16 @@ import loginTranslations from '../data/loginTranslations.json';
 import useExitConfirm from '../hooks/useExitConfirm';
 import ExitConfirmModal from '../components/modals/ExitConfirmModal';
 import OAuthButtons from '../components/auth/OAuthButtons';
+import FormErrorAnnouncer from '../components/Accessibility/FormErrorAnnouncer';
 import '../components/auth/OAuthButtons.css';
 import './02_LoginPage.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login: performLogin, startBgMusic, language } = useApp();
+  const seo = useSEO('login', {});
   const t = loginTranslations[language] || loginTranslations.ar;
   const isRTL = language === 'ar';
 
@@ -80,7 +84,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={`login-page-container dark:bg-primary transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} role="main">
+    <>
+      <SEOHead {...seo} />
+      <main id="main-content" tabIndex="-1" className={`login-page-container dark:bg-primary transition-all duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* رسالة تأكيد الخروج */}
       <ExitConfirmModal 
         isOpen={showExitModal}
@@ -88,11 +94,11 @@ export default function LoginPage() {
         onCancel={cancelExit}
       />
 
-      <main className="login-page-content dark:text-primary transition-colors duration-300">
+      <div className="login-page-content dark:text-primary transition-colors duration-300">
 
         <div className="login-logo-container">
           <div className="login-logo">
-             <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+             <img src="/logo.jpg" alt="Careerak logo - Sign in to access your career dashboard" className="w-full h-full object-cover" />
           </div>
         </div>
 
@@ -102,49 +108,76 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
-          <input
-            type="text"
-            placeholder={t.userPlaceholder}
-            className="login-input dark:bg-secondary dark:text-primary transition-all duration-300"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-          />
-
-          <div className="login-password-wrapper">
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder={t.passPlaceholder}
-              className="login-input dark:bg-secondary dark:text-primary transition-all duration-300"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className={`login-password-toggle dark:text-muted dark:hover:text-primary transition-colors duration-300 ${isRTL ? 'left-6' : 'right-6'}`}>
-              {showPassword ? '👁️' : '🙈'}
-            </button>
-          </div>
-
-          {error && (
-            <div className="login-error-message">
-              <p className="login-error-text">{error}</p>
+          {/* Error Announcer for Screen Readers */}
+          <FormErrorAnnouncer errors={error ? { login: error } : {}} language={language} />
+          
+          <fieldset className="login-fieldset">
+            <legend className="login-legend dark:text-primary transition-colors duration-300">
+              {t.loginCredentials || 'Login Credentials'}
+            </legend>
+            
+            <div className="login-field-group">
+              <label htmlFor="login-identifier" className="login-label dark:text-primary transition-colors duration-300">
+                {t.userLabel || t.userPlaceholder}
+              </label>
+              <input
+                id="login-identifier"
+                type="text"
+                placeholder={t.userPlaceholder}
+                className="login-input dark:bg-secondary dark:text-primary transition-all duration-300"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                required
+                aria-describedby={error ? "login-error" : undefined}
+              />
             </div>
-          )}
 
-          <div className="login-remember-me-container">
-            <input
-              type="checkbox"
-              id="remember"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              className="login-remember-me-checkbox dark:bg-secondary dark:border-secondary transition-all duration-300"
-              aria-checked={rememberMe}
-            />
-            <label htmlFor="remember" className="login-remember-me-label dark:text-secondary transition-colors duration-300">{t.rememberMe}</label>
-          </div>
+            <div className="login-field-group">
+              <label htmlFor="login-password" className="login-label dark:text-primary transition-colors duration-300">
+                {t.passLabel || t.passPlaceholder}
+              </label>
+              <div className="login-password-wrapper">
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder={t.passPlaceholder}
+                  className="login-input dark:bg-secondary dark:text-primary transition-all duration-300"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  aria-describedby={error ? "login-error" : undefined}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`login-password-toggle dark:text-muted dark:hover:text-primary transition-colors duration-300 ${isRTL ? 'left-6' : 'right-6'}`}
+                  aria-label={showPassword ? (t.hidePassword || 'Hide password') : (t.showPassword || 'Show password')}
+                >
+                  {showPassword ? '👁️' : '🙈'}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="login-error-message" role="alert" aria-live="polite">
+                <p id="login-error" className="login-error-text">{error}</p>
+              </div>
+            )}
+
+            <div className="login-remember-me-container">
+              <input
+                type="checkbox"
+                id="remember"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="login-remember-me-checkbox dark:bg-secondary dark:border-secondary transition-all duration-300"
+                aria-checked={rememberMe}
+              />
+              <label htmlFor="remember" className="login-remember-me-label dark:text-secondary transition-colors duration-300">
+                {t.rememberMe}
+              </label>
+            </div>
+          </fieldset>
 
           <button type="submit" disabled={loading} className="login-submit-btn dark:bg-accent dark:text-inverse transition-all duration-300">
             {loading ? <div className="login-loading-spinner dark:border-accent transition-colors duration-300"></div> : t.loginBtn}
@@ -159,7 +192,8 @@ export default function LoginPage() {
             {t.noAccount} <span onClick={() => navigate('/auth')} className="login-create-account-link dark:text-accent dark:hover:text-accent-hover transition-colors duration-300">{t.createAccount}</span>
           </p>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
+    </>
   );
 }

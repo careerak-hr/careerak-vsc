@@ -13,6 +13,83 @@
       }
     }
   ],
+  "redirects": [
+    {
+      "source": "/jobs",
+      "destination": "/job-postings",
+      "permanent": true
+    },
+    {
+      "source": "/jobs/:path*",
+      "destination": "/job-postings/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/training",
+      "destination": "/courses",
+      "permanent": true
+    },
+    {
+      "source": "/training/:path*",
+      "destination": "/courses/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/register",
+      "destination": "/auth",
+      "permanent": true
+    },
+    {
+      "source": "/signup",
+      "destination": "/auth",
+      "permanent": true
+    },
+    {
+      "source": "/signin",
+      "destination": "/login",
+      "permanent": true
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/user/:path*",
+      "destination": "/profile/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin-dashboard",
+      "permanent": true
+    },
+    {
+      "source": "/onboarding",
+      "destination": "/onboarding-individuals",
+      "permanent": true
+    },
+    {
+      "source": "/interface",
+      "destination": "/interface-individuals",
+      "permanent": true
+    },
+    {
+      "source": "/privacy",
+      "destination": "/policy",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/policy",
+      "permanent": true
+    },
+    {
+      "source": "/terms",
+      "destination": "/policy",
+      "permanent": true
+    }
+  ],
   "routes": [
     {
       "src": "/api/(.*)",

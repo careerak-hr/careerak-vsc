@@ -1,6 +1,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 import "./i18n/i18n"; // Import i18n configuration
 import "./index.css";
@@ -164,12 +165,14 @@ function showUpdateNotification(newWorker) {
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <AnimationProvider>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </AnimationProvider>
-    </ThemeProvider>
+    <HelmetProvider>
+      <ThemeProvider>
+        <AnimationProvider>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </AnimationProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   </React.StrictMode>
 );

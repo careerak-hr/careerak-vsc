@@ -83,7 +83,7 @@ const AdminDatabaseManager = () => {
   };
 
   return (
-    <div className="admin-database-manager" role="main">
+    <main id="main-content" tabIndex="-1" className="admin-database-manager">
       <div className="adb-header">
         <button onClick={() => navigate('/admin-dashboard')} className="adb-back-btn">
           ← {language === 'ar' ? 'العودة' : 'Back'}
@@ -172,7 +172,7 @@ const AdminDatabaseManager = () => {
         ⚠️ {language === 'ar' ? 'تحذير: التعديل المباشر على قاعدة البيانات قد يؤدي لمشاكل. استخدم بحذر!' : 
             'Warning: Direct database modifications may cause issues. Use with caution!'}
       </div>
-    </div>
+    </main>
   );
 };
 

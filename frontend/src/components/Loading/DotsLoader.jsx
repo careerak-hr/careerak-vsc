@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Dots Loader Component
@@ -13,6 +14,7 @@ import { useAnimation } from '../../context/AnimationContext';
  * - Respects prefers-reduced-motion
  * - Dark mode support
  * - Customizable colors and sizes
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <DotsLoader size="medium" color="primary" />
@@ -23,7 +25,8 @@ const DotsLoader = ({
   color = 'primary',
   gap = 'gap-1',
   className = '',
-  ariaLabel = 'Loading...'
+  ariaLabel = 'Loading...',
+  announceToScreenReader = true
 }) => {
   const { shouldAnimate } = useAnimation();
 
@@ -60,21 +63,32 @@ const DotsLoader = ({
   const delays = [0, 0.1, 0.2];
 
   return (
-    <div 
-      className={`flex items-center ${gap} ${className}`}
-      role="status"
-      aria-label={ariaLabel}
-    >
-      {delays.map((delay, index) => (
-        <motion.div
-          key={index}
-          className={`rounded-full ${sizes[size]} ${colors[color]}`}
-          variants={dotVariants}
-          animate="animate"
-          transition={{ delay }}
+    <>
+      {/* Announce loading to screen readers */}
+      {announceToScreenReader && (
+        <AriaLiveRegion 
+          message={ariaLabel}
+          politeness="polite"
+          role="status"
         />
-      ))}
-    </div>
+      )}
+      
+      <div 
+        className={`flex items-center ${gap} ${className}`}
+        role="status"
+        aria-label={ariaLabel}
+      >
+        {delays.map((delay, index) => (
+          <motion.div
+            key={index}
+            className={`rounded-full ${sizes[size]} ${colors[color]}`}
+            variants={dotVariants}
+            animate="animate"
+            transition={{ delay }}
+          />
+        ))}
+      </div>
+    </>
   );
 };
 

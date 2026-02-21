@@ -130,7 +130,7 @@ const AIAnalysisModal = ({ t, image, onAccept, onReject, isAnalyzing, analysisRe
           <div className="ai-modal-image-wrapper">
             <img
               src={image}
-              alt="AI Analysis Preview"
+              alt="Your uploaded photo being analyzed by AI for suitability"
               className="ai-modal-img dark:border-[#D48161] transition-all duration-300"
               style={{
                 filter: isAnalyzing ? 'blur(2px)' : 'none',

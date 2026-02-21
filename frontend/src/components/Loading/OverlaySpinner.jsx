@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
 import Spinner from './Spinner';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Overlay Spinner Component
@@ -14,6 +15,7 @@ import Spinner from './Spinner';
  * - Optional message
  * - Respects prefers-reduced-motion
  * - Dark mode support
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <OverlaySpinner show={isLoading} message="Uploading..." />
@@ -24,7 +26,8 @@ const OverlaySpinner = ({
   message = '',
   backdropOpacity = 0.5,
   spinnerSize = 'large',
-  spinnerColor = 'primary'
+  spinnerColor = 'primary',
+  announceToScreenReader = true
 }) => {
   const { shouldAnimate, variants } = useAnimation();
 
@@ -55,33 +58,44 @@ const OverlaySpinner = ({
   return (
     <AnimatePresence>
       {show && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center"
-          variants={backdropVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black" style={{ opacity: backdropOpacity }} />
+        <>
+          {/* Announce loading to screen readers */}
+          {announceToScreenReader && (
+            <AriaLiveRegion 
+              message={message || 'Loading...'}
+              politeness="polite"
+              role="status"
+            />
+          )}
           
-          {/* Content */}
           <motion.div
-            className="relative z-10 flex flex-col items-center gap-4 p-6 bg-[#E3DAD1] dark:bg-[#2d2d2d] rounded-2xl shadow-2xl"
-            variants={contentVariants}
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            variants={backdropVariants}
             initial="initial"
             animate="animate"
             exit="exit"
           >
-            <Spinner size={spinnerSize} color={spinnerColor} />
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black" style={{ opacity: backdropOpacity }} />
             
-            {message && (
-              <p className="text-[#304B60] dark:text-[#e0e0e0] text-center font-medium">
-                {message}
-              </p>
-            )}
+            {/* Content */}
+            <motion.div
+              className="relative z-10 flex flex-col items-center gap-4 p-6 bg-[#E3DAD1] dark:bg-[#2d2d2d] rounded-2xl shadow-2xl"
+              variants={contentVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+            >
+              <Spinner size={spinnerSize} color={spinnerColor} />
+              
+              {message && (
+                <p className="text-[#304B60] dark:text-[#e0e0e0] text-center font-medium">
+                  {message}
+                </p>
+              )}
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </>
       )}
     </AnimatePresence>
   );

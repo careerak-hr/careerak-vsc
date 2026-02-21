@@ -11,11 +11,15 @@ import { useApp } from '../context/AppContext';
 import NotificationList from '../components/NotificationList';
 import PageTransition from '../components/PageTransition';
 import InteractiveElement from '../components/InteractiveElement';
+import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import './NotificationsPage.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 const NotificationsPage = () => {
   const { language, startBgMusic } = useApp();
   const navigate = useNavigate();
+  const seo = useSEO('notifications');
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, unread, read
@@ -165,7 +169,8 @@ const NotificationsPage = () => {
   if (loading) {
     return (
       <PageTransition variant="fadeIn">
-        <div role="main" className="notifications-page">
+        <SEOHead {...seo} />
+        <main id="main-content" tabIndex="-1" className="notifications-page">
           <div className="notifications-container">
             <h1 className="notifications-title">{getTitle()}</h1>
             <p className="notifications-loading">
@@ -174,14 +179,15 @@ const NotificationsPage = () => {
                'Loading...'}
             </p>
           </div>
-        </div>
+        </main>
       </PageTransition>
     );
   }
 
   return (
     <PageTransition variant="fadeIn">
-      <div role="main" className="notifications-page">
+      <SEOHead {...seo} />
+      <main id="main-content" tabIndex="-1" className="notifications-page">
         <div className="notifications-container">
           {/* Header */}
           <div className="notifications-header">
@@ -230,13 +236,15 @@ const NotificationsPage = () => {
           </div>
 
           {/* Notification List with Stagger Animation */}
-          <NotificationList
-            notifications={getFilteredNotifications()}
-            onNotificationClick={handleNotificationClick}
-            language={language}
-          />
+          <ComponentErrorBoundary componentName="NotificationList">
+            <NotificationList
+              notifications={getFilteredNotifications()}
+              onNotificationClick={handleNotificationClick}
+              language={language}
+            />
+          </ComponentErrorBoundary>
         </div>
-      </div>
+      </main>
     </PageTransition>
   );
 };

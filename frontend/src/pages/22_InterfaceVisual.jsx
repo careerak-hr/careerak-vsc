@@ -11,13 +11,15 @@ const InterfaceVisual = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div role="main">
-            <main>
-            <h1>Interface Visual Page</h1>
-            <p>Language: {language}</p>
-            <p>User: {user?.name || 'Guest'}</p>
-            </main>
-        </div>
+        <main id="main-content" tabIndex="-1">
+            <h1>Visual Interface</h1>
+            
+            <section aria-labelledby="user-info">
+                <h2 id="user-info">User Information</h2>
+                <p>Language: {language}</p>
+                <p>User: {user?.name || 'Guest'}</p>
+            </section>
+        </main>
     );
 }
 

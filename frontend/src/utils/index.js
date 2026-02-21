@@ -42,5 +42,23 @@ export {
   testDifferentFileTypes
 } from './cvAnalyzerTester';
 
+// تصدير أدوات تحسين النصوص البديلة لـ SEO
+export {
+  generateSEOAltText,
+  validateSEOAltText,
+  optimizeAltTextForSEO,
+  auditImagesForSEO,
+  logSEOAuditResults,
+  SEOAltTextTemplates
+} from './seoAltTextOptimizer';
+
+// تصدير توصيات تحسين النصوص البديلة
+export {
+  imageAltTextRecommendations,
+  generateOptimizationReport,
+  seoAltTextBestPractices,
+  quickReferenceGuide
+} from './optimizeAllImageAltText';
+
 // تصدير الأدوات الأخرى
 export { default as resetSettings } from './resetSettings';

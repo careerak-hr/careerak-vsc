@@ -24,6 +24,14 @@ import IndividualForm from '../components/auth/IndividualForm';
 import CompanyForm from '../components/auth/CompanyForm';
 import OAuthButtons from '../components/auth/OAuthButtons';
 import ProgressRestoration from '../components/auth/ProgressRestoration';
+import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+
+// Accessibility Components
+import FormErrorAnnouncer from '../components/Accessibility/FormErrorAnnouncer';
+
+// SEO
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 // OAuth Styles
 import '../components/auth/OAuthButtons.css';
@@ -34,6 +42,7 @@ import { saveProgress, loadProgress, clearProgress, getProgressInfo } from '../u
 // Main Component
 export default function AuthPage() {
   const { language } = useAuth();
+  const seo = useSEO('auth', {});
   const t = authTranslations[language] || authTranslations.ar;
   const isRTL = language === 'ar';
   
@@ -432,12 +441,14 @@ export default function AuthPage() {
   }
 
   return (
-    <div className={`auth-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} style={{ fontFamily }} role="main">
-      <main className="auth-page-content" style={{ fontFamily }}>
+    <>
+      <SEOHead {...seo} />
+      <main id="main-content" tabIndex="-1" className={`auth-page-container ${isVisible ? 'opacity-100' : 'opacity-0'}`} dir={isRTL ? 'rtl' : 'ltr'} style={{ fontFamily }}>
+      <div className="auth-page-content" style={{ fontFamily }}>
 
         <div className="auth-logo-container">
           <div className="auth-logo">
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+            <img src="/logo.jpg" alt="Careerak logo - Create your professional account" className="w-full h-full object-cover" />
           </div>
         </div>
 
@@ -479,86 +490,138 @@ export default function AuthPage() {
         {userType && (
           <form onSubmit={handleRegisterClick} noValidate className="auth-form" style={{ fontFamily }}>
 
+            {/* Error Announcer for Screen Readers */}
+            <FormErrorAnnouncer errors={fieldErrors} language={language} />
+
             {/* OAuth Buttons - at the top */}
             <OAuthButtons mode="register" />
 
             <div className="auth-photo-upload-container">
-              <div
+              <button
+                type="button"
                 onClick={() => setShowPhotoModal(true)}
                 className="auth-photo-upload-box"
-                role="button"
-                tabIndex={0}
                 aria-label={language === 'ar' ? 'رفع صورة الملف الشخصي' : language === 'fr' ? 'Télécharger une photo de profil' : 'Upload profile photo'}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setShowPhotoModal(true);
-                  }
-                }}
               >
                 {profileImage ? (
-                  <img src={profileImage} alt="Profile" className="auth-photo-upload-img" />
+                  <img src={profileImage} alt="Your profile photo preview" className="auth-photo-upload-img" />
                 ) : (
                   <span className="auth-photo-upload-placeholder" aria-hidden="true">📷</span>
                 )}
-              </div>
+              </button>
               <p className="auth-photo-upload-label" style={{ fontFamily }}>{t.uploadPhoto}</p>
               {fieldErrors.image && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.image}</p>}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleInputChange}
-                className="auth-select-base"
-                style={{ fontFamily }}
-              >
-                <option value="" disabled selected>{t.country}</option>
-                {countries.map(c => (
-                  <option key={c.key} value={c.key}>
-                    {c.flag} {language === 'ar' ? c.name_ar : c.name_en}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="text"
-                name="city"
-                placeholder={t.city}
-                value={formData.city}
-                onChange={handleInputChange}
-                className="auth-input-base"
-                style={{ fontFamily }}
-              />
-            </div>
-            {fieldErrors.country && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.country}</p>}
-            {fieldErrors.city && <p className="auth-input-error" style={{ fontFamily }}>{fieldErrors.city}</p>}
+            <fieldset className="auth-fieldset">
+              <legend className="auth-legend" style={{ fontFamily }}>
+                {t.location || 'Location'}
+              </legend>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="auth-field-group">
+                  <label htmlFor="country" className="auth-label" style={{ fontFamily }}>
+                    {t.country}
+                  </label>
+                  <select
+                    id="country"
+                    name="country"
+                    value={formData.country}
+                    onChange={handleInputChange}
+                    className="auth-select-base"
+                    style={{ fontFamily }}
+                    aria-describedby={fieldErrors.country ? "country-error" : undefined}
+                  >
+                    <option value="" disabled>{t.country}</option>
+                    {countries.map(c => (
+                      <option key={c.key} value={c.key}>
+                        {c.flag} {language === 'ar' ? c.name_ar : c.name_en}
+                      </option>
+                    ))}
+                  </select>
+                  {fieldErrors.country && (
+                    <p id="country-error" className="auth-input-error" style={{ fontFamily }} role="alert">
+                      {fieldErrors.country}
+                    </p>
+                  )}
+                </div>
+                
+                <div className="auth-field-group">
+                  <label htmlFor="city" className="auth-label" style={{ fontFamily }}>
+                    {t.city}
+                  </label>
+                  <input
+                    id="city"
+                    type="text"
+                    name="city"
+                    placeholder={t.city}
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    className="auth-input-base"
+                    style={{ fontFamily }}
+                    aria-describedby={fieldErrors.city ? "city-error" : undefined}
+                  />
+                  {fieldErrors.city && (
+                    <p id="city-error" className="auth-input-error" style={{ fontFamily }} role="alert">
+                      {fieldErrors.city}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </fieldset>
 
             {userType === 'individual' ? (
-              <IndividualForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }} />
+              <ComponentErrorBoundary componentName="IndividualForm">
+                <IndividualForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }} />
+              </ComponentErrorBoundary>
             ) : (
-              <CompanyForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }} />
+              <ComponentErrorBoundary componentName="CompanyForm">
+                <CompanyForm {...{ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }} />
+              </ComponentErrorBoundary>
             )}
 
-            <div className="auth-checkbox-container">
-              <input
-                type="checkbox"
-                id="agreePolicy"
-                checked={formData.agreed}
-                onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
-                className="auth-checkbox"
-                aria-checked={formData.agreed}
-              />
-              <label htmlFor="agreePolicy" className="auth-checkbox-label">
-                <span
-                  onClick={() => setShowPolicy(true)}
-                  className="auth-policy-link"
-                >
-                  {t.agreePolicy}
-                </span>
-              </label>
-            </div>
-            {fieldErrors.agreed && <p className="auth-input-error">{fieldErrors.agreed}</p>}
+            <fieldset className="auth-fieldset">
+              <legend className="auth-legend" style={{ fontFamily }}>
+                {t.agreement || 'Agreement'}
+              </legend>
+              
+              <div className="auth-checkbox-container">
+                <input
+                  type="checkbox"
+                  id="agreePolicy"
+                  checked={formData.agreed}
+                  onChange={(e) => setFormData(prev => ({ ...prev, agreed: e.target.checked }))}
+                  className="auth-checkbox"
+                  aria-checked={formData.agreed}
+                  aria-describedby={fieldErrors.agreed ? "agreed-error" : "policy-description"}
+                />
+                <label htmlFor="agreePolicy" className="auth-checkbox-label">
+                  <span
+                    onClick={() => setShowPolicy(true)}
+                    className="auth-policy-link"
+                    role="button"
+                    tabIndex="0"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setShowPolicy(true);
+                      }
+                    }}
+                    aria-label={t.viewPolicy || 'View privacy policy'}
+                  >
+                    {t.agreePolicy}
+                  </span>
+                </label>
+                <p id="policy-description" className="sr-only">
+                  {t.policyDescription || 'Check this box to agree to our privacy policy and terms of service'}
+                </p>
+                {fieldErrors.agreed && (
+                  <p id="agreed-error" className="auth-input-error" role="alert">
+                    {fieldErrors.agreed}
+                  </p>
+                )}
+              </div>
+            </fieldset>
 
             <button
               type="submit"
@@ -570,38 +633,44 @@ export default function AuthPage() {
         )}
 
         {showPhotoModal && (
-          <PhotoOptionsModal
-            t={t}
-            onSelectFromGallery={() => getPhoto(CameraSource.Photos)}
-            onTakePhoto={() => getPhoto(CameraSource.Camera)}
-            onClose={() => setShowPhotoModal(false)}
-          />
+          <ComponentErrorBoundary componentName="PhotoOptionsModal">
+            <PhotoOptionsModal
+              t={t}
+              onSelectFromGallery={() => getPhoto(CameraSource.Photos)}
+              onTakePhoto={() => getPhoto(CameraSource.Camera)}
+              onClose={() => setShowPhotoModal(false)}
+            />
+          </ComponentErrorBoundary>
         )}
 
         {showCropModal && (
-          <CropModal
-            t={t}
-            image={tempImage}
-            crop={crop}
-            setCrop={setCrop}
-            onCropComplete={onCropComplete}
-            onSave={handleCropSave}
-            onClose={() => setShowCropModal(false)}
-            language={language}
-          />
+          <ComponentErrorBoundary componentName="CropModal">
+            <CropModal
+              t={t}
+              image={tempImage}
+              crop={crop}
+              setCrop={setCrop}
+              onCropComplete={onCropComplete}
+              onSave={handleCropSave}
+              onClose={() => setShowCropModal(false)}
+              language={language}
+            />
+          </ComponentErrorBoundary>
         )}
 
         {showAIAnalysis && (
-          <AIAnalysisModal
-            t={t}
-            image={tempImage}
-            onAccept={handleAIAccept}
-            onReject={handleAIReject}
-            isAnalyzing={isAnalyzing}
-            analysisResult={analysisResult}
-            userType={userType}
-            language={language}
-          />
+          <ComponentErrorBoundary componentName="AIAnalysisModal">
+            <AIAnalysisModal
+              t={t}
+              image={tempImage}
+              onAccept={handleAIAccept}
+              onReject={handleAIReject}
+              isAnalyzing={isAnalyzing}
+              analysisResult={analysisResult}
+              userType={userType}
+              language={language}
+            />
+          </ComponentErrorBoundary>
         )}
 
         {showPolicy && (
@@ -625,7 +694,8 @@ export default function AuthPage() {
             language={language}
           />
         )}
-      </main>
-    </div>
+      </div>
+    </main>
+    </>
   );
 }

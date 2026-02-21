@@ -4,13 +4,37 @@
  * This file is run before all tests to set up the testing environment.
  */
 
-import { expect, afterEach } from 'vitest';
+import { expect, afterEach, beforeAll } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // Cleanup after each test
 afterEach(() => {
   cleanup();
+});
+
+// Setup react-helmet-async for testing
+beforeAll(() => {
+  // Create a MutationObserver mock for react-helmet-async
+  global.MutationObserver = class {
+    constructor(callback) {
+      this.callback = callback;
+    }
+    disconnect() {}
+    observe(element, initObject) {
+      // Immediately trigger callback to simulate DOM changes
+      this.callback([{ type: 'childList', target: element }], this);
+    }
+    takeRecords() {
+      return [];
+    }
+  };
+  
+  // Ensure document.head exists and is mutable
+  if (!document.head) {
+    document.head = document.createElement('head');
+    document.documentElement.appendChild(document.head);
+  }
 });
 
 // Mock window.matchMedia

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Pulse Loader Component
@@ -12,6 +13,7 @@ import { useAnimation } from '../../context/AnimationContext';
  * - Respects prefers-reduced-motion
  * - Dark mode support
  * - Customizable colors and sizes
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <PulseLoader size="large" color="accent" />
@@ -21,7 +23,8 @@ const PulseLoader = ({
   size = 'medium',
   color = 'primary',
   className = '',
-  ariaLabel = 'Loading...'
+  ariaLabel = 'Loading...',
+  announceToScreenReader = true
 }) => {
   const { shouldAnimate } = useAnimation();
 
@@ -56,13 +59,24 @@ const PulseLoader = ({
   };
 
   return (
-    <motion.div
-      className={`rounded-full ${sizes[size]} ${colors[color]} ${className}`}
-      variants={pulseVariants}
-      animate="animate"
-      role="status"
-      aria-label={ariaLabel}
-    />
+    <>
+      {/* Announce loading to screen readers */}
+      {announceToScreenReader && (
+        <AriaLiveRegion 
+          message={ariaLabel}
+          politeness="polite"
+          role="status"
+        />
+      )}
+      
+      <motion.div
+        className={`rounded-full ${sizes[size]} ${colors[color]} ${className}`}
+        variants={pulseVariants}
+        animate="animate"
+        role="status"
+        aria-label={ariaLabel}
+      />
+    </>
   );
 };
 

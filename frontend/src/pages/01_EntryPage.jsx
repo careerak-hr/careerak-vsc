@@ -6,12 +6,15 @@ import { useApp } from '../context/AppContext';
 import { App } from '@capacitor/app';
 import entryTranslations from '../data/entryTranslations.json';
 import './01_EntryPage.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 export default function EntryPage() {
   const [phase, setPhase] = useState(0);
   const navigate = useNavigate();
 
   const { isAuthenticated, language, audioEnabled } = useApp();
+  const seo = useSEO('entry', {});
 
   const t = entryTranslations[language] || entryTranslations.ar;
 
@@ -93,17 +96,19 @@ export default function EntryPage() {
   };
 
   return (
-    <div className="entry-page-container" role="main">
+    <>
+      <SEOHead {...seo} />
+      <main id="main-content" tabIndex="-1" className="entry-page-container">
       <div className={`entry-page-gradient ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`}></div>
 
-      <main className="entry-page-main-content">
+      <div className="entry-page-main-content">
         <div className="entry-page-logo-wrapper">
           <div className={`entry-page-glowing-circle ${phase >= 2 ? 'scale-150' : 'scale-0'}`}></div>
 
           <div className={`entry-page-logo-animation-wrapper ${getPhaseClass()}`}>
             <div className="entry-page-logo-inner-wrapper">
               <div className="entry-page-spinning-border"></div>
-              <img src="/logo.jpg" alt="Logo" className="entry-page-logo" />
+              <img src="/logo.jpg" alt="Careerak logo - Your gateway to career opportunities" className="entry-page-logo" />
             </div>
           </div>
         </div>
@@ -116,7 +121,7 @@ export default function EntryPage() {
             <div className="entry-page-slogan-line"></div>
           </div>
         </div>
-      </main>
+      </div>
 
       <div className="entry-page-progress-bar-container">
         <div
@@ -127,6 +132,7 @@ export default function EntryPage() {
           }}
         ></div>
       </div>
-    </div>
+    </main>
+    </>
   );
 }

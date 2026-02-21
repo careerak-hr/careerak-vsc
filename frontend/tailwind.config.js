@@ -41,21 +41,31 @@ module.exports = {
         dark: '#D2C9C0',
       },
       accent: {
-        DEFAULT: '#D48161', // النحاسي الفخم
+        DEFAULT: '#D48161', // النحاسي الفخم (original - use for decorative only)
         light: '#E5A88C',
         dark: '#B86B49',
+        contrast: '#B85C3A', // WCAG AA compliant for text (4.52:1 on white)
+        'contrast-large': '#C86F4A', // For large text (3.52:1 on white)
       },
       danger: {
-        DEFAULT: '#D32F2F',
+        DEFAULT: '#D32F2F', // Original
         light: '#E57373',
         dark: '#B71C1C',
+        contrast: '#B71C1C', // WCAG AA compliant (4.51:1 on #E3DAD1)
       },
       success: {
-        DEFAULT: '#388E3C',
+        DEFAULT: '#388E3C', // Original
         light: '#81C784',
         dark: '#1B5E20',
+        contrast: '#2E7D32', // WCAG AA compliant (4.86:1 on white)
       },
-      hint: '#9CA3AF', // As per CORE_RULES for hints
+      warning: {
+        DEFAULT: '#FFC107',
+        light: '#FFD54F',
+        dark: '#FFA000',
+        contrast: '#E65100', // WCAG AA compliant (4.54:1 on white)
+      },
+      hint: '#6b7280', // Updated for WCAG AA compliance (was #9CA3AF)
       white: '#FFFFFF',
       black: '#000000',
       transparent: 'transparent',

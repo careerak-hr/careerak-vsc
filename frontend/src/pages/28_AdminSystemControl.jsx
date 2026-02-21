@@ -211,7 +211,7 @@ const AdminSystemControl = () => {
   );
 
   return (
-    <div className="admin-system-control" role="main">
+    <main id="main-content" tabIndex="-1" className="admin-system-control">
       <div className="asc-header">
         <button onClick={() => navigate('/admin-dashboard')} className="asc-back-btn">
           ← {language === 'ar' ? 'العودة' : 'Back'}
@@ -269,7 +269,7 @@ const AdminSystemControl = () => {
       {activeTab === 'info' && renderInfoTab()}
       {activeTab === 'actions' && renderActionsTab()}
       {activeTab === 'logs' && renderLogsTab()}
-    </div>
+    </main>
   );
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Button Spinner Component
@@ -12,6 +13,7 @@ import { useAnimation } from '../../context/AnimationContext';
  * - Framer Motion animation
  * - Respects prefers-reduced-motion
  * - Dark mode support
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <button disabled={loading}>
@@ -22,7 +24,8 @@ import { useAnimation } from '../../context/AnimationContext';
 const ButtonSpinner = ({ 
   color = 'white',
   className = '',
-  ariaLabel = 'Processing...'
+  ariaLabel = 'Processing...',
+  announceToScreenReader = true
 }) => {
   const { shouldAnimate } = useAnimation();
 
@@ -48,13 +51,24 @@ const ButtonSpinner = ({
   };
 
   return (
-    <motion.div
-      className={`inline-block w-4 h-4 border-2 rounded-full ${colors[color]} ${className}`}
-      variants={spinnerVariants}
-      animate="animate"
-      role="status"
-      aria-label={ariaLabel}
-    />
+    <>
+      {/* Announce loading to screen readers */}
+      {announceToScreenReader && (
+        <AriaLiveRegion 
+          message={ariaLabel}
+          politeness="polite"
+          role="status"
+        />
+      )}
+      
+      <motion.div
+        className={`inline-block w-4 h-4 border-2 rounded-full ${colors[color]} ${className}`}
+        variants={spinnerVariants}
+        animate="animate"
+        role="status"
+        aria-label={ariaLabel}
+      />
+    </>
   );
 };
 

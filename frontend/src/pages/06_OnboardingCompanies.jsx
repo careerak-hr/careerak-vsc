@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext'; // Corrected import
 import './06_OnboardingCompanies.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 const OnboardingCompanies = () => {
     const { language, updateUser, startBgMusic } = useApp(); // Corrected hook
+    const seo = useSEO('onboardingCompanies');
 
     useEffect(() => {
         startBgMusic();
@@ -18,13 +21,14 @@ const OnboardingCompanies = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div role="main">
-            <main>
-            <h1>Onboarding Companies Page</h1>
-            <p>Language: {language}</p>
-            <button onClick={() => handleUpdateUser({ companyName: 'Test' })}>Update Company</button>
+        <>
+            <SEOHead {...seo} />
+            <main id="main-content" tabIndex="-1">
+                <h1>Company Onboarding</h1>
+                <p>Language: {language}</p>
+                <button onClick={() => handleUpdateUser({ companyName: 'Test' })}>Update Company</button>
             </main>
-        </div>
+        </>
     );
 }
 

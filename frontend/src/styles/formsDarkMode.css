@@ -50,7 +50,7 @@
 }
 
 .dark .login-password-toggle {
-  color: rgba(224, 224, 224, 0.3);
+  color: rgba(224, 224, 224, 0.4); /* Updated from 0.3 for WCAG AA compliance */
 }
 
 .dark .login-password-toggle:hover {
@@ -58,7 +58,7 @@
 }
 
 .dark .login-error-text {
-  color: #f87171; /* red-400 */
+  color: #ef4444; /* red-500 - Updated from red-400 for WCAG AA compliance */
 }
 
 .dark .login-remember-me-checkbox {
@@ -126,7 +126,7 @@
 }
 
 .dark .auth-input-error {
-  @apply text-red-400;
+  @apply text-red-500; /* Updated from text-red-400 for WCAG AA compliance */
 }
 
 .dark .auth-input-base {

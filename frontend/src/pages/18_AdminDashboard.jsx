@@ -5,11 +5,14 @@ import adminDashboardTranslations from '../data/adminDashboard.json';
 import api from '../services/api';
 import InteractiveElement from '../components/InteractiveElement';
 import './18_AdminDashboard.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 const AdminDashboard = () => {
     const { logout, user, language, token, startBgMusic } = useApp();
     const navigate = useNavigate();
     const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
+    const seo = useSEO('adminDashboard');
     
     const [activeTab, setActiveTab] = useState('overview');
     const [stats, setStats] = useState({
@@ -677,27 +680,32 @@ const AdminDashboard = () => {
 
     if (loading) {
         return (
-            <div className="admin-dashboard-container" role="main">
-                <main className="admin-loading">
-                    <div className="admin-loading-spinner"></div>
-                    <p className="text-primary text-xl font-black mt-4">
-                        {language === 'ar' ? 'جاري التحميل...' : 
-                         language === 'fr' ? 'Chargement...' : 
-                         'Loading...'}
-                    </p>
+            <>
+                <SEOHead {...seo} />
+                <main id="main-content" tabIndex="-1" className="admin-dashboard-container">
+                    <div className="admin-loading">
+                        <div className="admin-loading-spinner"></div>
+                        <p className="text-primary text-xl font-black mt-4">
+                            {language === 'ar' ? 'جاري التحميل...' : 
+                             language === 'fr' ? 'Chargement...' : 
+                             'Loading...'}
+                        </p>
+                    </div>
                 </main>
-            </div>
+            </>
         );
     }
 
     return (
-        <div className="admin-dashboard-container" role="main">
+        <>
+            <SEOHead {...seo} />
+            <main id="main-content" tabIndex="-1" className="admin-dashboard-container">
             {/* الهيدر */}
             <header className="admin-header">
                 <div className="admin-header-logo-container">
                     <img 
                         src="/logo.jpg" 
-                        alt="Careerak Logo" 
+                        alt="Careerak logo - Admin dashboard control panel" 
                         className="admin-header-logo"
                     />
                     <div>
@@ -823,13 +831,14 @@ const AdminDashboard = () => {
             </nav>
 
             {/* محتوى التبويبات */}
-            <main>
+            <div className="admin-tabs-content">
             {activeTab === 'overview' && renderOverviewTab()}
             {activeTab === 'users' && renderUsersTab()}
             {activeTab === 'content' && renderContentTab()}
             {activeTab === 'settings' && renderSettingsTab()}
-            </main>
-        </div>
+            </div>
+        </main>
+        </>
     );
 };
 

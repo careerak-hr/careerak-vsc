@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Progress Bar Component
@@ -13,6 +14,7 @@ import { useAnimation } from '../../context/AnimationContext';
  * - Dark mode support
  * - Customizable colors
  * - Top-of-page positioning option
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <ProgressBar progress={75} position="top" />
@@ -24,7 +26,9 @@ const ProgressBar = ({
   height = 'h-1',
   color = 'accent',
   showPercentage = false,
-  className = ''
+  className = '',
+  announceToScreenReader = true,
+  loadingMessage = 'Loading'
 }) => {
   const { shouldAnimate } = useAnimation();
 
@@ -72,29 +76,40 @@ const ProgressBar = ({
   };
 
   return (
-    <div className={`${positions[position]} ${className}`}>
-      <div 
-        className={`w-full ${height} ${bgColors[color]} overflow-hidden`}
-        role="progressbar"
-        aria-valuenow={clampedProgress}
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-label={`Progress: ${clampedProgress}%`}
-      >
-        <motion.div
-          className={`h-full ${colors[color]}`}
-          variants={progressVariants}
-          initial="initial"
-          animate="animate"
+    <>
+      {/* Announce progress to screen readers */}
+      {announceToScreenReader && (
+        <AriaLiveRegion 
+          message={`${loadingMessage}: ${Math.round(clampedProgress)}%`}
+          politeness="polite"
+          role="status"
         />
-      </div>
-      
-      {showPercentage && (
-        <div className="text-center text-xs text-[#304B60] dark:text-[#e0e0e0] mt-1">
-          {Math.round(clampedProgress)}%
-        </div>
       )}
-    </div>
+      
+      <div className={`${positions[position]} ${className}`}>
+        <div 
+          className={`w-full ${height} ${bgColors[color]} overflow-hidden`}
+          role="progressbar"
+          aria-valuenow={clampedProgress}
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-label={`${loadingMessage}: ${clampedProgress}%`}
+        >
+          <motion.div
+            className={`h-full ${colors[color]}`}
+            variants={progressVariants}
+            initial="initial"
+            animate="animate"
+          />
+        </div>
+        
+        {showPercentage && (
+          <div className="text-center text-xs text-[#304B60] dark:text-[#e0e0e0] mt-1">
+            {Math.round(clampedProgress)}%
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

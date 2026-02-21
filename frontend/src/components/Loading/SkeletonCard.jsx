@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
 import SkeletonBox from './SkeletonBox';
 import SkeletonText from './SkeletonText';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Skeleton Card Component
@@ -15,6 +16,7 @@ import SkeletonText from './SkeletonText';
  * - Respects prefers-reduced-motion
  * - Dark mode support
  * - Customizable layout
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <SkeletonCard variant="job" />
@@ -25,7 +27,9 @@ const SkeletonCard = ({
   showImage = true,
   imageHeight = 'h-48',
   textLines = 3,
-  className = ''
+  className = '',
+  ariaLabel = 'Loading content...',
+  announceToScreenReader = true
 }) => {
   const { shouldAnimate } = useAnimation();
 
@@ -68,57 +72,70 @@ const SkeletonCard = ({
   const config = variants[variant] || variants.default;
 
   return (
-    <motion.div
-      className={`bg-white dark:bg-[#2d2d2d] rounded-lg shadow-md overflow-hidden ${className}`}
-      variants={cardVariants}
-      initial="initial"
-      animate="animate"
-    >
-      {/* Image skeleton */}
-      {(showImage || config.showImage) && (
-        <SkeletonBox
-          width="w-full"
-          height={imageHeight || config.imageHeight}
-          rounded="rounded-none"
-          animationType="shimmer"
+    <>
+      {/* Announce loading to screen readers */}
+      {announceToScreenReader && (
+        <AriaLiveRegion 
+          message={ariaLabel}
+          politeness="polite"
+          role="status"
         />
       )}
-
-      {/* Content skeleton */}
-      <div className="p-4 space-y-3">
-        {/* Title */}
-        <SkeletonBox
-          width="w-3/4"
-          height="h-6"
-          rounded="rounded"
-          animationType="pulse"
-        />
-
-        {/* Text lines */}
-        <SkeletonText
-          lines={textLines || config.textLines}
-          lineHeight="h-4"
-          gap="gap-2"
-          animationType="pulse"
-        />
-
-        {/* Action buttons */}
-        <div className="flex gap-2 mt-4">
+      
+      <motion.div
+        className={`bg-white dark:bg-[#2d2d2d] rounded-lg shadow-md overflow-hidden ${className}`}
+        variants={cardVariants}
+        initial="initial"
+        animate="animate"
+        role="status"
+        aria-label={ariaLabel}
+      >
+        {/* Image skeleton */}
+        {(showImage || config.showImage) && (
           <SkeletonBox
-            width="w-24"
-            height="h-10"
-            rounded="rounded-lg"
+            width="w-full"
+            height={imageHeight || config.imageHeight}
+            rounded="rounded-none"
+            animationType="shimmer"
+          />
+        )}
+
+        {/* Content skeleton */}
+        <div className="p-4 space-y-3">
+          {/* Title */}
+          <SkeletonBox
+            width="w-3/4"
+            height="h-6"
+            rounded="rounded"
             animationType="pulse"
           />
-          <SkeletonBox
-            width="w-24"
-            height="h-10"
-            rounded="rounded-lg"
+
+          {/* Text lines */}
+          <SkeletonText
+            lines={textLines || config.textLines}
+            lineHeight="h-4"
+            gap="gap-2"
             animationType="pulse"
           />
+
+          {/* Action buttons */}
+          <div className="flex gap-2 mt-4">
+            <SkeletonBox
+              width="w-24"
+              height="h-10"
+              rounded="rounded-lg"
+              animationType="pulse"
+            />
+            <SkeletonBox
+              width="w-24"
+              height="h-10"
+              rounded="rounded-lg"
+              animationType="pulse"
+            />
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </>
   );
 };
 

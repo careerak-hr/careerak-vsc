@@ -186,9 +186,8 @@ export default function OAuthCallback() {
   };
 
   return (
-    <div 
+    <main id="main-content" tabIndex="-1" 
       className="oauth-callback-container"
-      role="main"
       style={{ 
         fontFamily,
         minHeight: '100vh',
@@ -332,6 +331,6 @@ export default function OAuthCallback() {
           100% { transform: rotate(360deg); }
         }
       `}</style>
-    </div>
+    </main>
   );
 }

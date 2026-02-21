@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useAnimation } from '../../context/AnimationContext';
+import AriaLiveRegion from '../Accessibility/AriaLiveRegion';
 
 /**
  * Animated Spinner Component
@@ -11,6 +12,7 @@ import { useAnimation } from '../../context/AnimationContext';
  * - Multiple sizes (small, medium, large)
  * - Dark mode support
  * - Customizable colors
+ * - Screen reader announcements with aria-live
  * 
  * Usage:
  * <Spinner size="medium" color="primary" />
@@ -20,7 +22,8 @@ const Spinner = ({
   size = 'medium', 
   color = 'primary',
   className = '',
-  ariaLabel = 'Loading...'
+  ariaLabel = 'Loading...',
+  announceToScreenReader = true
 }) => {
   const { shouldAnimate, variants } = useAnimation();
 
@@ -54,13 +57,24 @@ const Spinner = ({
   };
 
   return (
-    <motion.div
-      className={`rounded-full ${sizes[size]} ${colors[color]} ${className}`}
-      variants={spinnerVariants}
-      animate="animate"
-      role="status"
-      aria-label={ariaLabel}
-    />
+    <>
+      {/* Announce loading to screen readers */}
+      {announceToScreenReader && (
+        <AriaLiveRegion 
+          message={ariaLabel}
+          politeness="polite"
+          role="status"
+        />
+      )}
+      
+      <motion.div
+        className={`rounded-full ${sizes[size]} ${colors[color]} ${className}`}
+        variants={spinnerVariants}
+        animate="animate"
+        role="status"
+        aria-label={ariaLabel}
+      />
+    </>
   );
 };
 

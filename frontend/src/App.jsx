@@ -7,6 +7,7 @@ import {
 } from "./components/LoadingStates";
 import ServiceWorkerManager from "./components/ServiceWorkerManager";
 import OfflineQueueStatus from "./components/OfflineQueueStatus";
+import { StructuredData } from "./components/SEO";
 
 /**
  * المكون الرئيسي للتطبيق - Application Entry Point
@@ -33,6 +34,25 @@ export default function App() {
     restart
   } = useAppBootstrap();
 
+  // Organization schema data for Careerak
+  const organizationData = {
+    name: 'Careerak',
+    url: 'https://careerak.com',
+    logo: 'https://careerak.com/logo.jpg',
+    description: 'Regional platform specialized in Human Resources, Employment, Training Courses, and Career Development across Arab countries.',
+    contactPoint: {
+      telephone: '+966-XX-XXX-XXXX',
+      contactType: 'Customer Service',
+      email: 'careerak.hr@gmail.com',
+      availableLanguage: ['Arabic', 'English', 'French']
+    },
+    sameAs: [
+      'https://www.facebook.com/careerak',
+      'https://www.twitter.com/careerak',
+      'https://www.linkedin.com/company/careerak'
+    ]
+  };
+
   // تخطي شاشة التحميل - عرض التطبيق مباشرة
   // حالة الخطأ
   if (error) {
@@ -48,6 +68,7 @@ export default function App() {
   // عرض التطبيق مباشرة (حتى أثناء التحميل)
   return (
     <>
+      <StructuredData type="Organization" data={organizationData} />
       <ApplicationShell />
       <ServiceWorkerManager />
       <OfflineQueueStatus />

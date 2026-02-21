@@ -141,7 +141,7 @@ const AdminPagesNavigator = () => {
   };
 
   return (
-    <div className="admin-pages-navigator" role="main">
+    <main id="main-content" tabIndex="-1" className="admin-pages-navigator">
       {/* الهيدر */}
       <header className="apn-header">
         <button onClick={() => navigate('/admin-dashboard')} className="apn-back-btn">
@@ -198,7 +198,7 @@ const AdminPagesNavigator = () => {
           <div key={page.id} className="apn-page-card">
             <div className="apn-page-icon">{page.icon}</div>
             <div className="apn-page-info">
-              <h3 className="apn-page-name">{getPageName(page)}</h3>
+              <h2 className="apn-page-name">{getPageName(page)}</h2>
               <p className="apn-page-path">{page.path}</p>
             </div>
             <button
@@ -221,7 +221,7 @@ const AdminPagesNavigator = () => {
           </p>
         </div>
       )}
-    </div>
+    </main>
   );
 };
 

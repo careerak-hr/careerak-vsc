@@ -150,7 +150,6 @@ const ServiceWorkerManager = () => {
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 10000,
-          maxWidth: '90%',
           width: '100%',
           maxWidth: '500px',
         }}

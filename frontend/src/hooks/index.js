@@ -9,3 +9,4 @@ export { default as useKeyboardNavigation } from './useKeyboardNavigation';
 export { default as useNavigationGuard } from './useNavigationGuard';
 export { default as usePasswordStrength } from './usePasswordStrength';
 export { default as useTranslate } from './useTranslate';
+export { default as useSEO } from './useSEO';

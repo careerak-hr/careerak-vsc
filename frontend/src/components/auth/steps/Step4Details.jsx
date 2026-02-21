@@ -78,7 +78,7 @@ function Step4Details({
           className="auth-photo-upload-box"
         >
           {profileImage ? (
-            <img src={profileImage} alt="Profile" className="auth-photo-upload-img" />
+            <img src={profileImage} alt="Your profile photo preview" className="auth-photo-upload-img" />
           ) : (
             <span className="auth-photo-upload-placeholder">📷</span>
           )}

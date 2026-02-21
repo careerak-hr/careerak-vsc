@@ -2,31 +2,46 @@
   "ar": {
     "subtitle": "تسجيل الدخول",
     "userPlaceholder": "البريد الإلكتروني أو رقم الهاتف",
+    "userLabel": "البريد الإلكتروني أو رقم الهاتف",
     "passPlaceholder": "كلمة المرور",
+    "passLabel": "كلمة المرور",
     "loginBtn": "دخول",
     "noAccount": "ليس لديك حساب؟",
     "createAccount": "أنشئ حساباً الآن",
     "error": "فشل الدخول، تحقق من البيانات",
-    "rememberMe": "تذكرني"
+    "rememberMe": "تذكرني",
+    "loginCredentials": "بيانات تسجيل الدخول",
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور"
   },
   "en": {
     "subtitle": "Login",
     "userPlaceholder": "Email or Phone Number",
+    "userLabel": "Email or Phone Number",
     "passPlaceholder": "Password",
+    "passLabel": "Password",
     "loginBtn": "Login",
     "noAccount": "Don't have an account?",
     "createAccount": "Create account now",
     "error": "Login failed, check your credentials",
-    "rememberMe": "Remember me"
+    "rememberMe": "Remember me",
+    "loginCredentials": "Login Credentials",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "fr": {
     "subtitle": "Connexion",
     "userPlaceholder": "E-mail ou numéro de téléphone",
+    "userLabel": "E-mail ou numéro de téléphone",
     "passPlaceholder": "Mot de passe",
+    "passLabel": "Mot de passe",
     "loginBtn": "Se connecter",
     "noAccount": "Vous n'avez pas de compte ?",
     "createAccount": "Créer un compte maintenant",
     "error": "Échec de la connexion, vérifiez vos identifiants",
-    "rememberMe": "Se souvenir de moi"
+    "rememberMe": "Se souvenir de moi",
+    "loginCredentials": "Identifiants de connexion",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe"
   }
 }

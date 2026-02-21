@@ -90,10 +90,10 @@
   --text-muted: #A39A91;           /* بيج باهت - Muted text */
   --text-inverse: #1A2332;         /* كحلي غامق - Text on light backgrounds */
   
-  /* Accent Colors (same as light mode) */
-  --accent-primary: #D48161;       /* نحاسي - Primary accent */
-  --accent-secondary: #E09A7A;     /* نحاسي أفتح - Secondary accent */
-  --accent-hover: #C26F50;         /* نحاسي أغمق - Hover state */
+  /* Accent Colors (adjusted for better contrast in dark mode) */
+  --accent-primary: #E09A7A;       /* نحاسي أفتح - Primary accent (improved contrast) */
+  --accent-secondary: #EAA88A;     /* نحاسي أفتح جداً - Secondary accent */
+  --accent-hover: #D48161;         /* نحاسي - Hover state */
   
   /* Border Colors */
   --border-primary: #D4816180;     /* نحاسي باهت - Primary borders (CONSTANT) */

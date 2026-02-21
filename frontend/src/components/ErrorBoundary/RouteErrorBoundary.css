@@ -1,0 +1,328 @@
+/**
+ * RouteErrorBoundary Styles
+ * Full-page error boundary styling with responsive design
+ * 
+ * Design Standards:
+ * - Primary: #304B60 (كحلي)
+ * - Secondary: #E3DAD1 (بيج)
+ * - Accent: #D48161 (نحاسي)
+ * - Supports RTL/LTR
+ * - Responsive (320px - 2560px)
+ */
+
+/* Container - Full viewport coverage */
+.route-error-boundary-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #E3DAD1 0%, #f5f0ea 100%);
+  padding: 1rem;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+/* Error Card */
+.route-error-boundary-card {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 3rem 2rem;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(48, 75, 96, 0.15);
+  text-align: center;
+  border: 4px solid #304B60;
+}
+
+/* Error Icon */
+.route-error-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  width: 80px;
+  height: 80px;
+  color: #D48161;
+}
+
+/* Error Title */
+.route-error-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 1rem 0;
+  line-height: 1.3;
+}
+
+/* Error Description */
+.route-error-description {
+  font-size: 1.125rem;
+  color: #666;
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+/* Action Buttons Container */
+.route-error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* Button Base Styles */
+.route-error-btn {
+  padding: 0.875rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 140px;
+  font-family: inherit;
+}
+
+/* Primary Button (Retry) */
+.route-error-btn-primary {
+  background-color: #304B60;
+  color: white;
+}
+
+.route-error-btn-primary:hover {
+  background-color: #243a4d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.route-error-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button (Go Home) */
+.route-error-btn-secondary {
+  background-color: #D48161;
+  color: white;
+}
+
+.route-error-btn-secondary:hover {
+  background-color: #c06f52;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.route-error-btn-secondary:active {
+  transform: translateY(0);
+}
+
+/* Focus Indicators for Accessibility */
+.route-error-btn:focus {
+  outline: 2px solid #304B60;
+  outline-offset: 2px;
+}
+
+/* Error Details (Development Only) */
+.route-error-details {
+  margin-top: 2rem;
+  text-align: left;
+  border-top: 2px solid #E3DAD1;
+  padding-top: 1.5rem;
+}
+
+.route-error-details-summary {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #304B60;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+.route-error-details-summary:hover {
+  background-color: #f5f0ea;
+}
+
+.route-error-details-summary:focus {
+  outline: 2px solid #304B60;
+  outline-offset: 2px;
+}
+
+.route-error-details-content {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.route-error-detail-item {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.route-error-detail-item strong {
+  color: #304B60;
+  font-weight: 600;
+}
+
+.route-error-detail-item span {
+  color: #666;
+  word-break: break-word;
+}
+
+.route-error-stack {
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Responsive Design */
+
+/* Mobile Phones (320px - 639px) */
+@media (max-width: 639px) {
+  .route-error-boundary-card {
+    padding: 2rem 1.5rem;
+    border-width: 3px;
+  }
+
+  .route-error-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1.5rem;
+  }
+
+  .route-error-icon svg {
+    width: 60px;
+    height: 60px;
+  }
+
+  .route-error-title {
+    font-size: 1.5rem;
+  }
+
+  .route-error-description {
+    font-size: 1rem;
+  }
+
+  .route-error-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .route-error-btn {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .route-error-details-content {
+    font-size: 0.8125rem;
+  }
+
+  .route-error-stack {
+    font-size: 0.6875rem;
+  }
+}
+
+/* Tablets (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .route-error-boundary-card {
+    padding: 2.5rem 2rem;
+  }
+
+  .route-error-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .route-error-icon svg {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .route-error-details {
+  text-align: right;
+}
+
+[dir="rtl"] .route-error-detail-item {
+  direction: rtl;
+}
+
+/* Dark Mode Support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  .route-error-boundary-container {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  }
+
+  .route-error-boundary-card {
+    background: #2d2d2d;
+    border-color: #D48161;
+  }
+
+  .route-error-title {
+    color: #e0e0e0;
+  }
+
+  .route-error-description {
+    color: #b0b0b0;
+  }
+
+  .route-error-details-content {
+    background-color: #1a1a1a;
+  }
+
+  .route-error-detail-item strong {
+    color: #D48161;
+  }
+
+  .route-error-detail-item span {
+    color: #b0b0b0;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .route-error-btn {
+    transition: none;
+  }
+
+  .route-error-btn:hover {
+    transform: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .route-error-boundary-container {
+    position: static;
+    background: white;
+  }
+
+  .route-error-boundary-card {
+    box-shadow: none;
+    border: 2px solid #304B60;
+  }
+
+  .route-error-actions {
+    display: none;
+  }
+}

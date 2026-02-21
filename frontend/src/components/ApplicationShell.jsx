@@ -8,8 +8,19 @@ import GlobalFontEnforcer from "./GlobalFontEnforcer";
 import AppRoutes from "./AppRoutes";
 import AppAudioPlayer from "./AppAudioPlayer";
 import ErrorBoundary from "./ErrorBoundary";
+import RouteErrorBoundary from "./ErrorBoundary/RouteErrorBoundary";
 import BackButtonHandler from "./BackButtonHandler";
 import OfflineIndicator from "./OfflineIndicator";
+import SkipLink from "./Accessibility/SkipLink";
+import { useApp } from "../context/AppContext";
+
+/**
+ * SkipLinkWrapper - Wraps SkipLink with language context
+ */
+const SkipLinkWrapper = () => {
+  const { language } = useApp();
+  return <SkipLink targetId="main-content" language={language} />;
+};
 
 const ApplicationShell = () => {
   return (
@@ -19,16 +30,19 @@ const ApplicationShell = () => {
           <AppProvider>
             <GlobalFontEnforcer />
             <OfflineIndicator />
-            <Router
-              future={{
-                v7_startTransition: true,
-                v7_relativeSplatPath: true
-              }}
-            >
-              <BackButtonHandler />
-              <AppAudioPlayer />
-              <AppRoutes />
-            </Router>
+            <SkipLinkWrapper />
+            <RouteErrorBoundary>
+              <Router
+                future={{
+                  v7_startTransition: true,
+                  v7_relativeSplatPath: true
+                }}
+              >
+                <BackButtonHandler />
+                <AppAudioPlayer />
+                <AppRoutes />
+              </Router>
+            </RouteErrorBoundary>
           </AppProvider>
         </OfflineProvider>
       </ThemeProvider>

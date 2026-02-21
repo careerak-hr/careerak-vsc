@@ -1,0 +1,210 @@
+{
+  "timestamp": "2026-02-20T19:58:36.152Z",
+  "wcagLevel": "AA",
+  "results": {
+    "critical": {
+      "passed": [
+        {
+          "name": "Primary text on Secondary bg (Light)",
+          "text": "#304B60",
+          "bg": "#E3DAD1",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "6.61",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AA"
+        },
+        {
+          "name": "Primary text on White bg",
+          "text": "#304B60",
+          "bg": "#FFFFFF",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "9.13",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AAA"
+        },
+        {
+          "name": "White text on Primary bg",
+          "text": "#FFFFFF",
+          "bg": "#304B60",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "9.13",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AAA"
+        },
+        {
+          "name": "Dark text on Dark bg (Dark)",
+          "text": "#e0e0e0",
+          "bg": "#1a1a1a",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "13.18",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AAA"
+        },
+        {
+          "name": "Dark text on Dark surface",
+          "text": "#e0e0e0",
+          "bg": "#2d2d2d",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "10.43",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AAA"
+        }
+      ],
+      "failed": []
+    },
+    "important": {
+      "passed": [
+        {
+          "name": "Secondary text on Primary bg",
+          "text": "#E3DAD1",
+          "bg": "#304B60",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "6.61",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AA"
+        },
+        {
+          "name": "White text on Danger bg",
+          "text": "#FFFFFF",
+          "bg": "#D32F2F",
+          "isLarge": false,
+          "passes": true,
+          "ratio": "4.98",
+          "required": 4.5,
+          "level": "AA",
+          "grade": "AA"
+        }
+      ],
+      "failed": [
+        {
+          "name": "White text on Success bg",
+          "text": "#FFFFFF",
+          "bg": "#388E3C",
+          "isLarge": false,
+          "passes": false,
+          "ratio": "4.12",
+          "required": 4.5,
+          "level": "Fail",
+          "grade": "Fail"
+        },
+        {
+          "name": "Danger text on Secondary bg",
+          "text": "#D32F2F",
+          "bg": "#E3DAD1",
+          "isLarge": false,
+          "passes": false,
+          "ratio": "3.61",
+          "required": 4.5,
+          "level": "Fail",
+          "grade": "Fail"
+        },
+        {
+          "name": "Success text on Secondary bg",
+          "text": "#388E3C",
+          "bg": "#E3DAD1",
+          "isLarge": false,
+          "passes": false,
+          "ratio": "2.98",
+          "required": 4.5,
+          "level": "Fail",
+          "grade": "Fail"
+        }
+      ]
+    },
+    "largeText": {
+      "passed": [
+        {
+          "name": "Large Primary text on Secondary bg",
+          "text": "#304B60",
+          "bg": "#E3DAD1",
+          "isLarge": true,
+          "passes": true,
+          "ratio": "6.61",
+          "required": 3,
+          "level": "AA",
+          "grade": "AA"
+        },
+        {
+          "name": "Large Dark text on Dark bg",
+          "text": "#e0e0e0",
+          "bg": "#1a1a1a",
+          "isLarge": true,
+          "passes": true,
+          "ratio": "13.18",
+          "required": 3,
+          "level": "AA",
+          "grade": "AAA"
+        }
+      ],
+      "failed": [
+        {
+          "name": "Large Accent text on Secondary bg",
+          "text": "#D48161",
+          "bg": "#E3DAD1",
+          "isLarge": true,
+          "passes": false,
+          "ratio": "2.14",
+          "required": 3,
+          "level": "Fail",
+          "grade": "Fail"
+        }
+      ]
+    },
+    "warnings": {
+      "passed": [],
+      "failed": [
+        {
+          "name": "Accent text on Secondary bg (UI only)",
+          "text": "#D48161",
+          "bg": "#E3DAD1",
+          "isLarge": false,
+          "passes": false,
+          "ratio": "2.14",
+          "required": 4.5,
+          "level": "Fail",
+          "grade": "Fail"
+        },
+        {
+          "name": "Accent text on White bg (UI only)",
+          "text": "#D48161",
+          "bg": "#FFFFFF",
+          "isLarge": false,
+          "passes": false,
+          "ratio": "2.95",
+          "required": 4.5,
+          "level": "Fail",
+          "grade": "Fail"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "critical": {
+      "total": 5,
+      "passed": 5,
+      "failed": 0
+    },
+    "important": {
+      "total": 5,
+      "passed": 2,
+      "failed": 3
+    },
+    "largeText": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1
+    }
+  }
+}

@@ -1,0 +1,105 @@
+/* Breadcrumbs Component Styles */
+
+.breadcrumbs-container {
+  margin: 1rem 0;
+  padding: 0.75rem 1rem;
+  background: rgba(227, 218, 209, 0.3);
+  border-radius: 8px;
+}
+
+.dark .breadcrumbs-container {
+  background: rgba(45, 45, 45, 0.5);
+}
+
+.breadcrumbs-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.breadcrumb-link {
+  color: #304B60;
+  text-decoration: none;
+  transition: all 200ms ease-in-out;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.dark .breadcrumb-link {
+  color: #e0e0e0;
+}
+
+.breadcrumb-link:hover,
+.breadcrumb-link:focus {
+  color: #D48161;
+  background: rgba(212, 129, 97, 0.1);
+  text-decoration: underline;
+}
+
+.dark .breadcrumb-link:hover,
+.dark .breadcrumb-link:focus {
+  background: rgba(212, 129, 97, 0.2);
+}
+
+.breadcrumb-separator {
+  color: #999;
+  font-weight: 300;
+  user-select: none;
+}
+
+.dark .breadcrumb-separator {
+  color: #666;
+}
+
+.breadcrumb-current {
+  color: #D48161;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+}
+
+.dark .breadcrumb-current {
+  color: #D48161;
+}
+
+/* RTL Support */
+[dir="rtl"] .breadcrumbs-list {
+  direction: rtl;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .breadcrumbs-container {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .breadcrumb-item {
+    font-size: 0.8125rem;
+  }
+
+  .breadcrumb-link,
+  .breadcrumb-current {
+    padding: 0.125rem 0.375rem;
+  }
+}
+
+/* Accessibility */
+.breadcrumb-link:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Structured Data Support */
+.breadcrumbs-container[itemscope] {
+  /* Schema.org BreadcrumbList markup support */
+}

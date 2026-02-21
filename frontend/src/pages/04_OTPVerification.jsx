@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
 import { useApp } from "../context/AppContext";
 import './04_OTPVerification.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 const OTPVerification = () => {
   const { language, login: performLogin, user: tempUser, startBgMusic } =
     useApp();
+  const seo = useSEO('otp', {});
 
   // تشغيل الموسيقى عند فتح الصفحة (اختياري)
   useEffect(() => {
@@ -12,14 +15,15 @@ const OTPVerification = () => {
   }, [startBgMusic]);
 
   return (
-    <div role="main">
-      <main>
+    <>
+      <SEOHead {...seo} />
+      <main id="main-content" tabIndex="-1">
       {/* عنوان الصفحة حسب اللغة */}
-      <h2>
+      <h1>
         {language === "ar"
-          ? "صفحة التحقق OTP"
-          : "OTP Verification Page"}
-      </h2>
+          ? "التحقق من الرمز"
+          : "OTP Verification"}
+      </h1>
 
       {/* ترحيب بالمستخدم إذا موجود */}
       <p>Welcome {tempUser?.name}</p>
@@ -28,8 +32,8 @@ const OTPVerification = () => {
       <button onClick={() => performLogin()}>
         Confirm OTP
       </button>
-      </main>
-    </div>
+    </main>
+    </>
   );
 };
 

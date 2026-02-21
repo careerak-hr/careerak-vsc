@@ -3,9 +3,12 @@ import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import notificationManager from '../services/notificationManager';
 import './14_SettingsPage.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 const SettingsPage = () => {
     const { language, saveLanguage, logout, startBgMusic } = useApp();
+    const seo = useSEO('settings', {});
     const { isDark, themeMode, toggleTheme, setTheme } = useTheme();
     
     // Notification state
@@ -81,43 +84,48 @@ const SettingsPage = () => {
     const permissionStatus = getPermissionStatusDisplay();
 
     return (
-        <div className="settings-page-container dark:bg-primary transition-colors duration-300" role="main">
-            <main className="settings-content dark:text-primary transition-colors duration-300">
-                <h1 className="settings-title dark:text-primary transition-colors duration-300">Settings Page</h1>
+        <>
+            <SEOHead {...seo} />
+            <main id="main-content" tabIndex="-1" className="settings-page-container dark:bg-primary transition-colors duration-300">
+            <div className="settings-content dark:text-primary transition-colors duration-300">
+                <h1 className="settings-title dark:text-primary transition-colors duration-300">Settings</h1>
                 
                 {/* Language Settings */}
-                <div className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
-                    <h2 className="settings-section-title dark:text-primary transition-colors duration-300">Language</h2>
+                <fieldset className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
+                    <legend className="settings-section-title dark:text-primary transition-colors duration-300">Language</legend>
                     <p className="settings-section-text dark:text-secondary transition-colors duration-300">Current Language: {language}</p>
-                    <div className="settings-buttons">
+                    <div className="settings-buttons" role="group" aria-labelledby="language-legend">
                         <button 
                             onClick={() => handleLanguageChange('ar')}
                             className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+                            aria-pressed={language === 'ar'}
                         >
                             العربية
                         </button>
                         <button 
                             onClick={() => handleLanguageChange('en')}
                             className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+                            aria-pressed={language === 'en'}
                         >
                             English
                         </button>
                         <button 
                             onClick={() => handleLanguageChange('fr')}
                             className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+                            aria-pressed={language === 'fr'}
                         >
                             Français
                         </button>
                     </div>
-                </div>
+                </fieldset>
 
                 {/* Dark Mode Settings */}
-                <div className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
-                    <h2 className="settings-section-title dark:text-primary transition-colors duration-300">Theme</h2>
+                <fieldset className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
+                    <legend className="settings-section-title dark:text-primary transition-colors duration-300">Theme</legend>
                     <p className="settings-section-text dark:text-secondary transition-colors duration-300">
                         Current Mode: {isDark ? 'Dark' : 'Light'} ({themeMode})
                     </p>
-                    <div className="settings-buttons">
+                    <div className="settings-buttons" role="group" aria-labelledby="theme-legend">
                         <button 
                             onClick={() => setTheme('light')}
                             className={`settings-btn dark:bg-accent dark:text-inverse transition-all duration-300 ${themeMode === 'light' ? 'settings-btn-active' : ''}`}
@@ -146,16 +154,17 @@ const SettingsPage = () => {
                     <button 
                         onClick={toggleTheme}
                         className="settings-btn-toggle dark:bg-accent dark:text-inverse transition-all duration-300"
+                        aria-label="Toggle between light and dark theme"
                     >
                         Toggle Theme
                     </button>
-                </div>
+                </fieldset>
 
                 {/* Notification Settings */}
-                <div className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
-                    <h2 className="settings-section-title dark:text-primary transition-colors duration-300">
+                <fieldset className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
+                    <legend className="settings-section-title dark:text-primary transition-colors duration-300">
                         🔔 Notifications
-                    </h2>
+                    </legend>
                     
                     {/* Browser Support Check */}
                     {!('Notification' in window) ? (
@@ -246,12 +255,12 @@ const SettingsPage = () => {
                                 backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
                                 borderRadius: '8px'
                             }}>
-                                <h4 className="settings-section-text dark:text-secondary transition-colors duration-300" style={{ 
+                                <h3 className="settings-section-text dark:text-secondary transition-colors duration-300" style={{ 
                                     marginBottom: '8px',
                                     fontWeight: 'bold'
                                 }}>
                                     ℹ️ About Notifications
-                                </h4>
+                                </h3>
                                 <ul className="settings-section-text dark:text-secondary transition-colors duration-300" style={{ 
                                     paddingLeft: '20px',
                                     margin: 0,
@@ -266,19 +275,21 @@ const SettingsPage = () => {
                             </div>
                         </>
                     )}
-                </div>
+                </fieldset>
 
                 {/* Logout */}
                 <div className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
                     <button 
                         onClick={handleLogout}
                         className="settings-btn-logout dark:bg-error dark:text-inverse transition-all duration-300"
+                        aria-label="Logout from your account"
                     >
                         Logout
                     </button>
                 </div>
-            </main>
-        </div>
+            </div>
+        </main>
+        </>
     );
 }
 

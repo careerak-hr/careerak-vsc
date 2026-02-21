@@ -88,7 +88,7 @@ const NotificationList = ({ notifications = [], onNotificationClick, language = 
                   'Notification list'}
     >
       {notifications.map((notification) => (
-        <motion.div
+        <motion.button
           key={notification.id}
           className={`notification-item ${getPriorityColor(notification.priority)} ${
             !notification.read ? 'notification-unread' : ''
@@ -96,13 +96,6 @@ const NotificationList = ({ notifications = [], onNotificationClick, language = 
           variants={itemVariants}
           onClick={() => onNotificationClick && onNotificationClick(notification)}
           role="listitem"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              onNotificationClick && onNotificationClick(notification);
-            }
-          }}
           aria-label={`${notification.title}: ${notification.message}`}
         >
           {/* Unread indicator */}
@@ -146,7 +139,7 @@ const NotificationList = ({ notifications = [], onNotificationClick, language = 
               </button>
             )}
           </div>
-        </motion.div>
+        </motion.button>
       ))}
     </motion.div>
   );

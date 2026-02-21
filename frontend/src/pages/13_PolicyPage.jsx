@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import './13_PolicyPage.css';
+import { SEOHead } from '../components/SEO';
+import { useSEO } from '../hooks';
 
 const PolicyPage = ({ isModal }) => {
     const { startBgMusic, language } = useApp();
+    const seo = useSEO('policy');
 
     useEffect(() => {
         if (!isModal) {
@@ -208,8 +211,8 @@ const PolicyPage = ({ isModal }) => {
             dir={isRTL ? 'rtl' : 'ltr'} 
             style={{ fontFamily }}
             className={`${isModal ? '' : 'min-h-screen bg-[#E3DAD1] p-6'}`}
-            role="main"
         >
+            {!isModal && <SEOHead {...seo} />}
             {!isModal && (
                 <header className="max-w-4xl mx-auto">
                     <h1 className="text-4xl font-black text-[#304B60] mb-6" style={{ fontFamily }}>
@@ -218,7 +221,8 @@ const PolicyPage = ({ isModal }) => {
                 </header>
             )}
             
-            <main className={`${isModal ? '' : 'max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg'}`}>
+    return (
+        <main id="main-content" tabIndex="-1" className={`${isModal ? '' : 'max-w-4xl mx-auto bg-white rounded-3xl p-8 shadow-lg'}`}>
                 <p className="text-xl font-black text-[#304B60] mb-4 leading-relaxed" style={{ fontFamily }}>
                     {currentContent.welcome}
                 </p>

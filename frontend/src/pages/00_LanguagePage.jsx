@@ -9,10 +9,13 @@ import LanguageConfirmModal from "../components/modals/LanguageConfirmModal";
 import AudioSettingsModal from "../components/modals/AudioSettingsModal";
 import NotificationSettingsModal from "../components/modals/NotificationSettingsModal";
 import languagePageTranslations from "../data/languagePage.json";
+import { SEOHead } from "../components/SEO";
+import { useSEO } from "../hooks";
 
 export default function LanguagePage() {
-  const { saveLanguage } = useApp(); // Corrected hook
+  const { saveLanguage, language } = useApp(); // Corrected hook
   const navigate = useNavigate();
+  const seo = useSEO('language', {});
 
   const [selectedLang, setSelectedLang] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -101,15 +104,17 @@ export default function LanguagePage() {
   }
 
   return (
-    <div className="lang-page-container dark:bg-primary transition-colors duration-300" role="main">
-      <main className="lang-page-content dark:text-primary transition-colors duration-300">
+    <>
+      <SEOHead {...seo} />
+      <main id="main-content" tabIndex="-1" className="lang-page-container dark:bg-primary transition-colors duration-300">
+      <div className="lang-page-content dark:text-primary transition-colors duration-300">
         <div className="lang-page-logo-container">
           {/* ✅ الشفافية خلف اللوجو مباشرة */}
           <div className="lang-page-glow-effect">
             <div className="lang-page-glow-dot"></div>
           </div>
           <div className="lang-page-logo">
-            <img src="/logo.jpg" alt="Logo" className="lang-page-logo-img" />
+            <img src="/logo.jpg" alt="Careerak logo - Professional HR and career development platform" className="lang-page-logo-img" />
           </div>
         </div>
 
@@ -149,7 +154,7 @@ export default function LanguagePage() {
             Français
           </button>
         </div>
-      </main>
+      </div>
 
       {isConfirmModalOpen && (
         <LanguageConfirmModal
@@ -181,6 +186,7 @@ export default function LanguagePage() {
           t={t}
         />
       )}
-    </div>
+    </main>
+    </>
   );
 }

@@ -48,7 +48,7 @@ const Navbar = () => {
                 <div className="navbar-logo-container">
                     <img 
                         src="/logo.png" 
-                        alt="Careerak" 
+                        alt="Careerak - Professional HR and recruitment platform" 
                         className="navbar-logo dark:border-accent transition-colors duration-300"
                         onError={(e) => {
                             e.target.style.display = 'none';

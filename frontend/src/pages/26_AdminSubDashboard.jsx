@@ -14,13 +14,15 @@ const AdminSubDashboard = () => {
 
     // ... (rest of the component remains the same)
     return (
-        <div role="main">
-            <main>
-            <h1>Admin Sub Dashboard Page</h1>
-            <p>Language: {language}</p>
-            <p>Admin: {user?.name || 'Admin'}</p>
-            </main>
-        </div>
+        <main id="main-content" tabIndex="-1">
+            <h1>Admin Sub Dashboard</h1>
+            
+            <section aria-labelledby="admin-info">
+                <h2 id="admin-info">Administrator Information</h2>
+                <p>Language: {language}</p>
+                <p>Admin: {user?.name || 'Admin'}</p>
+            </section>
+        </main>
     );
 }
 

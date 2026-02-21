@@ -42,7 +42,7 @@ const AdminCodeEditor = () => {
   };
 
   return (
-    <div className="admin-code-editor" role="main">
+    <main id="main-content" tabIndex="-1" className="admin-code-editor">
       <div className="ace-header">
         <button onClick={() => navigate('/admin-dashboard')} className="ace-back-btn">
           ← {language === 'ar' ? 'العودة' : 'Back'}
@@ -105,14 +105,14 @@ const AdminCodeEditor = () => {
 
       {/* Info */}
       <div className="ace-info">
-        <h3>{language === 'ar' ? 'ℹ️ ملاحظة' : 'ℹ️ Note'}</h3>
+        <h2>{language === 'ar' ? 'ℹ️ ملاحظة' : 'ℹ️ Note'}</h2>
         <p>
           {language === 'ar' 
             ? 'هذا محرر أكواد تجريبي. في بيئة الإنتاج، يجب استخدام محرر احترافي مثل Monaco Editor أو CodeMirror مع نظام مصادقة قوي وصلاحيات محددة.'
             : 'This is a demo code editor. In production, use a professional editor like Monaco Editor or CodeMirror with strong authentication and permissions.'}
         </p>
       </div>
-    </div>
+    </main>
   );
 };
 
