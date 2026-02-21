@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { logError } from '../../utils/errorTracking';
+import NetworkError from './NetworkError';
+import errorBoundaryTranslations from '../../data/errorBoundaryTranslations.json';
 import './RouteErrorBoundary.css';
 
 /**
@@ -101,7 +103,24 @@ class RouteErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      // FR-ERR-6: Full-page error UI
+      // Check if this is a network error
+      if (this.state.error?.networkError || this.state.error?.isNetworkError) {
+        return (
+          <div className="route-error-boundary-container">
+            <NetworkError
+              error={this.state.error.networkError || this.state.error}
+              onRetry={this.handleRetry}
+              onDismiss={this.handleGoHome}
+              size="large"
+              showDetails={process.env.NODE_ENV === 'development'}
+              autoRetryOnline={true}
+              maxAutoRetries={3}
+            />
+          </div>
+        );
+      }
+
+      // FR-ERR-6: Full-page error UI for non-network errors
       return (
         <RouteErrorUI
           error={this.state.error}
@@ -121,43 +140,11 @@ class RouteErrorBoundary extends React.Component {
 /**
  * RouteErrorUI - Full-page error display component
  * FR-ERR-2: User-friendly error messages in multiple languages
+ * Task 7.5.4: Use i18n for error messages
  */
 const RouteErrorUI = ({ error, errorInfo, errorTimestamp, onRetry, onGoHome, language }) => {
-  // FR-ERR-2: Multi-language error messages
-  const errorMessages = {
-    ar: {
-      title: 'عذراً، حدث خطأ غير متوقع',
-      description: 'نعتذر عن هذا الإزعاج. حدث خطأ أثناء تحميل الصفحة.',
-      retryButton: 'إعادة المحاولة',
-      homeButton: 'العودة للرئيسية',
-      detailsTitle: 'تفاصيل الخطأ (للمطورين)',
-      errorLabel: 'الخطأ:',
-      timestampLabel: 'الوقت:',
-      stackLabel: 'التتبع:',
-    },
-    en: {
-      title: 'Sorry, an unexpected error occurred',
-      description: 'We apologize for the inconvenience. An error occurred while loading the page.',
-      retryButton: 'Retry',
-      homeButton: 'Go Home',
-      detailsTitle: 'Error Details (for developers)',
-      errorLabel: 'Error:',
-      timestampLabel: 'Timestamp:',
-      stackLabel: 'Stack:',
-    },
-    fr: {
-      title: 'Désolé, une erreur inattendue s\'est produite',
-      description: 'Nous nous excusons pour le désagrément. Une erreur s\'est produite lors du chargement de la page.',
-      retryButton: 'Réessayer',
-      homeButton: 'Retour à l\'accueil',
-      detailsTitle: 'Détails de l\'erreur (pour les développeurs)',
-      errorLabel: 'Erreur:',
-      timestampLabel: 'Horodatage:',
-      stackLabel: 'Trace:',
-    },
-  };
-
-  const messages = errorMessages[language] || errorMessages.ar;
+  // Task 7.5.4: Use i18n translation file instead of hardcoded messages
+  const messages = errorBoundaryTranslations[language]?.routeError || errorBoundaryTranslations.ar.routeError;
 
   // Animation variants for error display
   const containerVariants = {

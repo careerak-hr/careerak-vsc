@@ -48,6 +48,10 @@ const AdminSystemControl = React.lazy(() => import('../pages/28_AdminSystemContr
 const AdminDatabaseManager = React.lazy(() => import('../pages/29_AdminDatabaseManager'));
 const AdminCodeEditor = React.lazy(() => import('../pages/30_AdminCodeEditor'));
 const NotificationsPage = React.lazy(() => import('../pages/NotificationsPage'));
+const NotFoundPage = React.lazy(() => import('../pages/NotFoundPage'));
+const ServerErrorPage = React.lazy(() => import('../pages/ServerErrorPage'));
+const ErrorBoundaryTest = React.lazy(() => import('../test/ErrorBoundaryTest'));
+const ErrorRecoveryVerification = React.lazy(() => import('../test/ErrorRecoveryVerification'));
 
 /**
  * Main Application Routes Component with Route Protection
@@ -383,8 +387,43 @@ function AppRoutes() {
             </ProtectedRoute>
           } />
           
-          {/* Fallback Route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Fallback Route - 404 Page */}
+          <Route path="*" element={
+            <SuspenseWrapper>
+              <PageTransition variant="fadeIn">
+                <NotFoundPage />
+              </PageTransition>
+            </SuspenseWrapper>
+          } />
+          
+          {/* Server Error Route - 500 Page */}
+          <Route path="/500" element={
+            <SuspenseWrapper>
+              <PageTransition variant="fadeIn">
+                <ServerErrorPage />
+              </PageTransition>
+            </SuspenseWrapper>
+          } />
+          
+          {/* Error Boundary Test Route - Development Only */}
+          {process.env.NODE_ENV === 'development' && (
+            <>
+              <Route path="/error-boundary-test" element={
+                <SuspenseWrapper>
+                  <PageTransition variant="fadeIn">
+                    <ErrorBoundaryTest />
+                  </PageTransition>
+                </SuspenseWrapper>
+              } />
+              <Route path="/test/error-recovery" element={
+                <SuspenseWrapper>
+                  <PageTransition variant="fadeIn">
+                    <ErrorRecoveryVerification />
+                  </PageTransition>
+                </SuspenseWrapper>
+              } />
+            </>
+          )}
         </Routes>
       </AnimatePresence>
       

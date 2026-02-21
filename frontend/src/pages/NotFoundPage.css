@@ -1,0 +1,186 @@
+/* NotFoundPage.css - Custom 404 Page Styles */
+
+.not-found-container {
+  @apply min-h-screen bg-secondary flex items-center justify-center p-4;
+  transition: background-color 300ms ease-in-out;
+}
+
+.not-found-card {
+  @apply bg-secondary rounded-3xl shadow-2xl p-8 md:p-12 max-w-2xl w-full text-center;
+  border: 4px solid #304B60;
+  transition: all 300ms ease-in-out;
+}
+
+.not-found-icon {
+  @apply text-8xl md:text-9xl mb-6;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.not-found-number {
+  @apply text-7xl md:text-9xl font-bold mb-4;
+  color: #D48161;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.not-found-heading {
+  @apply text-3xl md:text-4xl font-bold text-primary mb-4;
+  transition: color 300ms ease-in-out;
+}
+
+.not-found-message {
+  @apply text-lg md:text-xl text-hint mb-8 leading-relaxed;
+  transition: color 300ms ease-in-out;
+}
+
+.not-found-actions {
+  @apply flex flex-col sm:flex-row gap-4 justify-center items-center;
+}
+
+.not-found-btn {
+  @apply w-full sm:w-auto px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300;
+  min-width: 180px;
+  border: 2px solid transparent;
+}
+
+.not-found-btn:hover {
+  @apply transform scale-105;
+}
+
+.not-found-btn:active {
+  @apply transform scale-95;
+}
+
+.not-found-btn:focus {
+  @apply outline-none ring-2 ring-offset-2;
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+.not-found-btn-primary {
+  @apply bg-primary text-secondary;
+}
+
+.not-found-btn-primary:hover {
+  @apply bg-opacity-90;
+  background-color: #243a4d;
+}
+
+.not-found-btn-secondary {
+  @apply bg-accent text-secondary;
+  border-color: #D48161;
+}
+
+.not-found-btn-secondary:hover {
+  @apply bg-opacity-90;
+  background-color: #c67451;
+}
+
+/* Dark Mode Support */
+.dark .not-found-container {
+  @apply bg-[#1a1a1a];
+}
+
+.dark .not-found-card {
+  @apply bg-[#2d2d2d];
+  border-color: #D48161;
+}
+
+.dark .not-found-heading {
+  @apply text-[#e0e0e0];
+}
+
+.dark .not-found-message {
+  @apply text-[#e0e0e0]/70;
+}
+
+.dark .not-found-btn-primary {
+  @apply bg-[#304B60] text-[#e0e0e0];
+}
+
+.dark .not-found-btn-primary:hover {
+  background-color: #3d5f7a;
+}
+
+.dark .not-found-btn-secondary {
+  @apply bg-[#D48161] text-[#1a1a1a];
+}
+
+.dark .not-found-btn-secondary:hover {
+  background-color: #e09171;
+}
+
+/* RTL Support */
+[dir="rtl"] .not-found-heading,
+[dir="rtl"] .not-found-message {
+  @apply text-right;
+}
+
+[dir="rtl"] .not-found-number {
+  font-family: 'Amiri', serif;
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .not-found-icon {
+    @apply text-7xl mb-4;
+  }
+
+  .not-found-number {
+    @apply text-6xl mb-3;
+  }
+
+  .not-found-heading {
+    @apply text-2xl mb-3;
+  }
+
+  .not-found-message {
+    @apply text-base mb-6;
+  }
+
+  .not-found-card {
+    @apply p-6;
+  }
+
+  .not-found-btn {
+    @apply px-6 py-3 text-base;
+    min-width: 150px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .not-found-icon,
+  .not-found-card,
+  .not-found-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .not-found-card {
+    border-width: 6px;
+  }
+
+  .not-found-btn {
+    border-width: 3px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .not-found-container {
+    @apply bg-white;
+  }
+
+  .not-found-card {
+    @apply shadow-none;
+    border: 2px solid #000;
+  }
+
+  .not-found-actions {
+    @apply hidden;
+  }
+}

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { staleWhileRevalidate } from '../utils/apiCache';
 import { queueRequest, RequestPriority } from '../utils/offlineRequestQueue';
+import { createAxiosErrorHandler } from '../utils/networkErrorHandler';
 
 // تحميل monitoring بشكل آمن
 // مراقب الأداء (تعليق لتجنب تحذير ESLint)
@@ -76,72 +77,13 @@ api.interceptors.response.use(
     
     return response;
   },
-  (error) => {
-    // حساب مدة الطلب حتى لو فشل
-    const duration = error.config?.metadata?.startTime 
-      ? Date.now() - error.config.metadata.startTime 
-      : 0;
-    
-    // تتبع استدعاء API فاشل
-    if (trackApiCall) {
-      trackApiCall(
-        error.config?.method?.toUpperCase() || 'UNKNOWN',
-        error.config?.url || 'unknown',
-        duration,
-        error.response?.status || 0,
-        error.message
-      );
+  createAxiosErrorHandler({
+    language: 'ar', // Default language, can be overridden
+    onError: (networkError) => {
+      // Additional error handling if needed
+      console.log('[API] Network error processed:', networkError.type);
     }
-    
-    // تسجيل الخطأ
-    if (logError) {
-      logError({
-        type: 'API Response Error',
-        message: error.message,
-        status: error.response?.status,
-        url: error.config?.url,
-        method: error.config?.method,
-        timestamp: Date.now()
-      });
-    }
-    
-    // ✅ Queue request if offline (network error)
-    // Only queue POST, PUT, PATCH, DELETE requests
-    const isNetworkError = !error.response && error.message === 'Network Error';
-    const isOffline = !navigator.onLine;
-    const shouldQueue = isNetworkError || isOffline;
-    
-    if (shouldQueue && error.config) {
-      const method = error.config.method?.toUpperCase();
-      const queueableMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
-      
-      if (queueableMethods.includes(method)) {
-        console.log('[API] Queueing failed request for retry when online:', {
-          method,
-          url: error.config.url
-        });
-        
-        // Determine priority based on URL patterns
-        let priority = RequestPriority.MEDIUM;
-        if (error.config.url?.includes('/auth/') || error.config.url?.includes('/login')) {
-          priority = RequestPriority.URGENT;
-        } else if (error.config.url?.includes('/job') || error.config.url?.includes('/application')) {
-          priority = RequestPriority.HIGH;
-        }
-        
-        // Queue the request
-        queueRequest({
-          method: error.config.method,
-          url: error.config.url,
-          data: error.config.data ? JSON.parse(error.config.data) : undefined,
-          headers: error.config.headers,
-          priority
-        });
-      }
-    }
-    
-    return Promise.reject(error);
-  }
+  })
 );
 
 export const discoverBestServer = async () => {
@@ -190,6 +132,43 @@ export const postCached = async (url, data, config = {}) => {
     forceRefresh,
     cacheKey: { method: 'POST', url, data, params: axiosConfig.params }
   });
+};
+
+/**
+ * Update the language for network error messages
+ * 
+ * @param {string} language - Language code ('ar', 'en', 'fr')
+ */
+export const updateApiLanguage = (language) => {
+  // Remove existing response interceptor
+  api.interceptors.response.eject(api.interceptors.response.handlers.length - 1);
+  
+  // Add new response interceptor with updated language
+  api.interceptors.response.use(
+    (response) => {
+      // حساب مدة الطلب
+      const duration = Date.now() - response.config.metadata.startTime;
+      
+      // تتبع استدعاء API ناجح
+      if (trackApiCall) {
+        trackApiCall(
+          response.config.method.toUpperCase(),
+          response.config.url,
+          duration,
+          response.status
+        );
+      }
+      
+      return response;
+    },
+    createAxiosErrorHandler({
+      language,
+      onError: (networkError) => {
+        // Additional error handling if needed
+        console.log('[API] Network error processed:', networkError.type);
+      }
+    })
+  );
 };
 
 export default api;

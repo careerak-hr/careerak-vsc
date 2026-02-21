@@ -120,7 +120,7 @@ export default defineConfig({
   // Esbuild options for JSX in .js files
   esbuild: {
     loader: 'jsx',
-    include: /src\/.*\.jsx?$/,
+    include: /src\/.*\.jsx?$|tests\/.*\.jsx?$/,
   },
 
   // Development server configuration
@@ -367,5 +367,6 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/test/setup.js',
     css: true,
+    include: ['tests/**/*.{test,spec}.{js,jsx}', 'src/**/*.{test,spec}.{js,jsx}'],
   },
 });

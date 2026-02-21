@@ -1,0 +1,527 @@
+/**
+ * NetworkError Component Styles
+ * 
+ * Requirements:
+ * - FR-ERR-9: Display specific network error messages with retry options
+ * - Support for multiple sizes (small, medium, large)
+ * - Multi-language support with proper RTL/LTR layout
+ * - Accessibility-compliant colors and focus indicators
+ * - Responsive design for all screen sizes
+ */
+
+/* Base Network Error Styles */
+.network-error {
+  --error-primary: #dc2626;
+  --error-secondary: #fef2f2;
+  --error-border: #fecaca;
+  --error-text: #991b1b;
+  --warning-primary: #d97706;
+  --warning-secondary: #fffbeb;
+  --warning-border: #fed7aa;
+  --warning-text: #92400e;
+  --info-primary: #2563eb;
+  --info-secondary: #eff6ff;
+  --info-border: #bfdbfe;
+  --info-text: #1e40af;
+  --success-primary: #059669;
+  --success-secondary: #ecfdf5;
+  --success-border: #a7f3d0;
+  --success-text: #065f46;
+  
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--error-border);
+  background-color: var(--error-secondary);
+  color: var(--error-text);
+  font-family: inherit;
+  line-height: 1.5;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* Dark Mode Support */
+.dark .network-error {
+  --error-primary: #ef4444;
+  --error-secondary: #1f1f1f;
+  --error-border: #dc2626;
+  --error-text: #fca5a5;
+  --warning-primary: #f59e0b;
+  --warning-secondary: #1f1f1f;
+  --warning-border: #d97706;
+  --warning-text: #fcd34d;
+  --info-primary: #3b82f6;
+  --info-secondary: #1f1f1f;
+  --info-border: #2563eb;
+  --info-text: #93c5fd;
+  --success-primary: #10b981;
+  --success-secondary: #1f1f1f;
+  --success-border: #059669;
+  --success-text: #6ee7b7;
+}
+
+/* Size Variants */
+.network-error--small {
+  padding: 12px;
+  font-size: 14px;
+  gap: 8px;
+}
+
+.network-error--medium {
+  padding: 16px;
+  font-size: 16px;
+  gap: 12px;
+}
+
+.network-error--large {
+  padding: 20px;
+  font-size: 18px;
+  gap: 16px;
+}
+
+/* Content Container */
+.network-error__content {
+  display: flex;
+  align-items: flex-start;
+  gap: inherit;
+  width: 100%;
+  min-width: 0; /* Allow content to shrink */
+}
+
+/* Error Icon */
+.network-error__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--error-primary);
+  color: white;
+}
+
+.network-error--small .network-error__icon {
+  width: 32px;
+  height: 32px;
+}
+
+.network-error--large .network-error__icon {
+  width: 48px;
+  height: 48px;
+}
+
+.network-error__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.network-error--small .network-error__icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.network-error--large .network-error__icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Message Content */
+.network-error__message {
+  flex: 1;
+  min-width: 0;
+}
+
+.network-error__title {
+  margin: 0 0 8px 0;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--error-text);
+  line-height: 1.3;
+}
+
+.network-error--small .network-error__title {
+  font-size: 1em;
+  margin-bottom: 4px;
+}
+
+.network-error--large .network-error__title {
+  font-size: 1.2em;
+  margin-bottom: 12px;
+}
+
+.network-error__description {
+  margin: 0 0 8px 0;
+  color: var(--error-text);
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.network-error--small .network-error__description {
+  margin-bottom: 6px;
+}
+
+.network-error--large .network-error__description {
+  margin-bottom: 12px;
+}
+
+.network-error__suggestion {
+  margin: 0 0 12px 0;
+  font-size: 0.9em;
+  color: var(--warning-text);
+  background-color: var(--warning-secondary);
+  border: 1px solid var(--warning-border);
+  border-radius: 4px;
+  padding: 8px 12px;
+  line-height: 1.4;
+}
+
+.network-error--small .network-error__suggestion {
+  font-size: 0.85em;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+}
+
+.network-error--large .network-error__suggestion {
+  font-size: 0.95em;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+/* Online Status Indicator */
+.network-error__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.network-error__status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--error-primary);
+  animation: pulse 2s infinite;
+}
+
+.network-error__status.online .network-error__status-indicator {
+  background-color: var(--success-primary);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Action Buttons */
+.network-error__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.network-error--small .network-error__actions {
+  margin-top: 8px;
+  gap: 6px;
+}
+
+.network-error--large .network-error__actions {
+  margin-top: 16px;
+  gap: 12px;
+}
+
+.network-error__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  background: none;
+  font-family: inherit;
+  line-height: 1.4;
+  min-height: 36px;
+}
+
+.network-error--small .network-error__button {
+  padding: 6px 12px;
+  font-size: 0.85em;
+  min-height: 32px;
+}
+
+.network-error--large .network-error__button {
+  padding: 10px 20px;
+  font-size: 0.95em;
+  min-height: 40px;
+}
+
+.network-error__button:focus {
+  outline: 2px solid var(--error-primary);
+  outline-offset: 2px;
+}
+
+.network-error__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Primary Button */
+.network-error__button--primary {
+  background-color: var(--error-primary);
+  color: white;
+  border-color: var(--error-primary);
+}
+
+.network-error__button--primary:hover:not(:disabled) {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.network-error__button--primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.network-error__button--secondary {
+  background-color: transparent;
+  color: var(--error-text);
+  border-color: var(--error-border);
+}
+
+.network-error__button--secondary:hover:not(:disabled) {
+  background-color: var(--error-secondary);
+  border-color: var(--error-primary);
+}
+
+/* Loading Spinner */
+.network-error__spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+}
+
+.network-error--small .network-error__spinner {
+  width: 14px;
+  height: 14px;
+}
+
+.network-error--large .network-error__spinner {
+  width: 18px;
+  height: 18px;
+}
+
+/* Error Details (Development) */
+.network-error__details {
+  margin-top: 12px;
+  border: 1px solid var(--error-border);
+  border-radius: 4px;
+  background-color: var(--error-secondary);
+}
+
+.network-error__details-summary {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--error-text);
+  border-bottom: 1px solid var(--error-border);
+  user-select: none;
+}
+
+.network-error__details-summary:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark .network-error__details-summary:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.network-error__details-content {
+  padding: 12px;
+}
+
+.network-error__detail-item {
+  margin-bottom: 8px;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.network-error__detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.network-error__detail-item strong {
+  color: var(--error-text);
+  margin-right: 8px;
+}
+
+.network-error__error-message {
+  margin: 4px 0 0 0;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8em;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.dark .network-error__error-message {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Error Type Variants */
+.network-error--timeout {
+  border-color: var(--warning-border);
+  background-color: var(--warning-secondary);
+  color: var(--warning-text);
+}
+
+.network-error--timeout .network-error__icon {
+  background-color: var(--warning-primary);
+}
+
+.network-error--timeout .network-error__title,
+.network-error--timeout .network-error__description {
+  color: var(--warning-text);
+}
+
+.network-error--server {
+  border-color: var(--error-border);
+  background-color: var(--error-secondary);
+  color: var(--error-text);
+}
+
+.network-error--offline {
+  border-color: var(--info-border);
+  background-color: var(--info-secondary);
+  color: var(--info-text);
+}
+
+.network-error--offline .network-error__icon {
+  background-color: var(--info-primary);
+}
+
+.network-error--offline .network-error__title,
+.network-error--offline .network-error__description {
+  color: var(--info-text);
+}
+
+/* RTL Support */
+[dir="rtl"] .network-error__content {
+  direction: rtl;
+}
+
+[dir="rtl"] .network-error__detail-item strong {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .network-error {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .network-error__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .network-error__button {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .network-error__icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .network-error__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 374px) {
+  .network-error {
+    padding: 10px;
+    font-size: 13px;
+  }
+  
+  .network-error__title {
+    font-size: 1em;
+  }
+  
+  .network-error__button {
+    padding: 8px 12px;
+    font-size: 0.85em;
+  }
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+  .network-error {
+    border-width: 2px;
+  }
+  
+  .network-error__button {
+    border-width: 2px;
+  }
+  
+  .network-error__button:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .network-error__spinner {
+    animation: none;
+  }
+  
+  .network-error__status-indicator {
+    animation: none;
+  }
+  
+  .network-error__button {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .network-error {
+    border: 2px solid #000;
+    background: #fff;
+    color: #000;
+    break-inside: avoid;
+  }
+  
+  .network-error__actions {
+    display: none;
+  }
+  
+  .network-error__details {
+    display: block;
+  }
+  
+  .network-error__details-summary {
+    display: none;
+  }
+}

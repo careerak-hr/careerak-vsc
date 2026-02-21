@@ -1,0 +1,71 @@
+{
+  "ar": {
+    "componentError": {
+      "title": "حدث خطأ في هذا المكون",
+      "description": "عذراً، حدث خطأ أثناء تحميل هذا الجزء من الصفحة.",
+      "retryButton": "إعادة المحاولة",
+      "retryingMessage": "جاري إعادة المحاولة...",
+      "detailsTitle": "تفاصيل الخطأ (للمطورين)",
+      "componentLabel": "المكون:",
+      "errorLabel": "الخطأ:",
+      "timestampLabel": "الوقت:",
+      "retryCountLabel": "عدد المحاولات:"
+    },
+    "routeError": {
+      "title": "عذراً، حدث خطأ غير متوقع",
+      "description": "نعتذر عن هذا الإزعاج. حدث خطأ أثناء تحميل الصفحة.",
+      "retryButton": "إعادة المحاولة",
+      "homeButton": "العودة للرئيسية",
+      "detailsTitle": "تفاصيل الخطأ (للمطورين)",
+      "errorLabel": "الخطأ:",
+      "timestampLabel": "الوقت:",
+      "stackLabel": "التتبع:"
+    }
+  },
+  "en": {
+    "componentError": {
+      "title": "An error occurred in this component",
+      "description": "Sorry, an error occurred while loading this part of the page.",
+      "retryButton": "Retry",
+      "retryingMessage": "Retrying...",
+      "detailsTitle": "Error Details (for developers)",
+      "componentLabel": "Component:",
+      "errorLabel": "Error:",
+      "timestampLabel": "Timestamp:",
+      "retryCountLabel": "Retry Count:"
+    },
+    "routeError": {
+      "title": "Sorry, an unexpected error occurred",
+      "description": "We apologize for the inconvenience. An error occurred while loading the page.",
+      "retryButton": "Retry",
+      "homeButton": "Go Home",
+      "detailsTitle": "Error Details (for developers)",
+      "errorLabel": "Error:",
+      "timestampLabel": "Timestamp:",
+      "stackLabel": "Stack:"
+    }
+  },
+  "fr": {
+    "componentError": {
+      "title": "Une erreur s'est produite dans ce composant",
+      "description": "Désolé, une erreur s'est produite lors du chargement de cette partie de la page.",
+      "retryButton": "Réessayer",
+      "retryingMessage": "Nouvelle tentative...",
+      "detailsTitle": "Détails de l'erreur (pour les développeurs)",
+      "componentLabel": "Composant:",
+      "errorLabel": "Erreur:",
+      "timestampLabel": "Horodatage:",
+      "retryCountLabel": "Nombre de tentatives:"
+    },
+    "routeError": {
+      "title": "Désolé, une erreur inattendue s'est produite",
+      "description": "Nous nous excusons pour le désagrément. Une erreur s'est produite lors du chargement de la page.",
+      "retryButton": "Réessayer",
+      "homeButton": "Retour à l'accueil",
+      "detailsTitle": "Détails de l'erreur (pour les développeurs)",
+      "errorLabel": "Erreur:",
+      "timestampLabel": "Horodatage:",
+      "stackLabel": "Trace:"
+    }
+  }
+}

@@ -9,6 +9,10 @@
  * - Smooth transition to actual content
  */
 
+// Base skeleton loader component
+export { default as SkeletonLoader } from './SkeletonLoader';
+
+// Route-specific skeleton loaders
 export { ProfileSkeleton } from './ProfileSkeleton';
 export { JobListSkeleton } from './JobListSkeleton';
 export { CourseListSkeleton } from './CourseListSkeleton';

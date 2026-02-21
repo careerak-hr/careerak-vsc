@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { logError } from '../../utils/errorTracking';
+import NetworkError from './NetworkError';
+import errorBoundaryTranslations from '../../data/errorBoundaryTranslations.json';
 import './ComponentErrorBoundary.css';
 
 /**
@@ -96,6 +98,20 @@ class ComponentErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      // Check if this is a network error
+      if (this.state.error?.networkError || this.state.error?.isNetworkError) {
+        return (
+          <NetworkError
+            error={this.state.error.networkError || this.state.error}
+            onRetry={this.handleRetry}
+            size="medium"
+            showDetails={process.env.NODE_ENV === 'development'}
+            autoRetryOnline={true}
+            maxAutoRetries={2}
+          />
+        );
+      }
+
       // FR-ERR-7: Inline error UI (doesn't break the entire page)
       return (
         <ComponentErrorUI
@@ -118,6 +134,7 @@ class ComponentErrorBoundary extends React.Component {
 /**
  * ComponentErrorUI - Inline error display component
  * FR-ERR-2: User-friendly error messages in multiple languages
+ * Task 7.5.4: Use i18n for error messages
  */
 const ComponentErrorUI = ({ 
   error, 
@@ -129,44 +146,8 @@ const ComponentErrorUI = ({
   componentName,
   fallback 
 }) => {
-  // FR-ERR-2: Multi-language error messages
-  const errorMessages = {
-    ar: {
-      title: 'حدث خطأ في هذا المكون',
-      description: 'عذراً، حدث خطأ أثناء تحميل هذا الجزء من الصفحة.',
-      retryButton: 'إعادة المحاولة',
-      retryingMessage: 'جاري إعادة المحاولة...',
-      detailsTitle: 'تفاصيل الخطأ (للمطورين)',
-      componentLabel: 'المكون:',
-      errorLabel: 'الخطأ:',
-      timestampLabel: 'الوقت:',
-      retryCountLabel: 'عدد المحاولات:',
-    },
-    en: {
-      title: 'An error occurred in this component',
-      description: 'Sorry, an error occurred while loading this part of the page.',
-      retryButton: 'Retry',
-      retryingMessage: 'Retrying...',
-      detailsTitle: 'Error Details (for developers)',
-      componentLabel: 'Component:',
-      errorLabel: 'Error:',
-      timestampLabel: 'Timestamp:',
-      retryCountLabel: 'Retry Count:',
-    },
-    fr: {
-      title: 'Une erreur s\'est produite dans ce composant',
-      description: 'Désolé, une erreur s\'est produite lors du chargement de cette partie de la page.',
-      retryButton: 'Réessayer',
-      retryingMessage: 'Nouvelle tentative...',
-      detailsTitle: 'Détails de l\'erreur (pour les développeurs)',
-      componentLabel: 'Composant:',
-      errorLabel: 'Erreur:',
-      timestampLabel: 'Horodatage:',
-      retryCountLabel: 'Nombre de tentatives:',
-    },
-  };
-
-  const messages = errorMessages[language] || errorMessages.ar;
+  // Task 7.5.4: Use i18n translation file instead of hardcoded messages
+  const messages = errorBoundaryTranslations[language]?.componentError || errorBoundaryTranslations.ar.componentError;
 
   // If custom fallback is provided, use it
   if (fallback) {
