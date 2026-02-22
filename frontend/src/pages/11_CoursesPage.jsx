@@ -8,6 +8,7 @@ import { SEOHead, StructuredData } from '../components/SEO';
 import { useSEO } from '../hooks';
 import { RelatedLinks, Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import { CourseCardSkeleton } from '../components/SkeletonLoaders';
 
 const CoursesPage = () => {
     const { language, startBgMusic } = useApp();
@@ -84,7 +85,16 @@ const CoursesPage = () => {
                 <main id="main-content" tabIndex="-1" className="courses-page">
                     <div className="container mx-auto px-4 py-8">
                         <h1 className="text-3xl font-bold mb-6">Courses</h1>
-                        <p>Loading courses...</p>
+                        
+                        {/* Course skeleton loaders with grid layout */}
+                        <section aria-labelledby="course-catalog">
+                            <h2 id="course-catalog" className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+                                Available Courses
+                            </h2>
+                            <div className="course-listings grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <CourseCardSkeleton count={6} />
+                            </div>
+                        </section>
                     </div>
                 </main>
             </>

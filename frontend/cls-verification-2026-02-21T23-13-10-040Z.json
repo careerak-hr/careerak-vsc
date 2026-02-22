@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-02-21T23:13:10.051Z",
+  "target": 0.1,
+  "acceptable": 0.25,
+  "summary": {
+    "average": 0.4683266964180348,
+    "maximum": 0.4683266964180348,
+    "minimum": 0.4683266964180348,
+    "passedCount": 0,
+    "totalCount": 1,
+    "passRate": "0.0%"
+  },
+  "reports": [
+    {
+      "name": "Main Report",
+      "cls": 0.4683266964180348
+    }
+  ]
+}

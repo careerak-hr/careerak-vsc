@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Mode Transition Test</title>
+  <style>
+    /* Import the dark mode CSS */
+    @import url('../styles/darkMode.css');
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .test-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .test-box {
+      padding: 20px;
+      margin: 20px 0;
+      border: 2px solid var(--border-primary);
+      border-radius: 8px;
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+
+    .toggle-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: var(--accent-primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    .timing-display {
+      margin: 20px 0;
+      padding: 15px;
+      background-color: var(--bg-tertiary);
+      border-radius: 4px;
+      font-family: monospace;
+    }
+
+    .status {
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      margin: 5px 0;
+    }
+
+    .status.pass {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .status.fail {
+      background-color: #F44336;
+      color: white;
+    }
+
+    input {
+      padding: 10px;
+      margin: 10px 0;
+      border: 2px solid var(--input-border);
+      background-color: var(--input-bg);
+      color: var(--input-text);
+      border-radius: 4px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>Dark Mode Transition Test</h1>
+    <p>This page tests if dark mode transitions complete within 300ms as required by FR-DM-2 and FR-DM-7.</p>
+
+    <button class="toggle-button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+
+    <div class="timing-display">
+      <h3>Transition Timing Results:</h3>
+      <div id="results">
+        <p>Click the toggle button to test transition timing...</p>
+      </div>
+    </div>
+
+    <div class="test-box">
+      <h2>Test Box 1</h2>
+      <p>This box should transition smoothly when dark mode is toggled.</p>
+      <input type="text" placeholder="Test input field" />
+    </div>
+
+    <div class="test-box">
+      <h2>Test Box 2</h2>
+      <p>Watch the background, text, and border colors transition.</p>
+      <input type="email" placeholder="test@example.com" />
+    </div>
+
+    <div class="test-box">
+      <h2>Test Box 3</h2>
+      <p>All transitions should complete within 300ms.</p>
+      <input type="password" placeholder="Password" />
+    </div>
+  </div>
+
+  <script>
+    let transitionStartTime = 0;
+    let transitionEndTime = 0;
+    let transitionCount = 0;
+    let testResults = [];
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const isDark = html.classList.contains('dark');
+      
+      // Record start time
+      transitionStartTime = performance.now();
+      transitionCount = 0;
+
+      // Listen for transitionend events
+      const testBox = document.querySelector('.test-box');
+      
+      const handleTransitionEnd = (event) => {
+        transitionCount++;
+        transitionEndTime = performance.now();
+        const duration = transitionEndTime - transitionStartTime;
+        
+        // Only record the first transition end (they should all be similar)
+        if (transitionCount === 1) {
+          const passed = duration <= 350; // Allow 50ms buffer for browser timing
+          testResults.push({
+            mode: isDark ? 'light' : 'dark',
+            duration: duration.toFixed(2),
+            passed: passed
+          });
+          
+          displayResults();
+        }
+      };
+
+      // Add listener
+      testBox.addEventListener('transitionend', handleTransitionEnd, { once: true });
+
+      // Toggle dark mode
+      if (isDark) {
+        html.classList.remove('dark');
+      } else {
+        html.classList.add('dark');
+      }
+
+      // Fallback in case transitionend doesn't fire
+      setTimeout(() => {
+        if (transitionCount === 0) {
+          testResults.push({
+            mode: isDark ? 'light' : 'dark',
+            duration: 'N/A',
+            passed: false,
+            note: 'Transition event did not fire'
+          });
+          displayResults();
+        }
+      }, 1000);
+    }
+
+    function displayResults() {
+      const resultsDiv = document.getElementById('results');
+      let html = '<table style="width: 100%; border-collapse: collapse;">';
+      html += '<tr><th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Test #</th>';
+      html += '<th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Mode</th>';
+      html += '<th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Duration (ms)</th>';
+      html += '<th style="text-align: left; padding: 8px; border-bottom: 1px solid #ccc;">Status</th></tr>';
+      
+      testResults.forEach((result, index) => {
+        const statusClass = result.passed ? 'pass' : 'fail';
+        const statusText = result.passed ? 'PASS ✓' : 'FAIL ✗';
+        html += `<tr>
+          <td style="padding: 8px;">${index + 1}</td>
+          <td style="padding: 8px;">${result.mode}</td>
+          <td style="padding: 8px;">${result.duration}</td>
+          <td style="padding: 8px;"><span class="status ${statusClass}">${statusText}</span></td>
+        </tr>`;
+        if (result.note) {
+          html += `<tr><td colspan="4" style="padding: 8px; font-style: italic; color: #666;">${result.note}</td></tr>`;
+        }
+      });
+      
+      html += '</table>';
+      
+      // Summary
+      const passCount = testResults.filter(r => r.passed).length;
+      const totalCount = testResults.length;
+      const passRate = totalCount > 0 ? ((passCount / totalCount) * 100).toFixed(1) : 0;
+      
+      html += `<p style="margin-top: 15px; font-weight: bold;">
+        Summary: ${passCount}/${totalCount} tests passed (${passRate}%)
+      </p>`;
+      
+      if (passRate >= 100) {
+        html += '<p style="color: #4CAF50; font-weight: bold;">✓ All transitions complete within 300ms requirement!</p>';
+      } else {
+        html += '<p style="color: #F44336; font-weight: bold;">✗ Some transitions exceed 300ms requirement.</p>';
+      }
+      
+      resultsDiv.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

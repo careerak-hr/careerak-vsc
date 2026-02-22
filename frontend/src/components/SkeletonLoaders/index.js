@@ -19,3 +19,7 @@ export { CourseListSkeleton } from './CourseListSkeleton';
 export { FormSkeleton } from './FormSkeleton';
 export { DashboardSkeleton } from './DashboardSkeleton';
 export { TableSkeleton } from './TableSkeleton';
+
+// Card-specific skeleton loaders
+export { default as JobCardSkeleton } from './JobCardSkeleton';
+export { default as CourseCardSkeleton } from './CourseCardSkeleton';

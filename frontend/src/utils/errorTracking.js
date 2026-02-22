@@ -82,15 +82,19 @@ let userContext = {
  * });
  */
 export const initErrorTracking = (config = {}) => {
-  // Only enable in production by default
+  // Enable in all environments by default (Task 9.1.4)
   const shouldEnable = config.enabled !== undefined 
     ? config.enabled 
-    : process.env.NODE_ENV === 'production';
+    : true; // Changed from production-only to always enabled
+
+  // Default to custom service (Careerak backend) if not specified
+  const service = config.service || 'custom';
 
   errorTrackingConfig = {
     ...errorTrackingConfig,
     ...config,
     enabled: shouldEnable,
+    service: service,
   };
 
   if (!errorTrackingConfig.enabled) {
@@ -113,8 +117,8 @@ export const initErrorTracking = (config = {}) => {
       initBugsnag(config);
       break;
     case 'custom':
-      // Custom implementation
-      console.log('[ErrorTracking] Custom service initialized');
+      // Custom implementation (Careerak backend)
+      console.log('[ErrorTracking] Custom service (Careerak backend) initialized');
       break;
     default:
       console.warn('[ErrorTracking] No service specified. Error tracking is prepared but not active.');
@@ -456,25 +460,63 @@ const sendToBugsnag = (errorData) => {
 };
 
 /**
- * Send to custom service
+ * Send to custom service (Careerak Backend)
  * 
- * Implement your custom error tracking logic here
+ * Task 9.1.4: Integrate error logging with backend
  */
-const sendToCustomService = (errorData) => {
-  // Example: Send to your own backend API
-  /*
-  fetch('/api/errors', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(errorData),
-  }).catch(err => {
-    console.error('[ErrorTracking] Failed to send error:', err);
-  });
-  */
-  
-  console.log('[ErrorTracking] Would send to custom service:', errorData);
+const sendToCustomService = async (errorData) => {
+  try {
+    // Get auth token from localStorage
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      console.log('[ErrorTracking] No auth token, skipping backend logging');
+      return;
+    }
+
+    // Prepare payload for backend
+    const payload = {
+      error: {
+        message: errorData.error.message,
+        stack: errorData.error.stack,
+        name: errorData.error.name || 'Error',
+      },
+      context: {
+        component: errorData.component,
+        action: errorData.action,
+        errorBoundary: errorData.extra?.errorBoundary || 'None',
+        level: errorData.level,
+        extra: errorData.extra,
+      },
+      environment: errorData.environment,
+      release: errorData.release,
+      url: errorData.url,
+      userAgent: errorData.userAgent,
+    };
+
+    // Send to backend API
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/errors`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Backend error logging failed: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('[ErrorTracking] Error logged to backend:', {
+      errorId: result.errorId,
+      count: result.count,
+    });
+  } catch (err) {
+    console.error('[ErrorTracking] Failed to send error to backend:', err);
+    // Don't throw - we don't want error logging to break the app
+  }
 };
 
 /**

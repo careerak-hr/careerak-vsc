@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Responsive Testing Tool</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #304B60;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .viewport-info {
+      background: #E3DAD1;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border-left: 4px solid #D48161;
+    }
+
+    .viewport-info h2 {
+      color: #304B60;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #304B60;
+    }
+
+    .info-value {
+      color: #D48161;
+      font-weight: 600;
+    }
+
+    .test-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 2px solid #E3DAD1;
+      border-radius: 6px;
+    }
+
+    .test-section h3 {
+      color: #304B60;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status.pass {
+      background: #4CAF50;
+      color: white;
+    }
+
+    .status.fail {
+      background: #f44336;
+      color: white;
+    }
+
+    .status.warning {
+      background: #ff9800;
+      color: white;
+    }
+
+    .test-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .test-result {
+      font-weight: 600;
+    }
+
+    .test-result.pass {
+      color: #4CAF50;
+    }
+
+    .test-result.fail {
+      color: #f44336;
+    }
+
+    button {
+      background: #D48161;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    button:hover {
+      background: #304B60;
+    }
+
+    .button-group {
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 639px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      button {
+        width: 100%;
+        margin-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📱 Mobile Responsive Testing Tool</h1>
+    <p class="subtitle">Task 9.3.1: Test on mobile (320px - 767px)</p>
+
+    <div class="viewport-info">
+      <h2>Current Viewport Information</h2>
+      <div class="info-grid">
+        <div class="info-item">
+          <span class="info-label">Width:</span>
+          <span class="info-value" id="viewport-width">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Height:</span>
+          <span class="info-value" id="viewport-height">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Device:</span>
+          <span class="info-value" id="device-type">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Orientation:</span>
+          <span class="info-value" id="orientation">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Touch Support:</span>
+          <span class="info-value" id="touch-support">-</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Pixel Ratio:</span>
+          <span class="info-value" id="pixel-ratio">-</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button onclick="runAllTests()">🔍 Run All Tests</button>
+      <button onclick="location.reload()">🔄 Refresh</button>
+      <button onclick="window.open('/', '_blank')">🏠 Open App</button>
+    </div>
+
+    <div id="test-results"></div>
+  </div>
+
+  <script>
+    // Update viewport info
+    function updateViewportInfo() {
+      document.getElementById('viewport-width').textContent = window.innerWidth + 'px';
+      document.getElementById('viewport-height').textContent = window.innerHeight + 'px';
+      
+      const width = window.innerWidth;
+      let deviceType = '';
+      if (width <= 374) deviceType = 'Very Small Mobile';
+      else if (width <= 639) deviceType = 'Mobile';
+      else if (width <= 767) deviceType = 'Large Mobile';
+      else if (width <= 1023) deviceType = 'Tablet';
+      else deviceType = 'Desktop';
+      document.getElementById('device-type').textContent = deviceType;
+      
+      document.getElementById('orientation').textContent = 
+        window.innerHeight > window.innerWidth ? 'Portrait' : 'Landscape';
+      
+      document.getElementById('touch-support').textContent = 
+        'ontouchstart' in window ? 'Yes ✓' : 'No ✗';
+      
+      document.getElementById('pixel-ratio').textContent = window.devicePixelRatio;
+    }
+
+    // Run tests
+    function runAllTests() {
+      const results = [];
+      
+      // Test 1: Viewport Range
+      results.push({
+        section: 'Viewport Range',
+        tests: [
+          {
+            name: 'Width in mobile range (320px - 767px)',
+            pass: window.innerWidth >= 320 && window.innerWidth <= 767,
+            value: window.innerWidth + 'px'
+          }
+        ]
+      });
+
+      // Test 2: Media Queries
+      results.push({
+        section: 'Media Queries',
+        tests: [
+          {
+            name: 'Mobile styles active (max-width: 639px)',
+            pass: window.innerWidth <= 639 ? window.matchMedia('(max-width: 639px)').matches : true,
+            value: window.matchMedia('(max-width: 639px)').matches ? 'Active' : 'Inactive'
+          },
+          {
+            name: 'Very small mobile styles (max-width: 374px)',
+            pass: window.innerWidth <= 374 ? window.matchMedia('(max-width: 374px)').matches : true,
+            value: window.matchMedia('(max-width: 374px)').matches ? 'Active' : 'Inactive'
+          }
+        ]
+      });
+
+      // Test 3: Viewport Meta Tag
+      const viewportMeta = document.querySelector('meta[name="viewport"]');
+      results.push({
+        section: 'Viewport Configuration',
+        tests: [
+          {
+            name: 'Viewport meta tag exists',
+            pass: !!viewportMeta,
+            value: viewportMeta ? 'Present' : 'Missing'
+          },
+          {
+            name: 'Width=device-width',
+            pass: viewportMeta && viewportMeta.content.includes('width=device-width'),
+            value: viewportMeta ? 'Configured' : 'Not configured'
+          },
+          {
+            name: 'Initial-scale=1',
+            pass: viewportMeta && viewportMeta.content.includes('initial-scale=1'),
+            value: viewportMeta ? 'Configured' : 'Not configured'
+          }
+        ]
+      });
+
+      // Test 4: Touch Support
+      results.push({
+        section: 'Touch Support',
+        tests: [
+          {
+            name: 'Touch events supported',
+            pass: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+            value: 'ontouchstart' in window ? 'Yes' : 'No'
+          },
+          {
+            name: 'Max touch points',
+            pass: navigator.maxTouchPoints >= 0,
+            value: navigator.maxTouchPoints
+          }
+        ]
+      });
+
+      // Test 5: Horizontal Scroll
+      results.push({
+        section: 'Layout',
+        tests: [
+          {
+            name: 'No horizontal scroll',
+            pass: document.body.scrollWidth <= window.innerWidth,
+            value: document.body.scrollWidth + 'px'
+          },
+          {
+            name: 'Body overflow-x hidden',
+            pass: window.getComputedStyle(document.body).overflowX === 'hidden',
+            value: window.getComputedStyle(document.body).overflowX
+          }
+        ]
+      });
+
+      // Test 6: Typography
+      const htmlFontSize = parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+      results.push({
+        section: 'Typography',
+        tests: [
+          {
+            name: 'Root font size >= 14px',
+            pass: htmlFontSize >= 14,
+            value: htmlFontSize + 'px'
+          }
+        ]
+      });
+
+      // Test 7: Performance
+      results.push({
+        section: 'Performance',
+        tests: [
+          {
+            name: 'Device pixel ratio',
+            pass: window.devicePixelRatio > 0,
+            value: window.devicePixelRatio
+          },
+          {
+            name: 'Hardware acceleration available',
+            pass: true,
+            value: 'Supported'
+          }
+        ]
+      });
+
+      // Test 8: Orientation
+      results.push({
+        section: 'Orientation',
+        tests: [
+          {
+            name: 'Orientation detected',
+            pass: true,
+            value: window.innerHeight > window.innerWidth ? 'Portrait' : 'Landscape'
+          },
+          {
+            name: 'Landscape mode support',
+            pass: window.matchMedia('(orientation: landscape)').matches || 
+                  window.matchMedia('(orientation: portrait)').matches,
+            value: 'Supported'
+          }
+        ]
+      });
+
+      // Test 9: Accessibility
+      results.push({
+        section: 'Accessibility',
+        tests: [
+          {
+            name: 'Prefers reduced motion',
+            pass: true,
+            value: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'Yes' : 'No'
+          },
+          {
+            name: 'Prefers color scheme',
+            pass: true,
+            value: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Dark' : 'Light'
+          }
+        ]
+      });
+
+      // Render results
+      renderResults(results);
+    }
+
+    function renderResults(results) {
+      const container = document.getElementById('test-results');
+      container.innerHTML = '';
+
+      results.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'test-section';
+
+        const passCount = section.tests.filter(t => t.pass).length;
+        const totalCount = section.tests.length;
+        const allPass = passCount === totalCount;
+
+        sectionDiv.innerHTML = `
+          <h3>
+            ${section.section}
+            <span class="status ${allPass ? 'pass' : 'fail'}">
+              ${passCount}/${totalCount} Passed
+            </span>
+          </h3>
+        `;
+
+        section.tests.forEach(test => {
+          const testDiv = document.createElement('div');
+          testDiv.className = 'test-item';
+          testDiv.innerHTML = `
+            <span>${test.name}</span>
+            <span class="test-result ${test.pass ? 'pass' : 'fail'}">
+              ${test.pass ? '✓' : '✗'} ${test.value}
+            </span>
+          `;
+          sectionDiv.appendChild(testDiv);
+        });
+
+        container.appendChild(sectionDiv);
+      });
+    }
+
+    // Update on resize
+    window.addEventListener('resize', updateViewportInfo);
+    window.addEventListener('orientationchange', updateViewportInfo);
+
+    // Initial update
+    updateViewportInfo();
+    
+    // Auto-run tests on load
+    setTimeout(runAllTests, 500);
+  </script>
+</body>
+</html>

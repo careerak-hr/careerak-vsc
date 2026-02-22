@@ -1,9 +1,11 @@
 .loading-screen-container {
   @apply min-h-screen bg-secondary flex items-center justify-center p-4;
+  transition: opacity 200ms ease-in-out;
 }
 
 .loading-content-container {
   @apply text-center;
+  transition: opacity 200ms ease-in-out;
 }
 
 .loading-logo {
@@ -36,10 +38,12 @@
 
 .error-screen-container {
   @apply min-h-screen bg-secondary flex items-center justify-center p-4;
+  transition: opacity 200ms ease-in-out;
 }
 
 .error-card {
   @apply bg-secondary rounded-lg shadow-lg p-8 max-w-md w-full text-center;
+  transition: opacity 200ms ease-in-out;
 }
 
 .error-icon {
@@ -76,18 +80,22 @@
 
 .simple-loader-container {
     @apply flex items-center justify-center p-8;
+    transition: opacity 200ms ease-in-out;
 }
 
 .simple-loader-spinner {
     @apply inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4;
+    transition: opacity 200ms ease-in-out;
 }
 
 .progress-loader-container {
     @apply min-h-screen bg-secondary flex items-center justify-center;
+    transition: opacity 200ms ease-in-out;
 }
 
 .progress-loader-content {
     @apply text-center max-w-md w-full px-4;
+    transition: opacity 200ms ease-in-out;
 }
 
 .progress-bar-container {

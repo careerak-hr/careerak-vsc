@@ -65,6 +65,29 @@ const userSchema = new mongoose.Schema({
     completed: { type: Boolean, default: false },
     lastSaved: Date,
     data: mongoose.Schema.Types.Mixed
+  },
+  // تفضيلات المستخدم (User Preferences)
+  preferences: {
+    theme: { 
+      type: String, 
+      enum: ['light', 'dark', 'system'], 
+      default: 'system' 
+    },
+    language: { 
+      type: String, 
+      enum: ['ar', 'en', 'fr'], 
+      default: 'ar' 
+    },
+    notifications: {
+      enabled: { type: Boolean, default: true },
+      email: { type: Boolean, default: true },
+      push: { type: Boolean, default: true }
+    },
+    accessibility: {
+      reducedMotion: { type: Boolean, default: false },
+      highContrast: { type: Boolean, default: false },
+      fontSize: { type: String, enum: ['small', 'medium', 'large'], default: 'medium' }
+    }
   }
 }, baseOptions);
 

@@ -1,0 +1,579 @@
+/* 
+ * Large Screen Optimizations (1920px+)
+ * Ensures optimal layout and readability on large displays
+ * Date: 2026-02-21
+ */
+
+/* ========================================
+   1. Container Constraints for Large Screens
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Main container max-width */
+  .container,
+  .page-container,
+  .main-container {
+    max-width: 1600px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 2rem !important;
+    padding-right: 2rem !important;
+  }
+  
+  /* Content sections */
+  .content-section {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Text content for optimal readability */
+  .text-content,
+  .article-content,
+  .description-text {
+    max-width: 800px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* ========================================
+   2. Grid Layouts - Max Columns
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Job postings grid - max 4 columns */
+  .job-postings-grid,
+  .jobs-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    max-width: 1800px !important;
+    margin: 0 auto !important;
+    gap: 2rem !important;
+  }
+  
+  /* Courses grid - max 4 columns */
+  .courses-grid,
+  .course-cards-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    max-width: 1800px !important;
+    margin: 0 auto !important;
+    gap: 2rem !important;
+  }
+  
+  /* Admin dashboard stats - max 4 columns */
+  .admin-stats-grid,
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+    gap: 1.5rem !important;
+  }
+  
+  /* Generic grid with auto-fit */
+  .grid-auto-fit {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    max-width: 1800px !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  /* Slightly larger containers for 2K screens */
+  .container,
+  .page-container,
+  .main-container {
+    max-width: 2000px !important;
+  }
+  
+  .job-postings-grid,
+  .jobs-grid,
+  .courses-grid,
+  .course-cards-grid {
+    max-width: 2200px !important;
+  }
+  
+  .admin-stats-grid,
+  .stats-grid {
+    max-width: 2000px !important;
+  }
+}
+
+@media (min-width: 3840px) {
+  /* 4K screens - increase base font size slightly */
+  html {
+    font-size: 18px !important;
+  }
+  
+  /* Larger containers for 4K */
+  .container,
+  .page-container,
+  .main-container {
+    max-width: 2400px !important;
+  }
+  
+  .job-postings-grid,
+  .jobs-grid,
+  .courses-grid,
+  .course-cards-grid {
+    max-width: 2600px !important;
+  }
+  
+  .admin-stats-grid,
+  .stats-grid {
+    max-width: 2400px !important;
+  }
+}
+
+/* ========================================
+   3. Forms - Optimal Width
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Login form */
+  .login-page-content,
+  .login-form-container {
+    max-width: 500px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Registration form */
+  .auth-page-content,
+  .auth-form-container {
+    max-width: 600px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Post job form */
+  .post-job-form,
+  .job-form-container {
+    max-width: 900px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Settings form */
+  .settings-form,
+  .settings-container {
+    max-width: 800px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Generic forms */
+  form:not(.full-width) {
+    max-width: 700px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+
+/* ========================================
+   4. Modals - Constrained Width
+   ======================================== */
+
+@media (min-width: 1920px) {
+  .modal-content,
+  .modal-container {
+    max-width: 700px !important;
+    margin: 0 auto !important;
+  }
+  
+  /* Large modals (e.g., image viewer) */
+  .modal-content.large,
+  .modal-container.large {
+    max-width: 1200px !important;
+  }
+  
+  /* Small modals (e.g., confirmations) */
+  .modal-content.small,
+  .modal-container.small {
+    max-width: 400px !important;
+  }
+}
+
+/* ========================================
+   5. Navigation Bar
+   ======================================== */
+
+@media (min-width: 1920px) {
+  .navbar,
+  .header-nav {
+    max-width: 100% !important;
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+  
+  .navbar-content,
+  .nav-content {
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .navbar,
+  .header-nav {
+    padding-left: 4rem !important;
+    padding-right: 4rem !important;
+  }
+  
+  .navbar-content,
+  .nav-content {
+    max-width: 2000px !important;
+  }
+}
+
+/* ========================================
+   6. Footer
+   ======================================== */
+
+@media (min-width: 1920px) {
+  .footer {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+  
+  .footer-content {
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 3rem !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .footer {
+    padding-left: 4rem !important;
+    padding-right: 4rem !important;
+  }
+  
+  .footer-content {
+    max-width: 2000px !important;
+  }
+}
+
+/* ========================================
+   7. Tables
+   ======================================== */
+
+@media (min-width: 1920px) {
+  .table-container {
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+  }
+  
+  table {
+    width: 100% !important;
+  }
+  
+  th, td {
+    padding: 1rem 1.5rem !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .table-container {
+    max-width: 2000px !important;
+  }
+}
+
+/* ========================================
+   8. Images & Media
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Profile pictures */
+  .profile-avatar,
+  .user-avatar {
+    max-width: 200px !important;
+    max-height: 200px !important;
+  }
+  
+  /* Company logos */
+  .company-logo,
+  .logo-image {
+    max-width: 150px !important;
+    max-height: 150px !important;
+  }
+  
+  /* Thumbnails */
+  .thumbnail,
+  .card-image {
+    max-width: 600px !important;
+    max-height: 400px !important;
+    object-fit: cover !important;
+  }
+  
+  /* Hero images */
+  .hero-image,
+  .banner-image {
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* ========================================
+   9. Typography - Optimal Line Length
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Paragraphs and text blocks */
+  p,
+  .text-block,
+  .description {
+    max-width: 75ch !important; /* 75 characters for optimal readability */
+  }
+  
+  /* Article content */
+  article,
+  .article-content {
+    max-width: 800px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  /* Headings remain full width within their container */
+  h1, h2, h3, h4, h5, h6 {
+    max-width: 100% !important;
+  }
+}
+
+/* ========================================
+   10. Specific Page Layouts
+   ======================================== */
+
+/* Profile Page */
+@media (min-width: 1920px) {
+  .profile-page-container {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
+  
+  .profile-header {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+  }
+  
+  .profile-content {
+    display: grid !important;
+    grid-template-columns: 300px 1fr !important;
+    gap: 2rem !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* Admin Dashboard */
+@media (min-width: 1920px) {
+  .admin-dashboard-container {
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+  }
+  
+  .admin-content {
+    display: grid !important;
+    grid-template-columns: 250px 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+/* Job Postings Page */
+@media (min-width: 1920px) {
+  .job-postings-container {
+    max-width: 1800px !important;
+    margin: 0 auto !important;
+  }
+  
+  .job-postings-layout {
+    display: grid !important;
+    grid-template-columns: 300px 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+/* Courses Page */
+@media (min-width: 1920px) {
+  .courses-container {
+    max-width: 1800px !important;
+    margin: 0 auto !important;
+  }
+  
+  .courses-layout {
+    display: grid !important;
+    grid-template-columns: 300px 1fr !important;
+    gap: 2rem !important;
+  }
+}
+
+/* ========================================
+   11. Spacing & Padding
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Increase section spacing */
+  .section,
+  .page-section {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
+  }
+  
+  /* Card spacing */
+  .card,
+  .content-card {
+    padding: 2rem !important;
+  }
+  
+  /* Gap between elements */
+  .gap-default {
+    gap: 2rem !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .section,
+  .page-section {
+    padding-top: 5rem !important;
+    padding-bottom: 5rem !important;
+  }
+  
+  .card,
+  .content-card {
+    padding: 2.5rem !important;
+  }
+}
+
+/* ========================================
+   12. Buttons & Interactive Elements
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Buttons maintain comfortable size */
+  button,
+  .btn {
+    min-height: 44px !important;
+    padding: 0.75rem 2rem !important;
+  }
+  
+  /* Large buttons */
+  .btn-large {
+    min-height: 56px !important;
+    padding: 1rem 3rem !important;
+    font-size: 1.125rem !important;
+  }
+  
+  /* Icon buttons */
+  .btn-icon {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+}
+
+/* ========================================
+   13. Sidebar Layouts
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Sidebar navigation */
+  .sidebar {
+    width: 280px !important;
+    min-width: 280px !important;
+  }
+  
+  /* Main content with sidebar */
+  .main-with-sidebar {
+    display: grid !important;
+    grid-template-columns: 280px 1fr !important;
+    gap: 2rem !important;
+    max-width: 1600px !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (min-width: 2560px) {
+  .sidebar {
+    width: 320px !important;
+    min-width: 320px !important;
+  }
+  
+  .main-with-sidebar {
+    grid-template-columns: 320px 1fr !important;
+    max-width: 2000px !important;
+  }
+}
+
+/* ========================================
+   14. Prevent Excessive Stretching
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Prevent images from stretching */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Prevent cards from becoming too wide */
+  .card,
+  .content-card {
+    max-width: 600px !important;
+  }
+  
+  /* Prevent inputs from becoming too wide */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    max-width: 100% !important;
+  }
+}
+
+/* ========================================
+   15. Accessibility - Focus Indicators
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Ensure focus indicators remain visible */
+  *:focus-visible {
+    outline: 2px solid #D48161 !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Skip links */
+  .skip-link:focus {
+    position: fixed !important;
+    top: 1rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+  }
+}
+
+/* ========================================
+   16. Performance - GPU Acceleration
+   ======================================== */
+
+@media (min-width: 1920px) {
+  /* Enable GPU acceleration for smooth animations */
+  .animated,
+  .transition-all,
+  .hover-effect {
+    will-change: transform, opacity !important;
+    transform: translateZ(0) !important;
+  }
+}
+
+/* ========================================
+   17. Print Styles
+   ======================================== */
+
+@media print {
+  /* Optimize for printing from large screens */
+  .container,
+  .page-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  .navbar,
+  .footer,
+  .sidebar {
+    display: none !important;
+  }
+}

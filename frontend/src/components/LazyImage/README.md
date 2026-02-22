@@ -8,7 +8,10 @@ A React component that implements lazy loading for images using the Intersection
 - ✅ WebP format with JPEG/PNG fallback
 - ✅ Blur-up placeholder for smooth loading
 - ✅ Loading spinner
-- ✅ Error handling with fallback UI
+- ✅ **Enhanced error handling with retry functionality**
+- ✅ **Fallback image support**
+- ✅ **Multi-language error messages**
+- ✅ **Error logging and tracking**
 - ✅ Responsive images support
 - ✅ Accessibility compliant
 - ✅ Cloudinary integration
@@ -53,8 +56,12 @@ import LazyImage from '../components/LazyImage';
 | `threshold` | number | `0.1` | Intersection Observer threshold |
 | `rootMargin` | string | `'50px'` | Intersection Observer root margin |
 | `onLoad` | function | `null` | Callback when image loads |
-| `onError` | function | `null` | Callback when image fails |
+| `onError` | function | `null` | Callback when image fails (receives event and error details) |
 | `showSpinner` | boolean | `true` | Show loading spinner |
+| `fallbackImage` | string | `null` | URL of fallback image to show on error |
+| `showRetry` | boolean | `true` | Show retry button on error |
+| `errorMessage` | string | `null` | Custom error message to display |
+| `logErrors` | boolean | `true` | Log errors to console |
 
 ## Image Presets
 
@@ -178,6 +185,60 @@ Available presets from `imageOptimization.js`:
 />
 ```
 
+### 9. Error Handling with Retry
+
+```jsx
+<LazyImage
+  publicId="invalid/image/path"
+  alt="Image with error handling"
+  width={400}
+  height={300}
+  showRetry={true}
+  errorMessage="Failed to load image. Please try again."
+  onError={(e, errorDetails) => {
+    console.error('Image error:', errorDetails);
+  }}
+/>
+```
+
+### 10. Fallback Image
+
+```jsx
+<LazyImage
+  publicId="users/profile-picture"
+  alt="User profile"
+  preset="PROFILE_LARGE"
+  fallbackImage="/default-avatar.png"
+  showRetry={true}
+/>
+```
+
+### 11. Multi-Language Error Messages
+
+```jsx
+import { getImageErrorMessage } from '../../utils/imageErrorMessages';
+
+<LazyImage
+  publicId="invalid/image"
+  alt="Image"
+  width={400}
+  height={300}
+  errorMessage={getImageErrorMessage('ar', 'loadFailed')}
+  showRetry={true}
+/>
+```
+
+### 12. Disable Error Logging
+
+```jsx
+<LazyImage
+  publicId="image/path"
+  alt="Image"
+  preset="THUMBNAIL_MEDIUM"
+  logErrors={false}
+/>
+```
+
 ## When to Use LazyImage
 
 ### ✅ DO use LazyImage for:
@@ -241,7 +302,9 @@ Test files:
 - **Styles**: `LazyImage.css`
 - **Hook**: `../../hooks/useIntersectionObserver.js`
 - **Utils**: `../../utils/imageOptimization.js`
+- **Error Messages**: `../../utils/imageErrorMessages.js`
 - **Examples**: `LazyImage.examples.jsx`
+- **Error Examples**: `LazyImage.error-examples.jsx`
 - **Usage Examples**: `LazyImage.usage-examples.jsx`
 
 ## Migration Guide
@@ -254,6 +317,18 @@ See `docs/LAZY_IMAGE_MIGRATION_GUIDE.md` for detailed migration instructions.
 - Check that `publicId` is correct
 - Verify Cloudinary configuration in `imageOptimization.js`
 - Check browser console for errors
+- Try using the retry button if available
+
+### Error handling not working
+- Ensure `showRetry={true}` is set
+- Check that `onError` callback is properly defined
+- Verify error messages are displaying correctly
+- Check console for error logs (if `logErrors={true}`)
+
+### Fallback image not showing
+- Verify `fallbackImage` URL is correct and accessible
+- Check that the fallback image exists
+- Ensure fallback image is not also failing to load
 
 ### Placeholder not showing
 - Ensure `placeholder={true}` is set

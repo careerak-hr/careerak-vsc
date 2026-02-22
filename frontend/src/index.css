@@ -3,6 +3,7 @@
 @import './styles/fontEnforcement.css'; /* Import font enforcement */
 @import './styles/dynamicFontEnforcement.css'; /* Import dynamic font enforcement */
 @import './styles/responsiveFixes.css'; /* Import responsive design fixes */
+@import './styles/largeScreenOptimizations.css'; /* Import large screen optimizations (1920px+) */
 @import './styles/darkMode.css'; /* Import dark mode & light mode CSS variables */
 @import './styles/darkModePages.css'; /* Import dark mode support for all pages */
 @import './styles/formsDarkMode.css'; /* Import dark mode support for all forms */

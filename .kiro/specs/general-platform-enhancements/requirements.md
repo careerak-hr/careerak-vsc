@@ -368,25 +368,25 @@ This specification defines comprehensive platform enhancements for Careerak incl
 ## 7. Acceptance Criteria
 
 ### 7.1 Dark Mode
-- [ ] Dark mode toggle is accessible from settings/navigation
-- [ ] Dark mode applies within 300ms with smooth transitions
-- [ ] Dark mode preference persists in localStorage
-- [ ] System preference is detected on first visit
-- [ ] All UI elements support dark mode
-- [ ] Input borders remain #D4816180 in dark mode
+- [x] Dark mode toggle is accessible from settings/navigation
+- [-] Dark mode applies within 300ms with smooth transitions
+- [-] Dark mode preference persists in localStorage
+- [-] System preference is detected on first visit
+- [-] All UI elements support dark mode
+- [-] Input borders remain #D4816180 in dark mode
 
 ### 7.2 Performance
-- [ ] Lighthouse Performance score is 90+
-- [ ] Initial bundle size reduced by 40-60%
-- [ ] Routes are lazy loaded
-- [ ] Images use WebP with lazy loading
-- [ ] Static assets are cached for 30 days
-- [ ] FCP is under 1.8 seconds
-- [ ] TTI is under 3.8 seconds
+- [-] Lighthouse Performance score is 90+
+- [x] Initial bundle size reduced by 40-60%
+- [-] Routes are lazy loaded
+- [-] Images use WebP with lazy loading
+- [-] Static assets are cached for 30 days
+- [x] FCP is under 1.8 seconds
+- [x] TTI is under 3.8 seconds
 
 ### 7.3 PWA
-- [ ] Service worker is registered successfully
-- [ ] Offline pages are served from cache
+- [-] Service worker is registered successfully
+- [x] Offline pages are served from cache
 - [ ] Custom offline fallback page is displayed
 - [ ] Install prompt is shown on mobile
 - [ ] PWA is installable with custom splash screen

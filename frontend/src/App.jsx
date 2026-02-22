@@ -1,13 +1,16 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { useAppBootstrap } from "./hooks/useAppBootstrap";
 import ApplicationShell from "./components/ApplicationShell";
 import { 
   InitialLoadingScreen, 
   InitializationErrorScreen 
 } from "./components/LoadingStates";
-import ServiceWorkerManager from "./components/ServiceWorkerManager";
-import OfflineQueueStatus from "./components/OfflineQueueStatus";
 import { StructuredData } from "./components/SEO";
+
+// OPTIMIZATION: Lazy load non-critical components for better TTI
+// These components are not needed for initial render and can be loaded after
+const ServiceWorkerManager = React.lazy(() => import("./components/ServiceWorkerManager"));
+const OfflineQueueStatus = React.lazy(() => import("./components/OfflineQueueStatus"));
 
 /**
  * المكون الرئيسي للتطبيق - Application Entry Point
@@ -70,8 +73,12 @@ export default function App() {
     <>
       <StructuredData type="Organization" data={organizationData} />
       <ApplicationShell />
-      <ServiceWorkerManager />
-      <OfflineQueueStatus />
+      {/* OPTIMIZATION: Lazy load non-critical components with Suspense */}
+      {/* These components don't block initial render and improve TTI */}
+      <Suspense fallback={null}>
+        <ServiceWorkerManager />
+        <OfflineQueueStatus />
+      </Suspense>
     </>
   );
 }

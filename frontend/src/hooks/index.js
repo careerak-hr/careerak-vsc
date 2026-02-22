@@ -8,5 +8,6 @@ export { default as useIntersectionObserver } from './useIntersectionObserver';
 export { default as useKeyboardNavigation } from './useKeyboardNavigation';
 export { default as useNavigationGuard } from './useNavigationGuard';
 export { default as usePasswordStrength } from './usePasswordStrength';
+export { default as useRouteProgress } from './useRouteProgress';
 export { default as useTranslate } from './useTranslate';
 export { default as useSEO } from './useSEO';

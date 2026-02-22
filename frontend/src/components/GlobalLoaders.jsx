@@ -7,6 +7,7 @@ import {
   DashboardSkeleton,
   TableSkeleton
 } from './SkeletonLoaders';
+import { RouteSuspenseFallback } from './Loading';
 
 /**
  * مكون شاشة التحميل العامة
@@ -24,8 +25,14 @@ export const GlobalLoader = () => (
  * 
  * @param {Object} props
  * @param {React.ReactNode} props.children - المحتوى المراد تحميله
- * @param {string} props.skeleton - نوع الـ skeleton loader (profile, jobList, courseList, form, dashboard, table)
+ * @param {string} props.skeleton - نوع الـ skeleton loader (profile, jobList, courseList, form, dashboard, table, route)
  * @param {Object} props.skeletonProps - خصائص إضافية للـ skeleton loader
+ * 
+ * Requirements:
+ * - FR-LOAD-1: Display skeleton loaders matching content layout
+ * - FR-LOAD-7: Apply smooth transitions (200ms fade)
+ * - FR-LOAD-8: Prevent layout shifts
+ * - Design Section 9.3: Route level uses full-page skeleton
  */
 export const SuspenseWrapper = ({ children, skeleton, skeletonProps = {} }) => {
   // اختيار الـ skeleton المناسب بناءً على النوع
@@ -43,8 +50,11 @@ export const SuspenseWrapper = ({ children, skeleton, skeletonProps = {} }) => {
         return <DashboardSkeleton {...skeletonProps} />;
       case 'table':
         return <TableSkeleton {...skeletonProps} />;
+      case 'route':
+        return <RouteSuspenseFallback />;
       default:
-        return <GlobalLoader />;
+        // Default to route-level skeleton for better UX
+        return <RouteSuspenseFallback />;
     }
   };
 

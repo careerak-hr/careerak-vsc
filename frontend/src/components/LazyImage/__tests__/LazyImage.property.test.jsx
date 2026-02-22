@@ -15,7 +15,7 @@
 
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import fc from 'fast-check/lib/cjs/fast-check';
+import fc from 'fast-check';
 import LazyImage from '../LazyImage';
 
 // Mock IntersectionObserver

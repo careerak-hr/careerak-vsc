@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-02-21T22:06:26.869Z",
+  "summary": {
+    "performance": {
+      "avg": null,
+      "passed": false
+    },
+    "accessibility": {
+      "avg": null,
+      "passed": false
+    },
+    "seo": {
+      "avg": null,
+      "passed": false
+    },
+    "best-practices": {
+      "avg": null,
+      "passed": false
+    }
+  },
+  "targets": {
+    "performance": 90,
+    "accessibility": 95,
+    "seo": 95,
+    "best-practices": 90
+  },
+  "pages": []
+}

@@ -17,4 +17,8 @@ router.put('/profile', auth, validateUpdateProfile, userController.updateProfile
 router.get('/ai-recommendations', auth, userController.getAIRecommendations);
 router.post('/parse-cv', auth, userController.parseCV);
 
+// User preferences endpoints
+router.get('/preferences', auth, userController.getUserPreferences);
+router.put('/preferences', auth, userController.updateUserPreferences);
+
 module.exports = router;

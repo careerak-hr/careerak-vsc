@@ -159,70 +159,111 @@ export default defineConfig({
     // Rollup options for advanced bundling
     rollupOptions: {
       output: {
-        // Manual chunks for vendor separation
+        // Manual chunks for vendor separation - OPTIMIZED for TTI < 3.8s
         manualChunks: (id) => {
-          // React core libraries (must be first to avoid circular dependencies)
+          // CRITICAL: Skip zxcvbn entirely - it should be a dynamic chunk
+          // This prevents it from being bundled into any vendor chunk
+          if (id.includes('node_modules/zxcvbn')) {
+            return; // Return undefined to create a separate async chunk
+          }
+          
+          // React core libraries (CRITICAL - must load first)
           if (id.includes('node_modules/react/') || 
               id.includes('node_modules/react-dom/') || 
               id.includes('node_modules/scheduler/')) {
             return 'react-vendor';
           }
           
-          // React Router
+          // React Router (CRITICAL - needed for routing)
           if (id.includes('node_modules/react-router-dom') || 
               id.includes('node_modules/react-router') ||
               id.includes('node_modules/@remix-run')) {
             return 'router-vendor';
           }
           
-          // i18n libraries
+          // i18n libraries (CRITICAL - needed for initial render)
           if (id.includes('node_modules/i18next') || 
               id.includes('node_modules/react-i18next') ||
               id.includes('node_modules/i18next-browser-languagedetector')) {
             return 'i18n-vendor';
           }
           
-          // Capacitor libraries
+          // HTTP client (CRITICAL - needed for API calls)
+          if (id.includes('node_modules/axios')) {
+            return 'axios-vendor';
+          }
+          
+          // === NON-CRITICAL VENDORS (Lazy loaded) ===
+          
+          // Framer Motion (LAZY - animations not critical for TTI)
+          if (id.includes('node_modules/framer-motion')) {
+            return 'framer-vendor';
+          }
+          
+          // React Helmet (LAZY - SEO not critical for TTI)
+          if (id.includes('node_modules/react-helmet-async')) {
+            return 'helmet-vendor';
+          }
+          
+          // Pusher (LAZY - real-time features not critical for TTI)
+          if (id.includes('node_modules/pusher-js')) {
+            return 'pusher-vendor';
+          }
+          
+          // Capacitor libraries (LAZY - mobile features not critical for TTI)
           if (id.includes('node_modules/@capacitor')) {
             return 'capacitor-vendor';
           }
           
-          // Sentry monitoring (error tracking)
+          // Sentry monitoring (LAZY - error tracking not critical for TTI)
           if (id.includes('node_modules/@sentry')) {
             return 'sentry-vendor';
           }
           
-          // Animation libraries
+          // Animation libraries (LAZY)
           if (id.includes('node_modules/react-confetti')) {
-            return 'animation-vendor';
+            return 'confetti-vendor';
           }
           
-          // Image processing libraries
+          // Image processing libraries (LAZY)
           if (id.includes('node_modules/react-easy-crop') || 
               id.includes('node_modules/react-image-crop')) {
             return 'image-vendor';
           }
           
-          // NOTE: zxcvbn is lazy loaded - not included in vendor chunks
-          // This reduces initial bundle by 818KB (68%)
-          
-          // Crypto libraries
+          // Crypto libraries (LAZY)
           if (id.includes('node_modules/crypto-js')) {
             return 'crypto-vendor';
           }
           
-          // HTTP client
-          if (id.includes('node_modules/axios')) {
-            return 'axios-vendor';
-          }
-          
-          // Validation libraries
+          // Validation libraries (LAZY)
           if (id.includes('node_modules/ajv') || 
               id.includes('node_modules/mailcheck')) {
             return 'validation-vendor';
           }
           
-          // Other node_modules (catch-all for remaining dependencies)
+          // Workbox (LAZY - service worker not critical for TTI)
+          if (id.includes('node_modules/workbox')) {
+            return 'workbox-vendor';
+          }
+          
+          // Prop Types (LAZY - only used in development)
+          if (id.includes('node_modules/prop-types')) {
+            return 'prop-types-vendor';
+          }
+          
+          // Web Vitals (LAZY - monitoring not critical for TTI)
+          if (id.includes('node_modules/web-vitals')) {
+            return 'web-vitals-vendor';
+          }
+          
+          // Tar (LAZY - compression rarely used)
+          if (id.includes('node_modules/tar')) {
+            return 'tar-vendor';
+          }
+          
+          // Other node_modules (catch-all for remaining small dependencies)
+          // This should now be much smaller after splitting out major libraries
           if (id.includes('node_modules/')) {
             return 'vendor';
           }
@@ -230,6 +271,11 @@ export default defineConfig({
         
         // Chunk naming for better caching
         chunkFileNames: (chunkInfo) => {
+          // Special handling for zxcvbn - mark it as async
+          if (chunkInfo.facadeModuleId && chunkInfo.facadeModuleId.includes('zxcvbn')) {
+            return `assets/js/lazy-[name]-[hash].js`;
+          }
+          
           const facadeModuleId = chunkInfo.facadeModuleId 
             ? chunkInfo.facadeModuleId.split('/').pop() 
             : 'chunk';

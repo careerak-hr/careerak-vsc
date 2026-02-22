@@ -1,8 +1,24 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import './LoadingStates.css';
 import AriaLiveRegion from './Accessibility/AriaLiveRegion';
+import { useAnimation } from '../context/AnimationContext';
 
 export const InitialLoadingScreen = () => {
+  const { shouldAnimate } = useAnimation();
+
+  // Fade animation variants (200ms)
+  const fadeVariants = shouldAnimate ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+  } : {
+    initial: { opacity: 1 },
+    animate: { opacity: 1 },
+    exit: { opacity: 1 }
+  };
+
   return (
     <>
       {/* Announce loading to screen readers */}
@@ -12,7 +28,13 @@ export const InitialLoadingScreen = () => {
         role="status"
       />
       
-      <div className="loading-screen-container">
+      <motion.div 
+        className="loading-screen-container"
+        variants={fadeVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
         <div className="loading-content-container">
           <div className="loading-logo">
             <div className="loading-logo-text">C</div>
@@ -29,12 +51,26 @@ export const InitialLoadingScreen = () => {
           
           <p className="loading-message" aria-live="polite">جاري تحميل التطبيق...</p>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
 
 export const InitializationErrorScreen = ({ error, onRetry, onRestart }) => {
+  const { shouldAnimate } = useAnimation();
+
+  // Fade animation variants (200ms)
+  const fadeVariants = shouldAnimate ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+  } : {
+    initial: { opacity: 1 },
+    animate: { opacity: 1 },
+    exit: { opacity: 1 }
+  };
+
   return (
     <>
       {/* Announce error to screen readers */}
@@ -44,7 +80,13 @@ export const InitializationErrorScreen = ({ error, onRetry, onRestart }) => {
         role="alert"
       />
       
-      <div className="error-screen-container">
+      <motion.div 
+        className="error-screen-container"
+        variants={fadeVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
         <div className="error-card">
           <div className="error-icon">⚠️</div>
           
@@ -111,12 +153,26 @@ export const InitializationErrorScreen = ({ error, onRetry, onRestart }) => {
             <p className="mt-1">الإصدار: {import.meta.env.VITE_APP_VERSION || '1.3.0'}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
 
 export const SimpleLoader = ({ message = "جاري التحميل..." }) => {
+  const { shouldAnimate } = useAnimation();
+
+  // Fade animation variants (200ms)
+  const fadeVariants = shouldAnimate ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+  } : {
+    initial: { opacity: 1 },
+    animate: { opacity: 1 },
+    exit: { opacity: 1 }
+  };
+
   return (
     <>
       {/* Announce loading to screen readers */}
@@ -126,17 +182,37 @@ export const SimpleLoader = ({ message = "جاري التحميل..." }) => {
         role="status"
       />
       
-      <div className="simple-loader-container">
+      <motion.div 
+        className="simple-loader-container"
+        variants={fadeVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
         <div className="text-center">
           <div className="simple-loader-spinner" role="status" aria-label={message}></div>
           <p className="text-primary">{message}</p>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
 
 export const ProgressLoader = ({ progress = 0, message = "جاري التحميل..." }) => {
+  const { shouldAnimate } = useAnimation();
+
+  // Fade animation variants (200ms)
+  const fadeVariants = shouldAnimate ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+  } : {
+    initial: { opacity: 1 },
+    animate: { opacity: 1 },
+    exit: { opacity: 1 }
+  };
+
   return (
     <>
       {/* Announce progress to screen readers */}
@@ -146,7 +222,13 @@ export const ProgressLoader = ({ progress = 0, message = "جاري التحمي�
         role="status"
       />
       
-      <div className="progress-loader-container">
+      <motion.div 
+        className="progress-loader-container"
+        variants={fadeVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+      >
         <div className="progress-loader-content">
           <div className="loading-logo mx-auto mb-6">
             <div className="loading-logo-text">C</div>
@@ -171,7 +253,7 @@ export const ProgressLoader = ({ progress = 0, message = "جاري التحمي�
           <p className="text-primary text-sm">{message}</p>
           <p className="text-primary text-xs mt-2">{Math.round(progress)}%</p>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };

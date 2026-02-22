@@ -9,7 +9,8 @@
 
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import fc from 'fast-check/lib/cjs/fast-check';
+import fc from 'fast-check';
+import { vi } from 'vitest';
 import { ThemeProvider, useTheme } from '../ThemeContext';
 
 // Helper to render hook with ThemeProvider
@@ -41,11 +42,11 @@ const matchMediaMock = (matches) => ({
   matches,
   media: '(prefers-color-scheme: dark)',
   onchange: null,
-  addListener: jest.fn(),
-  removeListener: jest.fn(),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
 });
 
 describe('ThemeContext Property-Based Tests', () => {
@@ -58,7 +59,7 @@ describe('ThemeContext Property-Based Tests', () => {
     
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: jest.fn().mockImplementation(() => matchMediaMock(false)),
+      value: vi.fn().mockImplementation(() => matchMediaMock(false)),
     });
 
     // Clear localStorage before each test
@@ -458,7 +459,7 @@ describe('ThemeContext Property-Based Tests', () => {
             // Mock matchMedia to return the system preference
             Object.defineProperty(window, 'matchMedia', {
               writable: true,
-              value: jest.fn().mockImplementation(() => matchMediaMock(systemDarkMode)),
+              value: vi.fn().mockImplementation(() => matchMediaMock(systemDarkMode)),
             });
 
             // Create a new hook instance
@@ -499,7 +500,7 @@ describe('ThemeContext Property-Based Tests', () => {
             // Mock matchMedia with system preference
             Object.defineProperty(window, 'matchMedia', {
               writable: true,
-              value: jest.fn().mockImplementation(() => matchMediaMock(systemDarkMode)),
+              value: vi.fn().mockImplementation(() => matchMediaMock(systemDarkMode)),
             });
 
             // Create a new hook instance
@@ -530,7 +531,7 @@ describe('ThemeContext Property-Based Tests', () => {
             const mockMatchMedia = matchMediaMock(initialSystemPref);
             Object.defineProperty(window, 'matchMedia', {
               writable: true,
-              value: jest.fn().mockImplementation(() => mockMatchMedia),
+              value: vi.fn().mockImplementation(() => mockMatchMedia),
             });
 
             const { result } = renderThemeHook();
@@ -656,7 +657,7 @@ describe('ThemeContext Property-Based Tests', () => {
             // Mock matchMedia with system preference
             Object.defineProperty(window, 'matchMedia', {
               writable: true,
-              value: jest.fn().mockImplementation(() => matchMediaMock(systemDarkMode)),
+              value: vi.fn().mockImplementation(() => matchMediaMock(systemDarkMode)),
             });
 
             const { result } = renderThemeHook();
@@ -775,7 +776,7 @@ describe('ThemeContext Property-Based Tests', () => {
             const { result } = renderThemeHook();
 
             // Verify the context only exposes the expected properties
-            const expectedKeys = ['isDark', 'themeMode', 'systemPreference', 'toggleTheme', 'setTheme'];
+            const expectedKeys = ['isDark', 'themeMode', 'systemPreference', 'toggleTheme', 'setTheme', 'isAuthenticated', 'setIsAuthenticated'];
             const actualKeys = Object.keys(result.current).sort();
             const expectedKeysSorted = expectedKeys.sort();
 

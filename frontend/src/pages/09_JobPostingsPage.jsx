@@ -9,6 +9,7 @@ import { useSEO } from '../hooks';
 import { transformJobToSchema } from '../utils/seoHelpers';
 import { RelatedLinks, Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import { JobCardSkeleton } from '../components/SkeletonLoaders';
 
 const JobPostingsPage = () => {
     const { language, startBgMusic } = useApp();
@@ -120,7 +121,16 @@ const JobPostingsPage = () => {
                 <main id="main-content" tabIndex="-1" className="job-postings-page">
                     <div className="container mx-auto px-4 py-8">
                         <h1 className="text-3xl font-bold mb-6">Job Postings</h1>
-                        <p>Loading jobs...</p>
+                        
+                        {/* Job listings skeleton with stagger animation */}
+                        <section aria-labelledby="job-results">
+                            <h2 id="job-results" className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
+                                Available Positions
+                            </h2>
+                            <div className="job-listings space-y-4">
+                                <JobCardSkeleton count={6} />
+                            </div>
+                        </section>
                     </div>
                 </main>
             </>

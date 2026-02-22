@@ -9,6 +9,7 @@
 
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
+import { vi } from 'vitest';
 import { ThemeProvider, useTheme } from '../ThemeContext';
 
 // Helper to render hook with ThemeProvider
@@ -40,11 +41,11 @@ const matchMediaMock = (matches) => ({
   matches,
   media: '(prefers-color-scheme: dark)',
   onchange: null,
-  addListener: jest.fn(),
-  removeListener: jest.fn(),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
+  addListener: vi.fn(),
+  removeListener: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
 });
 
 describe('ThemeContext Unit Tests', () => {
@@ -57,7 +58,7 @@ describe('ThemeContext Unit Tests', () => {
     
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
-      value: jest.fn().mockImplementation(() => matchMediaMock(false)),
+      value: vi.fn().mockImplementation(() => matchMediaMock(false)),
     });
 
     // Clear localStorage before each test
@@ -184,7 +185,7 @@ describe('ThemeContext Unit Tests', () => {
 
     it('should handle invalid theme mode gracefully', () => {
       const { result } = renderThemeHook();
-      const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation();
 
       act(() => {
         result.current.setTheme('invalid');
@@ -246,7 +247,7 @@ describe('ThemeContext Unit Tests', () => {
     it('should detect dark system preference', () => {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(() => matchMediaMock(true)),
+        value: vi.fn().mockImplementation(() => matchMediaMock(true)),
       });
 
       const { result } = renderThemeHook();
@@ -257,7 +258,7 @@ describe('ThemeContext Unit Tests', () => {
     it('should detect light system preference', () => {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(() => matchMediaMock(false)),
+        value: vi.fn().mockImplementation(() => matchMediaMock(false)),
       });
 
       const { result } = renderThemeHook();
@@ -268,7 +269,7 @@ describe('ThemeContext Unit Tests', () => {
     it('should apply system preference when themeMode is system', () => {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(() => matchMediaMock(true)),
+        value: vi.fn().mockImplementation(() => matchMediaMock(true)),
       });
 
       const { result } = renderThemeHook();
@@ -284,7 +285,7 @@ describe('ThemeContext Unit Tests', () => {
     it('should not apply system preference when themeMode is explicit', () => {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(() => matchMediaMock(true)),
+        value: vi.fn().mockImplementation(() => matchMediaMock(true)),
       });
 
       const { result } = renderThemeHook();
@@ -322,7 +323,7 @@ describe('ThemeContext Unit Tests', () => {
     it('should match systemPreference when themeMode is system', () => {
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(() => matchMediaMock(true)),
+        value: vi.fn().mockImplementation(() => matchMediaMock(true)),
       });
 
       const { result } = renderThemeHook();
@@ -385,7 +386,7 @@ describe('ThemeContext Unit Tests', () => {
   describe('useTheme Hook', () => {
     it('should throw error when used outside ThemeProvider', () => {
       // Suppress console.error for this test
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation();
 
       expect(() => {
         renderHook(() => useTheme());

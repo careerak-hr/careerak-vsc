@@ -38,6 +38,9 @@ class BootstrapManager {
     console.log('🚀 Bootstrap Manager: Initializing application...');
 
     try {
+      // Task 9.1.4: Initialize error tracking with backend integration
+      await this._initErrorTracking();
+      
       // تهيئة فورية بدون تأخير
       this.isInitialized = true;
       console.log('✅ Bootstrap Manager: Application initialized instantly');
@@ -45,6 +48,54 @@ class BootstrapManager {
     } catch (error) {
       console.error('❌ Bootstrap Manager: Initialization failed:', error);
       this.isInitialized = true;
+    }
+  }
+
+  /**
+   * تهيئة نظام تتبع الأخطاء
+   * Task 9.1.4: Integrate error logging with backend
+   */
+  async _initErrorTracking() {
+    console.log('🔍 Initializing error tracking...');
+
+    try {
+      const { initErrorTracking, setUserContext } = await import('../utils/errorTracking');
+      
+      // Initialize with custom service (Careerak backend)
+      initErrorTracking({
+        service: 'custom',
+        enabled: true,
+        environment: process.env.NODE_ENV || 'production',
+        release: '1.0.0',
+        sampleRate: 1.0, // Track all errors
+        ignoreErrors: [
+          'ResizeObserver loop',
+          'Non-Error promise rejection',
+        ],
+      });
+
+      this.services.set('errorTracking', { initErrorTracking, setUserContext });
+      console.log('✅ Error tracking initialized with backend integration');
+
+      // Set user context if user is logged in
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          setUserContext({
+            id: user._id,
+            email: user.email,
+            username: user.name,
+            role: user.role,
+          });
+          console.log('✅ User context set for error tracking');
+        } catch (err) {
+          console.warn('⚠️ Failed to set user context:', err);
+        }
+      }
+    } catch (error) {
+      console.warn('⚠️ Error tracking initialization failed:', error.message);
     }
   }
 

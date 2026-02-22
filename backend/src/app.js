@@ -176,6 +176,7 @@ app.use('/chat', chatRoutes);
 app.use('/reviews', require('./routes/reviewRoutes'));
 app.use('/auth', authRoutes);
 app.use('/oauth', oauthRoutes);
+app.use('/errors', require('./routes/errorLogRoutes'));
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

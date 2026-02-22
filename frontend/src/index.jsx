@@ -9,41 +9,58 @@ import "./styles/fontEnforcement.css"; // Import font enforcement styles
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { AnimationProvider } from "./context/AnimationContext";
-import { initPerformanceMeasurement } from "./utils/performanceMeasurement";
 
-// Initialize performance measurement (FCP, TTI, and other Core Web Vitals)
-initPerformanceMeasurement();
+// OPTIMIZATION: Defer performance measurement to after initial render (TTI optimization)
+// This reduces the critical path and improves Time to Interactive
+setTimeout(() => {
+  import("./utils/performanceMeasurement").then(({ initPerformanceMeasurement }) => {
+    initPerformanceMeasurement();
+  });
+}, 0);
 
+// OPTIMIZATION: Defer service worker registration to after initial render (TTI optimization)
 // Register service worker for PWA functionality (FR-PWA-1)
+// This is deferred to improve Time to Interactive by reducing critical path work
 if ('serviceWorker' in navigator) {
+  // Wait for page load and then defer registration
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/service-worker.js')
-      .then((registration) => {
-        console.log('Service Worker registered successfully:', registration.scope);
-        
-        // FR-PWA-6: Update detection and notification
-        // Listen for updates to the service worker
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
+    // Use requestIdleCallback if available, otherwise setTimeout
+    const registerSW = () => {
+      navigator.serviceWorker
+        .register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker registered successfully:', registration.scope);
           
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // New service worker is installed and ready
-              // Show update notification to user
-              showUpdateNotification(newWorker);
-            }
+          // FR-PWA-6: Update detection and notification
+          // Listen for updates to the service worker
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // New service worker is installed and ready
+                // Show update notification to user
+                showUpdateNotification(newWorker);
+              }
+            });
           });
+          
+          // Check for updates periodically
+          setInterval(() => {
+            registration.update();
+          }, 60 * 60 * 1000); // Check every hour
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
         });
-        
-        // Check for updates periodically
-        setInterval(() => {
-          registration.update();
-        }, 60 * 60 * 1000); // Check every hour
-      })
-      .catch((error) => {
-        console.error('Service Worker registration failed:', error);
-      });
+    };
+
+    // Use requestIdleCallback for better performance, fallback to setTimeout
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(registerSW, { timeout: 2000 });
+    } else {
+      setTimeout(registerSW, 1000);
+    }
   });
 }
 
@@ -176,3 +193,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     </HelmetProvider>
   </React.StrictMode>
 );
+
+// Remove initial loader once React has rendered (improves perceived FCP)
+// This ensures the loader is removed as soon as the first content is painted
+if (typeof window !== 'undefined') {
+  // Use requestAnimationFrame to ensure DOM is ready
+  requestAnimationFrame(() => {
+    document.body.classList.add('app-ready');
+  });
+}

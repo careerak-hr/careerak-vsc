@@ -230,3 +230,90 @@ exports.parseCV = async (req, res) => {
     res.status(500).json({ error: "Parsing Failed" });
   }
 };
+
+/**
+ * Get user preferences (theme, language, notifications, accessibility)
+ * GET /api/users/preferences
+ */
+exports.getUserPreferences = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('preferences');
+    
+    if (!user) {
+      return res.status(404).json({ error: 'المستخدم غير موجود' });
+    }
+
+    // Return preferences with defaults if not set
+    const preferences = user.preferences || {
+      theme: 'system',
+      language: 'ar',
+      notifications: { enabled: true, email: true, push: true },
+      accessibility: { reducedMotion: false, highContrast: false, fontSize: 'medium' }
+    };
+
+    res.status(200).json({ preferences });
+  } catch (error) {
+    console.error('Get preferences error:', error);
+    res.status(500).json({ error: 'خطأ في جلب التفضيلات' });
+  }
+};
+
+/**
+ * Update user preferences (theme, language, notifications, accessibility)
+ * PUT /api/users/preferences
+ */
+exports.updateUserPreferences = async (req, res) => {
+  try {
+    const { theme, language, notifications, accessibility } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ error: 'المستخدم غير موجود' });
+    }
+
+    // Initialize preferences if not exists
+    if (!user.preferences) {
+      user.preferences = {};
+    }
+
+    // Update only provided fields
+    if (theme !== undefined) {
+      if (!['light', 'dark', 'system'].includes(theme)) {
+        return res.status(400).json({ error: 'قيمة theme غير صحيحة' });
+      }
+      user.preferences.theme = theme;
+    }
+
+    if (language !== undefined) {
+      if (!['ar', 'en', 'fr'].includes(language)) {
+        return res.status(400).json({ error: 'قيمة language غير صحيحة' });
+      }
+      user.preferences.language = language;
+    }
+
+    if (notifications !== undefined) {
+      user.preferences.notifications = {
+        ...user.preferences.notifications,
+        ...notifications
+      };
+    }
+
+    if (accessibility !== undefined) {
+      user.preferences.accessibility = {
+        ...user.preferences.accessibility,
+        ...accessibility
+      };
+    }
+
+    await user.save();
+
+    res.status(200).json({ 
+      message: 'تم تحديث التفضيلات بنجاح',
+      preferences: user.preferences 
+    });
+  } catch (error) {
+    console.error('Update preferences error:', error);
+    res.status(500).json({ error: 'خطأ في تحديث التفضيلات' });
+  }
+};

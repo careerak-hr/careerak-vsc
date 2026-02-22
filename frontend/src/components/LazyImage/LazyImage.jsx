@@ -57,6 +57,10 @@ const LazyImage = ({
   onLoad = null,
   onError = null,
   showSpinner = true,
+  fallbackImage = null,
+  showRetry = true,
+  errorMessage = null,
+  logErrors = true,
   ...otherProps
 }) => {
   const [ref, isVisible] = useIntersectionObserver({
@@ -68,6 +72,8 @@ const LazyImage = ({
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [shouldLoad, setShouldLoad] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const [errorDetails, setErrorDetails] = useState(null);
 
   // Determine transformation options
   const options = preset && ImagePresets[preset]
@@ -107,8 +113,35 @@ const LazyImage = ({
 
   // Handle image error
   const handleError = (e) => {
+    const error = {
+      message: e.target?.error?.message || 'Failed to load image',
+      src: e.target?.src,
+      timestamp: new Date().toISOString(),
+      retryCount,
+    };
+    
+    setErrorDetails(error);
     setHasError(true);
-    if (onError) onError(e);
+    
+    // Log error if enabled
+    if (logErrors) {
+      console.error('[LazyImage] Image load error:', {
+        publicId,
+        alt,
+        ...error,
+      });
+    }
+    
+    if (onError) onError(e, error);
+  };
+
+  // Retry loading the image
+  const handleRetry = () => {
+    setHasError(false);
+    setErrorDetails(null);
+    setIsLoaded(false);
+    setRetryCount(prev => prev + 1);
+    setShouldLoad(true);
   };
 
   // Reset state when publicId changes
@@ -116,6 +149,8 @@ const LazyImage = ({
     setIsLoaded(false);
     setHasError(false);
     setShouldLoad(false);
+    setRetryCount(0);
+    setErrorDetails(null);
   }, [publicId]);
 
   // If no publicId, show placeholder
@@ -141,8 +176,30 @@ const LazyImage = ({
     );
   }
 
-  // If error occurred, show error placeholder
+  // If error occurred, show error placeholder with retry option
   if (hasError) {
+    // If fallback image is provided, try to load it
+    if (fallbackImage && retryCount === 0) {
+      return (
+        <img
+          ref={ref}
+          src={fallbackImage}
+          alt={alt}
+          className={`lazy-image-fallback ${className}`}
+          style={{
+            width: width || '100%',
+            height: height || 'auto',
+            objectFit: 'cover',
+            ...style,
+          }}
+          onError={() => {
+            // If fallback also fails, show error UI
+            setRetryCount(1);
+          }}
+        />
+      );
+    }
+
     return (
       <div
         ref={ref}
@@ -152,14 +209,43 @@ const LazyImage = ({
           height: height || 'auto',
           backgroundColor: '#fee2e2',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          padding: '1rem',
+          gap: '0.5rem',
           ...style,
         }}
         role="img"
         aria-label={alt || 'Image failed to load'}
       >
         <span style={{ color: '#dc2626', fontSize: '2rem' }}>⚠️</span>
+        {errorMessage && (
+          <span style={{ color: '#dc2626', fontSize: '0.875rem', textAlign: 'center' }}>
+            {errorMessage}
+          </span>
+        )}
+        {showRetry && (
+          <button
+            onClick={handleRetry}
+            style={{
+              marginTop: '0.5rem',
+              padding: '0.5rem 1rem',
+              backgroundColor: '#dc2626',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.375rem',
+              cursor: 'pointer',
+              fontSize: '0.875rem',
+              fontWeight: '500',
+            }}
+            onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
+            onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
+            aria-label="Retry loading image"
+          >
+            🔄 Retry
+          </button>
+        )}
       </div>
     );
   }
@@ -316,6 +402,10 @@ LazyImage.propTypes = {
   onLoad: PropTypes.func,
   onError: PropTypes.func,
   showSpinner: PropTypes.bool,
+  fallbackImage: PropTypes.string,
+  showRetry: PropTypes.bool,
+  errorMessage: PropTypes.string,
+  logErrors: PropTypes.bool,
 };
 
 export default LazyImage;

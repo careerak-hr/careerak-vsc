@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import PolicyPage from '../../pages/13_PolicyPage.jsx';
 import { useApp } from '../../context/AppContext';
 import { useFocusTrap } from '../Accessibility/FocusTrap';
 import { useAnimation } from '../../context/AnimationContext';
+
+// Lazy load PolicyPage for better performance
+const PolicyPage = React.lazy(() => import('../../pages/13_PolicyPage.jsx'));
 
 const PolicyModal = ({ onClose, onAgree }) => {
   const { language } = useApp();
@@ -74,7 +76,13 @@ const PolicyModal = ({ onClose, onAgree }) => {
             ...fontStyle
           }}
         >
-          <PolicyPage isModal={true} />
+          <Suspense fallback={
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#304B60] dark:border-[#D48161]"></div>
+            </div>
+          }>
+            <PolicyPage isModal={true} />
+          </Suspense>
         </div>
         
         {/* Footer - Fixed */}

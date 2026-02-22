@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrome Testing - Careerak Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #ccc;
+            background: #f9f9f9;
+        }
+        .test-item.pass {
+            border-left-color: #4caf50;
+            background: #e8f5e9;
+        }
+        .test-item.fail {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        .test-item.warn {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        h1 {
+            color: #304B60;
+        }
+        h2 {
+            color: #D48161;
+            border-bottom: 2px solid #E3DAD1;
+            padding-bottom: 10px;
+        }
+        .status {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+        .status.pass { background: #4caf50; color: white; }
+        .status.fail { background: #f44336; color: white; }
+        .status.warn { background: #ff9800; color: white; }
+        button {
+            background: #304B60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #D48161;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .code {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Chrome Testing Suite - Careerak Platform</h1>
+    <p><strong>Chrome Version:</strong> <span id="chromeVersion"></span></p>
+    <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+    <p><strong>Test Date:</strong> <span id="testDate"></span></p>
+
+    <div class="test-section">
+        <h2>Quick Tests</h2>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <button onclick="clearResults()">Clear Results</button>
+        <button onclick="exportResults()">Export Results</button>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        // Display browser info
+        document.getElementById('chromeVersion').textContent = navigator.userAgent.match(/Chrome\/(\d+\.\d+\.\d+\.\d+)/)?.[1] || 'Unknown';
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        document.getElementById('testDate').textContent = new Date().toLocaleString();
+
+        const tests = [];
+
+        function addTest(category, name, status, message) {
+            tests.push({ category, name, status, message, timestamp: new Date() });
+            displayTest(category, name, status, message);
+        }
+
+        function displayTest(category, name, status, message) {
+            const resultsDiv = document.getElementById('results');
+            
+            let categorySection = document.getElementById(`category-${category}`);
+            if (!categorySection) {
+                categorySection = document.createElement('div');
+                categorySection.id = `category-${category}`;
+                categorySection.className = 'test-section';
+                categorySection.innerHTML = `<h2>${category}</h2>`;
+                resultsDiv.appendChild(categorySection);
+            }
+
+            const testItem = document.createElement('div');
+            testItem.className = `test-item ${status}`;
+            testItem.innerHTML = `
+                <strong>${name}</strong>
+                <span class="status ${status}">${status.toUpperCase()}</span>
+                <p>${message}</p>
+            `;
+            categorySection.appendChild(testItem);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+            tests.length = 0;
+        }
+
+        function exportResults() {
+            const report = {
+                chromeVersion: document.getElementById('chromeVersion').textContent,
+                userAgent: navigator.userAgent,
+                testDate: new Date().toISOString(),
+                tests: tests
+            };
+            
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `chrome-test-results-${Date.now()}.json`;
+            a.click();
+        }
+
+        // Test 1: Browser Features
+        function testBrowserFeatures() {
+            const category = 'Browser Features';
+            
+            // Service Worker
+            if ('serviceWorker' in navigator) {
+                addTest(category, 'Service Worker Support', 'pass', 'Service Worker API is supported');
+            } else {
+                addTest(category, 'Service Worker Support', 'fail', 'Service Worker API is NOT supported');
+            }
+
+            // Web App Manifest
+            if ('onappinstalled' in window) {
+                addTest(category, 'PWA Install Support', 'pass', 'PWA installation is supported');
+            } else {
+                addTest(category, 'PWA Install Support', 'warn', 'PWA installation may not be fully supported');
+            }
+
+            // Notifications
+            if ('Notification' in window) {
+                addTest(category, 'Notifications API', 'pass', `Notifications supported. Permission: ${Notification.permission}`);
+            } else {
+                addTest(category, 'Notifications API', 'fail', 'Notifications API is NOT supported');
+            }
+
+            // Intersection Observer
+            if ('IntersectionObserver' in window) {
+                addTest(category, 'Intersection Observer', 'pass', 'Intersection Observer is supported (for lazy loading)');
+            } else {
+                addTest(category, 'Intersection Observer', 'fail', 'Intersection Observer is NOT supported');
+            }
+
+            // WebP Support
+            const webpSupport = document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0;
+            if (webpSupport) {
+                addTest(category, 'WebP Image Format', 'pass', 'WebP format is supported');
+            } else {
+                addTest(category, 'WebP Image Format', 'fail', 'WebP format is NOT supported');
+            }
+
+            // Local Storage
+            try {
+                localStorage.setItem('test', 'test');
+                localStorage.removeItem('test');
+                addTest(category, 'Local Storage', 'pass', 'Local Storage is available');
+            } catch (e) {
+                addTest(category, 'Local Storage', 'fail', 'Local Storage is NOT available');
+            }
+
+            // Prefers Reduced Motion
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            addTest(category, 'Prefers Reduced Motion', prefersReducedMotion ? 'warn' : 'pass', 
+                prefersReducedMotion ? 'User prefers reduced motion' : 'No motion preference set');
+
+            // Prefers Color Scheme
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            addTest(category, 'Prefers Color Scheme', 'pass', 
+                prefersDark ? 'User prefers dark mode' : 'User prefers light mode');
+        }
+
+        // Test 2: Performance APIs
+        function testPerformanceAPIs() {
+            const category = 'Performance APIs';
+
+            // Performance API
+            if ('performance' in window) {
+                addTest(category, 'Performance API', 'pass', 'Performance API is available');
+                
+                // Navigation Timing
+                if (performance.timing) {
+                    const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+                    addTest(category, 'Page Load Time', loadTime < 3000 ? 'pass' : 'warn', 
+                        `Page loaded in ${loadTime}ms`);
+                }
+
+                // Performance Observer
+                if ('PerformanceObserver' in window) {
+                    addTest(category, 'Performance Observer', 'pass', 'Performance Observer is supported');
+                } else {
+                    addTest(category, 'Performance Observer', 'warn', 'Performance Observer is NOT supported');
+                }
+            } else {
+                addTest(category, 'Performance API', 'fail', 'Performance API is NOT available');
+            }
+
+            // Request Animation Frame
+            if ('requestAnimationFrame' in window) {
+                addTest(category, 'Request Animation Frame', 'pass', 'RAF is supported (for smooth animations)');
+            } else {
+                addTest(category, 'Request Animation Frame', 'fail', 'RAF is NOT supported');
+            }
+        }
+
+        // Test 3: Accessibility Features
+        function testAccessibilityFeatures() {
+            const category = 'Accessibility';
+
+            // ARIA Support
+            const testDiv = document.createElement('div');
+            testDiv.setAttribute('role', 'button');
+            testDiv.setAttribute('aria-label', 'Test');
+            if (testDiv.getAttribute('role') === 'button') {
+                addTest(category, 'ARIA Attributes', 'pass', 'ARIA attributes are supported');
+            } else {
+                addTest(category, 'ARIA Attributes', 'fail', 'ARIA attributes are NOT supported');
+            }
+
+            // Focus Management
+            if (document.activeElement) {
+                addTest(category, 'Focus Management', 'pass', 'Focus management is supported');
+            } else {
+                addTest(category, 'Focus Management', 'fail', 'Focus management is NOT supported');
+            }
+
+            // Keyboard Events
+            if ('KeyboardEvent' in window) {
+                addTest(category, 'Keyboard Events', 'pass', 'Keyboard events are supported');
+            } else {
+                addTest(category, 'Keyboard Events', 'fail', 'Keyboard events are NOT supported');
+            }
+        }
+
+        // Test 4: CSS Features
+        function testCSSFeatures() {
+            const category = 'CSS Features';
+
+            // CSS Variables
+            if (CSS.supports('color', 'var(--test)')) {
+                addTest(category, 'CSS Variables', 'pass', 'CSS custom properties are supported');
+            } else {
+                addTest(category, 'CSS Variables', 'fail', 'CSS custom properties are NOT supported');
+            }
+
+            // CSS Grid
+            if (CSS.supports('display', 'grid')) {
+                addTest(category, 'CSS Grid', 'pass', 'CSS Grid is supported');
+            } else {
+                addTest(category, 'CSS Grid', 'fail', 'CSS Grid is NOT supported');
+            }
+
+            // CSS Flexbox
+            if (CSS.supports('display', 'flex')) {
+                addTest(category, 'CSS Flexbox', 'pass', 'CSS Flexbox is supported');
+            } else {
+                addTest(category, 'CSS Flexbox', 'fail', 'CSS Flexbox is NOT supported');
+            }
+
+            // CSS Transitions
+            if (CSS.supports('transition', 'all 300ms')) {
+                addTest(category, 'CSS Transitions', 'pass', 'CSS transitions are supported');
+            } else {
+                addTest(category, 'CSS Transitions', 'fail', 'CSS transitions are NOT supported');
+            }
+
+            // CSS Animations
+            if (CSS.supports('animation', 'test 1s')) {
+                addTest(category, 'CSS Animations', 'pass', 'CSS animations are supported');
+            } else {
+                addTest(category, 'CSS Animations', 'fail', 'CSS animations are NOT supported');
+            }
+        }
+
+        // Test 5: Network Features
+        function testNetworkFeatures() {
+            const category = 'Network Features';
+
+            // Fetch API
+            if ('fetch' in window) {
+                addTest(category, 'Fetch API', 'pass', 'Fetch API is supported');
+            } else {
+                addTest(category, 'Fetch API', 'fail', 'Fetch API is NOT supported');
+            }
+
+            // Cache API
+            if ('caches' in window) {
+                addTest(category, 'Cache API', 'pass', 'Cache API is supported (for PWA)');
+            } else {
+                addTest(category, 'Cache API', 'fail', 'Cache API is NOT supported');
+            }
+
+            // Network Information
+            if ('connection' in navigator) {
+                const conn = navigator.connection;
+                addTest(category, 'Network Information', 'pass', 
+                    `Network type: ${conn.effectiveType || 'unknown'}, Downlink: ${conn.downlink || 'unknown'} Mbps`);
+            } else {
+                addTest(category, 'Network Information', 'warn', 'Network Information API is NOT supported');
+            }
+        }
+
+        // Test 6: Security Features
+        function testSecurityFeatures() {
+            const category = 'Security';
+
+            // HTTPS
+            if (location.protocol === 'https:') {
+                addTest(category, 'HTTPS', 'pass', 'Page is served over HTTPS');
+            } else {
+                addTest(category, 'HTTPS', 'warn', 'Page is NOT served over HTTPS (required for PWA)');
+            }
+
+            // Secure Context
+            if (window.isSecureContext) {
+                addTest(category, 'Secure Context', 'pass', 'Running in secure context');
+            } else {
+                addTest(category, 'Secure Context', 'warn', 'NOT running in secure context');
+            }
+
+            // Content Security Policy
+            const csp = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            if (csp) {
+                addTest(category, 'Content Security Policy', 'pass', 'CSP meta tag found');
+            } else {
+                addTest(category, 'Content Security Policy', 'warn', 'No CSP meta tag found');
+            }
+        }
+
+        // Run all tests
+        function runAllTests() {
+            clearResults();
+            
+            addTest('System', 'Test Started', 'pass', `Testing on Chrome ${document.getElementById('chromeVersion').textContent}`);
+            
+            testBrowserFeatures();
+            testPerformanceAPIs();
+            testAccessibilityFeatures();
+            testCSSFeatures();
+            testNetworkFeatures();
+            testSecurityFeatures();
+            
+            addTest('System', 'Test Completed', 'pass', `All tests completed at ${new Date().toLocaleTimeString()}`);
+            
+            // Summary
+            const passed = tests.filter(t => t.status === 'pass').length;
+            const failed = tests.filter(t => t.status === 'fail').length;
+            const warned = tests.filter(t => t.status === 'warn').length;
+            
+            addTest('Summary', 'Test Results', 
+                failed === 0 ? 'pass' : 'warn', 
+                `Passed: ${passed}, Failed: ${failed}, Warnings: ${warned}`);
+        }
+
+        // Auto-run tests on load
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

@@ -1,12 +1,39 @@
 import React from 'react';
+import { motion } from 'framer-motion';
+import { useAnimation } from '../../context/AnimationContext';
 
 /**
  * Skeleton loader for Table Pages
  * Matches the layout of data tables with rows and columns
+ * 
+ * Features:
+ * - 200ms fade transition
+ * - Respects prefers-reduced-motion
+ * - Dark mode support
  */
 export const TableSkeleton = ({ rows = 5, columns = 5, hasActions = true }) => {
+  const { shouldAnimate } = useAnimation();
+
+  // Fade animation variants (200ms)
+  const fadeVariants = shouldAnimate ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.2 }
+  } : {
+    initial: { opacity: 1 },
+    animate: { opacity: 1 },
+    exit: { opacity: 1 }
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+    <motion.div 
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
+      variants={fadeVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       {/* Table Header */}
       <div className="border-b border-gray-200 dark:border-gray-700">
         <div className="grid gap-4 p-4 animate-pulse" style={{ gridTemplateColumns: `repeat(${columns + (hasActions ? 1 : 0)}, 1fr)` }}>
@@ -49,7 +76,7 @@ export const TableSkeleton = ({ rows = 5, columns = 5, hasActions = true }) => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

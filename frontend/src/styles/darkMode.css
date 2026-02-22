@@ -134,6 +134,34 @@
 }
 
 /* ============================================
+   SMOOTH TRANSITIONS (300ms)
+   ============================================
+   Apply smooth transitions to all color properties for dark mode toggle.
+   Duration: 300ms (as per FR-DM-2 and FR-DM-7)
+   ============================================ */
+
+/* Universal transition for all elements */
+*,
+*::before,
+*::after {
+  transition: background-color 300ms ease-in-out,
+              color 300ms ease-in-out,
+              border-color 300ms ease-in-out,
+              box-shadow 300ms ease-in-out,
+              fill 300ms ease-in-out,
+              stroke 300ms ease-in-out !important;
+}
+
+/* Disable transitions for elements that should change instantly */
+.no-transition,
+.no-transition *,
+input[type="range"],
+input[type="checkbox"],
+input[type="radio"] {
+  transition: none !important;
+}
+
+/* ============================================
    APPLY VARIABLES TO ELEMENTS
    ============================================ */
 

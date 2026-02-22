@@ -21,6 +21,42 @@ npm run check:contrast
 
 **Documentation**: [AUTOMATED_CONTRAST_CHECKER.md](../../docs/AUTOMATED_CONTRAST_CHECKER.md)
 
+### measure-load-time.js
+
+**Purpose**: Measure load time improvements from performance optimizations
+
+**Usage**:
+```bash
+npm run build
+npm run measure:load-time
+```
+
+**Features**:
+- Measures FCP, TTI, LCP, TBT, Speed Index
+- Tests on Fast 3G network conditions
+- Compares to baseline (40-60% improvement target)
+- Generates detailed JSON reports
+- Color-coded pass/fail output
+
+**Documentation**: [LOAD_TIME_MEASUREMENT.md](../../docs/LOAD_TIME_MEASUREMENT.md), [README_LOAD_TIME.md](./README_LOAD_TIME.md)
+
+### measure-bundle-size.js
+
+**Purpose**: Measure bundle size reduction from code splitting and optimization
+
+**Usage**:
+```bash
+npm run build
+npm run measure:bundle
+```
+
+**Features**:
+- Analyzes JS and CSS bundle sizes
+- Compares to baseline (40-60% reduction target)
+- Shows gzip and brotli compression
+- Validates chunk size limits (< 200KB)
+- Generates detailed JSON reports
+
 ### pre-commit-contrast.sh
 
 **Purpose**: Pre-commit hook for contrast checking
@@ -50,14 +86,89 @@ npm run generate-icons
 - Creates maskable icons
 - Optimizes for PWA
 
+### generate-sitemap.js
+
+**Purpose**: Generate sitemap.xml for SEO
+
+**Usage**:
+```bash
+npm run generate-sitemap
+```
+
+**Features**:
+- Includes all public routes
+- Sets update frequency and priority
+- Validates sitemap format
+
+**Documentation**: [README_SITEMAP.md](./README_SITEMAP.md)
+
+### generate-og-images.js
+
+**Purpose**: Generate Open Graph social media preview images
+
+**Usage**:
+```bash
+npm run generate-og-images
+```
+
+**Features**:
+- Creates 1200x630 OG images
+- Supports multiple languages
+- Optimizes for social sharing
+
+**Documentation**: [README_OG_IMAGES.md](./README_OG_IMAGES.md)
+
+### test-slow-network.js
+
+**Purpose**: Test application on slow network conditions
+
+**Usage**:
+```bash
+npm run test:slow-network
+```
+
+**Features**:
+- Simulates 3G network
+- Tests load times
+- Identifies performance issues
+
+### mobile-test-helper.js
+
+**Purpose**: Helper for mobile device testing
+
+**Usage**:
+```bash
+npm run test:mobile-helper
+```
+
+**Features**:
+- Mobile viewport simulation
+- Touch event testing
+- Responsive design validation
+
 ## Script Categories
+
+### Performance Measurement
+- `measure-load-time.js` - Load time improvement measurement
+- `measure-bundle-size.js` - Bundle size reduction measurement
+- `test-slow-network.js` - Slow network testing
 
 ### Accessibility
 - `check-contrast.js` - Automated contrast checking
 - `pre-commit-contrast.sh` - Pre-commit contrast validation
 
+### SEO & Social
+- `generate-sitemap.js` - Sitemap generation
+- `generate-og-images.js` - Open Graph image generation
+- `validate-sitemap.js` - Sitemap validation
+- `validate-og-tags.js` - OG tags validation
+
 ### Build & Deploy
 - `generate-icons.js` - PWA icon generation
+
+### Testing
+- `mobile-test-helper.js` - Mobile testing helper
+- `test-slow-network.js` - Network throttling tests
 
 ## Adding New Scripts
 
@@ -90,10 +201,19 @@ Scripts should use standard exit codes:
 
 For detailed documentation, see:
 
+### Performance
+- [Load Time Measurement](../../docs/LOAD_TIME_MEASUREMENT.md)
+- [Load Time Quick Start](./README_LOAD_TIME.md)
+
+### Accessibility
 - [Automated Contrast Checker](../../docs/AUTOMATED_CONTRAST_CHECKER.md)
 - [Quick Start Guide](../../docs/CONTRAST_CHECKER_QUICK_START.md)
 - [Implementation Summary](../../docs/CONTRAST_CHECKING_SUMMARY.md)
 
+### SEO
+- [Sitemap Guide](./README_SITEMAP.md)
+- [Open Graph Images](./README_OG_IMAGES.md)
+
 ---
 
-**Last Updated**: 2026-02-20
+**Last Updated**: 2026-02-22

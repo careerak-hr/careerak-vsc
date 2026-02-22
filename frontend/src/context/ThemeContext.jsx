@@ -8,6 +8,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
  * - toggleTheme: Function to switch between light/dark/system
  * - systemPreference: Detected system dark mode preference
  * - Persists preference in localStorage ('careerak-theme')
+ * - Syncs with backend API for authenticated users
  * - Detects system preference using matchMedia
  * 
  * Storage values: 'light' | 'dark' | 'system'
@@ -40,6 +41,51 @@ export const ThemeProvider = ({ children }) => {
     }
     return themeMode === 'dark';
   });
+
+  // Track if user is authenticated
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem('token');
+    }
+    return false;
+  });
+
+  // Sync theme with backend on mount if authenticated
+  useEffect(() => {
+    const syncThemeWithBackend = async () => {
+      if (!isAuthenticated) return;
+
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch('/api/users/preferences', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const backendTheme = data.preferences?.theme;
+          
+          // If backend has a theme preference, use it
+          if (backendTheme && ['light', 'dark', 'system'].includes(backendTheme)) {
+            const localTheme = localStorage.getItem('careerak-theme');
+            
+            // Only update if different from local storage
+            if (localTheme !== backendTheme) {
+              setThemeMode(backendTheme);
+              localStorage.setItem('careerak-theme', backendTheme);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Failed to sync theme with backend:', error);
+      }
+    };
+
+    syncThemeWithBackend();
+  }, [isAuthenticated]);
 
   // Listen for system preference changes
   useEffect(() => {
@@ -91,6 +137,28 @@ export const ThemeProvider = ({ children }) => {
   }, [isDark]);
 
   /**
+   * Sync theme preference with backend API
+   * @param {string} mode - 'light' | 'dark' | 'system'
+   */
+  const syncWithBackend = async (mode) => {
+    if (!isAuthenticated) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await fetch('/api/users/preferences', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ theme: mode })
+      });
+    } catch (error) {
+      console.error('Failed to sync theme with backend:', error);
+    }
+  };
+
+  /**
    * Toggle theme between light, dark, and system
    * Cycles: light → dark → system → light
    */
@@ -110,6 +178,9 @@ export const ThemeProvider = ({ children }) => {
       if (typeof window !== 'undefined') {
         localStorage.setItem('careerak-theme', newMode);
       }
+
+      // Sync with backend if authenticated
+      syncWithBackend(newMode);
 
       return newMode;
     });
@@ -131,6 +202,9 @@ export const ThemeProvider = ({ children }) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('careerak-theme', mode);
     }
+
+    // Sync with backend if authenticated
+    syncWithBackend(mode);
   };
 
   const value = {
@@ -139,6 +213,8 @@ export const ThemeProvider = ({ children }) => {
     systemPreference,
     toggleTheme,
     setTheme,
+    isAuthenticated,
+    setIsAuthenticated,
   };
 
   return (
@@ -150,7 +226,7 @@ export const ThemeProvider = ({ children }) => {
 
 /**
  * Custom hook to use theme context
- * @returns {Object} { isDark, themeMode, systemPreference, toggleTheme, setTheme }
+ * @returns {Object} { isDark, themeMode, systemPreference, toggleTheme, setTheme, isAuthenticated, setIsAuthenticated }
  * @throws {Error} If used outside ThemeProvider
  */
 export const useTheme = () => {
