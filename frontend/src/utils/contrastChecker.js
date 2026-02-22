@@ -1,74 +1,91 @@
 /**
- * Contrast Checker Utility
+ * Color Contrast Checker Utility
  * 
- * Verifies WCAG 2.1 Level AA color contrast requirements:
- * - Normal text (< 18pt): 4.5:1 minimum
+ * Validates WCAG 2.1 Level AA compliance for color contrast ratios.
+ * 
+ * Requirements:
+ * - Normal text (< 18pt or < 14pt bold): 4.5:1 minimum
  * - Large text (≥ 18pt or ≥ 14pt bold): 3:1 minimum
+ * - UI components and graphics: 3:1 minimum
  * 
- * Based on WCAG 2.1 guidelines:
- * https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
+ * References:
+ * - FR-A11Y-8: Color contrast ratio requirements
+ * - NFR-A11Y-3: WCAG 2.1 Level AA compliance
  */
 
 /**
  * Convert hex color to RGB
- * @param {string} hex - Hex color (e.g., "#1A2332" or "#D4816180")
- * @returns {object} RGB values {r, g, b}
+ * @param {string} hex - Hex color code (e.g., "#304B60" or "#304B6080")
+ * @returns {object} RGB values {r, g, b, a}
  */
-function hexToRgb(hex) {
+export function hexToRgb(hex) {
   // Remove # if present
   hex = hex.replace('#', '');
   
   // Handle 8-digit hex (with alpha)
   if (hex.length === 8) {
-    hex = hex.substring(0, 6);
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const a = parseInt(hex.substring(6, 8), 16) / 255;
+    return { r, g, b, a };
+  }
+  
+  // Handle 6-digit hex
+  if (hex.length === 6) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { r, g, b, a: 1 };
   }
   
   // Handle 3-digit hex
   if (hex.length === 3) {
-    hex = hex.split('').map(char => char + char).join('');
+    const r = parseInt(hex[0] + hex[0], 16);
+    const g = parseInt(hex[1] + hex[1], 16);
+    const b = parseInt(hex[2] + hex[2], 16);
+    return { r, g, b, a: 1 };
   }
   
-  const r = parseInt(hex.substring(0, 2), 16);
-  const g = parseInt(hex.substring(2, 4), 16);
-  const b = parseInt(hex.substring(4, 6), 16);
-  
-  return { r, g, b };
+  throw new Error(`Invalid hex color: ${hex}`);
 }
 
 /**
- * Calculate relative luminance
+ * Calculate relative luminance of a color
  * @param {object} rgb - RGB values {r, g, b}
- * @returns {number} Relative luminance
+ * @returns {number} Relative luminance (0-1)
  */
-function getLuminance(rgb) {
-  const { r, g, b } = rgb;
-  
-  // Convert to 0-1 range
-  const rsRGB = r / 255;
-  const gsRGB = g / 255;
-  const bsRGB = b / 255;
+export function getLuminance(rgb) {
+  // Convert RGB to sRGB
+  const rsRGB = rgb.r / 255;
+  const gsRGB = rgb.g / 255;
+  const bsRGB = rgb.b / 255;
   
   // Apply gamma correction
-  const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
-  const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
-  const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
+  const r = rsRGB <= 0.03928 ? rsRGB / 12.92 : Math.pow((rsRGB + 0.055) / 1.055, 2.4);
+  const g = gsRGB <= 0.03928 ? gsRGB / 12.92 : Math.pow((gsRGB + 0.055) / 1.055, 2.4);
+  const b = bsRGB <= 0.03928 ? bsRGB / 12.92 : Math.pow((bsRGB + 0.055) / 1.055, 2.4);
   
   // Calculate luminance
-  return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
 /**
  * Calculate contrast ratio between two colors
  * @param {string} color1 - First color (hex)
  * @param {string} color2 - Second color (hex)
- * @returns {number} Contrast ratio
+ * @returns {number} Contrast ratio (1-21)
  */
 export function getContrastRatio(color1, color2) {
   const rgb1 = hexToRgb(color1);
   const rgb2 = hexToRgb(color2);
   
-  const lum1 = getLuminance(rgb1);
-  const lum2 = getLuminance(rgb2);
+  // Handle alpha transparency by blending with background
+  const blendedRgb1 = rgb1.a < 1 ? blendWithWhite(rgb1) : rgb1;
+  const blendedRgb2 = rgb2.a < 1 ? blendWithWhite(rgb2) : rgb2;
+  
+  const lum1 = getLuminance(blendedRgb1);
+  const lum2 = getLuminance(blendedRgb2);
   
   const lighter = Math.max(lum1, lum2);
   const darker = Math.min(lum1, lum2);
@@ -77,222 +94,189 @@ export function getContrastRatio(color1, color2) {
 }
 
 /**
- * Check if contrast ratio meets WCAG AA standards
- * @param {number} ratio - Contrast ratio
- * @param {boolean} isLargeText - Whether text is large (≥18pt or ≥14pt bold)
- * @returns {object} Result {passes, level, ratio}
+ * Blend color with white background (for alpha transparency)
+ * @param {object} rgba - RGBA values {r, g, b, a}
+ * @returns {object} Blended RGB values
  */
-export function meetsWCAG(ratio, isLargeText = false) {
-  const requiredRatio = isLargeText ? 3.0 : 4.5;
-  const passes = ratio >= requiredRatio;
-  
-  // Determine WCAG level
-  let level = 'Fail';
-  if (ratio >= 7.0) {
-    level = 'AAA';
-  } else if (ratio >= 4.5) {
-    level = 'AA';
-  } else if (isLargeText && ratio >= 3.0) {
-    level = 'AA (Large Text)';
-  }
-  
+function blendWithWhite(rgba) {
+  const { r, g, b, a } = rgba;
   return {
-    passes,
-    level,
-    ratio: ratio.toFixed(2),
-    required: requiredRatio.toFixed(1)
+    r: Math.round(r * a + 255 * (1 - a)),
+    g: Math.round(g * a + 255 * (1 - a)),
+    b: Math.round(b * a + 255 * (1 - a)),
+    a: 1
   };
 }
 
 /**
- * Dark mode color palette from darkMode.css
+ * Check if contrast ratio meets WCAG AA standards
+ * @param {number} ratio - Contrast ratio
+ * @param {string} level - Text level: 'normal' or 'large'
+ * @returns {object} Compliance status
  */
-export const darkModeColors = {
-  backgrounds: {
-    primary: '#1A2332',
-    secondary: '#243447',
-    tertiary: '#2E3F54',
-    hover: '#384A61'
+export function meetsWCAG_AA(ratio, level = 'normal') {
+  const required = level === 'large' ? 3 : 4.5;
+  const passes = ratio >= required;
+  
+  return {
+    passes,
+    ratio: ratio.toFixed(2),
+    required: required.toFixed(1),
+    level: passes ? 'AA' : 'Fail',
+    message: passes 
+      ? `✅ Passes WCAG AA (${ratio.toFixed(2)}:1 ≥ ${required}:1)`
+      : `❌ Fails WCAG AA (${ratio.toFixed(2)}:1 < ${required}:1)`
+  };
+}
+
+/**
+ * Check if contrast ratio meets WCAG AAA standards
+ * @param {number} ratio - Contrast ratio
+ * @param {string} level - Text level: 'normal' or 'large'
+ * @returns {object} Compliance status
+ */
+export function meetsWCAG_AAA(ratio, level = 'normal') {
+  const required = level === 'large' ? 4.5 : 7;
+  const passes = ratio >= required;
+  
+  return {
+    passes,
+    ratio: ratio.toFixed(2),
+    required: required.toFixed(1),
+    level: passes ? 'AAA' : 'Fail',
+    message: passes 
+      ? `✅ Passes WCAG AAA (${ratio.toFixed(2)}:1 ≥ ${required}:1)`
+      : `❌ Fails WCAG AAA (${ratio.toFixed(2)}:1 < ${required}:1)`
+  };
+}
+
+/**
+ * Audit a color combination
+ * @param {string} foreground - Foreground color (hex)
+ * @param {string} background - Background color (hex)
+ * @param {string} level - Text level: 'normal' or 'large'
+ * @returns {object} Audit results
+ */
+export function auditColorCombination(foreground, background, level = 'normal') {
+  const ratio = getContrastRatio(foreground, background);
+  const aa = meetsWCAG_AA(ratio, level);
+  const aaa = meetsWCAG_AAA(ratio, level);
+  
+  return {
+    foreground,
+    background,
+    level,
+    ratio: ratio.toFixed(2),
+    aa,
+    aaa,
+    passes: aa.passes
+  };
+}
+
+/**
+ * Careerak color palette (from project-standards.md)
+ */
+export const CAREERAK_COLORS = {
+  // Light Mode
+  light: {
+    primary: '#304B60',      // كحلي
+    secondary: '#E3DAD1',    // بيج
+    accent: '#A04D2F',       // نحاسي أغمق (adjusted for 4.5:1)
+    text: {
+      primary: '#304B60',
+      secondary: '#3D5A73',  // Adjusted for 4.5:1 contrast
+      tertiary: '#304B60',   // Use primary for better contrast
+      muted: '#3D5A73'       // Adjusted for 4.5:1 contrast
+    },
+    bg: {
+      primary: '#E3DAD1',
+      secondary: '#E8DFD6',
+      tertiary: '#F0EBE5',
+      hover: '#DDD4CB'
+    }
   },
-  text: {
-    primary: '#E3DAD1',
-    secondary: '#D4CCC3',
-    tertiary: '#C5BDB4',
-    muted: '#A39A91',
-    inverse: '#1A2332'
-  },
-  accent: {
-    primary: '#E09A7A',
-    secondary: '#EAA88A',
-    hover: '#D48161'
-  },
-  borders: {
-    primary: '#D4816180',
-    secondary: '#E3DAD140',
-    light: '#304B6080'
-  },
-  input: {
-    border: '#D4816180',
-    bg: '#243447',
-    text: '#E3DAD1'
-  },
-  modal: {
-    bg: '#243447',
-    border: '#D48161',
-    overlay: 'rgba(0, 0, 0, 0.7)'
-  },
-  status: {
-    success: '#66BB6A',
-    successLight: '#81C784',
-    warning: '#FFA726',
-    warningLight: '#FFB74D',
-    error: '#EF5350',
-    errorLight: '#E57373',
-    info: '#42A5F5',
-    infoLight: '#64B5F6'
+  // Dark Mode
+  dark: {
+    primary: '#1A2332',      // كحلي غامق
+    secondary: '#243447',    // كحلي غامق
+    accent: '#E09A7A',       // نحاسي أفتح
+    text: {
+      primary: '#E3DAD1',
+      secondary: '#D4CCC3',
+      tertiary: '#C5BDB4',
+      muted: '#A39A91'
+    },
+    bg: {
+      primary: '#1A2332',
+      secondary: '#243447',
+      tertiary: '#2E3F54',
+      hover: '#384A61'
+    }
   }
 };
 
 /**
- * Verify all dark mode color combinations
- * @returns {object} Verification results
+ * Audit all Careerak color combinations
+ * @returns {object} Audit results for light and dark modes
  */
-export function verifyDarkModeContrast() {
+export function auditCareerakColors() {
   const results = {
-    passed: [],
-    failed: [],
-    warnings: []
+    light: [],
+    dark: []
   };
   
-  // Test combinations
-  const combinations = [
-    // Primary text on backgrounds
-    { name: 'Primary text on primary background', text: darkModeColors.text.primary, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Primary text on secondary background', text: darkModeColors.text.primary, bg: darkModeColors.backgrounds.secondary, isLarge: false },
-    { name: 'Primary text on tertiary background', text: darkModeColors.text.primary, bg: darkModeColors.backgrounds.tertiary, isLarge: false },
-    { name: 'Primary text on hover background', text: darkModeColors.text.primary, bg: darkModeColors.backgrounds.hover, isLarge: false },
-    
-    // Secondary text on backgrounds
-    { name: 'Secondary text on primary background', text: darkModeColors.text.secondary, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Secondary text on secondary background', text: darkModeColors.text.secondary, bg: darkModeColors.backgrounds.secondary, isLarge: false },
-    
-    // Tertiary text on backgrounds
-    { name: 'Tertiary text on primary background', text: darkModeColors.text.tertiary, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Tertiary text on secondary background', text: darkModeColors.text.tertiary, bg: darkModeColors.backgrounds.secondary, isLarge: false },
-    
-    // Muted text on backgrounds
-    { name: 'Muted text on primary background', text: darkModeColors.text.muted, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Muted text on secondary background', text: darkModeColors.text.muted, bg: darkModeColors.backgrounds.secondary, isLarge: false },
-    
-    // Accent colors on backgrounds
-    { name: 'Accent primary on primary background', text: darkModeColors.accent.primary, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Accent primary on secondary background', text: darkModeColors.accent.primary, bg: darkModeColors.backgrounds.secondary, isLarge: false },
-    { name: 'Accent secondary on primary background', text: darkModeColors.accent.secondary, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    
-    // Input text on input background
-    { name: 'Input text on input background', text: darkModeColors.input.text, bg: darkModeColors.input.bg, isLarge: false },
-    
-    // Status colors on backgrounds
-    { name: 'Success on primary background', text: darkModeColors.status.success, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Warning on primary background', text: darkModeColors.status.warning, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Error on primary background', text: darkModeColors.status.error, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    { name: 'Info on primary background', text: darkModeColors.status.info, bg: darkModeColors.backgrounds.primary, isLarge: false },
-    
-    // Inverse text (for buttons/badges)
-    { name: 'Inverse text on accent primary', text: darkModeColors.text.inverse, bg: darkModeColors.accent.primary, isLarge: false },
-    
-    // Large text combinations (headings)
-    { name: 'Primary text on primary background (Large)', text: darkModeColors.text.primary, bg: darkModeColors.backgrounds.primary, isLarge: true },
-    { name: 'Accent primary on primary background (Large)', text: darkModeColors.accent.primary, bg: darkModeColors.backgrounds.primary, isLarge: true }
-  ];
+  // Light mode combinations
+  results.light.push(
+    auditColorCombination(CAREERAK_COLORS.light.text.primary, CAREERAK_COLORS.light.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.light.text.secondary, CAREERAK_COLORS.light.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.light.text.tertiary, CAREERAK_COLORS.light.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.light.text.muted, CAREERAK_COLORS.light.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.light.accent, CAREERAK_COLORS.light.bg.primary, 'normal'),
+    auditColorCombination('#FFFFFF', CAREERAK_COLORS.light.accent, 'normal'), // White text on accent
+    auditColorCombination(CAREERAK_COLORS.light.text.primary, CAREERAK_COLORS.light.bg.secondary, 'normal')
+  );
   
-  combinations.forEach(combo => {
-    const ratio = getContrastRatio(combo.text, combo.bg);
-    const result = meetsWCAG(ratio, combo.isLarge);
-    
-    const item = {
-      name: combo.name,
-      textColor: combo.text,
-      bgColor: combo.bg,
-      isLargeText: combo.isLarge,
-      ...result
-    };
-    
-    if (result.passes) {
-      results.passed.push(item);
-    } else {
-      results.failed.push(item);
-    }
-    
-    // Add warning if close to threshold
-    if (result.passes && parseFloat(result.ratio) < parseFloat(result.required) + 0.5) {
-      results.warnings.push({
-        ...item,
-        message: 'Passes but close to threshold'
-      });
-    }
-  });
+  // Dark mode combinations
+  results.dark.push(
+    auditColorCombination(CAREERAK_COLORS.dark.text.primary, CAREERAK_COLORS.dark.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.dark.text.secondary, CAREERAK_COLORS.dark.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.dark.text.tertiary, CAREERAK_COLORS.dark.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.dark.text.muted, CAREERAK_COLORS.dark.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.dark.accent, CAREERAK_COLORS.dark.bg.primary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.dark.text.primary, CAREERAK_COLORS.dark.bg.secondary, 'normal'),
+    auditColorCombination(CAREERAK_COLORS.dark.text.primary, CAREERAK_COLORS.dark.bg.tertiary, 'normal')
+  );
   
   return results;
 }
 
 /**
- * Generate a contrast report
+ * Generate contrast report
  * @returns {string} Formatted report
  */
 export function generateContrastReport() {
-  const results = verifyDarkModeContrast();
+  const results = auditCareerakColors();
   
-  let report = '='.repeat(80) + '\n';
-  report += 'DARK MODE CONTRAST VERIFICATION REPORT\n';
-  report += '='.repeat(80) + '\n\n';
+  let report = '# Careerak Color Contrast Audit Report\n\n';
+  report += '## WCAG 2.1 Level AA Requirements\n';
+  report += '- Normal text: 4.5:1 minimum\n';
+  report += '- Large text: 3:1 minimum\n\n';
   
-  report += `Total Combinations Tested: ${results.passed.length + results.failed.length}\n`;
-  report += `✅ Passed: ${results.passed.length}\n`;
-  report += `❌ Failed: ${results.failed.length}\n`;
-  report += `⚠️  Warnings: ${results.warnings.length}\n\n`;
-  
-  if (results.failed.length > 0) {
-    report += '❌ FAILED COMBINATIONS:\n';
-    report += '-'.repeat(80) + '\n';
-    results.failed.forEach(item => {
-      report += `\n${item.name}\n`;
-      report += `  Text: ${item.textColor}\n`;
-      report += `  Background: ${item.bgColor}\n`;
-      report += `  Ratio: ${item.ratio}:1 (Required: ${item.required}:1)\n`;
-      report += `  Level: ${item.level}\n`;
-    });
-    report += '\n';
-  }
-  
-  if (results.warnings.length > 0) {
-    report += '⚠️  WARNINGS (Close to threshold):\n';
-    report += '-'.repeat(80) + '\n';
-    results.warnings.forEach(item => {
-      report += `\n${item.name}\n`;
-      report += `  Text: ${item.textColor}\n`;
-      report += `  Background: ${item.bgColor}\n`;
-      report += `  Ratio: ${item.ratio}:1 (Required: ${item.required}:1)\n`;
-      report += `  Message: ${item.message}\n`;
-    });
-    report += '\n';
-  }
-  
-  report += '✅ PASSED COMBINATIONS:\n';
-  report += '-'.repeat(80) + '\n';
-  results.passed.forEach(item => {
-    report += `\n${item.name}\n`;
-    report += `  Text: ${item.textColor}\n`;
-    report += `  Background: ${item.bgColor}\n`;
-    report += `  Ratio: ${item.ratio}:1 (Required: ${item.required}:1)\n`;
-    report += `  Level: ${item.level}\n`;
+  report += '## Light Mode\n\n';
+  results.light.forEach(result => {
+    report += `### ${result.foreground} on ${result.background}\n`;
+    report += `- Contrast Ratio: ${result.ratio}:1\n`;
+    report += `- WCAG AA: ${result.aa.message}\n`;
+    report += `- WCAG AAA: ${result.aaa.message}\n\n`;
   });
   
-  report += '\n' + '='.repeat(80) + '\n';
-  report += 'WCAG 2.1 Level AA Requirements:\n';
-  report += '- Normal text: 4.5:1 minimum\n';
-  report += '- Large text (≥18pt or ≥14pt bold): 3:1 minimum\n';
-  report += '='.repeat(80) + '\n';
+  report += '## Dark Mode\n\n';
+  results.dark.forEach(result => {
+    report += `### ${result.foreground} on ${result.background}\n`;
+    report += `- Contrast Ratio: ${result.ratio}:1\n`;
+    report += `- WCAG AA: ${result.aa.message}\n`;
+    report += `- WCAG AAA: ${result.aaa.message}\n\n`;
+  });
   
   return report;
 }

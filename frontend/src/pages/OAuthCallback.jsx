@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Spinner from '../components/Loading/Spinner';
 
 /**
  * OAuthCallback Component
@@ -214,18 +215,9 @@ export default function OAuthCallback() {
         {/* Status Icon */}
         <div style={{ marginBottom: '1.5rem' }}>
           {status === 'processing' && (
-            <div 
-              className="spinner"
-              style={{
-                width: '60px',
-                height: '60px',
-                border: '4px solid #E3DAD1',
-                borderTop: '4px solid #D48161',
-                borderRadius: '50%',
-                margin: '0 auto',
-                animation: 'spin 1s linear infinite'
-              }}
-            />
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Spinner size="large" color="accent" ariaLabel={t.processing} announceToScreenReader={false} />
+            </div>
           )}
           
           {status === 'success' && (

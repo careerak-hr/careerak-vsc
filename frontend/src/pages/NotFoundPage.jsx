@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
+import { useAnimation } from '../context/AnimationContext';
 import { feedbackVariants } from '../utils/animationVariants';
 import AriaLiveRegion from '../components/Accessibility/AriaLiveRegion';
 import SEOHead from '../components/SEO/SEOHead';
@@ -24,6 +25,7 @@ import './NotFoundPage.css';
 const NotFoundPage = () => {
   const navigate = useNavigate();
   const { language } = useApp();
+  const { shouldAnimate } = useAnimation();
 
   // Multi-language content
   const content = {
@@ -87,83 +89,120 @@ const NotFoundPage = () => {
       />
 
       <div className="not-found-container" role="main">
-        <motion.div 
-          className="not-found-card"
-          variants={feedbackVariants.bounce}
-          initial="initial"
-          animate="animate"
-        >
-          {/* 404 Icon */}
+        {shouldAnimate ? (
           <motion.div 
-            className="not-found-icon"
-            aria-hidden="true"
-            animate={{ 
-              rotate: [0, -10, 10, -10, 0],
-              scale: [1, 1.1, 1]
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              repeatDelay: 3
-            }}
+            className="not-found-card"
+            variants={feedbackVariants.bounce}
+            initial="initial"
+            animate="animate"
           >
-            🔍
-          </motion.div>
-
-          {/* 404 Number */}
-          <motion.h1 
-            className="not-found-number"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            404
-          </motion.h1>
-
-          {/* Heading */}
-          <motion.h2 
-            className="not-found-heading"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            {t.heading}
-          </motion.h2>
-
-          {/* Message */}
-          <motion.p 
-            className="not-found-message"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            {t.message}
-          </motion.p>
-
-          {/* Action Buttons */}
-          <motion.div 
-            className="not-found-actions"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <button
-              onClick={handleGoHome}
-              className="not-found-btn not-found-btn-primary"
-              aria-label={t.goHome}
+            {/* 404 Icon */}
+            <motion.div 
+              className="not-found-icon"
+              aria-hidden="true"
+              animate={{ 
+                rotate: [0, -10, 10, -10, 0],
+                scale: [1, 1.1, 1]
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 3
+              }}
             >
-              {t.goHome}
-            </button>
+              🔍
+            </motion.div>
 
-            <button
-              onClick={handleGoBack}
-              className="not-found-btn not-found-btn-secondary"
-              aria-label={t.goBack}
+            {/* 404 Number */}
+            <motion.h1 
+              className="not-found-number"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              {t.goBack}
-            </button>
+              404
+            </motion.h1>
+
+            {/* Heading */}
+            <motion.h2 
+              className="not-found-heading"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              {t.heading}
+            </motion.h2>
+
+            {/* Message */}
+            <motion.p 
+              className="not-found-message"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              {t.message}
+            </motion.p>
+
+            {/* Action Buttons */}
+            <motion.div 
+              className="not-found-actions"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <button
+                onClick={handleGoHome}
+                className="not-found-btn not-found-btn-primary"
+                aria-label={t.goHome}
+              >
+                {t.goHome}
+              </button>
+
+              <button
+                onClick={handleGoBack}
+                className="not-found-btn not-found-btn-secondary"
+                aria-label={t.goBack}
+              >
+                {t.goBack}
+              </button>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        ) : (
+          <div className="not-found-card">
+            {/* 404 Icon */}
+            <div className="not-found-icon" aria-hidden="true">
+              🔍
+            </div>
+
+            {/* 404 Number */}
+            <h1 className="not-found-number">404</h1>
+
+            {/* Heading */}
+            <h2 className="not-found-heading">{t.heading}</h2>
+
+            {/* Message */}
+            <p className="not-found-message">{t.message}</p>
+
+            {/* Action Buttons */}
+            <div className="not-found-actions">
+              <button
+                onClick={handleGoHome}
+                className="not-found-btn not-found-btn-primary"
+                aria-label={t.goHome}
+              >
+                {t.goHome}
+              </button>
+
+              <button
+                onClick={handleGoBack}
+                className="not-found-btn not-found-btn-secondary"
+                aria-label={t.goBack}
+              >
+                {t.goBack}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

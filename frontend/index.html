@@ -4,9 +4,46 @@
     <meta charset="utf-8" />
     <link rel="icon" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#1A365D" />
+    <meta name="theme-color" content="#304B60" />
     <meta name="color-scheme" content="light">
-    <meta name="description" content="Careerak - The Future of HR" />
+    
+    <!-- Primary Meta Tags (FR-SEO-1, FR-SEO-2) -->
+    <title>Careerak - منصة التوظيف والموارد البشرية في الوطن العربي</title>
+    <meta name="title" content="Careerak - منصة التوظيف والموارد البشرية في الوطن العربي" />
+    <meta name="description" content="كاريرك - منصة شاملة للتوظيف والموارد البشرية والدورات التدريبية في الوطن العربي. ابحث عن وظائف، طور مهاراتك، وابنِ مستقبلك المهني معنا." />
+    <meta name="keywords" content="توظيف, وظائف, موارد بشرية, دورات تدريبية, تطوير مهني, كاريرك, Careerak, HR, jobs, recruitment" />
+    <meta name="author" content="Careerak" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="Arabic" />
+    <meta name="revisit-after" content="7 days" />
+    
+    <!-- Open Graph / Facebook (FR-SEO-4) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://careerak.com/" />
+    <meta property="og:title" content="Careerak - منصة التوظيف والموارد البشرية في الوطن العربي" />
+    <meta property="og:description" content="كاريرك - منصة شاملة للتوظيف والموارد البشرية والدورات التدريبية في الوطن العربي. ابحث عن وظائف، طور مهاراتك، وابنِ مستقبلك المهني معنا." />
+    <meta property="og:image" content="https://careerak.com/og-image.png" />
+    <meta property="og:site_name" content="Careerak" />
+    <meta property="og:locale" content="ar_SA" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:locale:alternate" content="fr_FR" />
+    
+    <!-- Twitter Card (FR-SEO-5) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://careerak.com/" />
+    <meta name="twitter:title" content="Careerak - منصة التوظيف والموارد البشرية في الوطن العربي" />
+    <meta name="twitter:description" content="كاريرك - منصة شاملة للتوظيف والموارد البشرية والدورات التدريبية في الوطن العربي. ابحث عن وظائف، طور مهاراتك، وابنِ مستقبلك المهني معنا." />
+    <meta name="twitter:image" content="https://careerak.com/og-image.png" />
+    
+    <!-- Canonical URL (FR-SEO-10) -->
+    <link rel="canonical" href="https://careerak.com/" />
+    
+    <!-- Alternate Languages -->
+    <link rel="alternate" hreflang="ar" href="https://careerak.com/" />
+    <link rel="alternate" hreflang="en" href="https://careerak.com/en" />
+    <link rel="alternate" hreflang="fr" href="https://careerak.com/fr" />
+    <link rel="alternate" hreflang="x-default" href="https://careerak.com/" />
+    
     <link rel="apple-touch-icon" href="/logo.png" />
     <link rel="manifest" href="/manifest.json" />
 
@@ -40,7 +77,43 @@
     <!-- Preload critical JavaScript entry point (FR-PERF-8) -->
     <link rel="modulepreload" href="/src/index.jsx" />
 
-    <title>Careerak</title>
+    <!-- Organization Structured Data (FR-SEO-6, FR-SEO-7) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Careerak",
+      "alternateName": "كاريرك",
+      "url": "https://careerak.com",
+      "logo": "https://careerak.com/logo.png",
+      "description": "منصة شاملة للتوظيف والموارد البشرية والدورات التدريبية في الوطن العربي",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "careerak.hr@gmail.com",
+        "contactType": "Customer Service",
+        "availableLanguage": ["Arabic", "English", "French"]
+      },
+      "sameAs": [
+        "https://careerak.com"
+      ]
+    }
+    </script>
+    
+    <!-- WebSite Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Careerak",
+      "alternateName": "كاريرك",
+      "url": "https://careerak.com",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://careerak.com/job-postings?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
     
     <!-- Critical CSS inlined for faster FCP (FR-PERF-8, NFR-PERF-3) -->
     <style>

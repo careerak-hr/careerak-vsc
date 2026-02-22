@@ -7,6 +7,7 @@ import useExitConfirm from '../hooks/useExitConfirm';
 import ExitConfirmModal from '../components/modals/ExitConfirmModal';
 import OAuthButtons from '../components/auth/OAuthButtons';
 import FormErrorAnnouncer from '../components/Accessibility/FormErrorAnnouncer';
+import ButtonSpinner from '../components/Loading/ButtonSpinner';
 import '../components/auth/OAuthButtons.css';
 import './02_LoginPage.css';
 import { SEOHead } from '../components/SEO';
@@ -180,7 +181,7 @@ export default function LoginPage() {
           </fieldset>
 
           <button type="submit" disabled={loading} className="login-submit-btn dark:bg-accent dark:text-inverse transition-all duration-300">
-            {loading ? <div className="login-loading-spinner dark:border-accent transition-colors duration-300"></div> : t.loginBtn}
+            {loading ? <ButtonSpinner color="white" ariaLabel={t.loading || 'Loading...'} /> : t.loginBtn}
           </button>
         </form>
 
@@ -189,7 +190,15 @@ export default function LoginPage() {
 
         <div className="login-no-account-container">
           <p className="login-no-account-text dark:text-secondary transition-colors duration-300">
-            {t.noAccount} <span onClick={() => navigate('/auth')} className="login-create-account-link dark:text-accent dark:hover:text-accent-hover transition-colors duration-300">{t.createAccount}</span>
+            {t.noAccount}{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/auth')}
+              className="login-create-account-link dark:text-accent dark:hover:text-accent-hover transition-colors duration-300"
+              style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              {t.createAccount}
+            </button>
           </p>
         </div>
       </div>

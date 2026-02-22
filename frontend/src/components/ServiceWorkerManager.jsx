@@ -22,6 +22,8 @@ const ServiceWorkerManager = () => {
   const [waitingWorker, setWaitingWorker] = useState(null);
   const [language, setLanguage] = useState('ar');
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
+  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   useEffect(() => {
     // Get language from localStorage
@@ -35,6 +37,47 @@ const ServiceWorkerManager = () => {
 
     // Initialize Pusher integration
     initializePusherIntegration();
+
+    // PWA Install Prompt (FR-PWA-4)
+    // Listen for beforeinstallprompt event
+    const handleBeforeInstallPrompt = (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later
+      setDeferredPrompt(e);
+      
+      // Check if user has already dismissed the prompt
+      const installPromptDismissed = localStorage.getItem('install-prompt-dismissed') === 'true';
+      const installPromptInstalled = localStorage.getItem('pwa-installed') === 'true';
+      
+      // Show install prompt if not dismissed and not installed
+      if (!installPromptDismissed && !installPromptInstalled) {
+        // Show prompt after a delay to not overwhelm user
+        setTimeout(() => {
+          setShowInstallPrompt(true);
+        }, 3000);
+      }
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Listen for app installed event
+    const handleAppInstalled = () => {
+      console.log('PWA was installed');
+      setShowInstallPrompt(false);
+      setDeferredPrompt(null);
+      localStorage.setItem('pwa-installed', 'true');
+    };
+
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    // Check if app is already installed (standalone mode)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                         window.navigator.standalone === true;
+    
+    if (isStandalone) {
+      localStorage.setItem('pwa-installed', 'true');
+    }
 
     // Listen for controlling service worker changes
     let refreshing = false;
@@ -112,6 +155,47 @@ const ServiceWorkerManager = () => {
   };
 
   /**
+   * Handle PWA install prompt
+   */
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) {
+      console.log('No deferred prompt available');
+      return;
+    }
+
+    // Show the install prompt
+    deferredPrompt.prompt();
+
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    
+    console.log(`User response to install prompt: ${outcome}`);
+    
+    if (outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      localStorage.setItem('pwa-installed', 'true');
+    } else {
+      console.log('User dismissed the install prompt');
+      localStorage.setItem('install-prompt-dismissed', 'true');
+    }
+
+    // Clear the deferred prompt
+    setDeferredPrompt(null);
+    setShowInstallPrompt(false);
+  };
+
+  /**
+   * Handle install prompt dismissal
+   */
+  const handleDismissInstallPrompt = () => {
+    setShowInstallPrompt(false);
+    // Remember user's choice for 7 days
+    const dismissedUntil = Date.now() + (7 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('install-prompt-dismissed', 'true');
+    localStorage.setItem('install-prompt-dismissed-until', dismissedUntil.toString());
+  };
+
+  /**
    * Handle notification permission request
    */
   const handleEnableNotifications = async () => {
@@ -155,6 +239,10 @@ const ServiceWorkerManager = () => {
       notificationPromptMessage: 'احصل على إشعارات فورية للوظائف والرسائل الجديدة',
       enableButton: 'تفعيل',
       notNowButton: 'ليس الآن',
+      installPromptTitle: 'تثبيت التطبيق',
+      installPromptMessage: 'ثبّت Careerak على جهازك للوصول السريع والعمل بدون اتصال',
+      installButton: 'تثبيت',
+      installLater: 'لاحقاً',
     },
     en: {
       message: 'New update available!',
@@ -165,6 +253,10 @@ const ServiceWorkerManager = () => {
       notificationPromptMessage: 'Get instant notifications for new jobs and messages',
       enableButton: 'Enable',
       notNowButton: 'Not Now',
+      installPromptTitle: 'Install App',
+      installPromptMessage: 'Install Careerak on your device for quick access and offline use',
+      installButton: 'Install',
+      installLater: 'Later',
     },
     fr: {
       message: 'Nouvelle mise à jour disponible!',
@@ -175,6 +267,10 @@ const ServiceWorkerManager = () => {
       notificationPromptMessage: 'Recevez des notifications instantanées pour les nouveaux emplois et messages',
       enableButton: 'Activer',
       notNowButton: 'Pas maintenant',
+      installPromptTitle: 'Installer l\'application',
+      installPromptMessage: 'Installez Careerak sur votre appareil pour un accès rapide et une utilisation hors ligne',
+      installButton: 'Installer',
+      installLater: 'Plus tard',
     },
   };
 
@@ -183,7 +279,7 @@ const ServiceWorkerManager = () => {
   // Check if notification prompt was already dismissed
   const notificationPromptDismissed = localStorage.getItem('notification-prompt-dismissed') === 'true';
 
-  if (!showUpdateNotification && (!showNotificationPrompt || notificationPromptDismissed)) {
+  if (!showUpdateNotification && (!showNotificationPrompt || notificationPromptDismissed) && !showInstallPrompt) {
     return null;
   }
 
@@ -561,6 +657,226 @@ const ServiceWorkerManager = () => {
                 }}
               >
                 {t.notNowButton}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PWA Install Prompt (FR-PWA-4) */}
+      {showInstallPrompt && deferredPrompt && (
+        <div
+          className="notification-prompt"
+          style={{
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10000,
+            width: '100%',
+            maxWidth: '500px',
+            padding: '0 16px',
+          }}
+          role="alert"
+          aria-live="polite"
+        >
+          <div
+            style={{
+              background: '#304B60',
+              color: '#E3DAD1',
+              padding: '16px 20px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '12px',
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {/* Download icon */}
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span style={{ fontWeight: '600', fontSize: '16px' }}>
+                  {t.installPromptTitle}
+                </span>
+              </div>
+              
+              {/* Close button */}
+              <button
+                onClick={handleDismissInstallPrompt}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#E3DAD1',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0.8,
+                  transition: 'opacity 0.2s',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.opacity = '1')}
+                onMouseLeave={(e) => (e.currentTarget.style.opacity = '0.8')}
+                aria-label="Dismiss install prompt"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+
+            {/* Description */}
+            <p
+              style={{
+                margin: 0,
+                fontSize: '14px',
+                opacity: 0.9,
+                lineHeight: '1.5',
+              }}
+            >
+              {t.installPromptMessage}
+            </p>
+
+            {/* Features list */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                fontSize: '13px',
+                opacity: 0.85,
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>{language === 'ar' ? 'وصول سريع من الشاشة الرئيسية' : language === 'fr' ? 'Accès rapide depuis l\'écran d\'accueil' : 'Quick access from home screen'}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>{language === 'ar' ? 'يعمل بدون اتصال بالإنترنت' : language === 'fr' ? 'Fonctionne hors ligne' : 'Works offline'}</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>{language === 'ar' ? 'تجربة تطبيق أصلي' : language === 'fr' ? 'Expérience d\'application native' : 'Native app experience'}</span>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '12px',
+                marginTop: '4px',
+              }}
+            >
+              <button
+                onClick={handleInstallApp}
+                className="sw-update-button"
+                style={{
+                  flex: 1,
+                  background: '#D48161',
+                  color: 'white',
+                  border: 'none',
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = '#c06d4f')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = '#D48161')}
+              >
+                {t.installButton}
+              </button>
+              
+              <button
+                onClick={handleDismissInstallPrompt}
+                className="sw-update-button"
+                style={{
+                  flex: 1,
+                  background: 'transparent',
+                  color: '#E3DAD1',
+                  border: '2px solid #E3DAD1',
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(227, 218, 209, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
+              >
+                {t.installLater}
               </button>
             </div>
           </div>

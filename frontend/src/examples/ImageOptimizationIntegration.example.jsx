@@ -156,7 +156,7 @@ export const ImageUploadPreviewExample = ({ previewUrl, uploadedImage }) => {
       {previewUrl && !uploadedImage && (
         <img 
           src={previewUrl} 
-          alt="Upload preview" 
+          alt="Image upload preview for profile photo selection" 
           className="w-full h-auto"
         />
       )}

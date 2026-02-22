@@ -1,0 +1,550 @@
+/**
+ * Hover Effects for Interactive Elements
+ * Task: 4.5.1 - Add hover animations to buttons (scale, color)
+ * Requirement: FR-ANIM-4 - Apply smooth scale or color transitions on hover
+ * 
+ * Features:
+ * - Smooth color transitions for links
+ * - Scale and shadow effects for cards
+ * - Hover states for form inputs
+ * - Interactive icons and badges
+ * - GPU-accelerated animations
+ * - Respects prefers-reduced-motion
+ * - 200-300ms duration for responsive feel
+ * 
+ * Applied to:
+ * - Links and navigation items
+ * - Cards and list items
+ * - Form inputs and selects
+ * - Icons and badges
+ * - Interactive overlays
+ */
+
+/* ============================================================================
+   LINKS AND NAVIGATION
+   ============================================================================ */
+
+/* Base link styles */
+a,
+[role="link"],
+.link {
+  transition: color 0.2s ease-in-out,
+              text-decoration-color 0.2s ease-in-out,
+              opacity 0.2s ease-in-out;
+}
+
+/* Link hover - color change */
+a:hover:not(:disabled),
+[role="link"]:hover:not([aria-disabled="true"]),
+.link:hover {
+  color: var(--accent-hover, #C26F50);
+  text-decoration-color: var(--accent-hover, #C26F50);
+}
+
+/* Navigation links */
+nav a,
+.nav-link,
+[class*="nav-item"] a {
+  transition: color 0.2s ease-in-out,
+              background-color 0.2s ease-in-out,
+              transform 0.2s ease-in-out;
+}
+
+nav a:hover,
+.nav-link:hover,
+[class*="nav-item"] a:hover {
+  color: var(--accent-primary, #D48161);
+  transform: translateY(-2px);
+}
+
+/* Footer links */
+.footer-link,
+footer a {
+  transition: color 0.2s ease-in-out,
+              opacity 0.2s ease-in-out;
+}
+
+.footer-link:hover,
+footer a:hover {
+  color: var(--accent-primary, #D48161);
+  opacity: 0.8;
+}
+
+/* Breadcrumb links */
+.breadcrumb-link {
+  transition: color 0.2s ease-in-out,
+              text-decoration 0.2s ease-in-out;
+}
+
+.breadcrumb-link:hover {
+  color: var(--accent-primary, #D48161);
+  text-decoration: underline;
+}
+
+/* Related links */
+.related-link-card {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out,
+              background-color 0.3s ease-in-out;
+}
+
+.related-link-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background-color: var(--bg-hover, #DDD4CB);
+}
+
+/* Skip links */
+.skip-link {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  background-color: var(--accent-primary, #D48161);
+}
+
+/* ============================================================================
+   CARDS AND LIST ITEMS
+   ============================================================================ */
+
+/* Base card styles */
+.card,
+[class*="card"],
+[class*="-card"] {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out,
+              background-color 0.3s ease-in-out;
+  will-change: transform;
+}
+
+/* Card hover - lift effect */
+.card:hover,
+[class*="card"]:hover,
+[class*="-card"]:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Job cards */
+.job-card {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out,
+              border-color 0.3s ease-in-out;
+}
+
+.job-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(212, 129, 97, 0.2);
+  border-color: var(--accent-primary, #D48161);
+}
+
+/* Course cards */
+.course-card {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out,
+              border-color 0.3s ease-in-out;
+}
+
+.course-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(212, 129, 97, 0.2);
+  border-color: var(--accent-primary, #D48161);
+}
+
+/* Profile cards */
+.profile-card,
+.user-card {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out;
+}
+
+.profile-card:hover,
+.user-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* List items */
+li[role="button"],
+.list-item-interactive,
+[class*="list-item"]:not(.list-item-static) {
+  transition: background-color 0.2s ease-in-out,
+              transform 0.2s ease-in-out;
+}
+
+li[role="button"]:hover,
+.list-item-interactive:hover,
+[class*="list-item"]:not(.list-item-static):hover {
+  background-color: var(--bg-hover, #DDD4CB);
+  transform: translateX(4px);
+}
+
+/* ============================================================================
+   FORM INPUTS AND CONTROLS
+   ============================================================================ */
+
+/* Input fields - subtle hover */
+input:not([type="checkbox"]):not([type="radio"]),
+textarea,
+select {
+  transition: border-color 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out,
+              background-color 0.2s ease-in-out;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus) {
+  border-color: var(--accent-primary, #D48161);
+  box-shadow: 0 0 0 1px rgba(212, 129, 97, 0.1);
+}
+
+/* Checkbox and radio - scale on hover */
+input[type="checkbox"],
+input[type="radio"] {
+  transition: transform 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:hover:not(:disabled),
+input[type="radio"]:hover:not(:disabled) {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(212, 129, 97, 0.1);
+}
+
+/* Select dropdown */
+select {
+  cursor: pointer;
+}
+
+select:hover:not(:disabled) {
+  background-color: var(--bg-hover, #DDD4CB);
+}
+
+/* File input */
+input[type="file"]::file-selector-button {
+  transition: background-color 0.2s ease-in-out,
+              transform 0.2s ease-in-out;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: var(--accent-hover, #C26F50);
+  transform: scale(1.05);
+}
+
+/* ============================================================================
+   ICONS AND BADGES
+   ============================================================================ */
+
+/* Interactive icons */
+.icon-interactive,
+[class*="icon-btn"],
+[class*="-icon"]:not(.icon-static) {
+  transition: transform 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              opacity 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.icon-interactive:hover,
+[class*="icon-btn"]:hover,
+[class*="-icon"]:not(.icon-static):hover {
+  transform: scale(1.15) rotate(5deg);
+  color: var(--accent-primary, #D48161);
+}
+
+/* Social media icons */
+.social-icon,
+[class*="social-"] {
+  transition: transform 0.3s ease-in-out,
+              color 0.3s ease-in-out,
+              filter 0.3s ease-in-out;
+}
+
+.social-icon:hover,
+[class*="social-"]:hover {
+  transform: translateY(-3px) scale(1.1);
+  filter: brightness(1.2);
+}
+
+/* Badges */
+.badge,
+[class*="badge"] {
+  transition: transform 0.2s ease-in-out,
+              background-color 0.2s ease-in-out;
+}
+
+.badge:hover,
+[class*="badge"]:hover {
+  transform: scale(1.05);
+  background-color: var(--accent-primary, #D48161);
+}
+
+/* ============================================================================
+   IMAGES AND MEDIA
+   ============================================================================ */
+
+/* Image hover - subtle zoom */
+img[role="button"],
+.image-interactive,
+[class*="image-"]:not(.image-static) {
+  transition: transform 0.3s ease-in-out,
+              opacity 0.3s ease-in-out,
+              filter 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+img[role="button"]:hover,
+.image-interactive:hover,
+[class*="image-"]:not(.image-static):hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Avatar images */
+.avatar,
+[class*="avatar"],
+[class*="profile-pic"] {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out,
+              border-color 0.3s ease-in-out;
+}
+
+.avatar:hover,
+[class*="avatar"]:hover,
+[class*="profile-pic"]:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+  border-color: var(--accent-primary, #D48161);
+}
+
+/* Thumbnail images */
+.thumbnail,
+[class*="thumbnail"] {
+  transition: transform 0.3s ease-in-out,
+              box-shadow 0.3s ease-in-out;
+}
+
+.thumbnail:hover,
+[class*="thumbnail"]:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================================================
+   TABS AND FILTERS
+   ============================================================================ */
+
+/* Tab buttons */
+[role="tab"],
+.tab,
+[class*="tab-"] {
+  transition: background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              border-color 0.2s ease-in-out,
+              transform 0.2s ease-in-out;
+}
+
+[role="tab"]:hover:not([aria-selected="true"]),
+.tab:hover:not(.tab-active),
+[class*="tab-"]:hover:not(.tab-active) {
+  background-color: var(--bg-hover, #DDD4CB);
+  color: var(--accent-primary, #D48161);
+  transform: translateY(-2px);
+}
+
+/* Filter buttons */
+.filter-btn,
+[class*="filter-"] {
+  transition: background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              border-color 0.2s ease-in-out,
+              transform 0.2s ease-in-out;
+}
+
+.filter-btn:hover:not(.filter-active),
+[class*="filter-"]:hover:not(.filter-active) {
+  background-color: var(--bg-hover, #DDD4CB);
+  border-color: var(--accent-primary, #D48161);
+  transform: scale(1.05);
+}
+
+/* ============================================================================
+   MODALS AND OVERLAYS
+   ============================================================================ */
+
+/* Modal close button */
+.modal-close,
+[class*="modal-close"],
+[class*="close-btn"] {
+  transition: transform 0.2s ease-in-out,
+              color 0.2s ease-in-out,
+              background-color 0.2s ease-in-out;
+}
+
+.modal-close:hover,
+[class*="modal-close"]:hover,
+[class*="close-btn"]:hover {
+  transform: scale(1.15) rotate(90deg);
+  color: var(--accent-primary, #D48161);
+  background-color: rgba(212, 129, 97, 0.1);
+}
+
+/* Overlay items */
+.overlay-item,
+[class*="overlay-"] {
+  transition: opacity 0.3s ease-in-out,
+              transform 0.3s ease-in-out;
+}
+
+.overlay-item:hover,
+[class*="overlay-"]:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* ============================================================================
+   NOTIFICATIONS AND ALERTS
+   ============================================================================ */
+
+/* Notification items */
+.notification,
+[class*="notification-"],
+.alert {
+  transition: background-color 0.2s ease-in-out,
+              transform 0.2s ease-in-out,
+              box-shadow 0.2s ease-in-out;
+}
+
+.notification:hover,
+[class*="notification-"]:hover,
+.alert:hover {
+  background-color: var(--bg-hover, #DDD4CB);
+  transform: translateX(4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   DARK MODE SUPPORT
+   ============================================================================ */
+
+/* Dark mode hover colors */
+.dark a:hover,
+.dark [role="link"]:hover,
+.dark .link:hover {
+  color: var(--accent-hover, #D48161);
+}
+
+.dark .card:hover,
+.dark [class*="card"]:hover,
+.dark [class*="-card"]:hover {
+  background-color: var(--bg-hover, #384A61);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dark input:not([type="checkbox"]):not([type="radio"]):hover:not(:disabled):not(:focus),
+.dark textarea:hover:not(:disabled):not(:focus),
+.dark select:hover:not(:disabled):not(:focus) {
+  border-color: var(--accent-primary, #E09A7A);
+  box-shadow: 0 0 0 1px rgba(224, 154, 122, 0.2);
+}
+
+.dark .icon-interactive:hover,
+.dark [class*="icon-btn"]:hover {
+  color: var(--accent-primary, #E09A7A);
+}
+
+/* ============================================================================
+   REDUCED MOTION SUPPORT
+   ============================================================================ */
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Keep color transitions but remove transforms */
+  a:hover,
+  [role="link"]:hover,
+  .link:hover,
+  .card:hover,
+  [class*="card"]:hover,
+  button:hover,
+  input:hover,
+  .icon-interactive:hover {
+    transform: none !important;
+  }
+}
+
+/* ============================================================================
+   ACCESSIBILITY - FOCUS VISIBLE
+   ============================================================================ */
+
+/* Ensure focus states are visible and enhanced on hover */
+a:focus-visible:hover,
+button:focus-visible:hover,
+[role="button"]:focus-visible:hover,
+input:focus-visible:hover,
+select:focus-visible:hover,
+textarea:focus-visible:hover {
+  outline: 2px solid var(--accent-primary, #D48161);
+  outline-offset: 2px;
+}
+
+/* ============================================================================
+   TOUCH DEVICE OPTIMIZATION
+   ============================================================================ */
+
+/* Disable hover effects on touch devices to prevent sticky hover states */
+@media (hover: none) and (pointer: coarse) {
+  /* Keep color changes but remove transforms on touch devices */
+  .card:hover,
+  [class*="card"]:hover,
+  .icon-interactive:hover,
+  img[role="button"]:hover {
+    transform: none;
+  }
+  
+  /* Increase tap target size for better touch interaction */
+  button,
+  a,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ============================================================================
+   PERFORMANCE OPTIMIZATION
+   ============================================================================ */
+
+/* Use GPU acceleration for transforms */
+.card,
+[class*="card"],
+button,
+a,
+.icon-interactive,
+[class*="icon-btn"] {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Remove will-change after animation completes to free up resources */
+.card:not(:hover),
+[class*="card"]:not(:hover),
+button:not(:hover),
+a:not(:hover) {
+  will-change: auto;
+}

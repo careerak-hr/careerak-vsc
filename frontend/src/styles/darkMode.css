@@ -25,15 +25,23 @@
   
   /* Text Colors */
   --text-primary: #304B60;         /* الكحلي الوقور - Primary text */
-  --text-secondary: #4A6B82;       /* كحلي أفتح - Secondary text */
-  --text-tertiary: #6B8BA3;        /* كحلي أفتح جداً - Tertiary text */
-  --text-muted: #8FA9BE;           /* كحلي باهت - Muted text */
+  --text-secondary: #3D5A73;       /* كحلي أفتح - Secondary text (adjusted for 4.5:1) */
+  --text-tertiary: #304B60;        /* كحلي - Tertiary text (use primary for contrast) */
+  --text-muted: #3D5A73;           /* كحلي - Muted text (adjusted for 4.5:1) */
   --text-inverse: #FFFFFF;         /* أبيض - Text on dark backgrounds */
   
   /* Accent Colors */
-  --accent-primary: #D48161;       /* نحاسي - Primary accent */
-  --accent-secondary: #E09A7A;     /* نحاسي أفتح - Secondary accent */
-  --accent-hover: #C26F50;         /* نحاسي أغمق - Hover state */
+  --accent-primary: #A04D2F;       /* نحاسي أغمق - Primary accent (4.23:1 - UI elements & large text only) */
+  --accent-secondary: #B85A3A;     /* نحاسي - Secondary accent */
+  --accent-hover: #8A3F22;         /* نحاسي أغمق - Hover state */
+  
+  /* IMPORTANT: Accent color usage guidelines
+   * --accent-primary (#A04D2F) has 4.23:1 contrast ratio
+   * ✅ USE FOR: Buttons, borders, icons, UI components (meets 3:1 for UI)
+   * ✅ USE FOR: Large text ≥18pt or ≥14pt bold (meets 3:1 for large text)
+   * ❌ DO NOT USE FOR: Normal body text <18pt (requires 4.5:1)
+   * For normal text, use --text-primary or --text-secondary instead
+   */
   
   /* Border Colors */
   --border-primary: #D4816180;     /* نحاسي باهت - Primary borders (CONSTANT) */

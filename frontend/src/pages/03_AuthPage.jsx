@@ -28,6 +28,7 @@ import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBo
 
 // Accessibility Components
 import FormErrorAnnouncer from '../components/Accessibility/FormErrorAnnouncer';
+import ButtonSpinner from '../components/Loading/ButtonSpinner';
 
 // SEO
 import { SEOHead } from '../components/SEO';
@@ -58,6 +59,7 @@ export default function AuthPage() {
   const [userType, setUserType] = useState(null); // 'individual' or 'company'
   const [showProgressRestoration, setShowProgressRestoration] = useState(false);
   const [progressInfo, setProgressInfo] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state for registration
 
   // Form States
   const [formData, setFormData] = useState({
@@ -393,11 +395,24 @@ export default function AuthPage() {
   };
 
   const handleFinalRegister = async () => {
-    console.log('Registering user:', { userType, formData, profileImage });
-    
-    // مسح التقدم المحفوظ بعد إكمال التسجيل (Requirement 6.5)
-    clearProgress();
-    console.log('🗑️ Progress cleared after successful registration');
+    setIsSubmitting(true);
+    try {
+      console.log('Registering user:', { userType, formData, profileImage });
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // مسح التقدم المحفوظ بعد إكمال التسجيل (Requirement 6.5)
+      clearProgress();
+      console.log('🗑️ Progress cleared after successful registration');
+      
+      // Close confirmation popup after successful registration
+      setShowConfirmPopup(false);
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // استرجاع التقدم المحفوظ (Requirement 6.3)
@@ -504,7 +519,7 @@ export default function AuthPage() {
                 aria-label={language === 'ar' ? 'رفع صورة الملف الشخصي' : language === 'fr' ? 'Télécharger une photo de profil' : 'Upload profile photo'}
               >
                 {profileImage ? (
-                  <img src={profileImage} alt="Your profile photo preview" className="auth-photo-upload-img" />
+                  <img src={profileImage} alt="Your professional profile photo preview for job applications" className="auth-photo-upload-img" />
                 ) : (
                   <span className="auth-photo-upload-placeholder" aria-hidden="true">📷</span>
                 )}
@@ -626,8 +641,9 @@ export default function AuthPage() {
             <button
               type="submit"
               className="auth-submit-btn"
+              disabled={isSubmitting}
             >
-              {t.register}
+              {isSubmitting ? <ButtonSpinner color="white" ariaLabel={t.loading || 'Processing...'} /> : t.register}
             </button>
           </form>
         )}

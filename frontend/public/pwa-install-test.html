@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PWA Install Test - Careerak</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #304B60 0%, #1a2f3f 100%);
+      color: #E3DAD1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #D48161;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .status-grid {
+      display: grid;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .status-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px 20px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-label {
+      font-weight: 500;
+    }
+
+    .status-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .status-icon.success {
+      background: #4ade80;
+      color: #166534;
+    }
+
+    .status-icon.error {
+      background: #f87171;
+      color: #7f1d1d;
+    }
+
+    .status-icon.warning {
+      background: #fbbf24;
+      color: #78350f;
+    }
+
+    .button {
+      background: #D48161;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .button:hover {
+      background: #c06d4f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 129, 97, 0.4);
+    }
+
+    .button:disabled {
+      background: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .info-box {
+      background: rgba(212, 129, 97, 0.1);
+      border-left: 4px solid #D48161;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .info-box h3 {
+      margin-bottom: 10px;
+      color: #D48161;
+    }
+
+    .info-box ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .info-box li {
+      padding: 5px 0;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .info-box li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #4ade80;
+      font-weight: bold;
+    }
+
+    .manifest-preview {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .splash-preview {
+      background: #E3DAD1;
+      padding: 40px;
+      border-radius: 10px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .splash-preview img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+    }
+
+    .splash-preview .app-name {
+      color: #304B60;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 PWA Install Test</h1>
+    <p class="subtitle">Careerak Progressive Web App</p>
+
+    <div class="status-grid">
+      <div class="status-item">
+        <span class="status-label">Service Worker</span>
+        <div class="status-value">
+          <span id="sw-status">Checking...</span>
+          <div class="status-icon" id="sw-icon">⏳</div>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <span class="status-label">Manifest</span>
+        <div class="status-value">
+          <span id="manifest-status">Checking...</span>
+          <div class="status-icon" id="manifest-icon">⏳</div>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <span class="status-label">HTTPS</span>
+        <div class="status-value">
+          <span id="https-status">Checking...</span>
+          <div class="status-icon" id="https-icon">⏳</div>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <span class="status-label">Installability</span>
+        <div class="status-value">
+          <span id="install-status">Checking...</span>
+          <div class="status-icon" id="install-icon">⏳</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="button" id="install-button" disabled>
+      Install Careerak PWA
+    </button>
+
+    <button class="button" id="test-splash" style="background: #304B60; margin-top: 10px;">
+      Preview Splash Screen
+    </button>
+
+    <div class="info-box">
+      <h3>PWA Features</h3>
+      <ul>
+        <li>Works offline after first visit</li>
+        <li>Install on home screen</li>
+        <li>Native app-like experience</li>
+        <li>Custom splash screen with brand colors</li>
+        <li>Push notifications support</li>
+        <li>Automatic updates</li>
+      </ul>
+    </div>
+
+    <div class="manifest-preview" id="manifest-preview" style="display: none;">
+      <strong>Manifest Configuration:</strong>
+      <pre id="manifest-content"></pre>
+    </div>
+
+    <div class="splash-preview" id="splash-preview" style="display: none;">
+      <img src="/icon-512x512.png" alt="Careerak Logo">
+      <div class="app-name">Careerak</div>
+      <p style="color: #304B60; margin-top: 10px; opacity: 0.8;">The Future of HR</p>
+    </div>
+  </div>
+
+  <script>
+    let deferredPrompt;
+
+    // Check Service Worker
+    async function checkServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (registration) {
+            updateStatus('sw', 'Registered', 'success');
+            return true;
+          } else {
+            updateStatus('sw', 'Not Registered', 'warning');
+            return false;
+          }
+        } catch (error) {
+          updateStatus('sw', 'Error', 'error');
+          return false;
+        }
+      } else {
+        updateStatus('sw', 'Not Supported', 'error');
+        return false;
+      }
+    }
+
+    // Check Manifest
+    async function checkManifest() {
+      try {
+        const response = await fetch('/manifest.json');
+        if (response.ok) {
+          const manifest = await response.json();
+          updateStatus('manifest', 'Valid', 'success');
+          
+          // Show manifest preview
+          document.getElementById('manifest-content').textContent = JSON.stringify(manifest, null, 2);
+          
+          return true;
+        } else {
+          updateStatus('manifest', 'Not Found', 'error');
+          return false;
+        }
+      } catch (error) {
+        updateStatus('manifest', 'Error', 'error');
+        return false;
+      }
+    }
+
+    // Check HTTPS
+    function checkHTTPS() {
+      const isSecure = location.protocol === 'https:' || location.hostname === 'localhost';
+      if (isSecure) {
+        updateStatus('https', 'Secure', 'success');
+      } else {
+        updateStatus('https', 'Not Secure', 'error');
+      }
+      return isSecure;
+    }
+
+    // Update status display
+    function updateStatus(type, text, status) {
+      document.getElementById(`${type}-status`).textContent = text;
+      const icon = document.getElementById(`${type}-icon`);
+      icon.className = `status-icon ${status}`;
+      icon.textContent = status === 'success' ? '✓' : status === 'error' ? '✗' : '⚠';
+    }
+
+    // Check installability
+    async function checkInstallability() {
+      const swOk = await checkServiceWorker();
+      const manifestOk = await checkManifest();
+      const httpsOk = checkHTTPS();
+
+      if (swOk && manifestOk && httpsOk) {
+        updateStatus('install', 'Ready', 'success');
+        return true;
+      } else {
+        updateStatus('install', 'Not Ready', 'error');
+        return false;
+      }
+    }
+
+    // Listen for install prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      
+      const installButton = document.getElementById('install-button');
+      installButton.disabled = false;
+      installButton.textContent = 'Install Careerak PWA';
+      
+      updateStatus('install', 'Available', 'success');
+    });
+
+    // Install button click
+    document.getElementById('install-button').addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        alert('Install prompt not available. The app may already be installed or the browser doesn\'t support installation.');
+        return;
+      }
+
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
+        updateStatus('install', 'Installed', 'success');
+      } else {
+        console.log('User dismissed the install prompt');
+      }
+      
+      deferredPrompt = null;
+      document.getElementById('install-button').disabled = true;
+    });
+
+    // Test splash screen button
+    document.getElementById('test-splash').addEventListener('click', () => {
+      const preview = document.getElementById('splash-preview');
+      const manifestPreview = document.getElementById('manifest-preview');
+      
+      if (preview.style.display === 'none') {
+        preview.style.display = 'block';
+        manifestPreview.style.display = 'block';
+        document.getElementById('test-splash').textContent = 'Hide Preview';
+      } else {
+        preview.style.display = 'none';
+        manifestPreview.style.display = 'none';
+        document.getElementById('test-splash').textContent = 'Preview Splash Screen';
+      }
+    });
+
+    // Listen for app installed
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA was installed');
+      updateStatus('install', 'Installed', 'success');
+      document.getElementById('install-button').textContent = 'Already Installed';
+      document.getElementById('install-button').disabled = true;
+    });
+
+    // Check if already installed
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      updateStatus('install', 'Installed', 'success');
+      document.getElementById('install-button').textContent = 'Already Installed';
+      document.getElementById('install-button').disabled = true;
+    }
+
+    // Run checks on load
+    checkInstallability();
+  </script>
+</body>
+</html>

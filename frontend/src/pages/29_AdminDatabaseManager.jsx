@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import api from '../services/api';
+import Spinner from '../components/Loading/Spinner';
 import './29_AdminDatabaseManager.css';
 
 const AdminDatabaseManager = () => {
@@ -127,7 +128,7 @@ const AdminDatabaseManager = () => {
             </div>
           ) : loading ? (
             <div className="adb-loading">
-              <div className="adb-spinner"></div>
+              <Spinner size="large" color="primary" ariaLabel={language === 'ar' ? 'جاري التحميل...' : 'Loading...'} />
               <p>{language === 'ar' ? 'جاري التحميل...' : 'Loading...'}</p>
             </div>
           ) : (

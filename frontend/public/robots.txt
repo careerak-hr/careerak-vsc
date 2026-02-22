@@ -1,5 +1,6 @@
 # Careerak - Robots.txt
 # This file controls how search engine crawlers access our site
+# Last updated: 2026-02-22
 
 # Allow all crawlers to access the site
 User-agent: *
@@ -8,16 +9,46 @@ Allow: /
 # Disallow admin and API routes
 Disallow: /admin
 Disallow: /api
+Disallow: /auth/callback
+Disallow: /otp-verify
 
-# Sitemap location
+# Allow specific pages
+Allow: /job-postings
+Allow: /courses
+Allow: /entry
+Allow: /language
+Allow: /login
+Allow: /auth
+Allow: /policy
+
+# Sitemap location (FR-SEO-8, FR-SEO-9)
 Sitemap: https://careerak.com/sitemap.xml
 
-# Crawl-delay (optional - helps prevent server overload)
-# Crawl-delay: 1
+# Crawl-delay to prevent server overload
+Crawl-delay: 1
 
-# Additional rules for specific bots (optional)
-# User-agent: Googlebot
-# Allow: /
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
 
-# User-agent: Bingbot
-# Allow: /
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

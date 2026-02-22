@@ -97,7 +97,7 @@ const ImageContainerExample = () => {
         )}
         <img
           src="https://via.placeholder.com/800x600"
-          alt="Example"
+          alt="Layout shift prevention example image demonstrating stable loading"
           style={imageStyle}
           onLoad={() => setLoading(false)}
         />

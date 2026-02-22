@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext';
 import adminDashboardTranslations from '../data/adminDashboard.json';
 import api from '../services/api';
 import InteractiveElement from '../components/InteractiveElement';
+import Spinner from '../components/Loading/Spinner';
 import './18_AdminDashboard.css';
 import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
@@ -684,7 +685,11 @@ const AdminDashboard = () => {
                 <SEOHead {...seo} />
                 <main id="main-content" tabIndex="-1" className="admin-dashboard-container">
                     <div className="admin-loading">
-                        <div className="admin-loading-spinner"></div>
+                        <Spinner size="large" color="primary" ariaLabel={
+                            language === 'ar' ? 'جاري التحميل...' : 
+                            language === 'fr' ? 'Chargement...' : 
+                            'Loading...'
+                        } />
                         <p className="text-primary text-xl font-black mt-4">
                             {language === 'ar' ? 'جاري التحميل...' : 
                              language === 'fr' ? 'Chargement...' : 

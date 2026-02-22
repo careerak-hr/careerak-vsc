@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { getInternalLinks } from '../utils/internalLinking';
+import { getNavAriaAttributes } from '../utils/ariaHelpers';
 import './Footer.css';
 
 export const Footer = () => {
@@ -13,6 +14,12 @@ export const Footer = () => {
   
   // Get footer internal links for SEO
   const footerLinks = getInternalLinks('footer', language, user);
+  
+  // Get ARIA attributes for footer navigation
+  const footerAriaAttrs = getNavAriaAttributes({
+    label: 'footerNav',
+    language
+  });
 
   return (
     <>
@@ -20,8 +27,7 @@ export const Footer = () => {
       <footer 
         className="footer-container" 
         dir="rtl"
-        role="navigation"
-        aria-label="التنقل السفلي"
+        {...footerAriaAttrs}
       >
         <nav className="footer-content">
           
@@ -29,8 +35,9 @@ export const Footer = () => {
             onClick={() => navigate('/profile')}
             className={`footer-btn ${isActive('/profile') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
             aria-label="بروفايلي"
+            aria-current={isActive('/profile') ? 'page' : undefined}
           >
-            <span className={`footer-icon ${isActive('/profile') ? 'footer-icon-active' : ''}`}>👤</span>
+            <span className={`footer-icon ${isActive('/profile') ? 'footer-icon-active' : ''}`} aria-hidden="true">👤</span>
             <span className="footer-label">بروفايلي</span>
           </button>
 
@@ -38,8 +45,9 @@ export const Footer = () => {
             onClick={() => navigate('/dashboard')}
             className={`footer-btn ${isActive('/dashboard') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
             aria-label="الرئيسية"
+            aria-current={isActive('/dashboard') ? 'page' : undefined}
           >
-            <span className={`footer-icon ${isActive('/dashboard') ? 'footer-icon-active' : ''}`}>🏠</span>
+            <span className={`footer-icon ${isActive('/dashboard') ? 'footer-icon-active' : ''}`} aria-hidden="true">🏠</span>
             <span className="footer-label">الرئيسية</span>
           </button>
 
@@ -49,7 +57,7 @@ export const Footer = () => {
                 className="footer-center-btn"
                 aria-label="بحث وظيفة"
               >
-                <span className="footer-center-btn-icon">+</span>
+                <span className="footer-center-btn-icon" aria-hidden="true">+</span>
               </button>
               <span className="footer-center-label">بحث وظيفة</span>
           </div>
@@ -58,10 +66,11 @@ export const Footer = () => {
             onClick={() => navigate('/notifications')}
             className={`footer-btn ${isActive('/notifications') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
             aria-label="تنبيهات"
+            aria-current={isActive('/notifications') ? 'page' : undefined}
           >
             <div className="footer-notification-badge-container">
-              <span className={`footer-icon ${isActive('/notifications') ? 'footer-icon-active' : ''}`}>🔔</span>
-              <div className="footer-notification-badge">3</div>
+              <span className={`footer-icon ${isActive('/notifications') ? 'footer-icon-active' : ''}`} aria-hidden="true">🔔</span>
+              <div className="footer-notification-badge" aria-label="3 إشعارات جديدة">3</div>
             </div>
             <span className="footer-label">تنبيهات</span>
           </button>
@@ -70,8 +79,9 @@ export const Footer = () => {
             onClick={() => navigate('/applications-status')}
             className={`footer-btn ${isActive('/applications-status') ? 'footer-btn-active' : 'footer-btn-inactive'}`}
             aria-label="طلباتي"
+            aria-current={isActive('/applications-status') ? 'page' : undefined}
           >
-            <span className={`footer-icon ${isActive('/applications-status') ? 'footer-icon-active' : ''}`}>⌛</span>
+            <span className={`footer-icon ${isActive('/applications-status') ? 'footer-icon-active' : ''}`} aria-hidden="true">⌛</span>
             <span className="footer-label">طلباتي</span>
           </button>
 
