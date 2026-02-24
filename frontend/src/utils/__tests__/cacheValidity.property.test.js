@@ -43,7 +43,7 @@ describe('Cache Validity Property-Based Tests', () => {
   describe('Property PERF-4: Cache Validity', () => {
     it('should serve from cache when age < maxAge', () => {
       fc.assert(
-        fc.property(
+        fc.asyncProperty(
           fc.string({ minLength: 1, maxLength: 50 }), // cache key
           fc.record({
             id: fc.integer({ min: 1, max: 10000 }),
@@ -96,7 +96,7 @@ describe('Cache Validity Property-Based Tests', () => {
 
     it('should revalidate when age >= maxAge', () => {
       fc.assert(
-        fc.property(
+        fc.asyncProperty(
           fc.string({ minLength: 1, maxLength: 50 }), // cache key
           fc.record({
             id: fc.integer({ min: 1, max: 10000 }),
@@ -480,7 +480,7 @@ describe('Cache Validity Property-Based Tests', () => {
 
     it('should handle concurrent cache validity checks', () => {
       fc.assert(
-        fc.property(
+        fc.asyncProperty(
           fc.string({ minLength: 1, maxLength: 50 }), // cache key
           fc.record({
             id: fc.integer({ min: 1, max: 10000 }),

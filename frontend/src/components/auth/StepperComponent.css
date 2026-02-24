@@ -1,199 +1,196 @@
-/* StepperComponent.css */
-/* تصميم مكون Stepper للتسجيل */
+/* StepperComponent.css - Stepper Component Styles */
 
-.stepper-component {
-  width: 100%;
+.stepper-container {
   margin-bottom: 2rem;
-  padding: 0 1rem;
+  width: 100%;
 }
 
-/* Progress Bar */
-.stepper-progress-bar {
+/* Progress Bar Styles (Requirement 5.2) */
+.stepper-progress-bar-container {
   position: relative;
-  width: 100%;
-  height: 4px;
-  background-color: #E3DAD1;
-  border-radius: 2px;
-  overflow: hidden;
   margin-bottom: 1.5rem;
 }
 
-.stepper-progress-fill {
+.stepper-progress-bar-bg {
+  height: 4px;
+  background-color: #e5e7eb; /* gray-200 */
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.stepper-progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #304B60 0%, #D48161 100%);
-  border-radius: 2px;
-  transition: width 0.3s ease-in-out;
+  background-color: #304B60; /* primary color */
+  border-radius: 9999px;
+  transition: width 300ms ease-in-out;
 }
 
 /* Steps Container */
 .stepper-steps-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   gap: 0.5rem;
 }
 
-/* Step Item */
-.stepper-step-item {
+/* Individual Step */
+.stepper-step {
   display: flex;
   flex-direction: column;
   align-items: center;
   flex: 1;
-  transition: all 0.3s ease;
+  min-width: 0; /* للسماح بالتقليص */
 }
 
-.stepper-step-item.completed,
-.stepper-step-item.current {
+.stepper-step-clickable {
   cursor: pointer;
 }
 
-/* Step Circle */
-.stepper-step-circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.stepper-step-clickable:hover .stepper-step-icon-completed {
+  transform: scale(1.05);
+}
+
+.stepper-step-clickable:focus {
+  outline: 2px solid #304B60;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Step Icon/Circle (Requirement 5.3, 5.4) */
+.stepper-step-icon {
+  width: 3rem; /* 48px */
+  height: 3rem; /* 48px */
+  border-radius: 9999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  transition: all 0.3s ease;
+  transition: all 300ms ease-in-out;
   margin-bottom: 0.5rem;
-  border: 2px solid transparent;
 }
 
-/* Step Circle - Upcoming */
-.stepper-step-circle.upcoming {
-  background-color: #E3DAD1;
-  color: #8B7355;
-  border-color: #E3DAD1;
+/* Emoji Icon Styling */
+.stepper-icon-emoji {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1;
+  display: inline-block;
 }
 
-/* Step Circle - Current */
-.stepper-step-circle.current {
-  background-color: #304B60;
+/* Completed Step (Requirement 5.4) */
+.stepper-step-icon-completed {
+  background-color: #10b981; /* green-500 */
   color: white;
-  border-color: #304B60;
-  box-shadow: 0 0 0 4px rgba(48, 75, 96, 0.2);
-  transform: scale(1.1);
 }
 
-/* Step Circle - Completed */
-.stepper-step-circle.completed {
-  background-color: #10b981;
+/* Current Step (Requirement 5.3) */
+.stepper-step-icon-current {
+  background-color: #304B60; /* primary */
   color: white;
-  border-color: #10b981;
+  box-shadow: 0 0 0 4px rgba(48, 75, 96, 0.2); /* ring effect */
 }
 
-/* Step Icons */
-.stepper-step-icon {
-  font-size: 1.5rem;
+/* Upcoming Step */
+.stepper-step-icon-upcoming {
+  background-color: #e5e7eb; /* gray-200 */
+  color: #6b7280; /* gray-500 */
 }
 
-.stepper-check-icon {
-  font-size: 1.75rem;
-  font-weight: bold;
-}
-
-/* Step Title */
+/* Step Title (Requirement 5.3) */
 .stepper-step-title {
-  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem; /* 14px */
   text-align: center;
-  transition: all 0.3s ease;
-  font-weight: 500;
-  line-height: 1.2;
-  max-width: 100px;
+  color: #6b7280; /* gray-600 */
+  transition: all 300ms ease-in-out;
+  word-break: break-word;
+  hyphens: auto;
 }
 
-/* Step Title - Upcoming */
-.stepper-step-title.upcoming {
-  color: #8B7355;
-}
-
-/* Step Title - Current */
-.stepper-step-title.current {
-  color: #304B60;
-  font-weight: 700;
-}
-
-/* Step Title - Completed */
-.stepper-step-title.completed {
-  color: #10b981;
+.stepper-step-title-current {
   font-weight: 600;
+  color: #304B60; /* primary */
 }
 
-/* Hover Effects */
-.stepper-step-item.completed:hover .stepper-step-circle {
-  transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
-
-.stepper-step-item.completed:hover .stepper-step-title {
-  color: #059669;
-}
-
-/* Responsive Design */
+/* Responsive Design - Mobile */
 @media (max-width: 639px) {
-  .stepper-component {
-    padding: 0 0.5rem;
+  .stepper-container {
     margin-bottom: 1.5rem;
   }
-  
-  .stepper-progress-bar {
+
+  .stepper-progress-bar-container {
     margin-bottom: 1rem;
   }
-  
+
   .stepper-steps-container {
     gap: 0.25rem;
   }
-  
-  .stepper-step-circle {
-    width: 40px;
-    height: 40px;
-    font-size: 1.25rem;
-  }
-  
-  .stepper-check-icon {
-    font-size: 1.5rem;
-  }
-  
+
   .stepper-step-icon {
-    font-size: 1.25rem;
+    width: 2.5rem; /* 40px */
+    height: 2.5rem; /* 40px */
   }
-  
+
+  .stepper-icon-emoji {
+    font-size: 1.25rem; /* 20px */
+  }
+
   .stepper-step-title {
-    font-size: 0.75rem;
-    max-width: 80px;
+    font-size: 0.75rem; /* 12px */
+    margin-top: 0.25rem;
   }
 }
 
+/* Responsive Design - Very Small Screens */
 @media (max-width: 374px) {
-  .stepper-step-circle {
-    width: 36px;
-    height: 36px;
-    font-size: 1.125rem;
+  .stepper-step-icon {
+    width: 2rem; /* 32px */
+    height: 2rem; /* 32px */
   }
-  
+
+  .stepper-icon-emoji {
+    font-size: 1rem; /* 16px */
+  }
+
   .stepper-step-title {
-    font-size: 0.7rem;
-    max-width: 70px;
+    font-size: 0.625rem; /* 10px */
   }
 }
 
 /* RTL Support */
-[dir="rtl"] .stepper-progress-fill {
-  background: linear-gradient(270deg, #304B60 0%, #D48161 100%);
+[dir="rtl"] .stepper-steps-container {
+  direction: rtl;
 }
 
-/* Animation for step transitions */
-@keyframes stepPulse {
-  0%, 100% {
-    transform: scale(1);
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+  .stepper-progress-bar-fill {
+    background-color: #000;
   }
-  50% {
-    transform: scale(1.05);
+
+  .stepper-step-icon-current {
+    border: 2px solid #000;
+  }
+
+  .stepper-step-icon-completed {
+    background-color: #000;
   }
 }
 
-.stepper-step-circle.current {
-  animation: stepPulse 2s ease-in-out infinite;
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .stepper-progress-bar-fill,
+  .stepper-step-icon,
+  .stepper-step-title {
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .stepper-container {
+    page-break-inside: avoid;
+  }
+
+  .stepper-step-icon-current {
+    box-shadow: none;
+    border: 2px solid #304B60;
+  }
 }

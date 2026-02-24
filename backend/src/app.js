@@ -117,9 +117,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000 // 24 ساعة
+    secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+    httpOnly: true, // Prevent XSS attacks
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // CSRF protection
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }
 }));
 
@@ -175,8 +176,11 @@ app.use('/notifications', notificationRoutes);
 app.use('/chat', chatRoutes);
 app.use('/reviews', require('./routes/reviewRoutes'));
 app.use('/auth', authRoutes);
+app.use('/auth/2fa', require('./routes/twoFactorRoutes'));
 app.use('/oauth', oauthRoutes);
 app.use('/errors', require('./routes/errorLogRoutes'));
+app.use('/security-score', require('./routes/securityScoreRoutes'));
+app.use('/devices', require('./routes/deviceRoutes'));
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

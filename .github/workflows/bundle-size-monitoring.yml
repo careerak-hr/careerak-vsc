@@ -1,0 +1,179 @@
+name: Bundle Size Monitoring
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/bundle-size-monitoring.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'frontend/**'
+  schedule:
+    # Run weekly on Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  monitor-bundle-size:
+    name: Monitor Bundle Sizes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for git info
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      
+      - name: Build project
+        working-directory: frontend
+        run: npm run build
+        env:
+          NODE_ENV: production
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://api.careerak.com' }}
+          VITE_PUSHER_KEY: ${{ secrets.VITE_PUSHER_KEY }}
+          VITE_PUSHER_CLUSTER: ${{ secrets.VITE_PUSHER_CLUSTER || 'eu' }}
+      
+      - name: Download previous bundle history
+        uses: actions/cache@v4
+        with:
+          path: frontend/.bundle-history
+          key: bundle-history-${{ github.ref }}-${{ github.sha }}
+          restore-keys: |
+            bundle-history-${{ github.ref }}-
+            bundle-history-
+      
+      - name: Run bundle size monitoring
+        id: monitor
+        working-directory: frontend
+        run: |
+          npm run monitor:bundle 2>&1 | tee monitor-output.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Upload bundle size report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bundle-size-report-${{ github.sha }}
+          path: |
+            frontend/build/bundle-size-report.json
+            frontend/.bundle-history/bundle-sizes.json
+            frontend/monitor-output.txt
+          retention-days: 30
+      
+      - name: Comment PR with bundle size report
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read monitoring output
+            const outputPath = path.join(process.env.GITHUB_WORKSPACE, 'frontend', 'monitor-output.txt');
+            let output = '';
+            try {
+              output = fs.readFileSync(outputPath, 'utf-8');
+            } catch (error) {
+              output = 'Could not read monitoring output';
+            }
+            
+            // Read bundle size report
+            const reportPath = path.join(process.env.GITHUB_WORKSPACE, 'frontend', 'build', 'bundle-size-report.json');
+            let report = null;
+            try {
+              report = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+            } catch (error) {
+              console.log('Could not read bundle size report');
+            }
+            
+            // Format comment
+            let comment = '## 📊 Bundle Size Monitoring Report\n\n';
+            
+            if (report) {
+              const formatBytes = (bytes) => {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+              };
+              
+              comment += '### Current Build\n\n';
+              comment += '| Metric | Size | Gzipped |\n';
+              comment += '|--------|------|----------|\n';
+              comment += `| Total JS | ${formatBytes(report.current.totalJS.raw)} | ${formatBytes(report.current.totalJS.gzip)} |\n`;
+              comment += `| Total CSS | ${formatBytes(report.current.totalCSS.raw)} | ${formatBytes(report.current.totalCSS.gzip)} |\n`;
+              comment += `| Largest Chunk | ${formatBytes(report.current.largestChunk.size)} | - |\n\n`;
+              
+              comment += '### Threshold Checks\n\n';
+              const chunkOk = report.targetsMet.chunkSize;
+              const jsReduction = report.targetsMet.jsReduction;
+              
+              comment += `- ${chunkOk ? '✅' : '❌'} Chunk size limit (200 KB): ${formatBytes(report.current.largestChunk.size)}\n`;
+              comment += `- ${jsReduction ? '✅' : '⚠️'} JS reduction target (40%+): ${report.reduction.initialJs}%\n\n`;
+              
+              if (report.reduction.initialJs) {
+                comment += `### Size Reduction\n\n`;
+                comment += `Bundle size has been reduced by **${report.reduction.initialJs}%** from baseline.\n\n`;
+              }
+              
+              comment += '### Top 5 Largest Chunks\n\n';
+              comment += '| Chunk | Size | Gzipped |\n';
+              comment += '|-------|------|----------|\n';
+              report.topChunks.slice(0, 5).forEach(chunk => {
+                const exceedsLimit = chunk.raw > 200 * 1024;
+                const icon = exceedsLimit ? '⚠️' : '✅';
+                comment += `| ${icon} ${chunk.name} | ${formatBytes(chunk.raw)} | ${formatBytes(chunk.gzip)} |\n`;
+              });
+              comment += '\n';
+              
+              if (!report.targetsMet.all) {
+                comment += '### ⚠️ Warnings\n\n';
+                if (!report.targetsMet.chunkSize) {
+                  comment += `- Largest chunk (${report.current.largestChunk.name}) exceeds 200 KB limit\n`;
+                }
+                if (!report.targetsMet.jsReduction) {
+                  comment += `- JS reduction is ${report.reduction.initialJs}%, target is 40%+\n`;
+                }
+                comment += '\n';
+              }
+            }
+            
+            comment += '<details>\n<summary>📋 Full Monitoring Output</summary>\n\n```\n';
+            comment += output.substring(0, 10000); // Limit to 10k chars
+            if (output.length > 10000) {
+              comment += '\n... (truncated)\n';
+            }
+            comment += '```\n</details>\n';
+            
+            // Post comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+      
+      - name: Check monitoring result
+        if: steps.monitor.outputs.exit_code != '0'
+        run: |
+          echo "::error::Bundle size monitoring failed with exit code ${{ steps.monitor.outputs.exit_code }}"
+          exit ${{ steps.monitor.outputs.exit_code }}
+      
+      - name: Success notification
+        if: success()
+        run: echo "✅ Bundle size monitoring passed successfully!"

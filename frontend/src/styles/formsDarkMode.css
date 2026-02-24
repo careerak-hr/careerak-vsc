@@ -222,7 +222,7 @@
 }
 
 .dark .auth-password-toggle {
-  @apply text-dark-text/40 hover:text-dark-text;
+  @apply text-dark-text/40 hover:text-dark-text focus:ring-dark-text/30;
 }
 
 .dark .auth-checkbox {

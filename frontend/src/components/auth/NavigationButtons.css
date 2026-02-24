@@ -1,0 +1,188 @@
+/* NavigationButtons.css - أنماط أزرار التنقل */
+
+/* Container */
+.navigation-buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+  width: 100%;
+}
+
+/* Spacer لدفع الأزرار إلى الجوانب */
+.navigation-spacer {
+  flex: 1;
+}
+
+/* Base Button Styles */
+.navigation-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 120px;
+}
+
+.navigation-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(212, 129, 97, 0.3);
+}
+
+.navigation-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Primary Button (Next/Submit) */
+.navigation-btn-primary {
+  background-color: #D48161; /* Accent color */
+  color: white;
+  border-color: #D48161;
+}
+
+.navigation-btn-primary:hover:not(:disabled) {
+  background-color: #c06f51;
+  border-color: #c06f51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(212, 129, 97, 0.3);
+}
+
+.navigation-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Secondary Button (Previous) */
+.navigation-btn-secondary {
+  background-color: transparent;
+  color: #304B60; /* Primary color */
+  border-color: #304B60;
+}
+
+.navigation-btn-secondary:hover:not(:disabled) {
+  background-color: #304B60;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(48, 75, 96, 0.2);
+}
+
+.navigation-btn-secondary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Skip Button */
+.navigation-btn-skip {
+  background-color: transparent;
+  color: #6B7280; /* Gray */
+  border-color: #D1D5DB; /* Light gray */
+}
+
+.navigation-btn-skip:hover:not(:disabled) {
+  background-color: #F3F4F6;
+  border-color: #9CA3AF;
+  color: #374151;
+}
+
+/* Loading Spinner */
+.navigation-btn-spinner {
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.navigation-spinner-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  animation: navigation-spin 1s linear infinite;
+}
+
+.navigation-spinner-circle {
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 25;
+}
+
+@keyframes navigation-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .navigation-btn-spinner {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .navigation-buttons-container {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .navigation-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    min-width: 100px;
+  }
+
+  /* في الشاشات الصغيرة، نجعل الأزرار تأخذ العرض الكامل */
+  .navigation-btn-primary {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .navigation-spacer {
+    display: none;
+  }
+}
+
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+  .navigation-btn {
+    border-width: 3px;
+  }
+
+  .navigation-btn-primary {
+    background-color: #000;
+    border-color: #000;
+    color: #fff;
+  }
+
+  .navigation-btn-secondary {
+    border-color: #000;
+    color: #000;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .navigation-btn {
+    transition: none;
+  }
+
+  .navigation-btn:hover:not(:disabled) {
+    transform: none;
+  }
+
+  @keyframes navigation-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

@@ -25,6 +25,38 @@ const versionPlugin = () => ({
   },
 });
 
+// Sitemap generation plugin
+// Implements: FR-SEO-8, Task 6.4.1, Task 10.2.3
+const sitemapPlugin = () => ({
+  name: 'sitemap-plugin',
+  closeBundle() {
+    try {
+      console.log('🗺️  Generating sitemap...');
+      
+      // Import and execute sitemap generation
+      const { generateSitemapXML, routes, BASE_URL } = require('./scripts/generate-sitemap.js');
+      
+      // Generate sitemap XML
+      const sitemapXML = generateSitemapXML();
+      
+      // Write to build directory
+      const sitemapPath = path.resolve(__dirname, 'build', 'sitemap.xml');
+      fs.writeFileSync(sitemapPath, sitemapXML, 'utf8');
+      
+      // Count public routes
+      const publicRoutes = routes.filter(r => r.public || process.env.SITEMAP_INCLUDE_PROTECTED === 'true').length;
+      
+      console.log(`✓ Generated sitemap.xml with ${publicRoutes} URLs`);
+      console.log(`  Base URL: ${BASE_URL}`);
+      console.log(`  Location: ${sitemapPath}`);
+    } catch (error) {
+      console.error('✗ Failed to generate sitemap:', error.message);
+      // Don't fail the build, just warn
+      console.warn('⚠ Build will continue without sitemap');
+    }
+  },
+});
+
 // Workbox plugin for service worker generation
 const workboxPlugin = () => ({
   name: 'workbox-plugin',
@@ -100,6 +132,8 @@ export default defineConfig({
     }),
     // Version plugin for cache busting
     versionPlugin(),
+    // Sitemap generation plugin - FR-SEO-8, Task 10.2.3
+    sitemapPlugin(),
     // Workbox plugin for service worker
     workboxPlugin(),
   ],
@@ -130,7 +164,15 @@ export default defineConfig({
     host: true,
   },
 
-  // Build configuration with code splitting
+  // ============================================================================
+  // BUILD CONFIGURATION - CODE SPLITTING OPTIMIZATION
+  // ============================================================================
+  // Implements:
+  // - FR-PERF-2: Load only required code chunks per route
+  // - FR-PERF-5: Chunks not exceeding 200KB
+  // - NFR-PERF-2: Reduce initial bundle size by 40-60%
+  // - Design Section 3.2: Route-based splitting, vendor chunk separation
+  // ============================================================================
   build: {
     // Output directory
     outDir: 'build',
@@ -138,8 +180,11 @@ export default defineConfig({
     // Generate source maps for debugging
     sourcemap: true,
     
-    // Chunk size warning limit (200KB)
+    // Chunk size warning limit (200KB) - FR-PERF-5
     chunkSizeWarningLimit: 200,
+    
+    // Target modern browsers for smaller bundles
+    target: 'es2015',
     
     // Module preload configuration for critical resources
     modulePreload: {
@@ -158,8 +203,17 @@ export default defineConfig({
     
     // Rollup options for advanced bundling
     rollupOptions: {
+      // Optimize tree-shaking
+      treeshake: {
+        moduleSideEffects: 'no-external',
+        propertyReadSideEffects: false,
+        tryCatchDeoptimization: false,
+      },
+      
       output: {
         // Manual chunks for vendor separation - OPTIMIZED for TTI < 3.8s
+        // Implements FR-PERF-2: Load only required code chunks per route
+        // Implements FR-PERF-5: Chunks not exceeding 200KB
         manualChunks: (id) => {
           // CRITICAL: Skip zxcvbn entirely - it should be a dynamic chunk
           // This prevents it from being bundled into any vendor chunk
@@ -276,6 +330,7 @@ export default defineConfig({
             return `assets/js/lazy-[name]-[hash].js`;
           }
           
+          // Route-based chunks get descriptive names for debugging
           const facadeModuleId = chunkInfo.facadeModuleId 
             ? chunkInfo.facadeModuleId.split('/').pop() 
             : 'chunk';
@@ -285,7 +340,7 @@ export default defineConfig({
         // Entry file naming
         entryFileNames: 'assets/js/[name]-[hash].js',
         
-        // Asset file naming
+        // Asset file naming - organized by type for better caching
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('.');
           const ext = info[info.length - 1];
@@ -304,6 +359,9 @@ export default defineConfig({
           
           return `assets/[name]-[hash][extname]`;
         },
+        
+        // Optimize chunk loading with import analysis
+        experimentalMinChunkSize: 10000, // 10KB minimum chunk size to reduce HTTP requests
       },
     },
     
@@ -374,8 +432,39 @@ export default defineConfig({
     // CSS code splitting
     cssCodeSplit: true,
     
+    // ============================================================================
+    // IMAGE OPTIMIZATION CONFIGURATION
+    // ============================================================================
+    // Implements:
+    // - FR-PERF-3: WebP format with JPEG/PNG fallback
+    // - FR-PERF-4: Lazy load images with placeholder loading states
+    // - Design Section 3.3: Image Optimization
+    // - Task 10.2.4: Configure image optimization
+    // ============================================================================
+    
     // Asset inline limit (4KB)
+    // Images smaller than 4KB are inlined as base64 data URLs
+    // This reduces HTTP requests for small icons and improves performance
+    // Larger images are emitted as separate files with hash for cache busting
     assetsInlineLimit: 4096,
+    
+    // Image optimization notes:
+    // 1. Static images in /public are served as-is (use for already optimized images)
+    // 2. Images imported in code are processed by Vite:
+    //    - Small images (<4KB) are inlined as base64
+    //    - Large images are copied to build/assets/images/ with hash
+    // 3. Cloudinary images are optimized at runtime via imageOptimization.js:
+    //    - Automatic format selection (WebP with JPEG/PNG fallback)
+    //    - Automatic quality optimization (q_auto)
+    //    - Lazy loading with Intersection Observer (LazyImage component)
+    //    - Blur-up placeholders for better UX
+    // 4. Service worker caches images with CacheFirst strategy (50MB limit)
+    //
+    // Best practices:
+    // - Use LazyImage component for all Cloudinary images
+    // - Use appropriate presets (PROFILE_MEDIUM, THUMBNAIL_LARGE, etc.)
+    // - Provide descriptive alt text for accessibility
+    // - Use responsive images with srcset for different screen sizes
   },
 
   // CSS configuration

@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require('../config/passport');
 const oauthController = require('../controllers/oauthController');
 const { auth } = require('../middleware/auth');
+const { generateState, verifyState } = require('../utils/oauthState');
 
 // ==================== Google OAuth ====================
 
@@ -10,25 +11,39 @@ const { auth } = require('../middleware/auth');
  * Initiate Google OAuth
  * GET /auth/google
  */
-router.get('/google',
+router.get('/google', (req, res, next) => {
+  // Generate and store state parameter for CSRF protection
+  const state = generateState(req.user?.id);
+  
   passport.authenticate('google', {
     scope: ['profile', 'email'],
     accessType: 'offline',
-    prompt: 'consent'
-  })
-);
+    prompt: 'consent',
+    state: state
+  })(req, res, next);
+});
 
 /**
  * Google OAuth Callback
  * GET /auth/google/callback
  */
-router.get('/google/callback',
+router.get('/google/callback', (req, res, next) => {
+  // Verify state parameter
+  const state = req.query.state;
+  const stateData = verifyState(state);
+  
+  if (!stateData) {
+    console.error('❌ OAuth State verification failed');
+    return res.redirect('/auth/failure?error=invalid_state');
+  }
+  
+  console.log('✅ OAuth State verified successfully');
+  
   passport.authenticate('google', {
     failureRedirect: '/auth/failure',
     session: false
-  }),
-  oauthController.oauthSuccess
-);
+  })(req, res, next);
+}, oauthController.oauthSuccess);
 
 // ==================== Facebook OAuth ====================
 
@@ -36,23 +51,37 @@ router.get('/google/callback',
  * Initiate Facebook OAuth
  * GET /auth/facebook
  */
-router.get('/facebook',
+router.get('/facebook', (req, res, next) => {
+  // Generate and store state parameter for CSRF protection
+  const state = generateState(req.user?.id);
+  
   passport.authenticate('facebook', {
-    scope: ['email', 'public_profile']
-  })
-);
+    scope: ['email', 'public_profile'],
+    state: state
+  })(req, res, next);
+});
 
 /**
  * Facebook OAuth Callback
  * GET /auth/facebook/callback
  */
-router.get('/facebook/callback',
+router.get('/facebook/callback', (req, res, next) => {
+  // Verify state parameter
+  const state = req.query.state;
+  const stateData = verifyState(state);
+  
+  if (!stateData) {
+    console.error('❌ OAuth State verification failed');
+    return res.redirect('/auth/failure?error=invalid_state');
+  }
+  
+  console.log('✅ OAuth State verified successfully');
+  
   passport.authenticate('facebook', {
     failureRedirect: '/auth/failure',
     session: false
-  }),
-  oauthController.oauthSuccess
-);
+  })(req, res, next);
+}, oauthController.oauthSuccess);
 
 // ==================== LinkedIn OAuth ====================
 
@@ -60,23 +89,37 @@ router.get('/facebook/callback',
  * Initiate LinkedIn OAuth
  * GET /auth/linkedin
  */
-router.get('/linkedin',
+router.get('/linkedin', (req, res, next) => {
+  // Generate and store state parameter for CSRF protection
+  const state = generateState(req.user?.id);
+  
   passport.authenticate('linkedin', {
-    scope: ['r_emailaddress', 'r_liteprofile']
-  })
-);
+    scope: ['r_emailaddress', 'r_liteprofile'],
+    state: state
+  })(req, res, next);
+});
 
 /**
  * LinkedIn OAuth Callback
  * GET /auth/linkedin/callback
  */
-router.get('/linkedin/callback',
+router.get('/linkedin/callback', (req, res, next) => {
+  // Verify state parameter
+  const state = req.query.state;
+  const stateData = verifyState(state);
+  
+  if (!stateData) {
+    console.error('❌ OAuth State verification failed');
+    return res.redirect('/auth/failure?error=invalid_state');
+  }
+  
+  console.log('✅ OAuth State verified successfully');
+  
   passport.authenticate('linkedin', {
     failureRedirect: '/auth/failure',
     session: false
-  }),
-  oauthController.oauthSuccess
-);
+  })(req, res, next);
+}, oauthController.oauthSuccess);
 
 // ==================== OAuth Management ====================
 

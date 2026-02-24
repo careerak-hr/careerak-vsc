@@ -21,6 +21,7 @@
     "framer-motion": "^10.18.0",
     "i18next": "^23.16.8",
     "i18next-browser-languagedetector": "^8.2.0",
+    "lucide-react": "^0.575.0",
     "mailcheck": "^1.1.1",
     "prop-types": "^15.8.1",
     "pusher-js": "^8.4.0-rc2",
@@ -49,6 +50,7 @@
     "test:mobile-helper": "node scripts/mobile-test-helper.js",
     "check:contrast": "node scripts/check-contrast.js",
     "check:contrast:ci": "node scripts/check-contrast.js --ci",
+    "verify:workbox": "node scripts/verify-workbox-config.js",
     "cap:sync": "npx cap sync android",
     "download-fonts": "node ../scripts/download-fonts.js",
     "setup-fonts": "npm run download-fonts",
@@ -61,11 +63,21 @@
     "audit:seo": "node run-seo-audit-simple.js",
     "audit:lighthouse": "node run-lighthouse-cli.js",
     "measure:bundle": "node scripts/measure-bundle-size.js",
+    "monitor:bundle": "node scripts/monitor-bundle-sizes.js",
     "measure:load-time": "node scripts/measure-load-time.js",
     "measure:cls": "node scripts/measure-cls.js",
     "verify:cls": "node scripts/verify-cls.js",
     "measure:fcp": "node scripts/measure-fcp.js",
-    "verify:fcp": "node scripts/verify-fcp.js"
+    "verify:fcp": "node scripts/verify-fcp.js",
+    "test:build": "node scripts/test-production-build.js",
+    "lighthouse:ci": "lhci autorun",
+    "lighthouse:local": "npm run build && lhci autorun",
+    "monitor:pwa": "node scripts/monitor-pwa-install-rate.js",
+    "monitor:pwa:watch": "node scripts/monitor-pwa-install-rate.js --watch",
+    "monitor:pwa:export": "node scripts/monitor-pwa-install-rate.js --export pwa-install-metrics.json",
+    "monitor:darkmode": "node scripts/monitor-dark-mode-adoption.js",
+    "monitor:darkmode:watch": "node scripts/monitor-dark-mode-adoption.js --watch",
+    "monitor:darkmode:export": "node scripts/monitor-dark-mode-adoption.js --export"
   },
   "eslintConfig": {
     "extends": [
@@ -87,6 +99,7 @@
   "devDependencies": {
     "@capacitor/cli": "8.0.2",
     "@fullhuman/postcss-purgecss": "^8.0.0",
+    "@lhci/cli": "^0.13.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

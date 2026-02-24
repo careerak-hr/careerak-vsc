@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "backend/src/index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["backend/**"]
+      }
     },
     {
       "src": "frontend/package.json",
@@ -13,6 +16,12 @@
       }
     }
   ],
+  "functions": {
+    "backend/src/index.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
   "redirects": [
     {
       "source": "/jobs",
@@ -88,6 +97,116 @@
       "source": "/terms",
       "destination": "/policy",
       "permanent": true
+    },
+    {
+      "source": "/terms-of-service",
+      "destination": "/policy",
+      "permanent": true
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/policy",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/about-us",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/contact",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/career",
+      "destination": "/job-postings",
+      "permanent": true
+    },
+    {
+      "source": "/careers",
+      "destination": "/job-postings",
+      "permanent": true
+    },
+    {
+      "source": "/opportunities",
+      "destination": "/job-postings",
+      "permanent": true
+    },
+    {
+      "source": "/vacancies",
+      "destination": "/job-postings",
+      "permanent": true
+    },
+    {
+      "source": "/learn",
+      "destination": "/courses",
+      "permanent": true
+    },
+    {
+      "source": "/learning",
+      "destination": "/courses",
+      "permanent": true
+    },
+    {
+      "source": "/education",
+      "destination": "/courses",
+      "permanent": true
+    },
+    {
+      "source": "/educational-courses",
+      "destination": "/courses",
+      "permanent": true
+    },
+    {
+      "source": "/account",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/my-account",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/my-profile",
+      "destination": "/profile",
+      "permanent": true
+    },
+    {
+      "source": "/settings",
+      "destination": "/profile",
+      "permanent": false
+    },
+    {
+      "source": "/preferences",
+      "destination": "/profile",
+      "permanent": false
     }
   ],
   "routes": [
@@ -114,10 +233,6 @@
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
-        },
-        {
-          "key": "Content-Encoding",
-          "value": "gzip"
         }
       ]
     },
@@ -131,10 +246,6 @@
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
-        },
-        {
-          "key": "Content-Encoding",
-          "value": "gzip"
         }
       ]
     },
@@ -161,6 +272,49 @@
         {
           "key": "X-Content-Type-Options",
           "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.(mp3|mp4|wav|ogg|webm))",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000, immutable"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
         }
       ]
     },

@@ -109,6 +109,28 @@ class NotificationService {
     });
   }
   
+  // إشعار بتسجيل دخول من جهاز جديد
+  async notifyNewDeviceLogin(userId, device) {
+    const deviceDescription = device.getDeviceDescription();
+    const loginTime = new Date().toLocaleString('ar-EG', {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+    
+    return await this.createNotification({
+      recipient: userId,
+      type: 'new_device_login',
+      title: 'تسجيل دخول من جهاز جديد 🔐',
+      message: `تم تسجيل الدخول إلى حسابك من ${deviceDescription} في ${loginTime}. إذا لم تكن أنت، يرجى تغيير كلمة المرور فوراً.`,
+      relatedData: { 
+        deviceId: device._id,
+        deviceInfo: device.deviceInfo,
+        location: device.location
+      },
+      priority: 'urgent'
+    });
+  }
+  
   // البحث عن المستخدمين المناسبين لوظيفة جديدة
   async findMatchingUsersForJob(jobPosting) {
     try {

@@ -139,7 +139,8 @@ function generateStrongPassword(length = 14) {
   const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const lowercase = 'abcdefghijklmnopqrstuvwxyz';
   const numbers = '0123456789';
-  const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+  // استخدام نفس الرموز الخاصة المستخدمة في التحقق
+  const special = '!@#$%^&*(),.?":{}|<>';
 
   const allChars = uppercase + lowercase + numbers + special;
 

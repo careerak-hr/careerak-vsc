@@ -86,11 +86,10 @@ function Step2Password({
       
       {/* مولد كلمات المرور */}
       <PasswordGenerator 
-        onGenerate={(password) => {
+        onPasswordGenerated={(password) => {
           handleInputChange({ target: { name: 'password', value: password } });
           handleInputChange({ target: { name: 'confirmPassword', value: password } });
         }}
-        language={language}
       />
       
       {/* تأكيد كلمة المرور */}

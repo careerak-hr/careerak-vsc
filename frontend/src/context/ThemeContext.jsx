@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { trackThemeChange, initDarkModeTracking } from '../utils/darkModeTracking';
 
 /**
  * ThemeContext - Manages dark mode state and system preference detection
@@ -10,6 +11,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
  * - Persists preference in localStorage ('careerak-theme')
  * - Syncs with backend API for authenticated users
  * - Detects system preference using matchMedia
+ * - Tracks dark mode adoption metrics
  * 
  * Storage values: 'light' | 'dark' | 'system'
  */
@@ -49,6 +51,11 @@ export const ThemeProvider = ({ children }) => {
     }
     return false;
   });
+
+  // Initialize dark mode tracking on mount
+  useEffect(() => {
+    initDarkModeTracking();
+  }, []);
 
   // Sync theme with backend on mount if authenticated
   useEffect(() => {
@@ -174,6 +181,10 @@ export const ThemeProvider = ({ children }) => {
         newMode = 'light';
       }
 
+      // Track theme change
+      const newIsDark = newMode === 'system' ? systemPreference : newMode === 'dark';
+      trackThemeChange(prevMode, newMode, newIsDark);
+
       // Persist to localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('careerak-theme', newMode);
@@ -196,7 +207,12 @@ export const ThemeProvider = ({ children }) => {
       mode = 'system';
     }
 
+    const prevMode = themeMode;
     setThemeMode(mode);
+
+    // Track theme change
+    const newIsDark = mode === 'system' ? systemPreference : mode === 'dark';
+    trackThemeChange(prevMode, mode, newIsDark);
 
     // Persist to localStorage
     if (typeof window !== 'undefined') {

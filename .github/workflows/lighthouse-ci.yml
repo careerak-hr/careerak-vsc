@@ -1,0 +1,192 @@
+name: Lighthouse CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+  schedule:
+    # Run weekly on Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build
+        env:
+          VITE_API_URL: http://localhost:3000
+          VITE_PUSHER_KEY: test_key
+          VITE_PUSHER_CLUSTER: eu
+      
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.13.x
+      
+      - name: Run Lighthouse CI
+        run: lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+      
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          retention-days: 30
+      
+      - name: Parse Lighthouse results
+        if: always()
+        id: lighthouse-results
+        run: |
+          # Extract scores from the manifest
+          if [ -f ".lighthouseci/manifest.json" ]; then
+            PERF_SCORE=$(jq -r '.[0].summary.performance' .lighthouseci/manifest.json)
+            A11Y_SCORE=$(jq -r '.[0].summary.accessibility' .lighthouseci/manifest.json)
+            SEO_SCORE=$(jq -r '.[0].summary.seo' .lighthouseci/manifest.json)
+            BP_SCORE=$(jq -r '.[0].summary."best-practices"' .lighthouseci/manifest.json)
+            
+            echo "performance=$PERF_SCORE" >> $GITHUB_OUTPUT
+            echo "accessibility=$A11Y_SCORE" >> $GITHUB_OUTPUT
+            echo "seo=$SEO_SCORE" >> $GITHUB_OUTPUT
+            echo "best-practices=$BP_SCORE" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Comment PR with Lighthouse results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Read manifest
+            let manifestPath = '.lighthouseci/manifest.json';
+            if (!fs.existsSync(manifestPath)) {
+              console.log('No manifest found, skipping comment');
+              return;
+            }
+            
+            const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+            const summary = manifest[0].summary;
+            
+            // Format scores
+            const formatScore = (score) => {
+              const percentage = Math.round(score * 100);
+              const emoji = percentage >= 90 ? '🟢' : percentage >= 50 ? '🟡' : '🔴';
+              return `${emoji} ${percentage}`;
+            };
+            
+            let comment = '## 🔦 Lighthouse CI Results\n\n';
+            comment += '| Category | Score | Target |\n';
+            comment += '|----------|-------|--------|\n';
+            comment += `| Performance | ${formatScore(summary.performance)} | 90+ |\n`;
+            comment += `| Accessibility | ${formatScore(summary.accessibility)} | 95+ |\n`;
+            comment += `| SEO | ${formatScore(summary.seo)} | 95+ |\n`;
+            comment += `| Best Practices | ${formatScore(summary['best-practices'])} | 90+ |\n\n`;
+            
+            // Check if targets are met
+            const perfMet = summary.performance >= 0.9;
+            const a11yMet = summary.accessibility >= 0.95;
+            const seoMet = summary.seo >= 0.95;
+            const bpMet = summary['best-practices'] >= 0.9;
+            
+            if (perfMet && a11yMet && seoMet && bpMet) {
+              comment += '✅ **All targets met!**\n\n';
+            } else {
+              comment += '⚠️ **Some targets not met:**\n';
+              if (!perfMet) comment += '- Performance score below 90\n';
+              if (!a11yMet) comment += '- Accessibility score below 95\n';
+              if (!seoMet) comment += '- SEO score below 95\n';
+              if (!bpMet) comment += '- Best Practices score below 90\n';
+              comment += '\n';
+            }
+            
+            comment += `[View full report in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n`;
+            
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🔦 Lighthouse CI Results')
+            );
+            
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                comment_id: botComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+      
+      - name: Fail if targets not met
+        if: always()
+        run: |
+          if [ -f ".lighthouseci/manifest.json" ]; then
+            PERF=$(jq -r '.[0].summary.performance' .lighthouseci/manifest.json)
+            A11Y=$(jq -r '.[0].summary.accessibility' .lighthouseci/manifest.json)
+            SEO=$(jq -r '.[0].summary.seo' .lighthouseci/manifest.json)
+            BP=$(jq -r '.[0].summary."best-practices"' .lighthouseci/manifest.json)
+            
+            FAILED=0
+            
+            if (( $(echo "$PERF < 0.9" | bc -l) )); then
+              echo "❌ Performance score $PERF is below target 0.9"
+              FAILED=1
+            fi
+            
+            if (( $(echo "$A11Y < 0.95" | bc -l) )); then
+              echo "❌ Accessibility score $A11Y is below target 0.95"
+              FAILED=1
+            fi
+            
+            if (( $(echo "$SEO < 0.95" | bc -l) )); then
+              echo "❌ SEO score $SEO is below target 0.95"
+              FAILED=1
+            fi
+            
+            if (( $(echo "$BP < 0.9" | bc -l) )); then
+              echo "❌ Best Practices score $BP is below target 0.9"
+              FAILED=1
+            fi
+            
+            if [ $FAILED -eq 1 ]; then
+              echo "Some Lighthouse targets were not met"
+              exit 1
+            fi
+            
+            echo "✅ All Lighthouse targets met!"
+          fi

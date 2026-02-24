@@ -2,22 +2,25 @@ import React from 'react';
 import './StepperComponent.css';
 
 /**
- * StepperComponent
- * مؤشر خطوات التسجيل مع progress bar
- * 4 خطوات: المعلومات الأساسية، كلمة المرور، نوع الحساب، التفاصيل
+ * StepperComponent - مكون عرض خطوات التسجيل
  * 
- * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6
+ * @param {number} currentStep - الخطوة الحالية (1-4)
+ * @param {number} totalSteps - إجمالي عدد الخطوات (4)
+ * @param {function} onStepChange - دالة تغيير الخطوة
+ * @param {string} language - اللغة الحالية (ar, en, fr)
+ * 
+ * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5
  */
-function StepperComponent({ currentStep = 1, totalSteps = 4, onStepChange, language = 'ar' }) {
+export default function StepperComponent({ currentStep, totalSteps = 4, onStepChange, language = 'ar' }) {
   const isRTL = language === 'ar';
   
-  // تعريف الخطوات مع الأيقونات والترجمات
+  // تعريف الخطوات الأربعة مع الأيقونات والعناوين
   const steps = [
     { 
       number: 1, 
       title: {
         ar: 'المعلومات الأساسية',
-        en: 'Basic Info',
+        en: 'Basic Information',
         fr: 'Informations de base'
       },
       icon: '👤' // User icon
@@ -47,66 +50,85 @@ function StepperComponent({ currentStep = 1, totalSteps = 4, onStepChange, langu
         en: 'Details',
         fr: 'Détails'
       },
-      icon: '📋' // Clipboard icon
+      icon: '📄' // Document icon
     }
   ];
-  
-  // حساب نسبة التقدم
+
+  // حساب النسبة المئوية للتقدم (Requirement 5.1)
   const progressPercentage = (currentStep / totalSteps) * 100;
-  
-  // التحقق من حالة كل خطوة
-  const getStepStatus = (stepNumber) => {
-    if (stepNumber < currentStep) return 'completed';
-    if (stepNumber === currentStep) return 'current';
-    return 'upcoming';
-  };
-  
-  // معالج النقر على الخطوة
+
+  // معالجة النقر على خطوة (Requirement 5.5)
   const handleStepClick = (stepNumber) => {
-    // السماح بالعودة للخطوات المكتملة فقط
+    // يمكن النقر فقط على الخطوات المكتملة للعودة إليها
     if (stepNumber < currentStep && onStepChange) {
       onStepChange(stepNumber);
     }
   };
-  
+
   return (
-    <div className="stepper-component" dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Progress Bar */}
-      <div className="stepper-progress-bar">
-        <div 
-          className="stepper-progress-fill" 
-          style={{ 
-            width: `${progressPercentage}%`,
-            transition: 'width 0.3s ease-in-out'
-          }}
-        />
+    <div className="stepper-container" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Progress Bar (Requirement 5.2) */}
+      <div className="stepper-progress-bar-container">
+        <div className="stepper-progress-bar-bg">
+          <div
+            className="stepper-progress-bar-fill"
+            style={{ width: `${progressPercentage}%` }}
+            role="progressbar"
+            aria-valuenow={currentStep}
+            aria-valuemin="1"
+            aria-valuemax={totalSteps}
+            aria-label={`Step ${currentStep} of ${totalSteps}`}
+          />
+        </div>
       </div>
-      
-      {/* Steps Container */}
+
+      {/* Steps (Requirement 5.3, 5.4, 5.5) */}
       <div className="stepper-steps-container">
         {steps.map((step) => {
-          const status = getStepStatus(step.number);
-          const isClickable = step.number < currentStep;
-          
+          const isCompleted = step.number < currentStep;
+          const isCurrent = step.number === currentStep;
+          const isClickable = isCompleted;
+
           return (
-            <div 
-              key={step.number} 
-              className={`stepper-step-item ${status}`}
+            <div
+              key={step.number}
+              className={`stepper-step ${isClickable ? 'stepper-step-clickable' : ''}`}
               onClick={() => handleStepClick(step.number)}
-              style={{ cursor: isClickable ? 'pointer' : 'default' }}
+              role="button"
+              tabIndex={isClickable ? 0 : -1}
+              aria-label={`${step.title[language]} - ${isCompleted ? 'Completed' : isCurrent ? 'Current' : 'Upcoming'}`}
+              aria-current={isCurrent ? 'step' : undefined}
+              onKeyDown={(e) => {
+                if (isClickable && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  handleStepClick(step.number);
+                }
+              }}
             >
-              {/* Step Circle */}
-              <div className={`stepper-step-circle ${status}`}>
-                {status === 'completed' ? (
-                  <span className="stepper-check-icon">✓</span>
+              {/* Step Icon/Number (Requirement 5.3, 5.4) */}
+              <div
+                className={`
+                  stepper-step-icon
+                  ${isCompleted ? 'stepper-step-icon-completed' : ''}
+                  ${isCurrent ? 'stepper-step-icon-current' : ''}
+                  ${!isCompleted && !isCurrent ? 'stepper-step-icon-upcoming' : ''}
+                `}
+              >
+                {isCompleted ? (
+                  <span className="stepper-icon-emoji" aria-hidden="true">✓</span>
                 ) : (
-                  <span className="stepper-step-icon">{step.icon}</span>
+                  <span className="stepper-icon-emoji" aria-hidden="true">{step.icon}</span>
                 )}
               </div>
-              
-              {/* Step Title */}
-              <span className={`stepper-step-title ${status}`}>
-                {step.title[language] || step.title.ar}
+
+              {/* Step Title (Requirement 5.3) */}
+              <span
+                className={`
+                  stepper-step-title
+                  ${isCurrent ? 'stepper-step-title-current' : ''}
+                `}
+              >
+                {step.title[language]}
               </span>
             </div>
           );
@@ -115,5 +137,3 @@ function StepperComponent({ currentStep = 1, totalSteps = 4, onStepChange, langu
     </div>
   );
 }
-
-export default StepperComponent;

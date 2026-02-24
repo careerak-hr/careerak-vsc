@@ -183,6 +183,18 @@ export default function LoginPage() {
           <button type="submit" disabled={loading} className="login-submit-btn dark:bg-accent dark:text-inverse transition-all duration-300">
             {loading ? <ButtonSpinner color="white" ariaLabel={t.loading || 'Loading...'} /> : t.loginBtn}
           </button>
+
+          {/* رابط نسيت كلمة المرور */}
+          <div className="login-forgot-password-container">
+            <button
+              type="button"
+              onClick={() => navigate('/forgot-password')}
+              className="login-forgot-password-link dark:text-accent dark:hover:text-accent-hover transition-colors duration-300"
+              style={{ background: 'none', border: 'none', padding: 0, font: 'inherit', cursor: 'pointer', textDecoration: 'underline' }}
+            >
+              {t.forgotPassword || 'نسيت كلمة المرور؟'}
+            </button>
+          </div>
         </form>
 
         {/* OAuth Buttons */}

@@ -18,6 +18,7 @@ const notificationSchema = new mongoose.Schema({
       'new_application',     // طلب توظيف جديد (للشركات)
       'job_closed',          // تم إغلاق الوظيفة
       'course_match',        // دورة مناسبة لك
+      'new_device_login',    // تسجيل دخول من جهاز جديد
       'system'               // إشعار نظام عام
     ],
     required: true

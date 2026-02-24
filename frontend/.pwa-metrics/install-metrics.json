@@ -1,0 +1,786 @@
+{
+  "version": "1.0.0",
+  "created": "2026-02-22T22:20:15.285Z",
+  "metrics": [
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T03:40:54.688Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T03:40:56.688Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T20:55:59.461Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T21:54:51.379Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T21:54:53.379Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T04:55:57.197Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T18:16:59.322Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T16:33:18.994Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-23T16:33:23.994Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T08:41:01.553Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T11:34:44.662Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T09:38:10.766Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T09:38:12.766Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T23:25:06.978Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-22T23:25:11.978Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T03:26:47.384Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T03:26:49.384Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T14:57:01.181Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T14:57:03.181Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T17:35:16.322Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-23T17:35:21.322Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T16:09:26.506Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T01:20:06.299Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T01:20:08.299Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T03:39:52.577Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T03:39:54.577Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-23T17:14:52.422Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-23T17:14:54.422Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T06:13:48.593Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-22T06:13:50.593Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T16:14:54.962Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T15:57:48.353Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-22T15:57:53.353Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T09:10:18.382Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T04:02:30.367Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-22T04:02:35.367Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T01:15:41.253Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T16:25:44.007Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T14:55:36.751Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-22T14:55:38.751Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-22T07:47:11.901Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T15:51:32.911Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T05:06:49.644Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T18:47:08.688Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T03:49:11.861Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-21T03:49:13.861Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T17:46:02.240Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T20:07:22.304Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-21T21:39:29.152Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-21T21:39:31.152Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T04:27:43.604Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-20T04:27:48.604Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T14:22:55.131Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-20T14:23:00.131Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T16:18:58.786Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T07:22:42.310Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-20T07:22:44.310Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T14:44:37.758Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-20T14:44:42.758Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T18:14:21.361Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-20T18:14:23.361Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T21:43:18.228Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-20T21:43:23.228Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T22:15:58.707Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-20T22:16:03.707Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T22:52:05.404Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-19T22:52:07.404Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T22:01:00.649Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T12:44:46.160Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T11:57:59.069Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-20T11:58:01.069Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-20T04:54:01.777Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-20T04:54:03.777Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T23:22:14.378Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T03:21:31.256Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-19T03:21:33.256Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T18:45:09.459Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T02:09:12.708Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-19T02:09:14.708Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T10:05:33.361Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-19T10:05:35.361Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T03:25:35.690Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-19T03:25:37.690Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T10:31:52.448Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-19T10:31:54.448Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T13:59:07.787Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-19T13:59:12.787Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-19T06:34:57.942Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T18:24:44.085Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-18T18:24:46.085Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T07:02:16.491Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-18T07:02:21.491Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T22:21:41.137Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T16:09:36.736Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T15:17:32.827Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T07:56:11.408Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-18T07:56:13.408Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T14:28:44.879Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T05:42:17.443Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-18T05:42:19.443Z",
+      "platform": "Android",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T22:59:54.697Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-17T22:59:59.697Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T14:12:13.192Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-18T14:12:15.192Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T21:58:41.452Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-18T21:58:43.452Z",
+      "platform": "Desktop",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-18T04:34:23.144Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-18T04:34:25.144Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T03:09:22.686Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T06:29:50.763Z",
+      "platform": "iOS",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T18:19:21.314Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "install_completed",
+      "timestamp": "2026-02-17T18:19:26.314Z",
+      "platform": "Android",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T00:38:09.200Z",
+      "platform": "Desktop",
+      "browser": "Chrome"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T03:32:45.485Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-17T03:32:47.485Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T18:28:52.137Z",
+      "platform": "iOS",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T18:43:28.735Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-16T22:55:52.323Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-16T22:55:54.323Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T13:43:35.603Z",
+      "platform": "Desktop",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T02:51:40.500Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T17:37:15.283Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T19:14:39.710Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-17T19:14:41.710Z",
+      "platform": "iOS",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T15:09:06.408Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-17T15:09:08.408Z",
+      "platform": "Android",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T15:06:56.622Z",
+      "platform": "Desktop",
+      "browser": "Safari"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T03:35:07.785Z",
+      "platform": "Android",
+      "browser": "Firefox"
+    },
+    {
+      "event": "prompt_shown",
+      "timestamp": "2026-02-17T05:04:35.805Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    },
+    {
+      "event": "prompt_dismissed",
+      "timestamp": "2026-02-17T05:04:37.805Z",
+      "platform": "iOS",
+      "browser": "Edge"
+    }
+  ]
+}

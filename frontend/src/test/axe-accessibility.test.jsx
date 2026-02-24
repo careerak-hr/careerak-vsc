@@ -10,6 +10,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { axe } from 'vitest-axe';
 
 // Custom matcher for axe violations
@@ -80,12 +81,14 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-// Helper function to render with router
+// Helper function to render with router and helmet provider
 const renderWithRouter = (component) => {
   return render(
-    <BrowserRouter>
-      {component}
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        {component}
+      </BrowserRouter>
+    </HelmetProvider>
   );
 };
 

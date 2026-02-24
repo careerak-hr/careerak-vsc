@@ -12,7 +12,8 @@
     "rememberMe": "تذكرني",
     "loginCredentials": "بيانات تسجيل الدخول",
     "showPassword": "إظهار كلمة المرور",
-    "hidePassword": "إخفاء كلمة المرور"
+    "hidePassword": "إخفاء كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟"
   },
   "en": {
     "subtitle": "Login",
@@ -27,7 +28,8 @@
     "rememberMe": "Remember me",
     "loginCredentials": "Login Credentials",
     "showPassword": "Show password",
-    "hidePassword": "Hide password"
+    "hidePassword": "Hide password",
+    "forgotPassword": "Forgot password?"
   },
   "fr": {
     "subtitle": "Connexion",
@@ -42,6 +44,7 @@
     "rememberMe": "Se souvenir de moi",
     "loginCredentials": "Identifiants de connexion",
     "showPassword": "Afficher le mot de passe",
-    "hidePassword": "Masquer le mot de passe"
+    "hidePassword": "Masquer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?"
   }
 }

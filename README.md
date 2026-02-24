@@ -273,6 +273,8 @@ Comprehensive documentation is available in the `docs/` directory:
 - `docs/IMAGE_OPTIMIZATION_INTEGRATION.md` - Image optimization guide
 - `docs/CLOUDINARY_TRANSFORMATIONS.md` - Cloudinary setup
 - `docs/PAGE_TRANSITIONS_IMPLEMENTATION.md` - Animation guide
+- `frontend/docs/IMAGE_OPTIMIZATION_BUILD_CONFIG.md` - Build configuration for images
+- `frontend/docs/IMAGE_OPTIMIZATION_QUICK_REFERENCE.md` - Quick reference guide
 
 ### SEO & Accessibility
 - `docs/SEO_IMPLEMENTATION.md` - SEO best practices

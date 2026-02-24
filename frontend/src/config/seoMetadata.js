@@ -366,6 +366,56 @@ const seoMetadata = {
     }
   },
 
+  // Forgot Password Page
+  forgotPassword: {
+    ar: {
+      title: 'نسيت كلمة المرور - Careerak | استعادة الحساب',
+      description: 'أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور. سنرسل لك رابطاً آمناً لإعادة تعيين كلمة المرور الخاصة بك.',
+      keywords: 'نسيت كلمة المرور, استعادة الحساب, إعادة تعيين, Careerak',
+      image: '/og-images/forgot-password.jpg',
+      url: '/forgot-password'
+    },
+    en: {
+      title: 'Forgot Password - Careerak | Account Recovery',
+      description: 'Enter your email to reset your password. We will send you a secure link to reset your password.',
+      keywords: 'forgot password, account recovery, password reset, Careerak',
+      image: '/og-images/forgot-password.jpg',
+      url: '/forgot-password'
+    },
+    fr: {
+      title: 'Mot de passe oublié - Careerak | Récupération',
+      description: 'Entrez votre email pour réinitialiser votre mot de passe. Nous vous enverrons un lien sécurisé pour réinitialiser votre mot de passe.',
+      keywords: 'mot de passe oublié, récupération compte, réinitialisation, Careerak',
+      image: '/og-images/forgot-password.jpg',
+      url: '/forgot-password'
+    }
+  },
+
+  // Reset Password Page
+  resetPassword: {
+    ar: {
+      title: 'إعادة تعيين كلمة المرور - Careerak | كلمة مرور جديدة',
+      description: 'أدخل كلمة المرور الجديدة لحسابك في Careerak. اختر كلمة مرور قوية وآمنة لحماية حسابك.',
+      keywords: 'إعادة تعيين كلمة المرور, كلمة مرور جديدة, أمان, Careerak',
+      image: '/og-images/reset-password.jpg',
+      url: '/reset-password'
+    },
+    en: {
+      title: 'Reset Password - Careerak | New Password',
+      description: 'Enter your new password for your Careerak account. Choose a strong and secure password to protect your account.',
+      keywords: 'reset password, new password, security, Careerak',
+      image: '/og-images/reset-password.jpg',
+      url: '/reset-password'
+    },
+    fr: {
+      title: 'Réinitialiser mot de passe - Careerak | Nouveau mot de passe',
+      description: 'Entrez votre nouveau mot de passe pour votre compte Careerak. Choisissez un mot de passe fort et sécurisé pour protéger votre compte.',
+      keywords: 'réinitialiser mot de passe, nouveau mot de passe, sécurité, Careerak',
+      image: '/og-images/reset-password.jpg',
+      url: '/reset-password'
+    }
+  },
+
   // Admin Dashboard
   adminDashboard: {
     ar: {

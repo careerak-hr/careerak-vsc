@@ -42,6 +42,14 @@ exports.oauthSuccess = async (req, res) => {
     const token = generateToken(req.user);
     const user = sanitizeUser(req.user);
     
+    // Set secure cookie with JWT token
+    res.cookie('jwt', token, {
+      httpOnly: true, // Prevent XSS attacks
+      secure: process.env.NODE_ENV === 'production', // HTTPS only in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // CSRF protection
+      maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+    });
+    
     // Redirect to frontend with token
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     const redirectUrl = `${frontendUrl}/auth/callback?token=${token}&user=${encodeURIComponent(JSON.stringify(user))}`;

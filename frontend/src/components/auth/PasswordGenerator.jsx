@@ -1,112 +1,76 @@
 import React, { useState } from 'react';
-import { useApp } from '../../context/AppContext';
-import api from '../../services/api';
+import { Copy, Check, RefreshCw } from 'lucide-react';
 import './PasswordGenerator.css';
 
 /**
- * PasswordGenerator Component
- * مكون لتوليد كلمات مرور قوية مع خيارات النسخ والتوليد الجديد
+ * مكون توليد كلمات مرور قوية
+ * يوفر اقتراحات لكلمات مرور قوية مع إمكانية النسخ والتوليد الجديد
+ * 
+ * @param {Function} onGenerate - دالة callback تُستدعى عند توليد كلمة مرور جديدة
+ * @param {string} language - اللغة الحالية (ar, en, fr)
  */
-function PasswordGenerator({ onPasswordGenerated }) {
-  const { language } = useApp();
-  const [generatedPassword, setGeneratedPassword] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
+function PasswordGenerator({ onGenerate, language = 'ar' }) {
+  const [generated, setGenerated] = useState('');
   const [copied, setCopied] = useState(false);
-  const [strength, setStrength] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const translations = {
+  // النصوص متعددة اللغات
+  const texts = {
     ar: {
       suggestButton: '🔑 اقتراح كلمة مرور قوية',
-      generating: 'جاري التوليد...',
-      copy: 'نسخ',
-      copied: 'تم النسخ!',
-      regenerate: 'توليد جديد',
-      strength: 'القوة:',
-      usePassword: 'استخدام كلمة المرور',
-      generatedPassword: 'كلمة المرور المقترحة:'
+      copyButton: 'نسخ',
+      regenerateButton: 'توليد جديد',
+      copiedMessage: '✓ تم النسخ!',
+      generatedLabel: 'كلمة المرور المقترحة:'
     },
     en: {
       suggestButton: '🔑 Suggest Strong Password',
-      generating: 'Generating...',
-      copy: 'Copy',
-      copied: 'Copied!',
-      regenerate: 'Generate New',
-      strength: 'Strength:',
-      usePassword: 'Use Password',
-      generatedPassword: 'Suggested Password:'
+      copyButton: 'Copy',
+      regenerateButton: 'Regenerate',
+      copiedMessage: '✓ Copied!',
+      generatedLabel: 'Suggested Password:'
     },
     fr: {
       suggestButton: '🔑 Suggérer un mot de passe fort',
-      generating: 'Génération...',
-      copy: 'Copier',
-      copied: 'Copié!',
-      regenerate: 'Générer nouveau',
-      strength: 'Force:',
-      usePassword: 'Utiliser le mot de passe',
-      generatedPassword: 'Mot de passe suggéré:'
+      copyButton: 'Copier',
+      regenerateButton: 'Régénérer',
+      copiedMessage: '✓ Copié!',
+      generatedLabel: 'Mot de passe suggéré:'
     }
   };
 
-  const t = translations[language];
-  const isRTL = language === 'ar';
+  const t = texts[language] || texts.ar;
 
   /**
-   * توليد كلمة مرور جديدة
+   * توليد كلمة مرور قوية
+   * نفس الخوارزمية المستخدمة في Backend
    */
-  const handleGenerate = async () => {
-    setIsGenerating(true);
-    setCopied(false);
+  const generatePassword = (length = 14) => {
+    // التأكد من أن الطول لا يقل عن 12
+    if (length < 12) length = 12;
+    if (length > 32) length = 32;
 
-    try {
-      const response = await api.post('/auth/generate-password', {
-        length: 14 // طول افتراضي
-      });
-
-      if (response.data.success) {
-        const { password, strength: passwordStrength } = response.data.data;
-        setGeneratedPassword(password);
-        setStrength(passwordStrength);
-
-        // إخطار المكون الأب
-        if (onPasswordGenerated) {
-          onPasswordGenerated(password);
-        }
-      }
-    } catch (error) {
-      console.error('Error generating password:', error);
-      // في حالة الخطأ، نولد كلمة مرور محلياً
-      const localPassword = generateLocalPassword();
-      setGeneratedPassword(localPassword);
-      
-      if (onPasswordGenerated) {
-        onPasswordGenerated(localPassword);
-      }
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  /**
-   * توليد كلمة مرور محلياً (fallback)
-   */
-  const generateLocalPassword = () => {
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercase = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
-    const special = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const special = '!@#$%^&*(),.?":{}|<>';
+
     const allChars = uppercase + lowercase + numbers + special;
 
     let password = '';
+
+    // ضمان وجود حرف واحد على الأقل من كل نوع
     password += uppercase[Math.floor(Math.random() * uppercase.length)];
     password += lowercase[Math.floor(Math.random() * lowercase.length)];
     password += numbers[Math.floor(Math.random() * numbers.length)];
     password += special[Math.floor(Math.random() * special.length)];
 
-    for (let i = password.length; i < 14; i++) {
+    // ملء الباقي عشوائياً
+    for (let i = password.length; i < length; i++) {
       password += allChars[Math.floor(Math.random() * allChars.length)];
     }
 
-    // خلط الأحرف
+    // خلط الأحرف بشكل عشوائي (Fisher-Yates shuffle)
     const passwordArray = password.split('');
     for (let i = passwordArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -117,76 +81,92 @@ function PasswordGenerator({ onPasswordGenerated }) {
   };
 
   /**
-   * نسخ كلمة المرور للحافظة
+   * معالج توليد كلمة مرور جديدة
+   */
+  const handleGenerate = () => {
+    setIsGenerating(true);
+    
+    // تأخير بسيط لإظهار animation
+    setTimeout(() => {
+      const password = generatePassword(14);
+      setGenerated(password);
+      setCopied(false);
+      setIsGenerating(false);
+      
+      // استدعاء callback إذا وُجد
+      if (onGenerate) {
+        onGenerate(password);
+      }
+    }, 300);
+  };
+
+  /**
+   * معالج نسخ كلمة المرور
    */
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(generatedPassword);
+      await navigator.clipboard.writeText(generated);
       setCopied(true);
       
-      // إخفاء رسالة "تم النسخ" بعد 2 ثانية
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
+      // إخفاء رسالة النجاح بعد 2 ثانية
+      setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy:', error);
-      // Fallback للمتصفحات القديمة
+      console.error('Failed to copy password:', error);
+      // Fallback: استخدام طريقة قديمة
       const textArea = document.createElement('textarea');
-      textArea.value = generatedPassword;
+      textArea.value = generated;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
       document.body.appendChild(textArea);
       textArea.select();
-      document.execCommand('copy');
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
+      }
       document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     }
   };
 
   return (
-    <div 
-      className="password-generator mt-2"
-      style={{ direction: isRTL ? 'rtl' : 'ltr' }}
-    >
-      {/* زر التوليد */}
-      {!generatedPassword && (
-        <button
-          type="button"
-          onClick={handleGenerate}
-          disabled={isGenerating}
-          className="suggest-password-btn"
-        >
-          {isGenerating ? t.generating : t.suggestButton}
-        </button>
-      )}
+    <div className="password-generator">
+      {/* زر الاقتراح */}
+      <button
+        type="button"
+        onClick={handleGenerate}
+        className="suggest-button"
+        disabled={isGenerating}
+      >
+        {t.suggestButton}
+      </button>
 
-      {/* عرض كلمة المرور المولدة */}
-      {generatedPassword && (
+      {/* عرض كلمة المرور المقترحة */}
+      {generated && (
         <div className="generated-password-container">
-          <p className="generated-label">
-            {t.generatedPassword}
-          </p>
-
+          <label className="generated-label">{t.generatedLabel}</label>
+          
           <div className="password-display">
-            <code className="password-text">
-              {generatedPassword}
+            {/* كلمة المرور في code block */}
+            <code className="password-code" dir="ltr">
+              {generated}
             </code>
 
-            <div className="password-actions">
+            {/* أزرار الإجراءات */}
+            <div className="action-buttons">
               {/* زر النسخ */}
               <button
                 type="button"
                 onClick={handleCopy}
-                className="action-btn copy-btn"
-                title={t.copy}
+                className="action-button copy-button"
+                title={t.copyButton}
+                aria-label={t.copyButton}
               >
                 {copied ? (
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
+                  <Check size={18} className="icon-check" />
                 ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
+                  <Copy size={18} className="icon-copy" />
                 )}
               </button>
 
@@ -194,38 +174,21 @@ function PasswordGenerator({ onPasswordGenerated }) {
               <button
                 type="button"
                 onClick={handleGenerate}
+                className={`action-button regenerate-button ${isGenerating ? 'spinning' : ''}`}
+                title={t.regenerateButton}
+                aria-label={t.regenerateButton}
                 disabled={isGenerating}
-                className="action-btn regenerate-btn"
-                title={t.regenerate}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
+                <RefreshCw size={18} className="icon-refresh" />
               </button>
             </div>
           </div>
 
           {/* رسالة تأكيد النسخ */}
           {copied && (
-            <p className="copy-confirmation">
-              ✓ {t.copied}
+            <p className="copied-message">
+              {t.copiedMessage}
             </p>
-          )}
-
-          {/* عرض قوة كلمة المرور */}
-          {strength && (
-            <div className="strength-display">
-              <span className="strength-label">{t.strength}</span>
-              <span 
-                className="strength-value"
-                style={{ color: strength.color }}
-              >
-                {strength.labelAr || strength.label}
-              </span>
-              <span className="strength-percentage">
-                ({Math.round(strength.percentage)}%)
-              </span>
-            </div>
           )}
         </div>
       )}

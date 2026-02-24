@@ -1,0 +1,227 @@
+/* Enhanced Error Message Component Styles */
+
+.enhanced-error-message {
+  background-color: #FEF2F2; /* Light red background */
+  border: 2px solid #FCA5A5; /* Red border */
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enhanced-error-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.enhanced-error-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.enhanced-error-text {
+  color: #991B1B; /* Dark red text */
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+}
+
+.enhanced-error-suggestions {
+  border-top: 1px solid #FCA5A5;
+  padding-top: 12px;
+}
+
+.enhanced-error-suggestions-title {
+  color: #7C2D12; /* Darker red */
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.enhanced-error-suggestions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.enhanced-error-suggestion-item {
+  margin: 0;
+}
+
+.enhanced-error-suggestion-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  background-color: #FFFFFF;
+  border: 1px solid #FCA5A5;
+  border-radius: 8px;
+  color: #7C2D12;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.enhanced-error-suggestion-btn:hover {
+  background-color: #FEE2E2;
+  border-color: #F87171;
+  transform: translateX(4px);
+}
+
+.enhanced-error-suggestion-btn:focus {
+  outline: 2px solid #DC2626;
+  outline-offset: 2px;
+}
+
+.enhanced-error-suggestion-btn:active {
+  transform: translateX(2px);
+}
+
+/* RTL Support */
+[dir="rtl"] .enhanced-error-suggestion-btn {
+  text-align: right;
+}
+
+[dir="rtl"] .enhanced-error-suggestion-btn:hover {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .enhanced-error-suggestion-btn:active {
+  transform: translateX(-2px);
+}
+
+.enhanced-error-suggestion-bullet {
+  color: #DC2626;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.enhanced-error-suggestion-text {
+  flex: 1;
+  line-height: 1.4;
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .enhanced-error-message {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .enhanced-error-header {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .enhanced-error-icon {
+    font-size: 20px;
+  }
+
+  .enhanced-error-text {
+    font-size: 14px;
+  }
+
+  .enhanced-error-suggestions-title {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  .enhanced-error-suggestion-btn {
+    padding: 6px 10px;
+    font-size: 13px;
+    gap: 6px;
+  }
+
+  .enhanced-error-suggestion-bullet {
+    font-size: 16px;
+  }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  .enhanced-error-message {
+    background-color: #450A0A;
+    border-color: #991B1B;
+  }
+
+  .enhanced-error-text {
+    color: #FCA5A5;
+  }
+
+  .enhanced-error-suggestions {
+    border-top-color: #991B1B;
+  }
+
+  .enhanced-error-suggestions-title {
+    color: #FCA5A5;
+  }
+
+  .enhanced-error-suggestion-btn {
+    background-color: #7F1D1D;
+    border-color: #991B1B;
+    color: #FEE2E2;
+  }
+
+  .enhanced-error-suggestion-btn:hover {
+    background-color: #991B1B;
+    border-color: #DC2626;
+  }
+
+  .enhanced-error-suggestion-bullet {
+    color: #FCA5A5;
+  }
+}
+
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+  .enhanced-error-message {
+    border-width: 3px;
+  }
+
+  .enhanced-error-text {
+    font-weight: 700;
+  }
+
+  .enhanced-error-suggestion-btn {
+    border-width: 2px;
+    font-weight: 600;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-error-message {
+    animation: none;
+  }
+
+  .enhanced-error-suggestion-btn:hover {
+    transform: none;
+  }
+
+  .enhanced-error-suggestion-btn:active {
+    transform: none;
+  }
+}

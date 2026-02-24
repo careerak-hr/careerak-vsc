@@ -1,0 +1,276 @@
+/* Connected Account Card Styles */
+
+.connected-account-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.connected-account-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  border-color: var(--provider-color);
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E3DAD1;
+}
+
+.provider-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(48, 75, 96, 0.05);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.provider-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.provider-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.provider-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #304B60;
+  margin: 0 0 0.25rem 0;
+}
+
+.provider-email {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Details */
+.card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.detail-label {
+  font-size: 0.875rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 0.875rem;
+  color: #304B60;
+  font-weight: 600;
+  text-align: end;
+}
+
+/* Actions */
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.unlink-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: transparent;
+  color: #ef4444;
+  border: 2px solid #ef4444;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.unlink-button:hover {
+  background: #ef4444;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.unlink-button:active {
+  transform: translateY(0);
+}
+
+.unlink-button svg {
+  flex-shrink: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .connected-account-card {
+    padding: 1rem;
+  }
+  
+  .card-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .provider-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .provider-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .provider-name {
+    font-size: 1rem;
+  }
+  
+  .provider-email {
+    font-size: 0.8rem;
+  }
+  
+  .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .detail-value {
+    text-align: start;
+  }
+  
+  .card-actions {
+    justify-content: stretch;
+  }
+  
+  .unlink-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .card-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .detail-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .detail-value {
+  text-align: start;
+}
+
+[dir="rtl"] .card-actions {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .unlink-button {
+  flex-direction: row-reverse;
+}
+
+@media (max-width: 480px) {
+  [dir="rtl"] .detail-row {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  [dir="rtl"] .detail-value {
+    text-align: end;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .connected-account-card {
+    background: #2d2d2d;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  .connected-account-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  }
+  
+  .card-header {
+    border-bottom-color: #444;
+  }
+  
+  .provider-icon {
+    background: rgba(227, 218, 209, 0.1);
+  }
+  
+  .provider-name {
+    color: #E3DAD1;
+  }
+  
+  .provider-email,
+  .detail-label {
+    color: #999;
+  }
+  
+  .detail-value {
+    color: #E3DAD1;
+  }
+}
+
+/* Accessibility */
+.unlink-button:focus-visible {
+  outline: 3px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.connected-account-card {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Print Styles */
+@media print {
+  .connected-account-card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    page-break-inside: avoid;
+  }
+  
+  .card-actions {
+    display: none;
+  }
+}

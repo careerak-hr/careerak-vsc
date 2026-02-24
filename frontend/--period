@@ -1,0 +1,115 @@
+{
+  "reportDate": "2026-02-22T22:20:15.458Z",
+  "period": 7,
+  "threshold": 0.1,
+  "overall": {
+    "totalPrompts": 83,
+    "totalInstalls": 14,
+    "totalDismissed": 33,
+    "installRate": 0.1686746987951807,
+    "dismissRate": 0.39759036144578314
+  },
+  "byPlatform": {
+    "iOS": {
+      "prompts": 31,
+      "installs": 4,
+      "dismissed": 12,
+      "installRate": 0.12903225806451613,
+      "dismissRate": 0.3870967741935484
+    },
+    "Android": {
+      "prompts": 22,
+      "installs": 6,
+      "dismissed": 9,
+      "installRate": 0.2727272727272727,
+      "dismissRate": 0.4090909090909091
+    },
+    "Desktop": {
+      "prompts": 30,
+      "installs": 4,
+      "dismissed": 12,
+      "installRate": 0.13333333333333333,
+      "dismissRate": 0.4
+    }
+  },
+  "byBrowser": {
+    "Safari": {
+      "prompts": 23,
+      "installs": 6,
+      "dismissed": 7,
+      "installRate": 0.2608695652173913,
+      "dismissRate": 0.30434782608695654
+    },
+    "Chrome": {
+      "prompts": 17,
+      "installs": 2,
+      "dismissed": 7,
+      "installRate": 0.11764705882352941,
+      "dismissRate": 0.4117647058823529
+    },
+    "Firefox": {
+      "prompts": 19,
+      "installs": 3,
+      "dismissed": 8,
+      "installRate": 0.15789473684210525,
+      "dismissRate": 0.42105263157894735
+    },
+    "Edge": {
+      "prompts": 24,
+      "installs": 3,
+      "dismissed": 11,
+      "installRate": 0.125,
+      "dismissRate": 0.4583333333333333
+    }
+  },
+  "dailyTrends": {
+    "2026-02-23": {
+      "prompts": 16,
+      "installs": 2,
+      "dismissed": 8,
+      "installRate": 0.125
+    },
+    "2026-02-22": {
+      "prompts": 10,
+      "installs": 3,
+      "dismissed": 2,
+      "installRate": 0.3
+    },
+    "2026-02-21": {
+      "prompts": 7,
+      "installs": 0,
+      "dismissed": 2,
+      "installRate": 0
+    },
+    "2026-02-20": {
+      "prompts": 12,
+      "installs": 5,
+      "dismissed": 4,
+      "installRate": 0.4166666666666667
+    },
+    "2026-02-19": {
+      "prompts": 9,
+      "installs": 1,
+      "dismissed": 6,
+      "installRate": 0.1111111111111111
+    },
+    "2026-02-18": {
+      "prompts": 11,
+      "installs": 1,
+      "dismissed": 6,
+      "installRate": 0.09090909090909091
+    },
+    "2026-02-17": {
+      "prompts": 17,
+      "installs": 2,
+      "dismissed": 4,
+      "installRate": 0.11764705882352941
+    },
+    "2026-02-16": {
+      "prompts": 1,
+      "installs": 0,
+      "dismissed": 1,
+      "installRate": 0
+    }
+  }
+}

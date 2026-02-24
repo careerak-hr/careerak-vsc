@@ -1,0 +1,252 @@
+.two-factor-setup {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.two-factor-setup-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.two-factor-setup-header h2 {
+  font-size: 1.75rem;
+  color: #304B60;
+  margin: 0;
+}
+
+.two-factor-setup-content {
+  width: 100%;
+}
+
+.setup-step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.setup-step h3 {
+  font-size: 1.25rem;
+  color: #304B60;
+  margin: 0;
+}
+
+.setup-step p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* QR Code */
+.qr-code-container {
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.qr-code {
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+  border: 2px solid #304B60;
+  border-radius: 8px;
+}
+
+/* Manual Entry */
+.manual-entry {
+  text-align: center;
+}
+
+.manual-entry p {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.secret-key {
+  display: inline-block;
+  padding: 0.75rem 1rem;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  color: #304B60;
+  word-break: break-all;
+  user-select: all;
+}
+
+/* Token Input */
+.verify-desc {
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+.token-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.5rem;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  transition: border-color 0.3s;
+}
+
+.token-input:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+/* Backup Codes */
+.backup-codes-warning {
+  padding: 1rem;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  color: #856404;
+  text-align: center;
+  font-weight: 500;
+}
+
+.backup-codes-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.backup-code {
+  padding: 0.75rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  text-align: center;
+  color: #304B60;
+  user-select: all;
+}
+
+.backup-codes-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Actions */
+.setup-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn-primary,
+.btn-outline {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-primary {
+  background: #304B60;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #243a4d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(48, 75, 96, 0.3);
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #304B60;
+  border: 2px solid #304B60;
+}
+
+.btn-outline:hover {
+  background: #304B60;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(48, 75, 96, 0.3);
+}
+
+/* Error Message */
+.error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  text-align: center;
+  margin: 0;
+  padding: 0.5rem;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+}
+
+/* Responsive */
+@media (max-width: 639px) {
+  .two-factor-setup {
+    padding: 1.5rem;
+  }
+
+  .two-factor-setup-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .setup-step h3 {
+    font-size: 1.125rem;
+  }
+
+  .qr-code {
+    max-width: 200px;
+  }
+
+  .token-input {
+    font-size: 1.25rem;
+    letter-spacing: 0.3rem;
+  }
+
+  .backup-codes-container {
+    grid-template-columns: 1fr;
+  }
+
+  .setup-actions,
+  .backup-codes-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .token-input {
+  letter-spacing: 0.5rem;
+  direction: ltr;
+  text-align: center;
+}
+
+[dir="rtl"] .secret-key {
+  direction: ltr;
+}

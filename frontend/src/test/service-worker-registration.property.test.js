@@ -93,9 +93,6 @@ describe('Service Worker Registration Property Tests', () => {
     // Save original navigator
     originalNavigator = global.navigator;
     
-    // Reset registration calls
-    registrationCalls = [];
-    
     // Create mock navigator with service worker support
     mockNavigator = {
       serviceWorker: {
@@ -120,6 +117,11 @@ describe('Service Worker Registration Property Tests', () => {
       writable: true,
       configurable: true,
     });
+  });
+
+  beforeEach(() => {
+    // Reset registration calls before each test
+    registrationCalls = [];
   });
 
   afterAll(() => {

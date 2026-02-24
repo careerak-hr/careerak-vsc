@@ -59,6 +59,7 @@ const userSchema = new mongoose.Schema({
   // المصادقة الثنائية
   twoFactorEnabled: { type: Boolean, default: false },
   twoFactorSecret: String,
+  backupCodes: [String], // رموز احتياطية مشفرة
   // تقدم التسجيل
   registrationProgress: {
     step: { type: Number, min: 1, max: 4, default: 1 },

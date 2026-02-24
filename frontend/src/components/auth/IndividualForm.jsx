@@ -1,15 +1,63 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import countries from '../../data/countries.json';
 import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 import PasswordGenerator from './PasswordGenerator';
 import EmailValidator from './EmailValidator';
+import EnhancedErrorMessage from './EnhancedErrorMessage';
 import '../../pages/03_AuthPage.css';
 
-const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily }) => {
+const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassword, setShowPassword, showConfirmPassword, setShowConfirmPassword, isRTL, fontFamily, language }) => {
+  // Ref للحقل الأول (Requirement 8.2)
+  const firstFieldRef = useRef(null);
+
+  // التركيز التلقائي على أول حقل عند تحميل المكون (Requirement 8.2)
+  useEffect(() => {
+    if (firstFieldRef.current) {
+      firstFieldRef.current.focus();
+    }
+  }, []);
 
   // معالج تغيير البريد الإلكتروني
   const handleEmailChange = (email) => {
     handleInputChange({ target: { name: 'email', value: email } });
+  };
+
+  // معالج النقر على الاقتراحات
+  const handleSuggestionClick = (action, fieldName) => {
+    console.log('Suggestion clicked:', action, fieldName);
+    
+    // تنفيذ الإجراءات المختلفة
+    switch (action) {
+      case 'focus_field':
+        // التركيز على الحقل
+        const field = document.getElementById(fieldName);
+        if (field) field.focus();
+        break;
+      
+      case 'show_password':
+        // إظهار كلمة المرور
+        if (fieldName === 'password') setShowPassword(true);
+        if (fieldName === 'confirmPassword') setShowConfirmPassword(true);
+        break;
+      
+      case 'generate_password':
+        // فتح مولد كلمة المرور (يمكن إضافة modal أو trigger)
+        console.log('Generate password clicked');
+        break;
+      
+      case 'login':
+        // إعادة توجيه لصفحة تسجيل الدخول
+        window.location.href = '/login';
+        break;
+      
+      case 'forgot_password':
+        // إعادة توجيه لصفحة استرجاع كلمة المرور
+        window.location.href = '/forgot-password';
+        break;
+      
+      default:
+        console.log('Action not implemented:', action);
+    }
   };
 
   return (
@@ -25,6 +73,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               {t.firstName}
             </label>
             <input
+              ref={firstFieldRef}
               id="firstName"
               type="text"
               name="firstName"
@@ -33,12 +82,16 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               onChange={handleInputChange}
               className="auth-input-base"
               style={{ fontFamily }}
+              tabIndex={0}
               aria-describedby={fieldErrors.firstName ? "firstName-error" : undefined}
             />
             {fieldErrors.firstName && (
-              <p id="firstName-error" className="auth-input-error" style={{ fontFamily }} role="alert">
-                {fieldErrors.firstName}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.firstName}
+                fieldName="firstName"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
           
@@ -55,12 +108,16 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               onChange={handleInputChange}
               className="auth-input-base"
               style={{ fontFamily }}
+              tabIndex={0}
               aria-describedby={fieldErrors.lastName ? "lastName-error" : undefined}
             />
             {fieldErrors.lastName && (
-              <p id="lastName-error" className="auth-input-error" style={{ fontFamily }} role="alert">
-                {fieldErrors.lastName}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.lastName}
+                fieldName="lastName"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         </div>
@@ -82,6 +139,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.gender}
               onChange={handleInputChange}
               className="auth-select-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.gender ? "gender-error" : undefined}
             >
               <option value="" disabled>{t.gender}</option>
@@ -90,9 +148,12 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               <option value="preferNot">{t.preferNot}</option>
             </select>
             {fieldErrors.gender && (
-              <p id="gender-error" className="auth-input-error" role="alert">
-                {fieldErrors.gender}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.gender}
+                fieldName="gender"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
           
@@ -108,13 +169,17 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.birthDate}
               onChange={handleInputChange}
               className="auth-input-base"
+              tabIndex={0}
               required
               aria-describedby={fieldErrors.birthDate ? "birthDate-error" : undefined}
             />
             {fieldErrors.birthDate && (
-              <p id="birthDate-error" className="auth-input-error" role="alert">
-                {fieldErrors.birthDate}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.birthDate}
+                fieldName="birthDate"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         </div>
@@ -136,6 +201,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.education}
               onChange={handleInputChange}
               className="auth-select-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.education ? "education-error" : undefined}
             >
               <option value="" disabled>{t.educationLevel}</option>
@@ -149,9 +215,12 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               <option value="uneducated">{t.uneducated}</option>
             </select>
             {fieldErrors.education && (
-              <p id="education-error" className="auth-input-error" role="alert">
-                {fieldErrors.education}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.education}
+                fieldName="education"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
           
@@ -167,12 +236,16 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.specialization}
               onChange={handleInputChange}
               className="auth-input-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.specialization ? "specialization-error" : undefined}
             />
             {fieldErrors.specialization && (
-              <p id="specialization-error" className="auth-input-error" style={{ fontFamily }} role="alert">
-                {fieldErrors.specialization}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.specialization}
+                fieldName="specialization"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         </div>
@@ -189,12 +262,16 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
             value={formData.interests}
             onChange={handleInputChange}
             className="auth-input-base auth-textarea"
+            tabIndex={0}
             aria-describedby={fieldErrors.interests ? "interests-error" : undefined}
           />
           {fieldErrors.interests && (
-            <p id="interests-error" className="auth-input-error" style={{ fontFamily }} role="alert">
-              {fieldErrors.interests}
-            </p>
+            <EnhancedErrorMessage
+              error={fieldErrors.interests}
+              fieldName="interests"
+              language={language || 'ar'}
+              onSuggestionClick={handleSuggestionClick}
+            />
           )}
         </div>
       </fieldset>
@@ -215,6 +292,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.countryCode}
               onChange={handleInputChange}
               className="auth-select-base text-sm"
+              tabIndex={0}
               aria-describedby={fieldErrors.countryCode ? "countryCode-error" : undefined}
             >
               <option value="" disabled>{t.countryCode}</option>
@@ -225,9 +303,12 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               ))}
             </select>
             {fieldErrors.countryCode && (
-              <p id="countryCode-error" className="auth-input-error" role="alert">
-                {fieldErrors.countryCode}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.countryCode}
+                fieldName="countryCode"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
           
@@ -243,12 +324,16 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.phone}
               onChange={handleInputChange}
               className="auth-input-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.phone ? "phone-error" : undefined}
             />
             {fieldErrors.phone && (
-              <p id="phone-error" className="auth-input-error" role="alert">
-                {fieldErrors.phone}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.phone}
+                fieldName="phone"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         </div>
@@ -266,9 +351,12 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               }}
             />
             {fieldErrors.email && (
-              <p id="email-error" className="auth-input-error" role="alert">
-                {fieldErrors.email}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.email}
+                fieldName="email"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         )}
@@ -292,15 +380,26 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.password}
               onChange={handleInputChange}
               className="auth-input-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.password ? "password-error" : undefined}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className={`auth-password-toggle ${isRTL ? 'left-4' : 'right-4'}`}
+              tabIndex={0}
               aria-label={showPassword ? (t.hidePassword || 'Hide password') : (t.showPassword || 'Show password')}
             >
-              {showPassword ? '👁️' : '🙈'}
+              {showPassword ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              )}
             </button>
           </div>
           
@@ -327,9 +426,12 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
           />
           
           {fieldErrors.password && (
-            <p id="password-error" className="auth-input-error" role="alert">
-              {fieldErrors.password}
-            </p>
+            <EnhancedErrorMessage
+              error={fieldErrors.password}
+              fieldName="password"
+              language={language || 'ar'}
+              onSuggestionClick={handleSuggestionClick}
+            />
           )}
         </div>
 
@@ -346,21 +448,35 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.confirmPassword}
               onChange={handleInputChange}
               className="auth-input-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.confirmPassword ? "confirmPassword-error" : undefined}
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className={`auth-password-toggle ${isRTL ? 'left-4' : 'right-4'}`}
+              tabIndex={0}
               aria-label={showConfirmPassword ? (t.hidePassword || 'Hide password') : (t.showPassword || 'Show password')}
             >
-              {showConfirmPassword ? '👁️' : '🙈'}
+              {showConfirmPassword ? (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              )}
             </button>
           </div>
           {fieldErrors.confirmPassword && (
-            <p id="confirmPassword-error" className="auth-input-error" role="alert">
-              {fieldErrors.confirmPassword}
-            </p>
+            <EnhancedErrorMessage
+              error={fieldErrors.confirmPassword}
+              fieldName="confirmPassword"
+              language={language || 'ar'}
+              onSuggestionClick={handleSuggestionClick}
+            />
           )}
         </div>
       </fieldset>
@@ -377,6 +493,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
             checked={formData.isSpecialNeeds}
             onChange={(e) => handleInputChange({ target: { name: 'isSpecialNeeds', value: e.target.checked } })}
             className="auth-checkbox"
+            tabIndex={0}
             aria-checked={formData.isSpecialNeeds}
             aria-describedby="specialNeeds-description"
           />
@@ -399,6 +516,7 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               value={formData.specialNeedType}
               onChange={handleInputChange}
               className="auth-select-base"
+              tabIndex={0}
               aria-describedby={fieldErrors.specialNeedType ? "specialNeedType-error" : undefined}
             >
               <option value="" disabled>{t.disabilityType}</option>
@@ -408,9 +526,12 @@ const IndividualForm = ({ t, formData, handleInputChange, fieldErrors, showPassw
               <option value="mobility">{t.mobility}</option>
             </select>
             {fieldErrors.specialNeedType && (
-              <p id="specialNeedType-error" className="auth-input-error" role="alert">
-                {fieldErrors.specialNeedType}
-              </p>
+              <EnhancedErrorMessage
+                error={fieldErrors.specialNeedType}
+                fieldName="specialNeedType"
+                language={language || 'ar'}
+                onSuggestionClick={handleSuggestionClick}
+              />
             )}
           </div>
         )}

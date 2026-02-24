@@ -11,6 +11,10 @@ backend/node_modules/
 # build outputs
 build/
 dist/
+
+# Lighthouse CI
+.lighthouseci/
+
 # env
 # OS
 .DS_Store

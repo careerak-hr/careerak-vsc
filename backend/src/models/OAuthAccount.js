@@ -47,6 +47,16 @@ oauthAccountSchema.index({ provider: 1, providerId: 1 }, { unique: true });
 const ENCRYPTION_KEY = process.env.OAUTH_ENCRYPTION_KEY || 'careerak_oauth_key_2024_32chars!';
 const ALGORITHM = 'aes-256-cbc';
 
+// Security warning for weak encryption key
+if (!process.env.OAUTH_ENCRYPTION_KEY || ENCRYPTION_KEY === 'careerak_oauth_key_2024_32chars!') {
+  console.warn('⚠️  SECURITY WARNING: Using default OAUTH_ENCRYPTION_KEY!');
+  console.warn('⚠️  Generate a strong key with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))"');
+  console.warn('⚠️  Add it to .env as OAUTH_ENCRYPTION_KEY=<generated_key>');
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('CRITICAL: OAUTH_ENCRYPTION_KEY must be set in production!');
+  }
+}
+
 function encrypt(text) {
   if (!text) return null;
   const iv = crypto.randomBytes(16);

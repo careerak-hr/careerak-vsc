@@ -20,6 +20,8 @@ const EntryPage = React.lazy(() => import('../pages/01_EntryPage'));
 const LoginPage = React.lazy(() => import('../pages/02_LoginPage'));
 const AuthPage = React.lazy(() => import('../pages/03_AuthPage'));
 const OTPVerification = React.lazy(() => import('../pages/04_OTPVerification'));
+const ForgotPasswordPage = React.lazy(() => import('../pages/ForgotPasswordPage'));
+const ResetPasswordPage = React.lazy(() => import('../pages/ResetPasswordPage'));
 const OAuthCallback = React.lazy(() => import('../pages/OAuthCallback'));
 const OnboardingIndividuals = React.lazy(() => import('../pages/05_OnboardingIndividuals'));
 const OnboardingCompanies = React.lazy(() => import('../pages/06_OnboardingCompanies'));
@@ -48,6 +50,7 @@ const AdminSystemControl = React.lazy(() => import('../pages/28_AdminSystemContr
 const AdminDatabaseManager = React.lazy(() => import('../pages/29_AdminDatabaseManager'));
 const AdminCodeEditor = React.lazy(() => import('../pages/30_AdminCodeEditor'));
 const NotificationsPage = React.lazy(() => import('../pages/NotificationsPage'));
+const ConnectedAccountsPage = React.lazy(() => import('../pages/ConnectedAccountsPage'));
 const NotFoundPage = React.lazy(() => import('../pages/NotFoundPage'));
 const ServerErrorPage = React.lazy(() => import('../pages/ServerErrorPage'));
 const ErrorBoundaryTest = React.lazy(() => import('../test/ErrorBoundaryTest'));
@@ -116,6 +119,28 @@ function AppRoutes() {
               <SuspenseWrapper>
                 <PageTransition variant="fadeIn">
                   <OTPVerification />
+                </PageTransition>
+              </SuspenseWrapper>
+            </GuestRoute>
+          } />
+          
+          {/* Forgot Password Route - Public */}
+          <Route path="/forgot-password" element={
+            <GuestRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="slideInRight">
+                  <ForgotPasswordPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </GuestRoute>
+          } />
+          
+          {/* Reset Password Route - Public */}
+          <Route path="/reset-password" element={
+            <GuestRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="slideInRight">
+                  <ResetPasswordPage />
                 </PageTransition>
               </SuspenseWrapper>
             </GuestRoute>
@@ -364,6 +389,15 @@ function AppRoutes() {
               <SuspenseWrapper>
                 <PageTransition variant="fadeIn">
                   <NotificationsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/connected-accounts" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <ConnectedAccountsPage />
                 </PageTransition>
               </SuspenseWrapper>
             </ProtectedRoute>

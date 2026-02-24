@@ -1,0 +1,90 @@
+[
+  {
+    "timestamp": "2026-02-22T21:46:20.512Z",
+    "git": {
+      "branch": "main",
+      "commit": "aa851ab2",
+      "message": "Build update: Sun 02/22/2026 21:53:02.57"
+    },
+    "totalJS": {
+      "raw": 1938987,
+      "gzip": 727945,
+      "brotli": 647030
+    },
+    "totalCSS": {
+      "raw": 700756,
+      "gzip": 98681,
+      "brotli": 65758
+    },
+    "largestChunk": {
+      "name": "main-d1tFLY5o.js",
+      "size": 818798
+    },
+    "fileCount": {
+      "js": 59,
+      "css": 26
+    },
+    "chunks": [
+      {
+        "name": "main-d1tFLY5o.js",
+        "size": 818798,
+        "gzip": 391963,
+        "brotli": 356923
+      },
+      {
+        "name": "index-UtSqu7hu.js",
+        "size": 171233,
+        "gzip": 41839,
+        "brotli": 33880
+      },
+      {
+        "name": "react-vendor-Ch_ua9aA.js",
+        "size": 140406,
+        "gzip": 45624,
+        "brotli": 39320
+      },
+      {
+        "name": "framer-vendor-JefCs7K2.js",
+        "size": 102668,
+        "gzip": 34197,
+        "brotli": 30029
+      },
+      {
+        "name": "03_AuthPage-C8bxVHeP.js",
+        "size": 91786,
+        "gzip": 21088,
+        "brotli": 17861
+      },
+      {
+        "name": "crypto-vendor-CfaW7o24.js",
+        "size": 66500,
+        "gzip": 24876,
+        "brotli": 20329
+      },
+      {
+        "name": "pusher-vendor-BVnTsYQr.js",
+        "size": 61867,
+        "gzip": 18198,
+        "brotli": 16238
+      },
+      {
+        "name": "i18n-vendor-DgfVz4-X.js",
+        "size": 56004,
+        "gzip": 16530,
+        "brotli": 14731
+      },
+      {
+        "name": "axios-vendor-BgdakM_l.js",
+        "size": 38171,
+        "gzip": 14724,
+        "brotli": 13293
+      },
+      {
+        "name": "useSEO-t4R8BFQ_.js",
+        "size": 35751,
+        "gzip": 7176,
+        "brotli": 6148
+      }
+    ]
+  }
+]

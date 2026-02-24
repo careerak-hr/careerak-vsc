@@ -189,13 +189,13 @@ describe('useCLSMeasurement', () => {
     it('should handle errors in async operation', async () => {
       const { result } = renderHook(() => useCLSMeasurementAsync('TestComponent'));
       
-      await expect(
-        act(async () => {
+      await expect(async () => {
+        await act(async () => {
           await result.current(async () => {
             throw new Error('Test error');
           });
-        })
-      ).rejects.toThrow('Test error');
+        });
+      }).rejects.toThrow('Test error');
     });
   });
 

@@ -5,10 +5,11 @@ const notificationPreferenceSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    unique: true
+    unique: true,
+    index: true
   },
   
-  // تفضيلات أنواع الإشعارات
+  // تفضيلات أنواع الإشعارات العادية
   preferences: {
     job_match: {
       enabled: { type: Boolean, default: true },
@@ -52,11 +53,58 @@ const notificationPreferenceSchema = new mongoose.Schema({
     }
   },
   
+  // تفضيلات الإشعارات الإدارية (للأدمن فقط)
+  adminPreferences: {
+    user_registered: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: false },
+      email: { type: Boolean, default: false }
+    },
+    job_posted: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: false },
+      email: { type: Boolean, default: false }
+    },
+    course_published: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: false },
+      email: { type: Boolean, default: false }
+    },
+    review_flagged: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: true }
+    },
+    content_reported: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: true }
+    },
+    suspicious_activity: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: true }
+    },
+    system_error: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: true }
+    }
+  },
+  
   // إعدادات عامة
   quietHours: {
     enabled: { type: Boolean, default: false },
-    start: { type: String, default: '22:00' }, // HH:mm
-    end: { type: String, default: '08:00' }
+    start: { 
+      type: String, 
+      default: '22:00',
+      match: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
+    },
+    end: { 
+      type: String, 
+      default: '08:00',
+      match: /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/
+    }
   },
   
   // Web Push Subscription
@@ -68,7 +116,12 @@ const notificationPreferenceSchema = new mongoose.Schema({
     },
     deviceInfo: String,
     subscribedAt: { type: Date, default: Date.now }
-  }]
+  }],
+  
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
 }, {
   timestamps: true
 });
