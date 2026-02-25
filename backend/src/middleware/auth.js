@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const { User } = require('../models/User');
 
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -17,6 +18,17 @@ const auth = (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, secret);
+
+    // Check if account is disabled (skip for admin)
+    if (decoded.role !== 'Admin') {
+      const user = await User.findById(decoded.id).select('accountDisabled');
+      if (user && user.accountDisabled) {
+        return res.status(403).json({ 
+          error: 'تم تعطيل حسابك. يرجى التواصل مع الدعم الفني.',
+          accountDisabled: true
+        });
+      }
+    }
 
     // إضافة بيانات المستخدم للطلب
     req.user = decoded;
@@ -40,4 +52,10 @@ const checkRole = (...roles) => {
   };
 };
 
-module.exports = { auth, checkRole };
+// Alias for auth middleware (used in some routes)
+const protect = auth;
+
+// Alias for checkRole middleware (used in some routes)
+const authorize = checkRole;
+
+module.exports = { auth, checkRole, protect, authorize };

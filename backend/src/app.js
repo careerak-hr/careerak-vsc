@@ -25,9 +25,17 @@ const {
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const adminNotificationRoutes = require('./routes/adminNotificationRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const oauthRoutes = require('./routes/oauthRoutes');
 const authRoutes = require('./routes/authRoutes');
+const activityLogRoutes = require('./routes/activityLogRoutes');
+const exportRoutes = require('./routes/exportRoutes');
+const dashboardLayoutRoutes = require('./routes/dashboardLayoutRoutes');
+const statisticsRoutes = require('./routes/statisticsRoutes');
+const reportsRoutes = require('./routes/reportsRoutes');
+const userManagementRoutes = require('./routes/userManagementRoutes');
+const contentManagementRoutes = require('./routes/contentManagementRoutes');
 
 const app = express();
 
@@ -172,6 +180,14 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // المسارات (بدون حماية CSRF مؤقتاً)
 app.use('/users', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/admin/users', userManagementRoutes);
+app.use('/admin/activity-log', activityLogRoutes);
+app.use('/admin/notifications', adminNotificationRoutes);
+app.use('/admin/export', exportRoutes);
+app.use('/admin/dashboard', dashboardLayoutRoutes);
+app.use('/admin/statistics', statisticsRoutes);
+app.use('/admin/reports', reportsRoutes);
+app.use('/admin/content', contentManagementRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/chat', chatRoutes);
 app.use('/reviews', require('./routes/reviewRoutes'));

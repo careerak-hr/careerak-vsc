@@ -247,6 +247,110 @@ class PusherService {
       return null;
     }
   }
+  
+  // ==================== Admin Dashboard Methods ====================
+  
+  // إرسال تحديث الإحصائيات للأدمن
+  async broadcastStatisticsUpdate(statistics) {
+    if (!this.isInitialized || !this.pusher) {
+      logger.debug('Pusher not initialized, skipping statistics broadcast');
+      return;
+    }
+    
+    try {
+      await this.pusher.trigger(
+        'admin-dashboard',
+        'statistics-updated',
+        {
+          statistics,
+          timestamp: new Date().toISOString()
+        }
+      );
+      
+      logger.debug('Statistics update broadcasted to admin dashboard');
+    } catch (error) {
+      logger.error('Error broadcasting statistics update:', error);
+    }
+  }
+  
+  // إرسال إشعار جديد للأدمن
+  async broadcastNotification(notification) {
+    if (!this.isInitialized || !this.pusher) {
+      logger.debug('Pusher not initialized, skipping notification broadcast');
+      return;
+    }
+    
+    try {
+      // إرسال للقناة العامة للأدمن
+      await this.pusher.trigger(
+        'admin-dashboard',
+        'new-notification',
+        {
+          notification,
+          timestamp: new Date().toISOString()
+        }
+      );
+      
+      // إرسال للأدمن المحدد إذا كان موجود
+      if (notification.adminId) {
+        await this.pusher.trigger(
+          `private-admin-${notification.adminId}`,
+          'new-notification',
+          {
+            notification,
+            timestamp: new Date().toISOString()
+          }
+        );
+      }
+      
+      logger.debug('Notification broadcasted to admin dashboard');
+    } catch (error) {
+      logger.error('Error broadcasting notification:', error);
+    }
+  }
+  
+  // إرسال سجل نشاط جديد للأدمن
+  async broadcastActivityLog(activityLog) {
+    if (!this.isInitialized || !this.pusher) {
+      logger.debug('Pusher not initialized, skipping activity log broadcast');
+      return;
+    }
+    
+    try {
+      await this.pusher.trigger(
+        'admin-dashboard',
+        'new-activity-log',
+        {
+          activityLog,
+          timestamp: new Date().toISOString()
+        }
+      );
+      
+      logger.debug('Activity log broadcasted to admin dashboard');
+    } catch (error) {
+      logger.error('Error broadcasting activity log:', error);
+    }
+  }
+  
+  // إرسال تحديث عدد الإشعارات غير المقروءة للأدمن
+  async broadcastUnreadNotificationCount(adminId, count) {
+    if (!this.isInitialized || !this.pusher) return;
+    
+    try {
+      await this.pusher.trigger(
+        `private-admin-${adminId}`,
+        'unread-notifications-updated',
+        {
+          count,
+          timestamp: new Date().toISOString()
+        }
+      );
+      
+      logger.debug(`Unread notification count (${count}) sent to admin ${adminId}`);
+    } catch (error) {
+      logger.error('Error broadcasting unread notification count:', error);
+    }
+  }
 }
 
 module.exports = new PusherService();

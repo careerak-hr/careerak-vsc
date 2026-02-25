@@ -1,0 +1,153 @@
+/* ChartWidget Styles */
+
+.chart-widget {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chart-widget-title {
+  font-family: 'Cairo', 'Amiri', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #304B60;
+  margin: 0;
+}
+
+.chart-time-range-selector {
+  display: flex;
+  gap: 8px;
+  background: #F5F5F5;
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.time-range-btn {
+  padding: 6px 16px;
+  border: none;
+  background: transparent;
+  color: #304B60;
+  font-family: 'Cairo', 'Amiri', serif;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-range-btn:hover {
+  background: rgba(212, 129, 97, 0.1);
+  color: #D48161;
+}
+
+.time-range-btn.active {
+  background: #D48161;
+  color: #FFFFFF;
+}
+
+.time-range-btn:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+.chart-widget-body {
+  flex: 1;
+  position: relative;
+  min-height: 250px;
+}
+
+.chart-no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #304B60;
+  opacity: 0.6;
+}
+
+.chart-no-data p {
+  margin: 4px 0;
+  font-family: 'Cairo', 'Amiri', serif;
+}
+
+.chart-no-data .text-sm {
+  font-size: 14px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .chart-widget {
+    background: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .chart-widget-title {
+    color: #E3DAD1;
+  }
+
+  .chart-time-range-selector {
+    background: #2a2a2a;
+  }
+
+  .time-range-btn {
+    color: #E3DAD1;
+  }
+
+  .chart-no-data {
+    color: #E3DAD1;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 639px) {
+  .chart-widget {
+    padding: 16px;
+  }
+
+  .chart-widget-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .chart-widget-title {
+    font-size: 16px;
+  }
+
+  .chart-time-range-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .time-range-btn {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .chart-widget-body {
+    min-height: 200px;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .chart-widget-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .chart-time-range-selector {
+  flex-direction: row-reverse;
+}

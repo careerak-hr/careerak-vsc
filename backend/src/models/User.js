@@ -89,7 +89,12 @@ const userSchema = new mongoose.Schema({
       highContrast: { type: Boolean, default: false },
       fontSize: { type: String, enum: ['small', 'medium', 'large'], default: 'medium' }
     }
-  }
+  },
+  // حالة الحساب (Account Status)
+  accountDisabled: { type: Boolean, default: false },
+  accountDisabledAt: Date,
+  accountDisabledReason: String,
+  accountDisabledBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 }, baseOptions);
 
 userSchema.pre('save', async function(next) {

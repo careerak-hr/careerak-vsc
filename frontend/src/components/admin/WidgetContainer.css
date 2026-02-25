@@ -1,0 +1,365 @@
+/* WidgetContainer Styles */
+
+.widget-container {
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+}
+
+/* Widget Controls */
+.widget-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.add-widget-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--dashboard-accent, #D48161);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.add-widget-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-widget-btn .icon {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Grid Layout */
+.grid-layout {
+  position: relative;
+}
+
+/* Widget Wrapper */
+.widget-wrapper {
+  background-color: var(--dashboard-card-bg, #ffffff);
+  border: 2px solid var(--dashboard-border, #D4816180);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.widget-container.edit-mode .widget-wrapper {
+  border-color: var(--dashboard-accent, #D48161);
+  box-shadow: 0 2px 8px rgba(212, 129, 97, 0.2);
+}
+
+.widget-wrapper:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Widget Header */
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--dashboard-header-bg, #304B60);
+  color: var(--dashboard-header-text, #E3DAD1);
+  border-bottom: 2px solid var(--dashboard-border, #D4816180);
+}
+
+.widget-drag-handle {
+  cursor: move;
+  padding: 0.25rem 0.5rem;
+  user-select: none;
+}
+
+.widget-drag-handle .icon {
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+.widget-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.widget-config-btn,
+.widget-remove-btn {
+  padding: 0.25rem 0.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.widget-config-btn:hover,
+.widget-remove-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.widget-config-btn .icon,
+.widget-remove-btn .icon {
+  font-size: 1rem;
+}
+
+/* Widget Content */
+.widget-content {
+  flex: 1;
+  padding: 1rem;
+  overflow: auto;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: var(--dashboard-card-bg, #ffffff);
+  border: 4px solid var(--dashboard-header-bg, #304B60);
+  border-radius: 24px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 2px solid var(--dashboard-border, #D4816180);
+}
+
+.modal-header h2 {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 1.5rem;
+  margin: 0;
+  color: var(--dashboard-text, #304B60);
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--dashboard-text, #304B60);
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  transform: scale(1.2);
+  color: var(--dashboard-accent, #D48161);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 2px solid var(--dashboard-border, #D4816180);
+}
+
+/* Widget Grid in Modal */
+.widget-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.widget-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  background-color: var(--dashboard-bg, #E3DAD1);
+  border: 2px solid var(--dashboard-border, #D4816180);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Amiri', 'Cairo', serif;
+}
+
+.widget-option:hover {
+  border-color: var(--dashboard-accent, #D48161);
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.widget-icon {
+  font-size: 2rem;
+}
+
+.widget-name {
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--dashboard-text, #304B60);
+}
+
+/* Modal Buttons */
+.btn-cancel,
+.btn-save {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel {
+  background-color: transparent;
+  border: 2px solid var(--dashboard-border, #D4816180);
+  color: var(--dashboard-text, #304B60);
+}
+
+.btn-cancel:hover {
+  background-color: var(--dashboard-hover, #D4816120);
+}
+
+.btn-save {
+  background-color: var(--dashboard-accent, #D48161);
+  color: #ffffff;
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Config Form */
+.config-form {
+  padding: 1rem;
+  background-color: var(--dashboard-bg, #E3DAD1);
+  border-radius: 8px;
+}
+
+.config-placeholder {
+  text-align: center;
+  color: var(--dashboard-text, #304B60);
+  font-family: 'Amiri', 'Cairo', serif;
+  opacity: 0.7;
+}
+
+/* RTL Support */
+.widget-container.rtl {
+  direction: rtl;
+}
+
+.widget-container.rtl .widget-header {
+  flex-direction: row-reverse;
+}
+
+.widget-container.rtl .widget-actions {
+  flex-direction: row-reverse;
+}
+
+.widget-container.rtl .modal-header {
+  flex-direction: row-reverse;
+}
+
+.widget-container.rtl .modal-footer {
+  flex-direction: row-reverse;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .widget-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .widget-option {
+    padding: 1rem 0.75rem;
+  }
+
+  .modal-content {
+    max-width: 95%;
+  }
+
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .add-widget-btn .text {
+    display: none;
+  }
+
+  .widget-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .widget-icon {
+    font-size: 1.5rem;
+  }
+
+  .widget-name {
+    font-size: 0.75rem;
+  }
+}
+
+/* Accessibility */
+.add-widget-btn:focus,
+.widget-config-btn:focus,
+.widget-remove-btn:focus,
+.widget-option:focus,
+.btn-cancel:focus,
+.btn-save:focus {
+  outline: 2px solid var(--dashboard-accent, #D48161);
+  outline-offset: 2px;
+}
+
+/* React Grid Layout Overrides */
+.react-grid-item.react-grid-placeholder {
+  background-color: var(--dashboard-accent, #D48161);
+  opacity: 0.2;
+  border-radius: 12px;
+}
+
+.react-grid-item.resizing {
+  opacity: 0.9;
+}
+
+.react-grid-item > .react-resizable-handle {
+  background-image: none;
+}
+
+.react-grid-item > .react-resizable-handle::after {
+  content: '⋰';
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  color: var(--dashboard-accent, #D48161);
+  font-size: 1.2rem;
+}
