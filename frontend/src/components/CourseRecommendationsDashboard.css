@@ -1,0 +1,915 @@
+/* Course Recommendations Dashboard Styles */
+.course-recommendations-dashboard {
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 10px 30px rgba(48, 75, 96, 0.1);
+  border: 1px solid rgba(211, 129, 97, 0.2);
+}
+
+.course-recommendations-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(48, 75, 96, 0.1);
+}
+
+.course-recommendations-title {
+  color: #304B60;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.course-recommendations-subtitle {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.course-recommendations-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.action-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quick-recommendations-button {
+  background: linear-gradient(135deg, #304B60 0%, #2a3f52 100%);
+  color: white;
+}
+
+.quick-recommendations-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2a3f52 0%, #243548 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(48, 75, 96, 0.3);
+}
+
+.quick-recommendations-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.selected-job-info {
+  background: rgba(211, 129, 97, 0.1);
+  border: 1px solid rgba(211, 129, 97, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.job-title {
+  font-weight: 600;
+  color: #304B60;
+  font-size: 1rem;
+}
+
+.company-name {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 3rem;
+  color: #304B60;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(48, 75, 96, 0.1);
+  border-top-color: #304B60;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.error-state {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(220, 53, 69, 0.1);
+  border-radius: 10px;
+  margin: 1rem 0;
+}
+
+.retry-button {
+  background: #dc3545;
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #c82333;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+  background: rgba(108, 117, 125, 0.05);
+  border-radius: 10px;
+}
+
+/* Impact Analysis Section */
+.impact-analysis-section {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.impact-analysis-title {
+  color: #304B60;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.improvement-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.improvement-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.improvement-card h4 {
+  color: #304B60;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.improvement-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #D48161;
+  margin: 0.5rem 0;
+}
+
+.improvement-label {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.improvement-plan {
+  background: rgba(48, 75, 96, 0.05);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.improvement-plan h4 {
+  color: #304B60;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.plan-section {
+  margin-bottom: 1.5rem;
+}
+
+.plan-section:last-child {
+  margin-bottom: 0;
+}
+
+.plan-section h5 {
+  color: #304B60;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.plan-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.plan-section li {
+  padding: 0.5rem 0;
+  color: #495057;
+  border-bottom: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.plan-section li:last-child {
+  border-bottom: none;
+}
+
+.immediate-actions h5::before {
+  content: "⚡";
+  color: #ffc107;
+}
+
+.short-term-goals h5::before {
+  content: "🎯";
+  color: #20c997;
+}
+
+.long-term-development h5::before {
+  content: "📈";
+  color: #0d6efd;
+}
+
+/* Course Recommendations Grid */
+.course-recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.course-recommendation-card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.course-recommendation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.course-card-header {
+  background: linear-gradient(135deg, #304B60 0%, #2a3f52 100%);
+  color: white;
+  padding: 1.5rem;
+}
+
+.course-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.course-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.course-category {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.course-level {
+  background: rgba(211, 129, 97, 0.2);
+  color: #D48161;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.course-card-body {
+  padding: 1.5rem;
+}
+
+.course-description {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+}
+
+/* Match Score Section */
+.match-score-section {
+  margin-bottom: 1.5rem;
+}
+
+.score-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.score-row:last-child {
+  margin-bottom: 0;
+}
+
+.score-label {
+  color: #304B60;
+  font-weight: 600;
+  min-width: 120px;
+  font-size: 0.95rem;
+}
+
+.score-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-width: 50px;
+}
+
+.improvement-value {
+  color: #D48161;
+}
+
+.score-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(48, 75, 96, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.score-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #304B60 0%, #3a5a7a 100%);
+  border-radius: 5px;
+  transition: width 1s ease;
+}
+
+.improvement-bar .score-fill {
+  background: linear-gradient(90deg, #D48161 0%, #e0967a 100%);
+}
+
+/* Skills Section */
+.skills-section {
+  margin-bottom: 1.5rem;
+}
+
+.skills-section h4 {
+  color: #304B60;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background: rgba(48, 75, 96, 0.1);
+  color: #304B60;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.skill-tag:hover {
+  background: rgba(48, 75, 96, 0.2);
+  transform: translateY(-1px);
+}
+
+.skill-tag.small {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+}
+
+.more-skills {
+  background: rgba(211, 129, 97, 0.1);
+  color: #D48161;
+}
+
+/* Course Details */
+.course-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(48, 75, 96, 0.03);
+  border-radius: 10px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.detail-value {
+  color: #304B60;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.priority-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.8rem;
+  text-align: center;
+  min-width: 60px;
+}
+
+/* Benefits Section */
+.benefits-section {
+  margin-bottom: 1.5rem;
+}
+
+.benefits-section h4 {
+  color: #304B60;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.benefits-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.benefit-item {
+  padding: 0.5rem 0;
+  color: #495057;
+  border-bottom: 1px solid rgba(48, 75, 96, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.benefit-item:last-child {
+  border-bottom: none;
+}
+
+.benefit-item::before {
+  content: "✓";
+  color: #20c997;
+  font-weight: bold;
+}
+
+/* Course Actions */
+.course-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.enroll-button {
+  flex: 1;
+  background: linear-gradient(135deg, #D48161 0%, #c07050 100%);
+  color: white;
+}
+
+.enroll-button:hover {
+  background: linear-gradient(135deg, #c07050 0%, #b06040 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(211, 129, 97, 0.3);
+}
+
+.details-button {
+  flex: 1;
+  background: transparent;
+  color: #304B60;
+  border: 2px solid #304B60;
+}
+
+.details-button:hover {
+  background: #304B60;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Learning Paths Section */
+.learning-paths-section {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-top: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.learning-paths-title {
+  color: #304B60;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.learning-path-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.learning-path-timeline::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #304B60, #D48161);
+}
+
+.week-card {
+  background: rgba(48, 75, 96, 0.05);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-left: 40px;
+  position: relative;
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.week-card::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: #D48161;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 3px rgba(211, 129, 97, 0.3);
+}
+
+.week-header {
+  margin-bottom: 1rem;
+}
+
+.week-number {
+  display: inline-block;
+  background: #304B60;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.week-title {
+  color: #304B60;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.week-skills,
+.week-resources {
+  margin-top: 1rem;
+}
+
+.week-skills h5,
+.week-resources h5 {
+  color: #304B60;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.week-resources ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.week-resources li {
+  padding: 0.25rem 0;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+.course-recommendations-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.recommendations-note {
+  color: #304B60;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.recommendations-disclaimer {
+  color: #6c757d;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-recommendations-dashboard {
+    padding: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .course-recommendations-title {
+    font-size: 1.8rem;
+  }
+
+  .course-recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .improvement-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .course-actions {
+    flex-direction: column;
+  }
+
+  .learning-path-timeline::before {
+    left: 15px;
+  }
+
+  .week-card {
+    margin-left: 30px;
+  }
+
+  .week-card::before {
+    left: -25px;
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .course-recommendations-dashboard {
+    padding: 1rem;
+  }
+
+  .course-recommendations-title {
+    font-size: 1.5rem;
+  }
+
+  .course-recommendations-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .score-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .score-bar {
+    width: 100%;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .course-recommendations-dashboard {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-color: rgba(211, 129, 97, 0.3);
+  }
+
+  .course-recommendation-card,
+  .impact-analysis-section,
+  .learning-paths-section {
+    background: #2d3748;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .course-description,
+  .benefit-item,
+  .week-resources li {
+    color: #cbd5e0;
+  }
+
+  .skills-tag {
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e0;
+  }
+
+  .course-details {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .detail-label {
+    color: #a0aec0;
+  }
+
+  .detail-value {
+    color: #cbd5e0;
+  }
+
+  .score-bar {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .improvement-card {
+    background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .improvement-plan {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .plan-section li {
+    color: #cbd5e0;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .week-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .learning-path-timeline::before {
+    background: linear-gradient(to bottom, #cbd5e0, #D48161);
+  }
+
+  .week-card::before {
+    border-color: #2d3748;
+  }
+}
+/* Level Filter Section */
+.level-filter-section {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.level-filter-title {
+  color: #304B60;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.level-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.level-filter-button {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #304B60;
+  background: white;
+  color: #304B60;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.level-filter-button:hover {
+  background: rgba(48, 75, 96, 0.1);
+  transform: translateY(-2px);
+}
+
+.level-filter-button.active {
+  background: #304B60;
+  color: white;
+  border-color: #304B60;
+}
+
+.filter-status {
+  text-align: center;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(48, 75, 96, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.filter-status-text {
+  color: #304B60;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.reset-filter-button {
+  background: #D48161;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.reset-filter-button:hover {
+  background: #c07050;
+  transform: translateY(-2px);
+}
+
+.filter-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(211, 129, 97, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(211, 129, 97, 0.3);
+}
+
+.filter-stats-text {
+  color: #304B60;
+  font-size: 0.9rem;
+}
+
+.filter-stats strong {
+  color: #D48161;
+}
+
+/* Inline reset button in empty state */
+.inline-reset-button {
+  background: none;
+  border: none;
+  color: #D48161;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  margin-left: 0.25rem;
+}
+
+.inline-reset-button:hover {
+  color: #304B60;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .level-filter-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .level-filter-button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .filter-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}

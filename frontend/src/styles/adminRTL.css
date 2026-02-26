@@ -1,0 +1,443 @@
+/**
+ * Admin Dashboard RTL (Right-to-Left) Support
+ * 
+ * This file provides comprehensive RTL support for the admin dashboard
+ * to ensure proper layout and text alignment for Arabic language users.
+ * 
+ * Features:
+ * - Automatic text alignment
+ * - Mirrored layouts and positioning
+ * - Proper spacing and margins
+ * - Icon and button positioning
+ * - Table and list alignment
+ */
+
+/* ============================================
+   BASE RTL STYLES
+   ============================================ */
+
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] body {
+  text-align: right;
+}
+
+/* ============================================
+   TEXT ALIGNMENT
+   ============================================ */
+
+[dir="rtl"] .admin-text-left {
+  text-align: right !important;
+}
+
+[dir="rtl"] .admin-text-right {
+  text-align: left !important;
+}
+
+/* Keep center aligned */
+[dir="rtl"] .admin-text-center {
+  text-align: center !important;
+}
+
+/* ============================================
+   FLEXBOX LAYOUTS
+   ============================================ */
+
+[dir="rtl"] .admin-flex-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .admin-flex-row-reverse {
+  flex-direction: row;
+}
+
+/* ============================================
+   MARGINS AND PADDING
+   ============================================ */
+
+/* Margin Left → Margin Right */
+[dir="rtl"] .admin-ml-auto {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+[dir="rtl"] .admin-mr-auto {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+/* Padding Left → Padding Right */
+[dir="rtl"] .admin-pl-0 { padding-left: 0 !important; padding-right: 0 !important; }
+[dir="rtl"] .admin-pr-0 { padding-right: 0 !important; padding-left: 0 !important; }
+
+[dir="rtl"] .admin-pl-1 { padding-left: 0 !important; padding-right: var(--admin-spacing-xs) !important; }
+[dir="rtl"] .admin-pr-1 { padding-right: 0 !important; padding-left: var(--admin-spacing-xs) !important; }
+
+[dir="rtl"] .admin-pl-2 { padding-left: 0 !important; padding-right: var(--admin-spacing-sm) !important; }
+[dir="rtl"] .admin-pr-2 { padding-right: 0 !important; padding-left: var(--admin-spacing-sm) !important; }
+
+[dir="rtl"] .admin-pl-3 { padding-left: 0 !important; padding-right: var(--admin-spacing-md) !important; }
+[dir="rtl"] .admin-pr-3 { padding-right: 0 !important; padding-left: var(--admin-spacing-md) !important; }
+
+[dir="rtl"] .admin-pl-4 { padding-left: 0 !important; padding-right: var(--admin-spacing-lg) !important; }
+[dir="rtl"] .admin-pr-4 { padding-right: 0 !important; padding-left: var(--admin-spacing-lg) !important; }
+
+/* ============================================
+   POSITIONING
+   ============================================ */
+
+[dir="rtl"] .admin-left-0 {
+  left: auto !important;
+  right: 0 !important;
+}
+
+[dir="rtl"] .admin-right-0 {
+  right: auto !important;
+  left: 0 !important;
+}
+
+/* ============================================
+   BORDER RADIUS
+   ============================================ */
+
+[dir="rtl"] .admin-rounded-l {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+  border-top-right-radius: var(--admin-radius-md) !important;
+  border-bottom-right-radius: var(--admin-radius-md) !important;
+}
+
+[dir="rtl"] .admin-rounded-r {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: var(--admin-radius-md) !important;
+  border-bottom-left-radius: var(--admin-radius-md) !important;
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+[dir="rtl"] .admin-table {
+  direction: rtl;
+}
+
+[dir="rtl"] .admin-table th,
+[dir="rtl"] .admin-table td {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-table th:first-child,
+[dir="rtl"] .admin-table td:first-child {
+  padding-right: var(--admin-spacing-lg);
+  padding-left: var(--admin-spacing-md);
+}
+
+[dir="rtl"] .admin-table th:last-child,
+[dir="rtl"] .admin-table td:last-child {
+  padding-left: var(--admin-spacing-lg);
+  padding-right: var(--admin-spacing-md);
+}
+
+/* ============================================
+   LISTS
+   ============================================ */
+
+[dir="rtl"] .admin-list {
+  padding-right: var(--admin-spacing-lg);
+  padding-left: 0;
+}
+
+[dir="rtl"] .admin-list-item {
+  text-align: right;
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+
+[dir="rtl"] .admin-form-label {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-input {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-checkbox,
+[dir="rtl"] .admin-radio {
+  margin-right: 0;
+  margin-left: var(--admin-spacing-sm);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+[dir="rtl"] .admin-button-group {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .admin-button-icon-left {
+  margin-right: 0;
+  margin-left: var(--admin-spacing-sm);
+}
+
+[dir="rtl"] .admin-button-icon-right {
+  margin-left: 0;
+  margin-right: var(--admin-spacing-sm);
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+
+[dir="rtl"] .admin-sidebar {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .admin-sidebar-collapsed {
+  transform: translateX(100%);
+}
+
+[dir="rtl"] .admin-nav-item {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-nav-icon {
+  margin-right: 0;
+  margin-left: var(--admin-spacing-sm);
+}
+
+/* ============================================
+   BREADCRUMBS
+   ============================================ */
+
+[dir="rtl"] .admin-breadcrumb {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .admin-breadcrumb-separator {
+  transform: scaleX(-1);
+}
+
+/* ============================================
+   DROPDOWNS
+   ============================================ */
+
+[dir="rtl"] .admin-dropdown {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .admin-dropdown-item {
+  text-align: right;
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+
+[dir="rtl"] .admin-modal-header {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-modal-close {
+  left: var(--admin-spacing-md);
+  right: auto;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+[dir="rtl"] .admin-card-header {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-card-actions {
+  flex-direction: row-reverse;
+}
+
+/* ============================================
+   CHARTS
+   ============================================ */
+
+[dir="rtl"] .admin-chart-legend {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-chart-label {
+  text-align: right;
+}
+
+/* ============================================
+   STATISTICS WIDGETS
+   ============================================ */
+
+[dir="rtl"] .admin-stat-widget {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-stat-icon {
+  margin-right: 0;
+  margin-left: var(--admin-spacing-md);
+}
+
+[dir="rtl"] .admin-stat-trend {
+  flex-direction: row-reverse;
+}
+
+/* ============================================
+   ACTIVITY LOG
+   ============================================ */
+
+[dir="rtl"] .admin-activity-item {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-activity-icon {
+  margin-right: 0;
+  margin-left: var(--admin-spacing-md);
+}
+
+[dir="rtl"] .admin-activity-timestamp {
+  text-align: left;
+}
+
+/* ============================================
+   NOTIFICATIONS
+   ============================================ */
+
+[dir="rtl"] .admin-notification {
+  text-align: right;
+}
+
+[dir="rtl"] .admin-notification-icon {
+  margin-right: 0;
+  margin-left: var(--admin-spacing-md);
+}
+
+[dir="rtl"] .admin-notification-badge {
+  left: -8px;
+  right: auto;
+}
+
+/* ============================================
+   TOOLTIPS
+   ============================================ */
+
+[dir="rtl"] .admin-tooltip {
+  text-align: right;
+}
+
+/* ============================================
+   PAGINATION
+   ============================================ */
+
+[dir="rtl"] .admin-pagination {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .admin-pagination-prev {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .admin-pagination-next {
+  transform: scaleX(-1);
+}
+
+/* ============================================
+   SEARCH
+   ============================================ */
+
+[dir="rtl"] .admin-search-input {
+  padding-right: var(--admin-spacing-xl);
+  padding-left: var(--admin-spacing-md);
+}
+
+[dir="rtl"] .admin-search-icon {
+  left: auto;
+  right: var(--admin-spacing-md);
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+[dir="rtl"] .admin-tabs {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .admin-tab {
+  text-align: right;
+}
+
+/* ============================================
+   GRID LAYOUT
+   ============================================ */
+
+[dir="rtl"] .admin-grid {
+  direction: rtl;
+}
+
+/* ============================================
+   ICONS
+   ============================================ */
+
+/* Flip directional icons in RTL */
+[dir="rtl"] .admin-icon-arrow-right,
+[dir="rtl"] .admin-icon-arrow-left,
+[dir="rtl"] .admin-icon-chevron-right,
+[dir="rtl"] .admin-icon-chevron-left {
+  transform: scaleX(-1);
+}
+
+/* ============================================
+   SCROLLBAR (Webkit browsers)
+   ============================================ */
+
+[dir="rtl"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[dir="rtl"] .admin-scrollable {
+  direction: rtl;
+}
+
+/* ============================================
+   RESPONSIVE RTL ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  [dir="rtl"] .admin-sidebar {
+    right: 0;
+    left: auto;
+  }
+  
+  [dir="rtl"] .admin-mobile-menu {
+    right: 0;
+    left: auto;
+  }
+}
+
+/* ============================================
+   PRINT RTL STYLES
+   ============================================ */
+
+@media print {
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  [dir="rtl"] .admin-table th,
+  [dir="rtl"] .admin-table td {
+    text-align: right;
+  }
+}

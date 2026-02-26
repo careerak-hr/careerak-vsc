@@ -18,3 +18,6 @@ export { default as RevenueChartWidget } from './RevenueChartWidget';
 
 // Activity Log Components
 export { default as ActivityLogWidget } from './ActivityLogWidget';
+
+// Export Components
+export { default as ExportModal } from './ExportModal';

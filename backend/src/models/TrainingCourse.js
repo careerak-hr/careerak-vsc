@@ -46,4 +46,10 @@ const trainingCourseSchema = new mongoose.Schema({
   }
 });
 
+// Indexes for performance optimization (admin dashboard queries)
+trainingCourseSchema.index({ createdAt: -1 }); // For time-based queries
+trainingCourseSchema.index({ status: 1, createdAt: -1 }); // For filtering by status
+trainingCourseSchema.index({ trainer: 1 }); // For trainer's courses
+trainingCourseSchema.index({ 'schedule.startDate': 1 }); // For upcoming courses
+
 module.exports = mongoose.model('TrainingCourse', trainingCourseSchema);

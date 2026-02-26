@@ -9,6 +9,7 @@ import { useSEO } from '../hooks';
 import { RelatedLinks, Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import { CourseCardSkeleton } from '../components/SkeletonLoaders';
+import CourseRecommendationsDashboard from '../components/CourseRecommendationsDashboard';
 
 const CoursesPage = () => {
     const { language, startBgMusic } = useApp();
@@ -109,14 +110,29 @@ const CoursesPage = () => {
                 {/* Breadcrumb Navigation */}
                 <Breadcrumbs />
                 
-                <h1 className="text-3xl font-bold mb-6">Courses</h1>
+                <h1 className="text-3xl font-bold mb-2">Courses</h1>
                 <p className="text-gray-600 mb-8">Language: {language}</p>
                 
-                {/* Course listings with stagger animation */}
-                <section aria-labelledby="course-catalog">
-                    <h2 id="course-catalog" className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-                        Available Courses
+                {/* AI-Powered Course Recommendations */}
+                <section aria-labelledby="ai-recommendations" className="mb-12">
+                    <h2 id="ai-recommendations" className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+                        AI-Powered Course Recommendations
                     </h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6">
+                        Get personalized course recommendations based on your profile and career goals. Our AI analyzes your skills and suggests the best courses to improve your employability.
+                    </p>
+                    <CourseRecommendationsDashboard />
+                </section>
+                
+                {/* All Available Courses */}
+                <section aria-labelledby="course-catalog" className="mt-12">
+                    <h2 id="course-catalog" className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+                        All Available Courses
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300 mb-8">
+                        Browse our complete catalog of courses to enhance your skills and advance your career.
+                    </p>
+                    
                     <motion.div
                         className="course-listings grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
                         variants={containerVariants}

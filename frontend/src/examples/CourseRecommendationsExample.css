@@ -1,0 +1,273 @@
+/* Course Recommendations Example Styles */
+.course-recommendations-example {
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(48, 75, 96, 0.1);
+}
+
+.example-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid rgba(48, 75, 96, 0.1);
+}
+
+.example-header h1 {
+  color: #304B60;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.example-description {
+  color: #6c757d;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.example-section {
+  background: white;
+  border-radius: 15px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.example-section h2 {
+  color: #304B60;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(48, 75, 96, 0.1);
+}
+
+.features-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.features-list li {
+  padding: 0.75rem 0;
+  color: #495057;
+  border-bottom: 1px solid rgba(48, 75, 96, 0.1);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.features-list li:last-child {
+  border-bottom: none;
+}
+
+.features-list li::before {
+  content: "✓";
+  color: #20c997;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.usage-instructions h3 {
+  color: #304B60;
+  font-size: 1.3rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.usage-instructions p {
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.usage-instructions ol {
+  padding-left: 1.5rem;
+  color: #495057;
+  line-height: 1.6;
+}
+
+.usage-instructions li {
+  margin-bottom: 0.5rem;
+}
+
+.code-block {
+  background: #1a1a2e;
+  color: #cbd5e0;
+  padding: 1.5rem;
+  border-radius: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.live-demo {
+  margin-top: 2rem;
+}
+
+.demo-note {
+  background: rgba(211, 129, 97, 0.1);
+  border: 1px solid rgba(211, 129, 97, 0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.demo-note p {
+  color: #304B60;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.component-container {
+  background: white;
+  border-radius: 15px;
+  padding: 1.5rem;
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.accessibility-features {
+  list-style: none;
+  padding-left: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.accessibility-features li {
+  background: rgba(48, 75, 96, 0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  color: #304B60;
+  border: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.example-footer {
+  text-align: center;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid rgba(48, 75, 96, 0.1);
+}
+
+.example-footer p {
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+.example-footer strong {
+  color: #304B60;
+}
+
+.example-footer code {
+  background: rgba(48, 75, 96, 0.1);
+  color: #304B60;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-recommendations-example {
+    padding: 1.5rem;
+  }
+
+  .example-header h1 {
+    font-size: 2rem;
+  }
+
+  .example-section {
+    padding: 1.5rem;
+  }
+
+  .example-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .accessibility-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .course-recommendations-example {
+    padding: 1rem;
+  }
+
+  .example-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .code-block {
+    font-size: 0.8rem;
+    padding: 1rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .course-recommendations-example {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  }
+
+  .example-section {
+    background: #2d3748;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .example-section h2 {
+    color: #cbd5e0;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .features-list li {
+    color: #cbd5e0;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .usage-instructions p,
+  .usage-instructions ol {
+    color: #cbd5e0;
+  }
+
+  .demo-note {
+    background: rgba(211, 129, 97, 0.2);
+    border-color: rgba(211, 129, 97, 0.4);
+  }
+
+  .demo-note p {
+    color: #cbd5e0;
+  }
+
+  .component-container {
+    background: #2d3748;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .accessibility-features li {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #cbd5e0;
+  }
+
+  .example-footer p {
+    color: #a0aec0;
+  }
+
+  .example-footer strong {
+    color: #cbd5e0;
+  }
+
+  .example-footer code {
+    background: rgba(255, 255, 255, 0.1);
+    color: #cbd5e0;
+  }
+}

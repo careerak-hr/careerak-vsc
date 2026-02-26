@@ -16,16 +16,23 @@
     "test": "jest",
     "test:security": "jest --testPathPattern=security",
     "test:watch": "jest --watch",
+    "test:realtime": "mocha tests/realtimeUpdate.test.js --timeout 10000",
     "track:errors": "node scripts/track-error-rates.js",
     "track:errors:production": "node scripts/track-error-rates.js --environment production",
     "track:errors:watch": "node scripts/track-error-rates.js --watch --interval 60",
-    "track:errors:export": "node scripts/track-error-rates.js --export json"
+    "track:errors:export": "node scripts/track-error-rates.js --export json",
+    "model:update:start": "node scripts/start-model-update-service.js start",
+    "model:update:retrain": "node scripts/start-model-update-service.js retrain",
+    "model:update:status": "node scripts/start-model-update-service.js status"
   },
   "devDependencies": {
+    "chai": "^5.1.1",
     "fast-check": "^4.5.3",
     "jest": "^29.7.0",
+    "mocha": "^11.0.0",
     "mongodb-memory-server": "^11.0.1",
     "nodemon": "^3.0.2",
+    "sinon": "^19.0.2",
     "supertest": "^6.3.3"
   },
   "dependencies": {
@@ -50,6 +57,7 @@
     "mongoose": "^7.0.0",
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "natural": "^8.1.0",
     "node-cache": "^5.1.2",
     "papaparse": "^5.5.3",
     "passport": "^0.7.0",
@@ -58,6 +66,7 @@
     "passport-linkedin-oauth2": "^2.0.0",
     "pusher": "^5.3.2",
     "qrcode": "^1.5.4",
+    "redis": "^4.7.0",
     "socket.io": "^4.8.3",
     "speakeasy": "^2.0.0",
     "ua-parser-js": "^2.0.9",

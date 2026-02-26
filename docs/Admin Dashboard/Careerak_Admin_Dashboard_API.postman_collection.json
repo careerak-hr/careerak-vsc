@@ -1,0 +1,898 @@
+{
+  "info": {
+    "name": "Careerak Admin Dashboard API",
+    "description": "Complete API collection for Careerak Admin Dashboard",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://careerak.com/api/admin",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Get Overview Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/statistics/overview",
+              "host": ["{{base_url}}"],
+              "path": ["statistics", "overview"]
+            }
+          }
+        },
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/statistics/users?timeRange=daily",
+              "host": ["{{base_url}}"],
+              "path": ["statistics", "users"],
+              "query": [
+                {
+                  "key": "timeRange",
+                  "value": "daily"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/statistics/jobs?timeRange=weekly",
+              "host": ["{{base_url}}"],
+              "path": ["statistics", "jobs"],
+              "query": [
+                {
+                  "key": "timeRange",
+                  "value": "weekly"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Course Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/statistics/courses?timeRange=monthly",
+              "host": ["{{base_url}}"],
+              "path": ["statistics", "courses"],
+              "query": [
+                {
+                  "key": "timeRange",
+                  "value": "monthly"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Review Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/statistics/reviews?timeRange=daily",
+              "host": ["{{base_url}}"],
+              "path": ["statistics", "reviews"],
+              "query": [
+                {
+                  "key": "timeRange",
+                  "value": "daily"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Activity Log",
+      "item": [
+        {
+          "name": "Get Activity Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/activity-log?page=1&limit=50",
+              "host": ["{{base_url}}"],
+              "path": ["activity-log"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search Activity Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/activity-log/search?q=disabled",
+              "host": ["{{base_url}}"],
+              "path": ["activity-log", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "disabled"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Activity Log Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/activity-log/stats",
+              "host": ["{{base_url}}"],
+              "path": ["activity-log", "stats"]
+            }
+          }
+        },
+        {
+          "name": "Get Action Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/activity-log/action-types",
+              "host": ["{{base_url}}"],
+              "path": ["activity-log", "action-types"]
+            }
+          }
+        },
+        {
+          "name": "Get User Activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/activity-log/user/:userId",
+              "host": ["{{base_url}}"],
+              "path": ["activity-log", "user", ":userId"],
+              "variable": [
+                {
+                  "key": "userId",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Activity Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"actionType\": \"manual_action\",\n  \"targetType\": \"User\",\n  \"targetId\": \"65f1234567890abcdef22222\",\n  \"details\": \"Manual intervention performed\",\n  \"metadata\": {\n    \"reason\": \"Customer support request\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/activity-log",
+              "host": ["{{base_url}}"],
+              "path": ["activity-log"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["notifications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/unread-count",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "unread-count"]
+            }
+          }
+        },
+        {
+          "name": "Get Notification Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/summary",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Mark as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/:id/read",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", ":id", "read"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/mark-all-read",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "mark-all-read"]
+            }
+          }
+        },
+        {
+          "name": "Delete Notification",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/:id",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Preferences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/notifications/preferences",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "preferences"]
+            }
+          }
+        },
+        {
+          "name": "Update Preferences",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adminPreferences\": {\n    \"new_user_registration\": {\n      \"enabled\": true,\n      \"push\": true,\n      \"email\": false\n    }\n  },\n  \"quietHours\": {\n    \"enabled\": true,\n    \"start\": \"22:00\",\n    \"end\": \"08:00\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/notifications/preferences",
+              "host": ["{{base_url}}"],
+              "path": ["notifications", "preferences"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard Layout",
+      "item": [
+        {
+          "name": "Get Layout",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/layout",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "layout"]
+            }
+          }
+        },
+        {
+          "name": "Save Layout",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"widgets\": [],\n  \"theme\": \"dark\",\n  \"sidebarCollapsed\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/dashboard/layout",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "layout"]
+            }
+          }
+        },
+        {
+          "name": "Reset Layout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/layout/reset",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "layout", "reset"]
+            }
+          }
+        },
+        {
+          "name": "Get Default Widgets",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/dashboard/layout/defaults",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "layout", "defaults"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Export",
+      "item": [
+        {
+          "name": "Export Users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"excel\",\n  \"dateRange\": {\n    \"start\": \"2026-01-01\",\n    \"end\": \"2026-02-23\"\n  },\n  \"filters\": {\n    \"type\": \"Employee\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/export/users",
+              "host": ["{{base_url}}"],
+              "path": ["export", "users"]
+            }
+          }
+        },
+        {
+          "name": "Export Jobs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"csv\",\n  \"dateRange\": {\n    \"start\": \"2026-01-01\",\n    \"end\": \"2026-02-23\"\n  },\n  \"filters\": {\n    \"status\": \"active\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/export/jobs",
+              "host": ["{{base_url}}"],
+              "path": ["export", "jobs"]
+            }
+          }
+        },
+        {
+          "name": "Export Applications",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"pdf\",\n  \"dateRange\": {\n    \"start\": \"2026-02-01\",\n    \"end\": \"2026-02-23\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/export/applications",
+              "host": ["{{base_url}}"],
+              "path": ["export", "applications"]
+            }
+          }
+        },
+        {
+          "name": "Export Courses",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"excel\",\n  \"dateRange\": {\n    \"start\": \"2026-01-01\",\n    \"end\": \"2026-02-23\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/export/courses",
+              "host": ["{{base_url}}"],
+              "path": ["export", "courses"]
+            }
+          }
+        },
+        {
+          "name": "Export Activity Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"csv\",\n  \"dateRange\": {\n    \"start\": \"2026-02-20\",\n    \"end\": \"2026-02-23\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/export/activity-log",
+              "host": ["{{base_url}}"],
+              "path": ["export", "activity-log"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Generate Users Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/users?startDate=2026-01-01&endDate=2026-02-23",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "users"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-02-23"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Generate Jobs Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/jobs?startDate=2026-01-01&endDate=2026-02-23",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "jobs"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-02-23"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Generate Courses Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/courses?startDate=2026-01-01&endDate=2026-02-23",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "courses"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-02-23"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Generate Reviews Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/reports/reviews?startDate=2026-01-01&endDate=2026-02-23",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "reviews"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-02-23"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/search?q=john",
+              "host": ["{{base_url}}"],
+              "path": ["users", "search"],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "john"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Users with Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users?type=Employee&isVerified=true",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "Employee"
+                },
+                {
+                  "key": "isVerified",
+                  "value": "true"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Disable User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Violation of terms of service\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/:id/disable",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id", "disable"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Enable User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/:id/enable",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id", "enable"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"User requested account deletion\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/:id",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Activity",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/:id/activity",
+              "host": ["{{base_url}}"],
+              "path": ["users", ":id", "activity"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content Management",
+      "item": [
+        {
+          "name": "Get Pending Jobs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content/pending-jobs",
+              "host": ["{{base_url}}"],
+              "path": ["content", "pending-jobs"]
+            }
+          }
+        },
+        {
+          "name": "Get Pending Courses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content/pending-courses",
+              "host": ["{{base_url}}"],
+              "path": ["content", "pending-courses"]
+            }
+          }
+        },
+        {
+          "name": "Get Flagged Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content/flagged",
+              "host": ["{{base_url}}"],
+              "path": ["content", "flagged"]
+            }
+          }
+        },
+        {
+          "name": "Approve Content",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contentType\": \"job\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/content/:id/approve",
+              "host": ["{{base_url}}"],
+              "path": ["content", ":id", "approve"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reject Content",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contentType\": \"course\",\n  \"reason\": \"Content does not meet quality standards\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/content/:id/reject",
+              "host": ["{{base_url}}"],
+              "path": ["content", ":id", "reject"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Content",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content/:id?contentType=review",
+              "host": ["{{base_url}}"],
+              "path": ["content", ":id"],
+              "query": [
+                {
+                  "key": "contentType",
+                  "value": "review"
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

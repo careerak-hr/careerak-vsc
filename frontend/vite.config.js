@@ -249,6 +249,26 @@ export default defineConfig({
           
           // === NON-CRITICAL VENDORS (Lazy loaded) ===
           
+          // Chart.js (LAZY - admin dashboard charts)
+          // Task 29.3: Lazy load chart components
+          if (id.includes('node_modules/chart.js') || 
+              id.includes('node_modules/react-chartjs-2')) {
+            return 'charts-vendor';
+          }
+          
+          // React Grid Layout (LAZY - admin dashboard layout)
+          // Task 29.3: Lazy load dashboard layout components
+          if (id.includes('node_modules/react-grid-layout') || 
+              id.includes('node_modules/react-draggable') ||
+              id.includes('node_modules/react-resizable')) {
+            return 'grid-vendor';
+          }
+          
+          // React Query (LAZY - data fetching for admin dashboard)
+          if (id.includes('node_modules/@tanstack/react-query')) {
+            return 'query-vendor';
+          }
+          
           // Framer Motion (LAZY - animations not critical for TTI)
           if (id.includes('node_modules/framer-motion')) {
             return 'framer-vendor';
@@ -314,6 +334,11 @@ export default defineConfig({
           // Tar (LAZY - compression rarely used)
           if (id.includes('node_modules/tar')) {
             return 'tar-vendor';
+          }
+          
+          // Lucide React icons (LAZY - icons can be loaded on demand)
+          if (id.includes('node_modules/lucide-react')) {
+            return 'icons-vendor';
           }
           
           // Other node_modules (catch-all for remaining small dependencies)
@@ -503,5 +528,17 @@ export default defineConfig({
     setupFiles: './src/test/setup.js',
     css: true,
     include: ['tests/**/*.{test,spec}.{js,jsx}', 'src/**/*.{test,spec}.{js,jsx}'],
+    // Use a different port for test server to avoid conflicts
+    server: {
+      deps: {
+        inline: ['vitest-canvas-mock'],
+      },
+    },
+    // Disable watch mode for CI/CD
+    watch: false,
+    // Set test timeout
+    testTimeout: 10000,
+    // Disable WebSocket server to avoid port conflicts
+    api: false,
   },
 });

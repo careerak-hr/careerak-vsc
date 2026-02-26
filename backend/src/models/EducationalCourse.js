@@ -50,4 +50,12 @@ const educationalCourseSchema = new mongoose.Schema({
   }
 });
 
+// Indexes for performance optimization (admin dashboard queries)
+educationalCourseSchema.index({ createdAt: -1 }); // For time-based queries
+educationalCourseSchema.index({ status: 1, createdAt: -1 }); // For filtering by status
+educationalCourseSchema.index({ instructor: 1 }); // For instructor's courses
+educationalCourseSchema.index({ category: 1 }); // For filtering by category
+educationalCourseSchema.index({ level: 1 }); // For filtering by level
+educationalCourseSchema.index({ startDate: 1 }); // For upcoming courses
+
 module.exports = mongoose.model('EducationalCourse', educationalCourseSchema);

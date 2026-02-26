@@ -197,6 +197,9 @@ app.use('/oauth', oauthRoutes);
 app.use('/errors', require('./routes/errorLogRoutes'));
 app.use('/security-score', require('./routes/securityScoreRoutes'));
 app.use('/devices', require('./routes/deviceRoutes'));
+app.use('/recommendations', require('./routes/recommendationRoutes'));
+app.use('/user-interactions', require('./routes/userInteractionRoutes'));
+app.use('/learning-paths', require('./routes/learningPathRoutes'));
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

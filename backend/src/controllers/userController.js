@@ -177,8 +177,41 @@ exports.getUserProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.user.id, req.body, { new: true });
-    res.status(200).json(sanitizeUser(user));
+    const userId = req.user.id;
+    const updatedFields = req.body;
+    
+    // تحديث المستخدم
+    const user = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
+    
+    // بدء معالجة تحديث التوصيات في الوقت الفعلي (غير متزامن)
+    // نستخدم IIFE لتشغيل العملية في الخلفية دون انتظارها
+    (async () => {
+      try {
+        const realTimeRecommendationService = require('../services/realtimeRecommendationService');
+        const result = await realTimeRecommendationService.processProfileUpdateIfRelevant(userId, updatedFields);
+        
+        if (result.success && result.relevant) {
+          console.log(`✅ تم بدء تحديث التوصيات للمستخدم ${userId}: ${result.message}`);
+        } else if (result.success && !result.relevant) {
+          console.log(`ℹ️ تحديث غير ذي صلة للمستخدم ${userId}: ${result.message}`);
+        } else {
+          console.warn(`⚠️ فشل تحديث التوصيات للمستخدم ${userId}: ${result.message}`);
+        }
+      } catch (recommendationError) {
+        console.error(`❌ خطأ في تحديث التوصيات للمستخدم ${userId}:`, recommendationError.message);
+        // لا نرمي الخطأ حتى لا نؤثر على تحديث الملف الشخصي
+      }
+    })();
+    
+    // إرجاع استجابة فورية مع تأكيد بدء تحديث التوصيات
+    res.status(200).json({
+      ...sanitizeUser(user),
+      recommendationUpdate: {
+        started: true,
+        message: 'تم بدء تحديث التوصيات بناءً على التغييرات الجديدة',
+        expectedCompletion: 'خلال دقيقة واحدة'
+      }
+    });
   } catch (error) {
     res.status(500).json({ error: 'خطأ في التحديث' });
   }
@@ -315,5 +348,42 @@ exports.updateUserPreferences = async (req, res) => {
   } catch (error) {
     console.error('Update preferences error:', error);
     res.status(500).json({ error: 'خطأ في تحديث التفضيلات' });
+  }
+};
+/**
+ * الحصول على حالة تحديث التوصيات في الوقت الفعلي
+ * GET /api/users/recommendation-update-status
+ */
+exports.getRecommendationUpdateStatus = async (req, res) => {
+  try {
+    const realTimeRecommendationService = require('../services/realtimeRecommendationService');
+    const status = realTimeRecommendationService.getUpdateStatus(req.user.id);
+    
+    res.status(200).json(status);
+  } catch (error) {
+    console.error('Get recommendation update status error:', error);
+    res.status(500).json({ 
+      error: 'خطأ في جلب حالة تحديث التوصيات',
+      details: error.message 
+    });
+  }
+};
+
+/**
+ * الحصول على إحصائيات معالجة التوصيات
+ * GET /api/users/recommendation-processing-stats
+ */
+exports.getRecommendationProcessingStats = async (req, res) => {
+  try {
+    const realTimeRecommendationService = require('../services/realtimeRecommendationService');
+    const stats = realTimeRecommendationService.getProcessingStats();
+    
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error('Get recommendation processing stats error:', error);
+    res.status(500).json({ 
+      error: 'خطأ في جلب إحصائيات المعالجة',
+      details: error.message 
+    });
   }
 };

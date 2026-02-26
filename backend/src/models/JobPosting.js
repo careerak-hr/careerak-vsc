@@ -33,4 +33,11 @@ const jobPostingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
+// Indexes for performance optimization (admin dashboard queries)
+jobPostingSchema.index({ createdAt: -1 }); // For time-based queries
+jobPostingSchema.index({ status: 1, createdAt: -1 }); // For filtering by status
+jobPostingSchema.index({ postedBy: 1, createdAt: -1 }); // For company's jobs
+jobPostingSchema.index({ postingType: 1 }); // For filtering by type
+jobPostingSchema.index({ title: 'text', description: 'text' }); // For text search
+
 module.exports = mongoose.model('JobPosting', jobPostingSchema);

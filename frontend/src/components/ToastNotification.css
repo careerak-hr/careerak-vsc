@@ -1,0 +1,45 @@
+/* Toast Notification Styles */
+
+.toast-notification {
+  @apply px-4 py-3 rounded-2xl shadow-2xl border-2 z-50 min-w-[280px] max-w-[400px];
+}
+
+.toast-content {
+  @apply flex items-center gap-3;
+}
+
+.toast-icon {
+  @apply text-xl font-black flex-shrink-0;
+}
+
+.toast-message {
+  @apply flex-1 font-bold text-sm;
+}
+
+.toast-close-btn {
+  @apply flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full hover:bg-black/10 transition-colors font-black text-sm;
+}
+
+/* Responsive adjustments */
+@media (max-width: 639px) {
+  .toast-notification {
+    @apply min-w-[260px] max-w-[calc(100vw-2rem)] px-3 py-2 rounded-xl;
+  }
+
+  .toast-icon {
+    @apply text-lg;
+  }
+
+  .toast-message {
+    @apply text-xs;
+  }
+
+  .toast-close-btn {
+    @apply w-5 h-5 text-xs;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .toast-content {
+  @apply flex-row-reverse;
+}

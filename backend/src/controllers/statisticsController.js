@@ -1,9 +1,11 @@
 const statisticsService = require('../services/statisticsService');
+const { shortCacheHeaders } = require('../middleware/cacheHeaders');
 
 /**
  * Statistics Controller for Admin Dashboard
  * 
  * Handles HTTP requests for statistics endpoints.
+ * Uses cache headers middleware for optimal caching.
  * Implements Requirements 2.1-2.9, 11.2
  */
 
@@ -19,9 +21,6 @@ const statisticsService = require('../services/statisticsService');
 const getOverview = async (req, res) => {
   try {
     const stats = await statisticsService.getOverviewStatistics();
-    
-    // Add Cache-Control headers for client-side caching (Requirement 11.2)
-    res.set('Cache-Control', 'public, max-age=30'); // 30 seconds
     
     res.status(200).json({
       success: true,
@@ -101,9 +100,6 @@ const getUserStatistics = async (req, res) => {
       endDate: now
     });
     
-    // Add Cache-Control headers for client-side caching
-    res.set('Cache-Control', 'public, max-age=30');
-    
     res.status(200).json({
       success: true,
       data: {
@@ -160,9 +156,6 @@ const getJobStatistics = async (req, res) => {
       startDate,
       endDate: now
     });
-    
-    // Add Cache-Control headers for client-side caching
-    res.set('Cache-Control', 'public, max-age=30');
     
     res.status(200).json({
       success: true,
@@ -224,9 +217,6 @@ const getCourseStatistics = async (req, res) => {
       endDate: now
     });
     
-    // Add Cache-Control headers for client-side caching
-    res.set('Cache-Control', 'public, max-age=30');
-    
     res.status(200).json({
       success: true,
       data: {
@@ -286,9 +276,6 @@ const getReviewStatistics = async (req, res) => {
       startDate,
       endDate: now
     });
-    
-    // Add Cache-Control headers for client-side caching
-    res.set('Cache-Control', 'public, max-age=30');
     
     res.status(200).json({
       success: true,

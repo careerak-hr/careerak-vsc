@@ -108,6 +108,14 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
+// Indexes for performance optimization (admin dashboard queries)
+userSchema.index({ createdAt: -1 }); // For time-based queries
+userSchema.index({ role: 1, createdAt: -1 }); // For user statistics by type
+userSchema.index({ accountDisabled: 1 }); // For filtering disabled accounts
+userSchema.index({ email: 1 }); // For search
+userSchema.index({ phone: 1 }); // Already unique, but explicit index
+userSchema.index({ 'reviewStats.averageRating': -1 }); // For sorting by rating
+
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
 // --- تطوير نموذج الأفراد المتطور (Comprehensive Employee Schema) ---

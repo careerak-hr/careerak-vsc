@@ -1,4 +1,4 @@
-const NodeCache = require('node-cache');
+const redisCache = require('./redisCache');
 const { User } = require('../models/User');
 const JobPosting = require('../models/JobPosting');
 const JobApplication = require('../models/JobApplication');
@@ -9,42 +9,23 @@ const Review = require('../models/Review');
  * Statistics Service for Admin Dashboard
  * 
  * Provides aggregation queries for real-time statistics and growth rates.
+ * Uses Redis for distributed caching with node-cache fallback.
  * Implements Requirements 2.1-2.6, 11.2, 12.1, 12.2
  */
-
-// Initialize cache with 30-second TTL (Requirement 11.2)
-const statisticsCache = new NodeCache({
-  stdTTL: 30, // 30 seconds
-  checkperiod: 35, // Check for expired keys every 35 seconds
-  useClones: false // Don't clone data for better performance
-});
-
-// Cache statistics
-let cacheStats = {
-  hits: 0,
-  misses: 0,
-  keys: 0
-};
 
 /**
  * Get cache statistics
  * @returns {Object} Cache statistics
  */
 const getCacheStats = () => {
-  return {
-    ...cacheStats,
-    keys: statisticsCache.keys().length,
-    hitRate: cacheStats.hits + cacheStats.misses > 0 
-      ? ((cacheStats.hits / (cacheStats.hits + cacheStats.misses)) * 100).toFixed(2) + '%'
-      : '0%'
-  };
+  return redisCache.getStats();
 };
 
 /**
  * Clear all cache entries
  */
-const clearCache = () => {
-  statisticsCache.flushAll();
+const clearCache = async () => {
+  await redisCache.flushAll();
   console.log('[Cache] All cache entries cleared');
 };
 
@@ -52,40 +33,31 @@ const clearCache = () => {
  * Invalidate specific cache key
  * @param {string} key - Cache key to invalidate
  */
-const invalidateCache = (key) => {
-  const deleted = statisticsCache.del(key);
-  if (deleted > 0) {
+const invalidateCache = async (key) => {
+  const deleted = await redisCache.del(key);
+  if (deleted) {
     console.log(`[Cache] Invalidated cache key: ${key}`);
   }
+};
+
+/**
+ * Invalidate all statistics cache keys
+ */
+const invalidateAllStatistics = async () => {
+  await redisCache.delPattern('*_stats_*');
+  await redisCache.del('active_users_count');
+  console.log('[Cache] Invalidated all statistics cache keys');
 };
 
 /**
  * Helper: Get cached data or fetch from database
  * @param {string} cacheKey - Unique cache key
  * @param {Function} fetchFunction - Function to fetch data if not cached
+ * @param {number} ttl - Time to live in seconds (default: 30)
  * @returns {Promise<any>} Cached or fresh data
  */
-const getCachedOrFetch = async (cacheKey, fetchFunction) => {
-  // Try to get from cache
-  const cachedData = statisticsCache.get(cacheKey);
-  
-  if (cachedData !== undefined) {
-    cacheStats.hits++;
-    console.log(`[Cache HIT] ${cacheKey} (Total hits: ${cacheStats.hits})`);
-    return cachedData;
-  }
-  
-  // Cache miss - fetch from database
-  cacheStats.misses++;
-  console.log(`[Cache MISS] ${cacheKey} (Total misses: ${cacheStats.misses})`);
-  
-  const data = await fetchFunction();
-  
-  // Store in cache
-  statisticsCache.set(cacheKey, data);
-  console.log(`[Cache SET] ${cacheKey} (TTL: 30s)`);
-  
-  return data;
+const getCachedOrFetch = async (cacheKey, fetchFunction, ttl = 30) => {
+  return redisCache.getOrFetch(cacheKey, fetchFunction, ttl);
 };
 
 /**
@@ -132,11 +104,16 @@ const getUserStatistics = async ({ startDate, endDate } = {}) => {
           createdAt: { $gte: start, $lte: now }
         }),
         
-        // Users by type in current period
+        // Users by type in current period - OPTIMIZED with early $match and $project
         User.aggregate([
           {
             $match: {
               createdAt: { $gte: start, $lte: now }
+            }
+          },
+          {
+            $project: {
+              role: 1  // Only project needed fields
             }
           },
           {
@@ -152,11 +129,16 @@ const getUserStatistics = async ({ startDate, endDate } = {}) => {
           createdAt: { $gte: previousStart, $lt: previousEnd }
         }),
         
-        // Users by type in previous period
+        // Users by type in previous period - OPTIMIZED with early $match and $project
         User.aggregate([
           {
             $match: {
               createdAt: { $gte: previousStart, $lt: previousEnd }
+            }
+          },
+          {
+            $project: {
+              role: 1  // Only project needed fields
             }
           },
           {
@@ -258,8 +240,13 @@ const getJobStatistics = async ({ startDate, endDate } = {}) => {
           appliedAt: { $gte: previousStart, $lt: previousEnd }
         }),
         
-        // Jobs by status
+        // Jobs by status - OPTIMIZED with $project
         JobPosting.aggregate([
+          {
+            $project: {
+              status: 1  // Only project needed fields
+            }
+          },
           {
             $group: {
               _id: '$status',
@@ -268,8 +255,13 @@ const getJobStatistics = async ({ startDate, endDate } = {}) => {
           }
         ]),
         
-        // Applications by status
+        // Applications by status - OPTIMIZED with $project
         JobApplication.aggregate([
+          {
+            $project: {
+              status: 1  // Only project needed fields
+            }
+          },
           {
             $group: {
               _id: '$status',
@@ -361,8 +353,13 @@ const getCourseStatistics = async ({ startDate, endDate } = {}) => {
           createdAt: { $gte: previousStart, $lt: previousEnd }
         }),
         
-        // Courses by status
+        // Courses by status - OPTIMIZED with $project
         EducationalCourse.aggregate([
+          {
+            $project: {
+              status: 1  // Only project needed fields
+            }
+          },
           {
             $group: {
               _id: '$status',
@@ -371,7 +368,7 @@ const getCourseStatistics = async ({ startDate, endDate } = {}) => {
           }
         ]),
         
-        // Enrollment statistics
+        // Enrollment statistics - OPTIMIZED with early $match and $project
         EducationalCourse.aggregate([
           {
             $project: {
@@ -380,33 +377,41 @@ const getCourseStatistics = async ({ startDate, endDate } = {}) => {
             }
           },
           {
-            $group: {
-              _id: null,
-              totalEnrollments: { $sum: '$enrollmentCount' },
-              currentPeriodEnrollments: {
-                $sum: {
-                  $cond: [
-                    { $and: [
-                      { $gte: ['$createdAt', start] },
-                      { $lte: ['$createdAt', now] }
-                    ]},
-                    '$enrollmentCount',
-                    0
-                  ]
+            $facet: {
+              totalEnrollments: [
+                {
+                  $group: {
+                    _id: null,
+                    total: { $sum: '$enrollmentCount' }
+                  }
                 }
-              },
-              previousPeriodEnrollments: {
-                $sum: {
-                  $cond: [
-                    { $and: [
-                      { $gte: ['$createdAt', previousStart] },
-                      { $lt: ['$createdAt', previousEnd] }
-                    ]},
-                    '$enrollmentCount',
-                    0
-                  ]
+              ],
+              currentPeriodEnrollments: [
+                {
+                  $match: {
+                    createdAt: { $gte: start, $lte: now }
+                  }
+                },
+                {
+                  $group: {
+                    _id: null,
+                    total: { $sum: '$enrollmentCount' }
+                  }
                 }
-              }
+              ],
+              previousPeriodEnrollments: [
+                {
+                  $match: {
+                    createdAt: { $gte: previousStart, $lt: previousEnd }
+                  }
+                },
+                {
+                  $group: {
+                    _id: null,
+                    total: { $sum: '$enrollmentCount' }
+                  }
+                }
+              ]
             }
           }
         ])
@@ -423,7 +428,11 @@ const getCourseStatistics = async ({ startDate, endDate } = {}) => {
         return result;
       };
       
-      const enrollmentData = enrollmentStats[0] || {
+      const enrollmentData = enrollmentStats[0] ? {
+        totalEnrollments: enrollmentStats[0].totalEnrollments[0]?.total || 0,
+        currentPeriodEnrollments: enrollmentStats[0].currentPeriodEnrollments[0]?.total || 0,
+        previousPeriodEnrollments: enrollmentStats[0].previousPeriodEnrollments[0]?.total || 0
+      } : {
         totalEnrollments: 0,
         currentPeriodEnrollments: 0,
         previousPeriodEnrollments: 0
@@ -493,8 +502,13 @@ const getReviewStatistics = async ({ startDate, endDate } = {}) => {
           createdAt: { $gte: previousStart, $lt: previousEnd }
         }),
         
-        // Reviews by status
+        // Reviews by status - OPTIMIZED with $project
         Review.aggregate([
+          {
+            $project: {
+              status: 1  // Only project needed fields
+            }
+          },
           {
             $group: {
               _id: '$status',
@@ -503,11 +517,16 @@ const getReviewStatistics = async ({ startDate, endDate } = {}) => {
           }
         ]),
         
-        // Rating statistics
+        // Rating statistics - OPTIMIZED with early $match and $project
         Review.aggregate([
           {
             $match: {
               status: 'approved'
+            }
+          },
+          {
+            $project: {
+              rating: 1  // Only project needed fields
             }
           },
           {
@@ -661,5 +680,6 @@ module.exports = {
   calculateGrowthRate, // Export for testing
   getCacheStats, // Export for monitoring
   clearCache, // Export for cache management
-  invalidateCache // Export for cache invalidation
+  invalidateCache, // Export for cache invalidation
+  invalidateAllStatistics // Export for bulk cache invalidation
 };

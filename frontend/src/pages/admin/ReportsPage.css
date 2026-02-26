@@ -1,0 +1,226 @@
+/* Reports Page Styles */
+
+.reports-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.reports-header {
+  margin-bottom: 2rem;
+}
+
+.reports-header h1 {
+  font-size: 2rem;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.reports-header p {
+  color: #666;
+  font-size: 1rem;
+}
+
+.reports-controls {
+  background: white;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Report Type Selector */
+.report-type-selector {
+  margin-bottom: 1.5rem;
+}
+
+.report-type-selector label {
+  display: block;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.report-type-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.report-type-btn {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #D4816180;
+  background: white;
+  color: #304B60;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.report-type-btn:hover {
+  background: #E3DAD1;
+  transform: translateY(-2px);
+}
+
+.report-type-btn.active {
+  background: #D48161;
+  color: white;
+  border-color: #D48161;
+}
+
+/* Date Range Selector */
+.date-range-selector label {
+  display: block;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.date-inputs {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.date-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.date-input-group label {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: normal;
+}
+
+.date-input-group input[type="date"] {
+  padding: 0.75rem;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 180px;
+}
+
+.date-input-group input[type="date"]:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+.clear-dates-btn {
+  padding: 0.75rem 1.5rem;
+  background: #E3DAD1;
+  border: 2px solid #D4816180;
+  color: #304B60;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.clear-dates-btn:hover {
+  background: #D48161;
+  color: white;
+  border-color: #D48161;
+}
+
+/* Report Content */
+.report-content {
+  background: white;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 2rem;
+  min-height: 400px;
+}
+
+/* Dark Mode Support */
+[data-theme="dark"] .reports-page {
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .reports-header h1 {
+  color: #E3DAD1;
+}
+
+[data-theme="dark"] .reports-header p {
+  color: #aaa;
+}
+
+[data-theme="dark"] .reports-controls,
+[data-theme="dark"] .report-content {
+  background: #2a2a2a;
+  border-color: #D4816180;
+}
+
+[data-theme="dark"] .report-type-btn {
+  background: #2a2a2a;
+  color: #E3DAD1;
+  border-color: #D4816180;
+}
+
+[data-theme="dark"] .report-type-btn:hover {
+  background: #3a3a3a;
+}
+
+[data-theme="dark"] .report-type-btn.active {
+  background: #D48161;
+  color: white;
+}
+
+[data-theme="dark"] .date-input-group input[type="date"] {
+  background: #2a2a2a;
+  color: #E3DAD1;
+  border-color: #D4816180;
+}
+
+[data-theme="dark"] .clear-dates-btn {
+  background: #3a3a3a;
+  color: #E3DAD1;
+}
+
+[data-theme="dark"] .clear-dates-btn:hover {
+  background: #D48161;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .reports-page {
+    padding: 1rem;
+  }
+
+  .reports-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .report-type-buttons {
+    flex-direction: column;
+  }
+
+  .report-type-btn {
+    width: 100%;
+  }
+
+  .date-inputs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .date-input-group input[type="date"] {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .clear-dates-btn {
+    width: 100%;
+  }
+
+  .report-content {
+    padding: 1rem;
+  }
+}

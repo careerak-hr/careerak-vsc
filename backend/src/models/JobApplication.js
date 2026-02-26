@@ -37,4 +37,11 @@ const jobApplicationSchema = new mongoose.Schema({
   }
 });
 
+// Indexes for performance optimization (admin dashboard queries)
+jobApplicationSchema.index({ appliedAt: -1 }); // For time-based queries
+jobApplicationSchema.index({ status: 1, appliedAt: -1 }); // For filtering by status
+jobApplicationSchema.index({ jobPosting: 1, status: 1 }); // For job's applications
+jobApplicationSchema.index({ applicant: 1, appliedAt: -1 }); // For user's applications
+jobApplicationSchema.index({ jobPosting: 1, applicant: 1 }, { unique: true }); // Prevent duplicate applications
+
 module.exports = mongoose.model('JobApplication', jobApplicationSchema);

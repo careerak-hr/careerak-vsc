@@ -21,4 +21,8 @@ router.post('/parse-cv', auth, userController.parseCV);
 router.get('/preferences', auth, userController.getUserPreferences);
 router.put('/preferences', auth, userController.updateUserPreferences);
 
+// Real-time recommendation update endpoints
+router.get('/recommendation-update-status', auth, userController.getRecommendationUpdateStatus);
+router.get('/recommendation-processing-stats', auth, userController.getRecommendationProcessingStats);
+
 module.exports = router;

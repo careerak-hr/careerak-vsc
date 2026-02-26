@@ -77,13 +77,69 @@ api.interceptors.response.use(
     
     return response;
   },
-  createAxiosErrorHandler({
-    language: 'ar', // Default language, can be overridden
-    onError: (networkError) => {
-      // Additional error handling if needed
-      console.log('[API] Network error processed:', networkError.type);
+  (error) => {
+    // Requirement 11.9: Handle session expiration
+    if (error.response) {
+      const { status, data } = error.response;
+      
+      // Handle 401 Unauthorized (session expired or invalid token)
+      if (status === 401) {
+        const errorCode = data?.code;
+        
+        // Check if it's a session expiration
+        if (errorCode === 'SESSION_EXPIRED' || errorCode === 'INVALID_TOKEN' || errorCode === 'AUTHENTICATION_FAILED') {
+          // Clear authentication data
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          
+          // Store the current path to redirect back after login
+          const currentPath = window.location.pathname;
+          if (currentPath !== '/login' && currentPath !== '/auth') {
+            sessionStorage.setItem('redirectAfterLogin', currentPath);
+          }
+          
+          // Show session expired message
+          const message = errorCode === 'SESSION_EXPIRED' 
+            ? 'انتهت صلاحية الجلسة، يرجى تسجيل الدخول مرة أخرى'
+            : 'جلسة غير صالحة، يرجى إعادة تسجيل الدخول';
+          
+          // Dispatch custom event for session expiration
+          window.dispatchEvent(new CustomEvent('sessionExpired', { 
+            detail: { message, code: errorCode } 
+          }));
+          
+          // Redirect to login page
+          if (window.location.pathname !== '/login' && window.location.pathname !== '/auth') {
+            window.location.href = '/login?session=expired';
+          }
+        }
+      }
+      
+      // Handle 403 Forbidden (insufficient permissions)
+      if (status === 403) {
+        const errorCode = data?.code;
+        
+        if (errorCode === 'INSUFFICIENT_PERMISSIONS') {
+          // Dispatch custom event for insufficient permissions
+          window.dispatchEvent(new CustomEvent('insufficientPermissions', { 
+            detail: { 
+              message: data.error,
+              requiredRoles: data.requiredRoles,
+              userRole: data.userRole
+            } 
+          }));
+        }
+      }
     }
-  })
+    
+    // Continue with the existing error handler
+    return createAxiosErrorHandler({
+      language: 'ar',
+      onError: (networkError) => {
+        console.log('[API] Network error processed:', networkError.type);
+      }
+    })(error);
+  }
 );
 
 export const discoverBestServer = async () => {

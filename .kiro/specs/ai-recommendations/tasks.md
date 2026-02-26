@@ -33,13 +33,13 @@
     - _Requirements: 1.1, 1.2_
 
 - [ ] 3. تنفيذ توصيات الوظائف الأساسية
-  - [ ] 3.1 Content-Based Filtering
+  - [x] 3.1 Content-Based Filtering
     - حساب التشابه بين المستخدم والوظائف
     - ترتيب الوظائف حسب التطابق
     - حساب نسبة التطابق (0-100%)
     - _Requirements: 1.1, 1.4_
   
-  - [ ] 3.2 إضافة شرح التوصيات
+  - [x] 3.2 إضافة شرح التوصيات
     - توليد أسباب التوصية
     - عرض نقاط التطابق
     - _Requirements: 1.3_
@@ -132,7 +132,7 @@
 - [ ] 8. Checkpoint - التأكد من التحليل والتوصيات
 
 - [ ] 9. تنفيذ توصيات الدورات
-  - [ ] 9.1 تحليل فجوات المهارات
+  - [x] 9.1 تحليل فجوات المهارات
     - مقارنة مهارات المستخدم مع متطلبات الوظائف
     - تحديد المهارات المفقودة
     - _Requirements: 2.1_
@@ -141,13 +141,13 @@
     - **Property 8: Skill Gap Identification**
     - **Validates: Requirements 2.1**
   
-  - [ ] 9.3 توصيات الدورات
+  - [x] 9.3 توصيات الدورات
     - دورات لسد الفجوات
     - دورات بناءً على الاهتمامات
     - مسار تعليمي مخصص
     - _Requirements: 2.1, 2.2, 2.3_
   
-  - [ ] 9.4 توقع التأثير
+  - [x] 9.4 توقع التأثير
     - حساب تحسين فرص التوظيف
     - عرض الفوائد المتوقعة
     - _Requirements: 2.3_
@@ -172,23 +172,23 @@
     - إشعار المرشحين المناسبين
     - _Requirements: 3.5_
 
-- [ ] 11. تنفيذ التعلم من السلوك
-  - [ ] 11.1 تتبع التفاعلات
+- [x] 11. تنفيذ التعلم من السلوك
+  - [x] 11.1 تتبع التفاعلات
     - حفظ جميع التفاعلات (view, like, apply, ignore)
     - حساب مدة المشاهدة
     - _Requirements: 6.1_
   
-  - [ ] 11.2 تحليل الأنماط
+  - [x] 11.2 تحليل الأنماط
     - تحديد التفضيلات
     - تحليل السلوك
     - _Requirements: 6.2_
   
-  - [ ] 11.3 تحديث النماذج
+  - [x] 11.3 تحديث النماذج
     - إعادة تدريب النماذج دورياً
     - تحسين التوصيات
     - _Requirements: 6.3_
   
-  - [ ]* 11.4 Property test: Learning from Interactions
+  - [x]* 11.4 Property test: Learning from Interactions
     - **Property 6: Learning from Interactions**
     - **Validates: Requirements 6.2**
 
@@ -203,7 +203,7 @@
     - قسم "جديد لك"
     - _Requirements: 7.2, 7.3_
   
-  - [ ]* 12.3 Property test: Real-time Update
+  - [x]* 12.3 Property test: Real-time Update
     - **Property 7: Real-time Update**
     - **Validates: Requirements 1.5, 7.2**
   
@@ -214,7 +214,7 @@
 - [ ] 13. Checkpoint - التأكد من التعلم والتحديثات
 
 - [ ] 14. واجهة المستخدم (Frontend)
-  - [ ] 14.1 Recommendations Dashboard
+  - [x] 14.1 Recommendations Dashboard
     - عرض التوصيات المخصصة
     - نسبة التطابق
     - شرح التوصية
@@ -232,7 +232,7 @@
     - تتبع التقدم
     - _Requirements: 5.1, 5.2, 5.5_
   
-  - [ ] 14.4 Courses Recommendations
+  - [x] 14.4 Courses Recommendations
     - دورات مقترحة
     - مسار تعليمي
     - _Requirements: 2.1, 2.3_

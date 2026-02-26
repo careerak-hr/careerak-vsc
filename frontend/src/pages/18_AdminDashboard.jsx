@@ -5,6 +5,11 @@ import adminDashboardTranslations from '../data/adminDashboard.json';
 import api from '../services/api';
 import InteractiveElement from '../components/InteractiveElement';
 import Spinner from '../components/Loading/Spinner';
+import ErrorMessage from '../components/ErrorMessage';
+import ToastNotification from '../components/ToastNotification';
+import KeyboardShortcutsModal from '../components/KeyboardShortcutsModal';
+import useToast from '../hooks/useToast';
+import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
 import './18_AdminDashboard.css';
 import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
@@ -14,6 +19,7 @@ const AdminDashboard = () => {
     const navigate = useNavigate();
     const t = adminDashboardTranslations[language] || adminDashboardTranslations.ar;
     const seo = useSEO('adminDashboard');
+    const { toast, showToast, hideToast } = useToast();
     
     const [activeTab, setActiveTab] = useState('overview');
     const [stats, setStats] = useState({
@@ -25,6 +31,53 @@ const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [showShortcutsModal, setShowShortcutsModal] = useState(false);
+
+    // Define keyboard shortcuts
+    const shortcuts = [
+        // Navigation
+        { keys: '1', description: language === 'ar' ? 'نظرة عامة' : language === 'fr' ? 'Aperçu' : 'Overview', category: 'navigation' },
+        { keys: '2', description: language === 'ar' ? 'المستخدمون' : language === 'fr' ? 'Utilisateurs' : 'Users', category: 'navigation' },
+        { keys: '3', description: language === 'ar' ? 'المحتوى' : language === 'fr' ? 'Contenu' : 'Content', category: 'navigation' },
+        { keys: '4', description: language === 'ar' ? 'الإعدادات' : language === 'fr' ? 'Paramètres' : 'Settings', category: 'navigation' },
+        
+        // Actions
+        { keys: 'Ctrl+R', description: language === 'ar' ? 'تحديث البيانات' : language === 'fr' ? 'Actualiser' : 'Refresh Data', category: 'actions' },
+        { keys: 'Ctrl+S', description: language === 'ar' ? 'الإعدادات' : language === 'fr' ? 'Paramètres' : 'Settings', category: 'actions' },
+        { keys: 'Ctrl+L', description: language === 'ar' ? 'تسجيل الخروج' : language === 'fr' ? 'Déconnexion' : 'Logout', category: 'actions' },
+        
+        // General
+        { keys: '?', description: language === 'ar' ? 'عرض الاختصارات' : language === 'fr' ? 'Afficher les raccourcis' : 'Show Shortcuts', category: 'general' },
+        { keys: 'Esc', description: language === 'ar' ? 'إغلاق النافذة' : language === 'fr' ? 'Fermer' : 'Close Modal', category: 'general' }
+    ];
+
+    // Keyboard shortcuts handlers
+    useKeyboardShortcuts({
+        '1': () => setActiveTab('overview'),
+        '2': () => setActiveTab('users'),
+        '3': () => setActiveTab('content'),
+        '4': () => setActiveTab('settings'),
+        'ctrl+r': (e) => {
+            e.preventDefault();
+            fetchDashboardData();
+            showToast(
+                language === 'ar' ? 'جاري تحديث البيانات...' :
+                language === 'fr' ? 'Actualisation des données...' :
+                'Refreshing data...',
+                'info'
+            );
+        },
+        'ctrl+s': (e) => {
+            e.preventDefault();
+            navigate('/settings');
+        },
+        'ctrl+l': (e) => {
+            e.preventDefault();
+            handleLogout();
+        },
+        '?': () => setShowShortcutsModal(true),
+        'escape': () => setShowShortcutsModal(false)
+    }, !loading); // Disable shortcuts while loading
 
     // Tab navigation order
     const tabs = ['overview', 'users', 'content', 'settings'];
@@ -132,7 +185,7 @@ const AdminDashboard = () => {
                 const successText = language === 'ar' ? 'تم حذف المستخدم بنجاح' :
                                    language === 'fr' ? 'Utilisateur supprimé avec succès' :
                                    'User deleted successfully';
-                alert(successText);
+                showToast(successText, 'success');
                 
                 // تحديث الإحصائيات
                 fetchDashboardData();
@@ -141,7 +194,7 @@ const AdminDashboard = () => {
                 const errorText = language === 'ar' ? 'فشل حذف المستخدم' :
                                  language === 'fr' ? 'Échec de la suppression' :
                                  'Failed to delete user';
-                alert(errorText);
+                showToast(errorText, 'error');
             }
         }
     };
@@ -166,9 +219,11 @@ const AdminDashboard = () => {
             </div>
 
             {error && (
-                <div className="admin-error-message">
-                    <p className="text-danger font-black">{error}</p>
-                </div>
+                <ErrorMessage 
+                    message={error}
+                    variant="errorSlide"
+                    className="mb-6"
+                />
             )}
 
             {/* الإحصائيات */}
@@ -705,6 +760,25 @@ const AdminDashboard = () => {
         <>
             <SEOHead {...seo} />
             <main id="main-content" tabIndex="-1" className="admin-dashboard-container">
+            {/* Toast Notification */}
+            {toast && (
+                <ToastNotification
+                    message={toast.message}
+                    type={toast.type}
+                    duration={toast.duration}
+                    onClose={hideToast}
+                    position="top-right"
+                />
+            )}
+
+            {/* Keyboard Shortcuts Modal */}
+            <KeyboardShortcutsModal
+                isOpen={showShortcutsModal}
+                onClose={() => setShowShortcutsModal(false)}
+                shortcuts={shortcuts}
+                language={language}
+            />
+            
             {/* الهيدر */}
             <header className="admin-header">
                 <div className="admin-header-logo-container">
@@ -723,6 +797,15 @@ const AdminDashboard = () => {
                     </div>
                 </div>
                 <div className="admin-header-actions">
+                    <button 
+                        onClick={() => setShowShortcutsModal(true)}
+                        className="admin-settings-btn"
+                        title={language === 'ar' ? 'اختصارات لوحة المفاتيح (?)' : 
+                               language === 'fr' ? 'Raccourcis clavier (?)' : 
+                               'Keyboard Shortcuts (?)'}
+                    >
+                        ⌨️
+                    </button>
                     <button 
                         onClick={() => navigate('/settings')} 
                         className="admin-settings-btn"

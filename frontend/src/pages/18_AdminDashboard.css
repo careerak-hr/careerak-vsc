@@ -456,3 +456,298 @@
 .admin-content-count {
     @apply ml-2 px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-black;
 }
+
+/* ========================================
+   RESPONSIVE BREAKPOINTS
+   ======================================== */
+
+/* Mobile Layout (< 640px) */
+@media (max-width: 639px) {
+  /* Container adjustments */
+  .admin-dashboard-container {
+    @apply p-3;
+  }
+
+  /* Header responsive */
+  .admin-header {
+    @apply flex-col gap-4 p-3;
+  }
+
+  .admin-header-logo-container {
+    @apply w-full justify-center;
+  }
+
+  .admin-header-logo {
+    @apply w-10 h-10;
+  }
+
+  .admin-header-title {
+    @apply text-base;
+  }
+
+  .admin-header-subtitle {
+    @apply text-[9px];
+  }
+
+  .admin-header-actions {
+    @apply w-full justify-center;
+  }
+
+  .admin-settings-btn,
+  .admin-logout-btn {
+    @apply p-2 text-sm;
+  }
+
+  /* Tabs responsive */
+  .admin-tabs {
+    @apply flex-col gap-2 p-2;
+  }
+
+  .admin-tab-btn {
+    @apply py-2 px-3 text-xs;
+  }
+
+  /* Welcome card responsive */
+  .admin-welcome-card {
+    @apply p-5 rounded-[2rem];
+  }
+
+  .admin-welcome-title {
+    @apply text-xl;
+  }
+
+  .admin-welcome-subtitle {
+    @apply text-xs;
+  }
+
+  /* Stats grid - 2 columns on mobile */
+  .admin-stats-grid {
+    @apply grid-cols-2 gap-3;
+  }
+
+  .admin-stat-card {
+    @apply p-4 rounded-[1.5rem];
+  }
+
+  .admin-stat-card-title {
+    @apply text-xs;
+  }
+
+  .admin-stat-card-value {
+    @apply text-2xl;
+  }
+
+  /* Quick nav responsive */
+  .admin-quick-nav-card {
+    @apply p-5 rounded-[2rem];
+  }
+
+  .admin-quick-nav-title {
+    @apply text-lg;
+  }
+
+  .admin-pages-dropdown {
+    @apply p-3 text-xs rounded-xl;
+  }
+
+  .admin-quick-nav-simple-grid {
+    @apply grid-cols-2 gap-3;
+  }
+
+  .admin-quick-nav-simple-btn {
+    @apply p-4 gap-2;
+  }
+
+  .simple-btn-icon {
+    @apply text-2xl;
+  }
+
+  .simple-btn-label {
+    @apply text-xs;
+  }
+
+  /* Users list responsive */
+  .admin-users-header {
+    @apply flex-col gap-3 items-start;
+  }
+
+  .admin-users-title {
+    @apply text-xl;
+  }
+
+  .admin-refresh-btn {
+    @apply w-full px-4 py-2 text-xs;
+  }
+
+  .admin-user-card {
+    @apply flex-col gap-3 p-3 items-start;
+  }
+
+  .admin-user-card-actions {
+    @apply w-full flex-col gap-2;
+  }
+
+  .admin-user-card-view-btn,
+  .admin-user-card-delete-btn {
+    @apply w-full px-3 py-2 text-xs;
+  }
+
+  /* Content management responsive */
+  .admin-content-management-grid {
+    @apply grid-cols-1 gap-4;
+  }
+
+  .admin-content-management-btn {
+    @apply p-4 text-base rounded-xl;
+  }
+
+  /* System settings responsive */
+  .admin-system-settings-btn {
+    @apply p-3 text-base rounded-xl;
+  }
+
+  /* Section titles */
+  .admin-section-title {
+    @apply text-xl;
+  }
+}
+
+/* Tablet Layout (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Container adjustments */
+  .admin-dashboard-container {
+    @apply p-4;
+  }
+
+  /* Header responsive */
+  .admin-header {
+    @apply p-4;
+  }
+
+  .admin-header-logo {
+    @apply w-11 h-11;
+  }
+
+  .admin-header-title {
+    @apply text-base;
+  }
+
+  /* Tabs responsive */
+  .admin-tabs {
+    @apply gap-2;
+  }
+
+  .admin-tab-btn {
+    @apply py-2 px-3 text-sm;
+  }
+
+  /* Welcome card responsive */
+  .admin-welcome-card {
+    @apply p-6 rounded-[2.5rem];
+  }
+
+  .admin-welcome-title {
+    @apply text-2xl;
+  }
+
+  /* Stats grid - 2 columns on tablet */
+  .admin-stats-grid {
+    @apply grid-cols-2 gap-4;
+  }
+
+  .admin-stat-card {
+    @apply p-5;
+  }
+
+  .admin-stat-card-value {
+    @apply text-2xl;
+  }
+
+  /* Quick nav responsive */
+  .admin-quick-nav-card {
+    @apply p-6 rounded-[2.5rem];
+  }
+
+  .admin-quick-nav-simple-grid {
+    @apply grid-cols-3 gap-4;
+  }
+
+  .admin-quick-nav-simple-btn {
+    @apply p-5;
+  }
+
+  .simple-btn-icon {
+    @apply text-3xl;
+  }
+
+  /* Users list responsive */
+  .admin-user-card {
+    @apply flex-row;
+  }
+
+  .admin-user-card-actions {
+    @apply flex-row gap-2;
+  }
+
+  /* Content management responsive */
+  .admin-content-management-grid {
+    @apply grid-cols-2 gap-5;
+  }
+
+  .admin-content-management-btn {
+    @apply p-5 text-lg;
+  }
+}
+
+/* Desktop Layout (>= 1024px) */
+@media (min-width: 1024px) {
+  /* Stats grid - 4 columns on desktop */
+  .admin-stats-grid {
+    @apply grid-cols-4;
+  }
+
+  /* Quick nav - 3 columns on desktop */
+  .admin-quick-nav-simple-grid {
+    @apply grid-cols-3;
+  }
+
+  /* Content management - 2 columns on desktop */
+  .admin-content-management-grid {
+    @apply grid-cols-2;
+  }
+}
+
+/* Landscape mode adjustments for mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .admin-dashboard-container {
+    @apply p-2;
+  }
+
+  .admin-header {
+    @apply flex-row p-2;
+  }
+
+  .admin-welcome-card {
+    @apply p-4;
+  }
+
+  .admin-welcome-title {
+    @apply text-lg;
+  }
+
+  .admin-stats-grid {
+    @apply grid-cols-4 gap-2;
+  }
+
+  .admin-stat-card {
+    @apply p-3;
+  }
+
+  .admin-stat-card-value {
+    @apply text-xl;
+  }
+
+  .admin-quick-nav-card {
+    @apply p-4;
+  }
+}
