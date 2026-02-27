@@ -6,10 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const learningPathController = require('../controllers/learningPathController');
-const { authenticate } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // جميع المسارات تتطلب مصادقة
-router.use(authenticate);
+router.use(protect);
 
 /**
  * @route   POST /api/learning-paths/generate

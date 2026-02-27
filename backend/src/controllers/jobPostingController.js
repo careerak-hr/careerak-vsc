@@ -18,19 +18,22 @@ exports.createJobPosting = async (req, res) => {
 
     await jobPosting.save();
     
-    // البحث عن المستخدمين المناسبين وإرسال إشعارات لهم
-    const matchingUsers = await notificationService.findMatchingUsersForJob(jobPosting._id);
+    // إرسال إشعارات فورية للمستخدمين المناسبين (بشكل غير متزامن)
+    notificationService.notifyMatchingUsersForNewJob(jobPosting._id)
+      .then(result => {
+        if (result.success) {
+          console.log(`✅ Sent ${result.notified} real-time notifications for job: ${result.jobTitle}`);
+        } else {
+          console.error('❌ Failed to send job match notifications:', result.error);
+        }
+      })
+      .catch(err => console.error('❌ Error sending job match notifications:', err));
     
-    // إرسال إشعارات للمستخدمين المناسبين (بشكل غير متزامن)
-    if (matchingUsers.length > 0) {
-      Promise.all(
-        matchingUsers.map(userId => 
-          notificationService.notifyJobMatch(userId, jobPosting._id)
-        )
-      ).catch(err => console.error('Error sending job match notifications:', err));
-    }
-    
-    res.status(201).json({ message: 'Job posting created successfully', data: jobPosting });
+    res.status(201).json({ 
+      message: 'Job posting created successfully', 
+      data: jobPosting,
+      notificationsQueued: true
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

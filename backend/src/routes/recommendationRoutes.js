@@ -6,10 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const recommendationController = require('../controllers/recommendationController');
-const { authenticate } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // جميع المسارات تتطلب مصادقة
-router.use(authenticate);
+router.use(protect);
 
 /**
  * @route   GET /api/recommendations/jobs
@@ -184,4 +184,165 @@ router.get('/courses', recommendationController.getCourseRecommendations);
  */
 router.get('/courses/quick', recommendationController.getQuickCourseRecommendations);
 
+/**
+ * @route   GET /api/recommendations/candidates/filter
+ * @desc    فلترة ذكية للمرشحين حسب الخبرة، المهارات، والموقع
+ * @access  Private (للشركات فقط)
+ * @query   {string} [jobId] - معرف الوظيفة للفلترة بناءً عليها (اختياري)
+ * @query   {string|Array} [skills] - المهارات المطلوبة (اختياري)
+ * @query   {number} [minExperience] - الحد الأدنى لسنوات الخبرة (اختياري)
+ * @query   {number} [maxExperience] - الحد الأقصى لسنوات الخبرة (اختياري)
+ * @query   {string} [location] - الموقع المطلوب (مدينة أو دولة) (اختياري)
+ * @query   {string} [education] - المستوى التعليمي المطلوب (اختياري)
+ * @query   {number} [minScore=30] - الحد الأدنى لدرجة التطابق (0-100)
+ * @query   {number} [limit=50] - الحد الأقصى لعدد المرشحين
+ * @query   {string} [sortBy=score] - ترتيب النتائج ['score', 'experience', 'education']
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - candidates: Array<Object> - قائمة المرشحين المفلترين
+ *   - stats: Object - إحصاءات الفلترة
+ *   - filters: Object - المعايير المستخدمة في الفلترة
+ *   - timestamp: Date
+ * 
+ * @example
+ * GET /api/recommendations/candidates/filter?skills=JavaScript&skills=React&minExperience=2&location=القاهرة
+ * GET /api/recommendations/candidates/filter?jobId=507f1f77bcf86cd799439011&minScore=50
+ * GET /api/recommendations/candidates/filter?education=bachelor&sortBy=experience
+ */
+router.get('/candidates/filter', recommendationController.filterCandidatesIntelligently);
+
+/**
+ * @route   POST /api/recommendations/notify-matches
+ * @desc    إرسال إشعارات فورية للمستخدمين عند إيجاد تطابقات جديدة
+ * @access  Private (للشركات فقط)
+ * @body    {Object} - بيانات الإشعار:
+ *   - jobId: string - معرف الوظيفة (مطلوب)
+ *   - minScore: number - الحد الأدنى لدرجة التطابق (افتراضي: 70)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - job: Object - معلومات الوظيفة
+ *   - stats: Object - إحصاءات الإشعارات
+ *   - topMatches: Array<Object> - أفضل التطابقات
+ * 
+ * @example
+ * POST /api/recommendations/notify-matches
+ * {
+ *   "jobId": "507f1f77bcf86cd799439011",
+ *   "minScore": 70
+ * }
+ */
+router.post('/notify-matches', recommendationController.notifyNewMatches);
+
+/**
+ * @route   POST /api/recommendations/notify-candidate-match
+ * @desc    إشعار الشركة بمرشح مناسب جديد
+ * @access  Private (للشركات فقط)
+ * @body    {Object} - بيانات الإشعار:
+ *   - candidateId: string - معرف المرشح (مطلوب)
+ *   - jobId: string - معرف الوظيفة (مطلوب)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - notification: Object - معلومات الإشعار
+ *   - match: Object - معلومات التطابق
+ * 
+ * @example
+ * POST /api/recommendations/notify-candidate-match
+ * {
+ *   "candidateId": "507f1f77bcf86cd799439011",
+ *   "jobId": "507f1f77bcf86cd799439012"
+ * }
+ */
+router.post('/notify-candidate-match', recommendationController.notifyCandidateMatch);
+
+/**
+ * @route   POST /api/recommendations/notify-update
+ * @desc    إرسال إشعار فوري بتحديث التوصيات
+ * @access  Private
+ * @body    {Object} - بيانات الإشعار:
+ *   - updateType: string - نوع التحديث ['new_recommendations', 'profile_updated', 'high_match_found'] (مطلوب)
+ *   - data: Object - بيانات إضافية (اختياري)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - notification: Object - معلومات الإشعار
+ * 
+ * @example
+ * POST /api/recommendations/notify-update
+ * {
+ *   "updateType": "high_match_found",
+ *   "data": {
+ *     "matchScore": 95,
+ *     "jobId": "507f1f77bcf86cd799439011"
+ *   }
+ * }
+ */
+router.post('/notify-update', recommendationController.notifyRecommendationUpdate);
+
 module.exports = router;
+
+/**
+ * @route   GET /api/recommendations/accuracy
+ * @desc    الحصول على دقة التوصيات للمستخدم
+ * @access  Private
+ * @query   {string} [itemType=job] - نوع العنصر ['job', 'course']
+ * @query   {number} [period=30] - فترة التحليل بالأيام
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - data: Object - بيانات الدقة
+ *     - status: string - حالة التحليل
+ *     - accuracy: Object - مقاييس الدقة
+ *     - level: Object - مستوى الدقة
+ *     - improvements: Array<Object> - اقتراحات التحسين
+ * 
+ * @example
+ * GET /api/recommendations/accuracy?itemType=job&period=30
+ */
+router.get('/accuracy', recommendationController.getUserAccuracy);
+
+/**
+ * @route   GET /api/recommendations/accuracy/system
+ * @desc    الحصول على دقة التوصيات على مستوى النظام (للأدمن فقط)
+ * @access  Private (Admin only)
+ * @query   {string} [itemType=job] - نوع العنصر ['job', 'course']
+ * @query   {number} [period=30] - فترة التحليل بالأيام
+ * @query   {number} [sampleSize=100] - حجم العينة من المستخدمين
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - data: Object - بيانات دقة النظام
+ *     - status: string - حالة التحليل
+ *     - accuracy: Object - مقاييس الدقة الإجمالية
+ *     - level: Object - مستوى الدقة
+ *     - report: Object - تقرير مفصل
+ * 
+ * @example
+ * GET /api/recommendations/accuracy/system?itemType=job&period=30&sampleSize=100
+ */
+router.get('/accuracy/system', recommendationController.getSystemAccuracy);
+
+/**
+ * @route   GET /api/recommendations/accuracy/improvement
+ * @desc    تتبع تحسن دقة التوصيات مع الوقت
+ * @access  Private
+ * @query   {string} [itemType=job] - نوع العنصر ['job', 'course']
+ * @query   {string} [periods=7,14,30] - فترات التحليل بالأيام (مفصولة بفواصل)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - data: Object - بيانات التحسن
+ *     - status: string - حالة التحليل
+ *     - history: Array<Object> - سجل الدقة عبر الفترات
+ *     - improvement: Object - معدل التحسن
+ * 
+ * @example
+ * GET /api/recommendations/accuracy/improvement?itemType=job&periods=7,14,30
+ */
+router.get('/accuracy/improvement', recommendationController.getAccuracyImprovement);

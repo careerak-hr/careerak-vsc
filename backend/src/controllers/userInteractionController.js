@@ -50,6 +50,29 @@ class UserInteractionController {
         });
       }
       
+      // التحقق من خيار التتبع (Requirements 6.4)
+      const { User } = require('../models/User');
+      const user = await User.findById(userId).select('preferences.tracking');
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'المستخدم غير موجود'
+        });
+      }
+      
+      // إذا كان التتبع معطلاً، لا نسجل التفاعل
+      if (user.preferences?.tracking?.enabled === false) {
+        return res.status(200).json({
+          success: true,
+          message: 'التتبع معطل. لم يتم تسجيل التفاعل',
+          data: {
+            trackingDisabled: true,
+            disabledAt: user.preferences.tracking.disabledAt
+          }
+        });
+      }
+      
       // تسجيل التفاعل
       const interaction = await this.userInteractionService.logInteraction(
         userId, itemType, itemId, action, options
@@ -487,6 +510,138 @@ class UserInteractionController {
       res.status(500).json({
         success: false,
         message: 'حدث خطأ في إعادة تدوير النماذج',
+        error: error.message
+      });
+    }
+  }
+  
+  /**
+   * الحصول على حالة التتبع (Requirements 6.4)
+   */
+  async getTrackingStatus(req, res) {
+    try {
+      const { userId } = req.user;
+      const { User } = require('../models/User');
+      
+      const user = await User.findById(userId).select('preferences.tracking');
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'المستخدم غير موجود'
+        });
+      }
+      
+      const trackingEnabled = user.preferences?.tracking?.enabled !== false;
+      
+      res.status(200).json({
+        success: true,
+        data: {
+          trackingEnabled,
+          disabledAt: user.preferences?.tracking?.disabledAt || null,
+          disabledReason: user.preferences?.tracking?.disabledReason || null
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في جلب حالة التتبع:', error.message);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في جلب حالة التتبع',
+        error: error.message
+      });
+    }
+  }
+  
+  /**
+   * تفعيل/تعطيل التتبع (Requirements 6.4)
+   */
+  async updateTrackingPreference(req, res) {
+    try {
+      const { userId } = req.user;
+      const { enabled, reason } = req.body;
+      
+      if (typeof enabled !== 'boolean') {
+        return res.status(400).json({
+          success: false,
+          message: 'enabled يجب أن يكون true أو false'
+        });
+      }
+      
+      const { User } = require('../models/User');
+      
+      const updateData = {
+        'preferences.tracking.enabled': enabled
+      };
+      
+      if (!enabled) {
+        // إذا تم تعطيل التتبع، نسجل التاريخ والسبب
+        updateData['preferences.tracking.disabledAt'] = new Date();
+        if (reason) {
+          updateData['preferences.tracking.disabledReason'] = reason;
+        }
+      } else {
+        // إذا تم تفعيل التتبع، نحذف التاريخ والسبب
+        updateData['preferences.tracking.disabledAt'] = null;
+        updateData['preferences.tracking.disabledReason'] = null;
+      }
+      
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $set: updateData },
+        { new: true, select: 'preferences.tracking' }
+      );
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'المستخدم غير موجود'
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        message: enabled ? 'تم تفعيل التتبع بنجاح' : 'تم تعطيل التتبع بنجاح',
+        data: {
+          trackingEnabled: user.preferences.tracking.enabled,
+          disabledAt: user.preferences.tracking.disabledAt,
+          disabledReason: user.preferences.tracking.disabledReason
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في تحديث تفضيلات التتبع:', error.message);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في تحديث تفضيلات التتبع',
+        error: error.message
+      });
+    }
+  }
+  
+  /**
+   * حذف جميع بيانات التتبع للمستخدم (Requirements 6.4)
+   */
+  async deleteAllTrackingData(req, res) {
+    try {
+      const { userId } = req.user;
+      
+      // حذف جميع التفاعلات
+      const result = await UserInteraction.deleteMany({ userId });
+      
+      res.status(200).json({
+        success: true,
+        message: `تم حذف ${result.deletedCount} تفاعل بنجاح`,
+        data: {
+          deletedCount: result.deletedCount
+        }
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في حذف بيانات التتبع:', error.message);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في حذف بيانات التتبع',
         error: error.message
       });
     }

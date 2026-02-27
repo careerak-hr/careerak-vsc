@@ -1090,6 +1090,645 @@ class RecommendationController {
 
     return defaultCourses.slice(0, limit);
   }
+
+  /**
+   * GET /api/recommendations/candidates/filter
+   * فلترة ذكية للمرشحين حسب الخبرة، المهارات، والموقع
+   * Requirements: 3.6 (فلترة ذكية - خبرة، مهارات، موقع)
+   */
+  async filterCandidatesIntelligently(req, res) {
+    try {
+      const companyId = req.user.id;
+      const {
+        jobId,
+        skills = [],
+        minExperience,
+        maxExperience,
+        location,
+        education,
+        minScore = 30,
+        limit = 50,
+        sortBy = 'score' // score, experience, education
+      } = req.query;
+
+      // 1. التحقق من وجود معايير الفلترة
+      if (!jobId && (!skills || skills.length === 0) && !minExperience && !location) {
+        return res.status(400).json({
+          success: false,
+          message: 'يجب تحديد معيار واحد على الأقل للفلترة (jobId، skills، minExperience، أو location)'
+        });
+      }
+
+      // 2. بناء معايير البحث الأساسية
+      const searchCriteria = {
+        accountDisabled: { $ne: true }
+      };
+
+      // 3. فلترة حسب المهارات
+      if (skills && skills.length > 0) {
+        const skillsArray = Array.isArray(skills) ? skills : [skills];
+        searchCriteria.$or = [
+          { 'computerSkills.skill': { $in: skillsArray.map(s => new RegExp(s, 'i')) } },
+          { 'softwareSkills.software': { $in: skillsArray.map(s => new RegExp(s, 'i')) } },
+          { otherSkills: { $in: skillsArray.map(s => new RegExp(s, 'i')) } }
+        ];
+      }
+
+      // 4. فلترة حسب الموقع
+      if (location) {
+        searchCriteria.$and = searchCriteria.$and || [];
+        searchCriteria.$and.push({
+          $or: [
+            { city: { $regex: location, $options: 'i' } },
+            { country: { $regex: location, $options: 'i' } }
+          ]
+        });
+      }
+
+      // 5. جلب المرشحين المطابقين
+      const candidates = await Individual.find(searchCriteria)
+        .select('-password -otp')
+        .limit(parseInt(limit) * 2); // جلب ضعف العدد للتصفية
+
+      if (!candidates.length) {
+        return res.status(200).json({
+          success: true,
+          message: 'لم يتم العثور على مرشحين مطابقين للمعايير المحددة',
+          candidates: [],
+          total: 0,
+          filters: {
+            skills: skillsArray || [],
+            minExperience,
+            maxExperience,
+            location,
+            education
+          }
+        });
+      }
+
+      // 6. تطبيق فلترة الخبرة والتعليم وحساب الدرجات
+      const candidateRankingService = require('../services/candidateRankingService');
+      const filteredCandidates = [];
+
+      for (const candidate of candidates) {
+        const candidateFeatures = candidateRankingService.extractCandidateFeatures(candidate);
+
+        // فلترة حسب الخبرة
+        if (minExperience && candidateFeatures.totalExperience < parseFloat(minExperience)) {
+          continue;
+        }
+        if (maxExperience && candidateFeatures.totalExperience > parseFloat(maxExperience)) {
+          continue;
+        }
+
+        // فلترة حسب التعليم
+        if (education) {
+          const educationLevels = {
+            'phd': 5, 'doctorate': 5, 'master': 4, 'bachelor': 3,
+            'diploma': 2, 'high school': 1, 'secondary': 1, 'none': 0
+          };
+          const requiredLevel = educationLevels[education.toLowerCase()] || 0;
+          const candidateLevel = educationLevels[candidateFeatures.highestEducation] || 0;
+          
+          if (candidateLevel < requiredLevel) {
+            continue;
+          }
+        }
+
+        // 7. حساب درجة التطابق
+        let matchScore = 0;
+        const reasons = [];
+
+        // إذا تم تحديد jobId، نستخدم الوظيفة للحساب
+        if (jobId) {
+          const job = await JobPosting.findById(jobId);
+          if (job) {
+            const jobFeatures = candidateRankingService.extractJobFeatures(job);
+            const matchResult = candidateRankingService.calculateMatchScore(candidateFeatures, jobFeatures);
+            matchScore = matchResult.score;
+            reasons.push(...matchResult.reasons);
+          }
+        } else {
+          // حساب درجة بناءً على المعايير المحددة
+          let scoreComponents = 0;
+          let totalComponents = 0;
+
+          // درجة المهارات
+          if (skills && skills.length > 0) {
+            const skillsArray = Array.isArray(skills) ? skills : [skills];
+            const matchedSkills = candidateFeatures.skills.filter(skill =>
+              skillsArray.some(s => skill.toLowerCase().includes(s.toLowerCase()) || s.toLowerCase().includes(skill.toLowerCase()))
+            );
+            const skillsScore = (matchedSkills.length / skillsArray.length) * 100;
+            scoreComponents += skillsScore * 0.5; // 50% وزن
+            totalComponents += 0.5;
+
+            if (matchedSkills.length > 0) {
+              reasons.push({
+                type: 'skills',
+                message: `يمتلك ${matchedSkills.length} من ${skillsArray.length} مهارات مطلوبة`,
+                strength: matchedSkills.length >= skillsArray.length * 0.7 ? 'high' : 'medium',
+                details: { matchedSkills: matchedSkills.slice(0, 5) }
+              });
+            }
+          }
+
+          // درجة الخبرة
+          if (minExperience || maxExperience) {
+            const targetExp = minExperience ? parseFloat(minExperience) : 0;
+            const expScore = Math.min(100, (candidateFeatures.totalExperience / Math.max(targetExp, 1)) * 100);
+            scoreComponents += expScore * 0.3; // 30% وزن
+            totalComponents += 0.3;
+
+            reasons.push({
+              type: 'experience',
+              message: `${candidateFeatures.totalExperience} سنوات من الخبرة`,
+              strength: candidateFeatures.totalExperience >= targetExp ? 'high' : 'medium',
+              details: { years: candidateFeatures.totalExperience }
+            });
+          }
+
+          // درجة الموقع
+          if (location) {
+            const locationMatch = 
+              candidate.city?.toLowerCase().includes(location.toLowerCase()) ||
+              candidate.country?.toLowerCase().includes(location.toLowerCase()) ||
+              location.toLowerCase().includes(candidate.city?.toLowerCase()) ||
+              location.toLowerCase().includes(candidate.country?.toLowerCase());
+            
+            if (locationMatch) {
+              scoreComponents += 100 * 0.2; // 20% وزن
+              reasons.push({
+                type: 'location',
+                message: `موقع مطابق: ${candidate.city}, ${candidate.country}`,
+                strength: 'high',
+                details: { city: candidate.city, country: candidate.country }
+              });
+            }
+            totalComponents += 0.2;
+          }
+
+          matchScore = totalComponents > 0 ? Math.round(scoreComponents / totalComponents) : 0;
+        }
+
+        // تجاهل المرشحين ذوي الدرجات المنخفضة
+        if (matchScore >= parseInt(minScore)) {
+          filteredCandidates.push({
+            candidate: {
+              _id: candidate._id,
+              firstName: candidate.firstName,
+              lastName: candidate.lastName,
+              email: candidate.email,
+              profileImage: candidate.profileImage,
+              city: candidate.city,
+              country: candidate.country,
+              specialization: candidate.specialization
+            },
+            matchScore,
+            confidence: Math.min(1, reasons.length / 3),
+            reasons,
+            features: {
+              totalExperience: candidateFeatures.totalExperience,
+              skillsCount: candidateFeatures.skills.length,
+              education: candidateFeatures.highestEducation,
+              location: `${candidate.city || ''}, ${candidate.country || ''}`.trim()
+            }
+          });
+        }
+      }
+
+      // 8. ترتيب النتائج
+      filteredCandidates.sort((a, b) => {
+        switch (sortBy) {
+          case 'experience':
+            return b.features.totalExperience - a.features.totalExperience;
+          case 'education':
+            const eduLevels = { 'phd': 5, 'doctorate': 5, 'master': 4, 'bachelor': 3, 'diploma': 2, 'high school': 1, 'none': 0 };
+            return (eduLevels[b.features.education] || 0) - (eduLevels[a.features.education] || 0);
+          case 'score':
+          default:
+            return b.matchScore - a.matchScore;
+        }
+      });
+
+      // 9. تحديد العدد المطلوب
+      const topCandidates = filteredCandidates.slice(0, parseInt(limit));
+
+      // 10. إحصاءات الفلترة
+      const stats = {
+        totalEvaluated: candidates.length,
+        totalMatched: filteredCandidates.length,
+        totalReturned: topCandidates.length,
+        averageScore: topCandidates.length > 0 
+          ? Math.round(topCandidates.reduce((sum, c) => sum + c.matchScore, 0) / topCandidates.length)
+          : 0,
+        experienceRange: topCandidates.length > 0 ? {
+          min: Math.min(...topCandidates.map(c => c.features.totalExperience)),
+          max: Math.max(...topCandidates.map(c => c.features.totalExperience)),
+          average: Math.round(topCandidates.reduce((sum, c) => sum + c.features.totalExperience, 0) / topCandidates.length * 10) / 10
+        } : null,
+        educationDistribution: topCandidates.reduce((acc, c) => {
+          const edu = c.features.education;
+          acc[edu] = (acc[edu] || 0) + 1;
+          return acc;
+        }, {})
+      };
+
+      // 11. إرجاع النتائج
+      res.status(200).json({
+        success: true,
+        message: `تم العثور على ${topCandidates.length} مرشح مطابق`,
+        candidates: topCandidates,
+        stats,
+        filters: {
+          jobId: jobId || null,
+          skills: skills || [],
+          minExperience: minExperience || null,
+          maxExperience: maxExperience || null,
+          location: location || null,
+          education: education || null,
+          minScore: parseInt(minScore),
+          sortBy
+        },
+        timestamp: new Date()
+      });
+
+    } catch (error) {
+      console.error('Error in filterCandidatesIntelligently:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في فلترة المرشحين',
+        error: error.message
+      });
+    }
+  }
+  /**
+   * POST /api/recommendations/notify-matches
+   * إرسال إشعارات فورية للمستخدمين عند إيجاد تطابقات جديدة
+   * Requirements: 7.1 (إشعار فوري عند نشر وظيفة مناسبة)
+   */
+  async notifyNewMatches(req, res) {
+    try {
+      const { jobId, minScore = 70 } = req.body;
+
+      if (!jobId) {
+        return res.status(400).json({
+          success: false,
+          message: 'يجب تحديد معرف الوظيفة (jobId)'
+        });
+      }
+
+      // 1. جلب الوظيفة
+      const job = await JobPosting.findById(jobId).populate('postedBy', 'companyName');
+      if (!job) {
+        return res.status(404).json({
+          success: false,
+          message: 'الوظيفة غير موجودة'
+        });
+      }
+
+      // 2. جلب المستخدمين النشطين
+      const { Individual } = require('../models/User');
+      const users = await Individual.find({ 
+        accountDisabled: { $ne: true }
+      }).limit(100);
+
+      if (!users.length) {
+        return res.status(200).json({
+          success: true,
+          message: 'لا يوجد مستخدمون نشطون',
+          notified: 0
+        });
+      }
+
+      // 3. حساب التطابق لكل مستخدم
+      const matches = [];
+      for (const user of users) {
+        const userFeatures = this.contentBasedFiltering.extractUserFeatures(user);
+        const jobFeatures = this.contentBasedFiltering.extractJobFeatures(job);
+        const similarity = this.contentBasedFiltering.calculateSimilarity(userFeatures, jobFeatures);
+
+        if (similarity.percentage >= minScore) {
+          matches.push({
+            userId: user._id,
+            matchScore: similarity.percentage,
+            reasons: similarity.reasons
+          });
+        }
+      }
+
+      if (!matches.length) {
+        return res.status(200).json({
+          success: true,
+          message: `لم يتم العثور على مستخدمين بتطابق أعلى من ${minScore}%`,
+          notified: 0,
+          evaluated: users.length
+        });
+      }
+
+      // 4. إرسال إشعارات للمستخدمين المطابقين
+      const notificationService = require('../services/notificationService');
+      const notifications = await Promise.all(
+        matches.map(match => 
+          notificationService.notifyJobMatch(match.userId, jobId)
+        )
+      );
+
+      // 5. إرسال إشعارات فورية عبر Pusher
+      const pusherService = require('../services/pusherService');
+      if (pusherService.isEnabled()) {
+        await Promise.all(
+          matches.map(match => 
+            pusherService.sendNotificationToUser(match.userId, {
+              type: 'job_match',
+              title: 'وظيفة جديدة مناسبة لك! 🎯',
+              message: `وظيفة "${job.title}" في ${job.postedBy?.companyName || job.location} تناسب مهاراتك بنسبة ${match.matchScore}%`,
+              jobId: job._id,
+              jobTitle: job.title,
+              company: job.postedBy?.companyName,
+              location: job.location,
+              matchScore: match.matchScore,
+              reasons: match.reasons.slice(0, 3),
+              timestamp: new Date().toISOString()
+            })
+          )
+        );
+      }
+
+      const successCount = notifications.filter(n => n !== null).length;
+
+      res.status(200).json({
+        success: true,
+        message: `تم إرسال ${successCount} إشعار فوري بنجاح`,
+        job: {
+          id: job._id,
+          title: job.title,
+          company: job.postedBy?.companyName
+        },
+        stats: {
+          evaluated: users.length,
+          matched: matches.length,
+          notified: successCount,
+          minScore,
+          averageScore: Math.round(matches.reduce((sum, m) => sum + m.matchScore, 0) / matches.length)
+        },
+        topMatches: matches
+          .sort((a, b) => b.matchScore - a.matchScore)
+          .slice(0, 5)
+          .map(m => ({
+            userId: m.userId,
+            matchScore: m.matchScore,
+            topReasons: m.reasons.slice(0, 2).map(r => r.message)
+          }))
+      });
+
+    } catch (error) {
+      console.error('Error in notifyNewMatches:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في إرسال الإشعارات',
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/notify-candidate-match
+   * إشعار الشركة بمرشح مناسب جديد
+   * Requirements: 7.2 (إشعار عند تسجيل مرشح مناسب)
+   */
+  async notifyCandidateMatch(req, res) {
+    try {
+      const companyId = req.user.id;
+      const { candidateId, jobId } = req.body;
+
+      if (!candidateId || !jobId) {
+        return res.status(400).json({
+          success: false,
+          message: 'يجب تحديد معرف المرشح (candidateId) ومعرف الوظيفة (jobId)'
+        });
+      }
+
+      // 1. جلب بيانات المرشح والوظيفة
+      const { Individual } = require('../models/User');
+      const [candidate, job] = await Promise.all([
+        Individual.findById(candidateId),
+        JobPosting.findById(jobId)
+      ]);
+
+      if (!candidate || !job) {
+        return res.status(404).json({
+          success: false,
+          message: !candidate ? 'المرشح غير موجود' : 'الوظيفة غير موجودة'
+        });
+      }
+
+      // 2. حساب درجة التطابق
+      const candidateRankingService = require('../services/candidateRankingService');
+      const candidateFeatures = candidateRankingService.extractCandidateFeatures(candidate);
+      const jobFeatures = candidateRankingService.extractJobFeatures(job);
+      const matchResult = candidateRankingService.calculateMatchScore(candidateFeatures, jobFeatures);
+
+      // 3. إرسال إشعار للشركة
+      const notificationService = require('../services/notificationService');
+      const notification = await notificationService.notifyCompanyOfMatchingCandidate(
+        companyId,
+        candidateId,
+        jobId,
+        matchResult.score
+      );
+
+      res.status(200).json({
+        success: true,
+        message: 'تم إرسال الإشعار بنجاح',
+        notification: {
+          id: notification._id,
+          type: notification.type,
+          title: notification.title,
+          message: notification.message
+        },
+        match: {
+          candidate: {
+            id: candidate._id,
+            name: `${candidate.firstName} ${candidate.lastName}`,
+            specialization: candidate.specialization
+          },
+          job: {
+            id: job._id,
+            title: job.title
+          },
+          matchScore: matchResult.score,
+          confidence: matchResult.confidence,
+          topReasons: matchResult.reasons.slice(0, 3).map(r => r.message)
+        }
+      });
+
+    } catch (error) {
+      console.error('Error in notifyCandidateMatch:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في إرسال الإشعار',
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/notify-update
+   * إرسال إشعار فوري بتحديث التوصيات
+   * Requirements: 1.5 (تحديث فوري عند تغيير الملف الشخصي)
+   */
+  async notifyRecommendationUpdate(req, res) {
+    try {
+      const userId = req.user.id;
+      const { updateType, data } = req.body;
+
+      if (!updateType) {
+        return res.status(400).json({
+          success: false,
+          message: 'يجب تحديد نوع التحديث (updateType)'
+        });
+      }
+
+      // إرسال إشعار التحديث
+      const notificationService = require('../services/notificationService');
+      const notification = await notificationService.notifyRecommendationUpdate(
+        userId,
+        updateType,
+        data || {}
+      );
+
+      if (!notification) {
+        return res.status(400).json({
+          success: false,
+          message: 'نوع تحديث غير صالح'
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'تم إرسال إشعار التحديث بنجاح',
+        notification: {
+          id: notification._id,
+          type: notification.type,
+          title: notification.title,
+          message: notification.message
+        }
+      });
+
+    } catch (error) {
+      console.error('Error in notifyRecommendationUpdate:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في إرسال إشعار التحديث',
+        error: error.message
+      });
+    }
+  }
 }
 
 module.exports = new RecommendationController();
+
+  /**
+   * GET /api/recommendations/accuracy
+   * الحصول على دقة التوصيات للمستخدم
+   */
+  async getUserAccuracy(req, res) {
+    try {
+      const userId = req.user.id;
+      const { itemType = 'job', period } = req.query;
+      
+      const RecommendationAccuracyService = require('../services/recommendationAccuracyService');
+      const accuracyService = new RecommendationAccuracyService();
+      
+      const options = { itemType };
+      if (period) {
+        options.period = parseInt(period) * 24 * 60 * 60 * 1000; // تحويل الأيام إلى ميلي ثانية
+      }
+      
+      const accuracy = await accuracyService.calculateUserAccuracy(userId, options);
+      
+      res.status(200).json({
+        success: true,
+        data: accuracy
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في جلب دقة التوصيات:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في جلب دقة التوصيات',
+        error: error.message
+      });
+    }
+  }
+  
+  /**
+   * GET /api/recommendations/accuracy/system
+   * الحصول على دقة التوصيات على مستوى النظام (للأدمن فقط)
+   */
+  async getSystemAccuracy(req, res) {
+    try {
+      const { itemType = 'job', period, sampleSize } = req.query;
+      
+      const RecommendationAccuracyService = require('../services/recommendationAccuracyService');
+      const accuracyService = new RecommendationAccuracyService();
+      
+      const options = { itemType };
+      if (period) {
+        options.period = parseInt(period) * 24 * 60 * 60 * 1000;
+      }
+      if (sampleSize) {
+        options.sampleSize = parseInt(sampleSize);
+      }
+      
+      const accuracy = await accuracyService.calculateSystemAccuracy(options);
+      
+      res.status(200).json({
+        success: true,
+        data: accuracy
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في جلب دقة النظام:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في جلب دقة النظام',
+        error: error.message
+      });
+    }
+  }
+  
+  /**
+   * GET /api/recommendations/accuracy/improvement
+   * تتبع تحسن دقة التوصيات مع الوقت
+   */
+  async getAccuracyImprovement(req, res) {
+    try {
+      const userId = req.user.id;
+      const { itemType = 'job', periods } = req.query;
+      
+      const RecommendationAccuracyService = require('../services/recommendationAccuracyService');
+      const accuracyService = new RecommendationAccuracyService();
+      
+      const options = { itemType };
+      if (periods) {
+        options.periods = periods.split(',').map(p => parseInt(p));
+      }
+      
+      const improvement = await accuracyService.trackAccuracyImprovement(userId, options);
+      
+      res.status(200).json({
+        success: true,
+        data: improvement
+      });
+      
+    } catch (error) {
+      console.error('❌ خطأ في تتبع تحسن الدقة:', error);
+      res.status(500).json({
+        success: false,
+        message: 'حدث خطأ في تتبع تحسن الدقة',
+        error: error.message
+      });
+    }
+  }

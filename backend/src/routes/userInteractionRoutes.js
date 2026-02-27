@@ -8,10 +8,10 @@
 const express = require('express');
 const router = express.Router();
 const userInteractionController = require('../controllers/userInteractionController');
-const { authenticate, authorize } = require('../middleware/auth');
+const { protect, authorize } = require('../middleware/auth');
 
 // جميع المسارات تتطلب مصادقة
-router.use(authenticate);
+router.use(protect);
 
 /**
  * @route   POST /api/user-interactions/log
@@ -68,6 +68,28 @@ router.get('/patterns', userInteractionController.analyzeBehaviorPatterns);
  * @body    {itemType}
  */
 router.post('/update-recommendations', userInteractionController.updateRecommendations);
+
+/**
+ * @route   GET /api/user-interactions/tracking/status
+ * @desc    الحصول على حالة التتبع (Requirements 6.4)
+ * @access  Private
+ */
+router.get('/tracking/status', userInteractionController.getTrackingStatus);
+
+/**
+ * @route   PUT /api/user-interactions/tracking/preference
+ * @desc    تفعيل/تعطيل التتبع (Requirements 6.4)
+ * @access  Private
+ * @body    {enabled, reason}
+ */
+router.put('/tracking/preference', userInteractionController.updateTrackingPreference);
+
+/**
+ * @route   DELETE /api/user-interactions/tracking/data
+ * @desc    حذف جميع بيانات التتبع للمستخدم (Requirements 6.4)
+ * @access  Private
+ */
+router.delete('/tracking/data', userInteractionController.deleteAllTrackingData);
 
 // المسارات التالية للمسؤولين فقط
 router.use(authorize(['admin']));

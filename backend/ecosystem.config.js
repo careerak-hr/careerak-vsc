@@ -8,6 +8,7 @@ module.exports = {
     name: 'careerak-backend',
     script: './src/index.js',
     instances: 1,
+    exec_mode: 'fork', // تغيير من cluster إلى fork
     autorestart: true,
     watch: false,
     max_memory_restart: '1G',

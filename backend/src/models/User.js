@@ -88,6 +88,12 @@ const userSchema = new mongoose.Schema({
       reducedMotion: { type: Boolean, default: false },
       highContrast: { type: Boolean, default: false },
       fontSize: { type: String, enum: ['small', 'medium', 'large'], default: 'medium' }
+    },
+    // خيار إيقاف التتبع (Requirements 6.4)
+    tracking: {
+      enabled: { type: Boolean, default: true }, // تفعيل/تعطيل التتبع
+      disabledAt: Date, // تاريخ التعطيل
+      disabledReason: String // سبب التعطيل (اختياري)
     }
   },
   // حالة الحساب (Account Status)

@@ -1,0 +1,465 @@
+/**
+ * 🔒 Tracking Preference Styles
+ * تنسيقات مكون إدارة تفضيلات التتبع
+ */
+
+.tracking-preference-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #E3DAD1;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tracking-preference-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.tracking-preference-header h2 {
+  color: #304B60;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.tracking-preference-header .subtitle {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* رسالة النجاح/الخطأ */
+.message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.message-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* قسم Toggle التتبع */
+.tracking-toggle-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #D4816180;
+}
+
+.toggle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+.toggle-info h3 {
+  color: #304B60;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.toggle-info p {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.disabled-info {
+  color: #D48161 !important;
+  font-size: 0.85rem !important;
+  font-style: italic;
+}
+
+.toggle-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Switch Toggle */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #D48161;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+input:disabled + .slider {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.status.enabled {
+  color: #155724;
+  background: #d4edda;
+}
+
+.status.disabled {
+  color: #721c24;
+  background: #f8d7da;
+}
+
+/* شرح التتبع */
+.tracking-explanation {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #D4816180;
+}
+
+.tracking-explanation h3 {
+  color: #304B60;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.tracking-explanation p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.benefits-section,
+.effects-section {
+  margin-bottom: 1.5rem;
+}
+
+.benefits-section h4,
+.effects-section h4 {
+  color: #304B60;
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.benefits-list,
+.effects-list {
+  list-style: none;
+  padding: 0;
+}
+
+.benefits-list li,
+.effects-list li {
+  padding: 0.5rem 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.benefits-list .icon {
+  color: #28a745;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.effects-list .icon {
+  color: #dc3545;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* إدارة البيانات */
+.data-management-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 2px solid #D4816180;
+}
+
+.data-management-section h3 {
+  color: #304B60;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.delete-data-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+}
+
+.delete-info h4 {
+  color: #c53030;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.delete-info p {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.delete-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.delete-button:hover:not(:disabled) {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ملاحظة الخصوصية */
+.privacy-note {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #D48161;
+}
+
+.privacy-note p {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.learn-more-link {
+  color: #D48161;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.learn-more-link:hover {
+  color: #304B60;
+}
+
+/* نافذة التأكيد */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+  color: #304B60;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.modal-content p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.confirm-delete-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.confirm-delete-button:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.confirm-delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading */
+.tracking-preference-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #D48161;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tracking-preference-container {
+    padding: 1rem;
+  }
+  
+  .toggle-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .toggle-control {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .delete-data-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .delete-button {
+    width: 100%;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .confirm-delete-button,
+  .cancel-button {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .benefits-list li,
+[dir="rtl"] .effects-list li {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .privacy-note {
+  border-left: none;
+  border-right: 4px solid #D48161;
+}
+
+[dir="rtl"] .toggle-header {
+  flex-direction: row-reverse;
+}

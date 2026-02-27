@@ -1,0 +1,363 @@
+/**
+ * 🆕 New For You Styles
+ * تنسيقات مكون "جديد لك"
+ */
+
+.new-for-you-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Header */
+.new-for-you-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.new-for-you-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.new-for-you-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.generated-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #D48161 0%, #E3DAD1 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(212, 129, 97, 0.3);
+}
+
+/* Loading State */
+.new-for-you-loading {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.new-for-you-error {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #d32f2f;
+}
+
+.retry-button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: #c06f51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+/* Empty State */
+.new-for-you-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  margin-top: 2rem;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.new-for-you-empty h3 {
+  font-size: 1.5rem;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.new-for-you-empty p {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Recommendations Grid */
+.recommendations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* Recommendation Card */
+.recommendation-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: #D48161;
+}
+
+/* New Badge */
+.new-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Job Info */
+.job-info {
+  margin-bottom: 1rem;
+}
+
+.job-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.company-name {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.job-location {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+/* Match Score */
+.match-score-container {
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.match-score-label {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.match-score-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #D48161;
+  margin-bottom: 0.5rem;
+}
+
+.match-score-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.match-score-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D48161 0%, #E3DAD1 100%);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+/* Reasons */
+.reasons-container {
+  margin-bottom: 1rem;
+}
+
+.reasons-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.reasons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reason-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.reason-high {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.reason-medium {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.reason-low {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.reason-icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.reason-text {
+  flex: 1;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.view-button,
+.apply-button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-button {
+  background-color: white;
+  color: #304B60;
+  border: 2px solid #304B60;
+}
+
+.view-button:hover {
+  background-color: #304B60;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.apply-button {
+  background-color: #D48161;
+  color: white;
+}
+
+.apply-button:hover {
+  background-color: #c06f51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .new-for-you-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .new-for-you-title {
+    font-size: 1.5rem;
+  }
+
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .recommendation-card {
+    padding: 1rem;
+  }
+
+  .job-title {
+    font-size: 1.125rem;
+  }
+
+  .match-score-value {
+    font-size: 1.5rem;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .view-button,
+  .apply-button {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .new-badge {
+  right: auto;
+  left: -10px;
+}
+
+[dir="rtl"] .reason-item {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .card-actions {
+  flex-direction: row-reverse;
+}

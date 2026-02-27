@@ -198,8 +198,12 @@ app.use('/errors', require('./routes/errorLogRoutes'));
 app.use('/security-score', require('./routes/securityScoreRoutes'));
 app.use('/devices', require('./routes/deviceRoutes'));
 app.use('/recommendations', require('./routes/recommendationRoutes'));
+app.use('/recommendations', require('./routes/dailyRecommendationRoutes')); // Daily recommendations
+app.use('/recommendations/candidates', require('./routes/candidateRankingRoutes'));
 app.use('/user-interactions', require('./routes/userInteractionRoutes'));
 app.use('/learning-paths', require('./routes/learningPathRoutes'));
+app.use('/cv', require('./routes/cvParserRoutes'));
+app.use('/profile-analysis', require('./routes/profileAnalysisRoutes'));
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {
@@ -224,5 +228,20 @@ app.use((err, req, res, next) => {
 app.get('/', (req, res) => {
   res.status(200).send("Careerak API is Ready.");
 });
+
+// 🕐 بدء جدولة التحديث اليومي للتوصيات
+if (process.env.NODE_ENV !== 'test') {
+  const dailyRecommendationCron = require('./jobs/dailyRecommendationCron');
+  
+  // بدء الجدولة تلقائياً عند تشغيل السيرفر
+  setTimeout(() => {
+    try {
+      dailyRecommendationCron.start();
+      console.log('✅ تم بدء جدولة التحديث اليومي للتوصيات');
+    } catch (error) {
+      console.error('❌ خطأ في بدء جدولة التحديث اليومي:', error);
+    }
+  }, 5000); // انتظار 5 ثواني بعد بدء السيرفر
+}
 
 module.exports = app;

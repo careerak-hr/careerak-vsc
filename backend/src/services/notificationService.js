@@ -159,6 +159,176 @@ class NotificationService {
     }
   }
   
+  // إرسال إشعارات فورية للمستخدمين المطابقين لوظيفة جديدة
+  async notifyMatchingUsersForNewJob(jobPosting) {
+    try {
+      const job = await JobPosting.findById(jobPosting).populate('postedBy', 'companyName');
+      if (!job) {
+        logger.warn(`Job ${jobPosting} not found for notifications`);
+        return { success: false, notified: 0 };
+      }
+      
+      // البحث عن المستخدمين المطابقين
+      const matchingUserIds = await this.findMatchingUsersForJob(jobPosting);
+      
+      if (!matchingUserIds.length) {
+        logger.info(`No matching users found for job ${job.title}`);
+        return { success: true, notified: 0 };
+      }
+      
+      logger.info(`Found ${matchingUserIds.length} matching users for job ${job.title}`);
+      
+      // إرسال إشعارات لجميع المستخدمين المطابقين
+      const notifications = await Promise.all(
+        matchingUserIds.map(userId => this.notifyJobMatch(userId, jobPosting))
+      );
+      
+      // إرسال إشعارات فورية عبر Pusher
+      const pusherService = require('./pusherService');
+      if (pusherService.isEnabled()) {
+        await Promise.all(
+          matchingUserIds.map(userId => 
+            pusherService.sendNotificationToUser(userId, {
+              type: 'job_match',
+              title: 'وظيفة جديدة مناسبة لك! 🎯',
+              message: `وظيفة "${job.title}" في ${job.postedBy?.companyName || job.location} تناسب مهاراتك`,
+              jobId: job._id,
+              jobTitle: job.title,
+              company: job.postedBy?.companyName,
+              location: job.location,
+              timestamp: new Date().toISOString()
+            })
+          )
+        );
+        logger.info(`Real-time notifications sent via Pusher to ${matchingUserIds.length} users`);
+      }
+      
+      const successCount = notifications.filter(n => n !== null).length;
+      logger.info(`Successfully sent ${successCount} notifications for job ${job.title}`);
+      
+      return { 
+        success: true, 
+        notified: successCount,
+        jobTitle: job.title,
+        matchingUsers: matchingUserIds.length
+      };
+      
+    } catch (error) {
+      logger.error('Error notifying matching users for new job:', error);
+      return { success: false, notified: 0, error: error.message };
+    }
+  }
+  
+  // إشعار الشركة بمرشح مناسب جديد
+  async notifyCompanyOfMatchingCandidate(companyId, candidateId, jobId, matchScore) {
+    try {
+      const { Individual } = require('../models/User');
+      const candidate = await Individual.findById(candidateId).select('firstName lastName specialization');
+      const job = await JobPosting.findById(jobId).select('title');
+      
+      if (!candidate || !job) {
+        logger.warn('Candidate or job not found for notification');
+        return null;
+      }
+      
+      const notification = await this.createNotification({
+        recipient: companyId,
+        type: 'candidate_match',
+        title: 'مرشح مناسب لوظيفتك! 👤',
+        message: `${candidate.firstName} ${candidate.lastName} (${candidate.specialization}) مناسب لوظيفة "${job.title}" بنسبة ${matchScore}%`,
+        relatedData: { 
+          candidate: candidateId,
+          jobPosting: jobId,
+          matchScore
+        },
+        priority: 'high'
+      });
+      
+      // إرسال إشعار فوري عبر Pusher
+      const pusherService = require('./pusherService');
+      if (pusherService.isEnabled()) {
+        await pusherService.sendNotificationToUser(companyId, {
+          type: 'candidate_match',
+          title: 'مرشح مناسب لوظيفتك! 👤',
+          message: `${candidate.firstName} ${candidate.lastName} مناسب لوظيفة "${job.title}"`,
+          candidateId,
+          candidateName: `${candidate.firstName} ${candidate.lastName}`,
+          candidateSpecialization: candidate.specialization,
+          jobId,
+          jobTitle: job.title,
+          matchScore,
+          timestamp: new Date().toISOString()
+        });
+        logger.info(`Real-time candidate match notification sent to company ${companyId}`);
+      }
+      
+      return notification;
+      
+    } catch (error) {
+      logger.error('Error notifying company of matching candidate:', error);
+      throw error;
+    }
+  }
+  
+  // إرسال إشعارات فورية لتحديثات التوصيات
+  async notifyRecommendationUpdate(userId, updateType, data) {
+    try {
+      let title, message, notificationType;
+      
+      switch (updateType) {
+        case 'new_recommendations':
+          title = 'توصيات جديدة متاحة! ✨';
+          message = `لديك ${data.count} توصيات وظائف جديدة بناءً على ملفك الشخصي`;
+          notificationType = 'recommendation_update';
+          break;
+          
+        case 'profile_updated':
+          title = 'تم تحديث توصياتك 🔄';
+          message = 'تم تحديث توصيات الوظائف بناءً على التغييرات في ملفك الشخصي';
+          notificationType = 'recommendation_update';
+          break;
+          
+        case 'high_match_found':
+          title = 'تطابق عالي! 🎯';
+          message = `وجدنا وظيفة بتطابق ${data.matchScore}% مع مهاراتك`;
+          notificationType = 'job_match';
+          break;
+          
+        default:
+          logger.warn(`Unknown update type: ${updateType}`);
+          return null;
+      }
+      
+      const notification = await this.createNotification({
+        recipient: userId,
+        type: notificationType,
+        title,
+        message,
+        relatedData: data,
+        priority: updateType === 'high_match_found' ? 'high' : 'medium'
+      });
+      
+      // إرسال إشعار فوري عبر Pusher
+      const pusherService = require('./pusherService');
+      if (pusherService.isEnabled()) {
+        await pusherService.sendNotificationToUser(userId, {
+          type: notificationType,
+          title,
+          message,
+          data,
+          timestamp: new Date().toISOString()
+        });
+        logger.info(`Real-time recommendation update sent to user ${userId}`);
+      }
+      
+      return notification;
+      
+    } catch (error) {
+      logger.error('Error notifying recommendation update:', error);
+      throw error;
+    }
+  }
+  
   // استخراج كلمات مفتاحية بسيطة
   extractKeywords(text) {
     const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by'];

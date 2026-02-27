@@ -18,8 +18,8 @@ class AIJobMatcher {
   }
 
   initializeNLP() {
-    // تهيئة معالج اللغة العربية
-    natural.PorterStemmer.attach();
+    // تهيئة معالج اللغة (تم إزالة attach() لأنه غير موجود في الإصدار الحالي)
+    // natural.PorterStemmer.attach(); // هذا السطر يسبب خطأ
     
     // قاموس المهارات والمرادفات
     this.skillsSynonyms = {
