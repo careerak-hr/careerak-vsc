@@ -5,6 +5,7 @@
 const app = require('./app');
 const pusherService = require('./services/pusherService');
 const statisticsBroadcaster = require('./services/statisticsBroadcaster');
+const { scheduleRecordingCleanup } = require('./jobs/recordingCleanupCron');
 const logger = require('./utils/logger');
 
 // تهيئة Pusher للمحادثات الفورية
@@ -15,6 +16,9 @@ if (pusherInitialized) {
   statisticsBroadcaster.start();
   logger.info('📊 Statistics broadcaster started (every 30 seconds)');
 }
+
+// جدولة حذف التسجيلات المنتهية (يومياً 2:00 صباحاً)
+scheduleRecordingCleanup();
 
 // اختبار Pusher (فقط في Development)
 if (pusherInitialized && process.env.NODE_ENV === 'development') {

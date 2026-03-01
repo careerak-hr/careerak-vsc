@@ -1,18 +1,17 @@
 /**
  * 🆕 New For You Component
- * مكون "جديد لك" - عرض التوصيات اليومية الجديدة
+ * مكون قسم "جديد لك" - عرض التوصيات اليومية الجديدة
  * 
- * المتطلبات: 7.3 (قسم "جديد لك")
+ * المتطلبات: 7.2, 7.3 (تحديث يومي، قسم "جديد لك")
  * Task: 12.2 تحديث يومي
  */
 
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import axios from 'axios';
 import './NewForYou.css';
 
-const NewForYou = () => {
-  const { language, fontFamily } = useApp();
+const NewForYou = ({ limit = 5 }) => {
+  const { language, user } = useApp();
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,88 +20,96 @@ const NewForYou = () => {
   const translations = {
     ar: {
       title: 'جديد لك',
-      subtitle: 'توصيات وظائف جديدة تم توليدها خصيصاً لك اليوم',
+      subtitle: 'توصيات مخصصة بناءً على ملفك الشخصي',
+      loading: 'جاري التحميل...',
       noRecommendations: 'لا توجد توصيات جديدة حالياً',
-      noRecommendationsDesc: 'سيتم تحديث التوصيات يومياً بناءً على ملفك الشخصي',
-      matchScore: 'نسبة التطابق',
-      viewJob: 'عرض الوظيفة',
-      apply: 'تقديم',
-      loading: 'جاري تحميل التوصيات الجديدة...',
       error: 'فشل في تحميل التوصيات',
       retry: 'إعادة المحاولة',
-      generatedToday: 'تم التوليد اليوم',
-      reasons: 'لماذا هذه الوظيفة؟'
+      matchScore: 'نسبة التطابق',
+      viewDetails: 'عرض التفاصيل',
+      apply: 'تقديم',
+      save: 'حفظ',
+      reasons: 'لماذا هذه التوصية؟'
     },
     en: {
       title: 'New For You',
-      subtitle: 'Fresh job recommendations generated just for you today',
-      noRecommendations: 'No new recommendations available',
-      noRecommendationsDesc: 'Recommendations will be updated daily based on your profile',
-      matchScore: 'Match Score',
-      viewJob: 'View Job',
-      apply: 'Apply',
-      loading: 'Loading new recommendations...',
+      subtitle: 'Personalized recommendations based on your profile',
+      loading: 'Loading...',
+      noRecommendations: 'No new recommendations at the moment',
       error: 'Failed to load recommendations',
       retry: 'Retry',
-      generatedToday: 'Generated Today',
-      reasons: 'Why this job?'
+      matchScore: 'Match Score',
+      viewDetails: 'View Details',
+      apply: 'Apply',
+      save: 'Save',
+      reasons: 'Why this recommendation?'
     },
     fr: {
       title: 'Nouveau pour vous',
-      subtitle: 'Nouvelles recommandations d\'emploi générées spécialement pour vous aujourd\'hui',
-      noRecommendations: 'Aucune nouvelle recommandation disponible',
-      noRecommendationsDesc: 'Les recommandations seront mises à jour quotidiennement en fonction de votre profil',
-      matchScore: 'Score de correspondance',
-      viewJob: 'Voir l\'emploi',
-      apply: 'Postuler',
-      loading: 'Chargement des nouvelles recommandations...',
+      subtitle: 'Recommandations personnalisées basées sur votre profil',
+      loading: 'Chargement...',
+      noRecommendations: 'Aucune nouvelle recommandation pour le moment',
       error: 'Échec du chargement des recommandations',
       retry: 'Réessayer',
-      generatedToday: 'Généré aujourd\'hui',
-      reasons: 'Pourquoi cet emploi?'
+      matchScore: 'Score de correspondance',
+      viewDetails: 'Voir les détails',
+      apply: 'Postuler',
+      save: 'Enregistrer',
+      reasons: 'Pourquoi cette recommandation?'
     }
   };
 
   const t = translations[language] || translations.ar;
 
+  // جلب التوصيات الجديدة
   useEffect(() => {
     fetchNewRecommendations();
-  }, []);
+  }, [user]);
 
   const fetchNewRecommendations = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+    if (!user) return;
 
+    setLoading(true);
+    setError(null);
+
+    try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/recommendations/new`,
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/recommendations/new?limit=${limit}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
-          params: { limit: 10 }
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
       );
 
-      if (response.data.success) {
-        setRecommendations(response.data.recommendations);
+      if (!response.ok) {
+        throw new Error('Failed to fetch recommendations');
       }
 
+      const data = await response.json();
+      setRecommendations(data.recommendations || []);
     } catch (err) {
-      console.error('Error fetching new recommendations:', err);
-      setError(err.response?.data?.message || t.error);
+      console.error('Error fetching recommendations:', err);
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
+  // تحديد توصية كمشاهدة
   const markAsSeen = async (recommendationId) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(
-        `${import.meta.env.VITE_API_URL}/recommendations/${recommendationId}/seen`,
-        {},
+      await fetch(
+        `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/recommendations/${recommendationId}/seen`,
         {
-          headers: { Authorization: `Bearer ${token}` }
+          method: 'PATCH',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
       );
     } catch (err) {
@@ -110,138 +117,126 @@ const NewForYou = () => {
     }
   };
 
-  const handleViewJob = (recommendation) => {
-    // تحديد كمشاهدة
+  // معالجة النقر على توصية
+  const handleRecommendationClick = (recommendation) => {
     markAsSeen(recommendation._id);
-    
-    // الانتقال إلى صفحة الوظيفة
-    window.location.href = `/job/${recommendation.job._id}`;
+    // يمكن إضافة navigation هنا
   };
 
-  const handleApply = (recommendation) => {
-    // تحديد كمشاهدة
-    markAsSeen(recommendation._id);
-    
-    // الانتقال إلى صفحة التقديم
-    window.location.href = `/apply/${recommendation.job._id}`;
-  };
-
+  // حالة التحميل
   if (loading) {
     return (
-      <div className="new-for-you-container" style={{ fontFamily }}>
+      <section className="new-for-you" aria-labelledby="new-for-you-title">
+        <div className="new-for-you-header">
+          <h2 id="new-for-you-title">{t.title}</h2>
+          <p className="new-for-you-subtitle">{t.subtitle}</p>
+        </div>
         <div className="new-for-you-loading">
-          <div className="spinner"></div>
+          <div className="spinner" aria-label={t.loading}></div>
           <p>{t.loading}</p>
         </div>
-      </div>
+      </section>
     );
   }
 
+  // حالة الخطأ
   if (error) {
     return (
-      <div className="new-for-you-container" style={{ fontFamily }}>
+      <section className="new-for-you" aria-labelledby="new-for-you-title">
+        <div className="new-for-you-header">
+          <h2 id="new-for-you-title">{t.title}</h2>
+          <p className="new-for-you-subtitle">{t.subtitle}</p>
+        </div>
         <div className="new-for-you-error">
-          <p>{error}</p>
+          <p>{t.error}</p>
           <button onClick={fetchNewRecommendations} className="retry-button">
             {t.retry}
           </button>
         </div>
-      </div>
+      </section>
     );
   }
 
+  // لا توجد توصيات
   if (recommendations.length === 0) {
     return (
-      <div className="new-for-you-container" style={{ fontFamily }}>
+      <section className="new-for-you" aria-labelledby="new-for-you-title">
         <div className="new-for-you-header">
-          <h2 className="new-for-you-title">🆕 {t.title}</h2>
+          <h2 id="new-for-you-title">{t.title}</h2>
           <p className="new-for-you-subtitle">{t.subtitle}</p>
         </div>
         <div className="new-for-you-empty">
-          <div className="empty-icon">📭</div>
-          <h3>{t.noRecommendations}</h3>
-          <p>{t.noRecommendationsDesc}</p>
+          <p>{t.noRecommendations}</p>
         </div>
-      </div>
+      </section>
     );
   }
 
+  // عرض التوصيات
   return (
-    <div className="new-for-you-container" style={{ fontFamily }}>
+    <section className="new-for-you" aria-labelledby="new-for-you-title">
       <div className="new-for-you-header">
-        <h2 className="new-for-you-title">🆕 {t.title}</h2>
+        <h2 id="new-for-you-title">{t.title}</h2>
         <p className="new-for-you-subtitle">{t.subtitle}</p>
-        <span className="generated-badge">✨ {t.generatedToday}</span>
       </div>
 
       <div className="recommendations-grid">
         {recommendations.map((rec) => (
-          <div key={rec._id} className="recommendation-card">
-            {/* Badge "جديد" */}
-            <div className="new-badge">NEW</div>
-
-            {/* معلومات الوظيفة */}
-            <div className="job-info">
-              <h3 className="job-title">{rec.job.title}</h3>
-              <p className="company-name">
-                {rec.job.postedBy?.companyName || 'شركة'}
-              </p>
-              <p className="job-location">
-                📍 {rec.job.location || 'غير محدد'}
-              </p>
-            </div>
-
+          <article 
+            key={rec._id} 
+            className="recommendation-card"
+            onClick={() => handleRecommendationClick(rec)}
+          >
             {/* نسبة التطابق */}
-            <div className="match-score-container">
-              <div className="match-score-label">{t.matchScore}</div>
-              <div className="match-score-value">
-                {rec.matchScore.percentage}%
-              </div>
-              <div className="match-score-bar">
-                <div 
-                  className="match-score-fill"
-                  style={{ width: `${rec.matchScore.percentage}%` }}
-                ></div>
-              </div>
+            <div className="match-score">
+              <span className="score-label">{t.matchScore}</span>
+              <span className="score-value">{rec.score}%</span>
             </div>
 
-            {/* أسباب التوصية */}
-            {rec.reasons && rec.reasons.length > 0 && (
-              <div className="reasons-container">
-                <h4 className="reasons-title">{t.reasons}</h4>
-                <ul className="reasons-list">
-                  {rec.reasons.slice(0, 2).map((reason, index) => (
-                    <li key={index} className={`reason-item reason-${reason.strength}`}>
-                      <span className="reason-icon">
-                        {reason.strength === 'high' ? '⭐' : 
-                         reason.strength === 'medium' ? '✓' : '•'}
-                      </span>
-                      <span className="reason-text">{reason.message}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {/* محتوى التوصية */}
+            <div className="recommendation-content">
+              <h3 className="recommendation-title">
+                {rec.itemId?.title || 'Untitled'}
+              </h3>
+              
+              {rec.itemType === 'job' && rec.itemId?.company && (
+                <p className="recommendation-company">
+                  {rec.itemId.company.name}
+                </p>
+              )}
 
-            {/* الأزرار */}
-            <div className="card-actions">
-              <button 
-                onClick={() => handleViewJob(rec)}
-                className="view-button"
-              >
-                {t.viewJob}
-              </button>
-              <button 
-                onClick={() => handleApply(rec)}
-                className="apply-button"
-              >
+              {rec.itemId?.description && (
+                <p className="recommendation-description">
+                  {rec.itemId.description.substring(0, 100)}...
+                </p>
+              )}
+
+              {/* أسباب التوصية */}
+              {rec.reasons && rec.reasons.length > 0 && (
+                <div className="recommendation-reasons">
+                  <p className="reasons-title">{t.reasons}</p>
+                  <ul className="reasons-list">
+                    {rec.reasons.slice(0, 2).map((reason, index) => (
+                      <li key={index}>{reason}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* أزرار الإجراءات */}
+            <div className="recommendation-actions">
+              <button className="btn-primary" aria-label={t.apply}>
                 {t.apply}
               </button>
+              <button className="btn-secondary" aria-label={t.save}>
+                {t.save}
+              </button>
             </div>
-          </div>
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

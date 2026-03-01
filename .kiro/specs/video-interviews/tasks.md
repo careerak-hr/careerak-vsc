@@ -18,14 +18,14 @@
   - _Requirements: جميع المتطلبات التقنية_
 
 - [ ] 2. تنفيذ WebRTC الأساسي
-  - [ ] 2.1 إنشاء WebRTCService
+  - [x] 2.1 إنشاء WebRTCService
     - إنشاء peer connections
     - معالجة SDP offers/answers
     - معالجة ICE candidates
     - إدارة media streams
     - _Requirements: 1.1_
   
-  - [ ] 2.2 إنشاء SignalingService
+  - [x] 2.2 إنشاء SignalingService
     - إنشاء وإدارة الغرف
     - تبادل الإشارات بين المشاركين
     - معالجة الانضمام والمغادرة
@@ -40,19 +40,26 @@
     - **Validates: Requirements 1.1**
 
 - [ ] 3. تنفيذ واجهة الفيديو الأساسية
-  - [ ] 3.1 إنشاء VideoCall Component
+  - [x] 3.1 إنشاء VideoCall Component
     - عرض الفيديو المحلي والبعيد
     - أزرار التحكم (كتم، إيقاف)
     - مؤشر جودة الاتصال
     - _Requirements: 1.1, 1.5_
   
-  - [ ] 3.2 إضافة اختبار الأجهزة
+  - [x] 3.2 إضافة اختبار الأجهزة
     - اختبار الكاميرا قبل الانضمام
     - اختبار الميكروفون
     - معاينة الفيديو
     - _Requirements: 1.4_
   
-  - [ ]* 3.3 Property test: Connection Quality
+  - [x] 3.3 التبديل بين الكاميرا الأمامية والخلفية (موبايل)
+    - إضافة دالة switchCamera في Frontend WebRTCService
+    - إضافة زر تبديل الكاميرا في VideoCall Component
+    - دعم facingMode (user/environment)
+    - تحديث peer connection مع الكاميرا الجديدة
+    - _Requirements: 1.6_
+  
+  - [ ]* 3.4 Property test: Connection Quality
     - **Property 10: Connection Quality Indicator**
     - **Validates: Requirements 1.5**
 
@@ -61,7 +68,7 @@
   - اختبار جودة الفيديو والصوت
   - اختبار أزرار التحكم
 
-- [ ] 5. تنفيذ مشاركة الشاشة
+- [x] 5. تنفيذ مشاركة الشاشة
   - [ ] 5.1 إنشاء ScreenShareService
     - بدء مشاركة الشاشة
     - اختيار الشاشة/النافذة/التبويب
@@ -84,13 +91,13 @@
     - إرسال واستقبال رسائل
     - _Requirements: 6.1_
   
-  - [ ] 6.2 إضافة ميزات إضافية
+  - [x] 6.2 إضافة ميزات إضافية
     - رفع اليد (raise hand)
     - إرسال ملفات
     - مؤقت المقابلة
     - _Requirements: 6.1, 6.3, 6.4, 6.5_
 
-- [ ] 7. تنفيذ تسجيل المقابلات
+- [x] 7. تنفيذ تسجيل المقابلات
   - [ ] 7.1 إنشاء RecordingService
     - بدء التسجيل باستخدام MediaRecorder API
     - إيقاف التسجيل
@@ -210,7 +217,7 @@
     - تقليل الضوضاء
     - _Requirements: 1.1, 1.2_
   
-  - [ ] 14.2 تحسين الاتصال
+  - [x] 14.2 تحسين الاتصال
     - إعادة الاتصال التلقائي
     - معالجة فقدان الحزم
     - تحسين الـ latency

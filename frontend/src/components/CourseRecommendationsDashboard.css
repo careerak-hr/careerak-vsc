@@ -641,50 +641,92 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* الهواتف الصغيرة جداً (< 375px) */
+@media (max-width: 374px) {
   .course-recommendations-dashboard {
-    padding: 1.5rem;
+    padding: 1rem;
     margin: 1rem 0;
+    border-radius: 12px;
   }
 
   .course-recommendations-title {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+  }
+  
+  .course-recommendations-subtitle {
+    font-size: 0.9rem;
   }
 
   .course-recommendations-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
+  
+  .course-recommendation-card {
+    border-radius: 10px;
+  }
+  
+  .course-card-header {
+    padding: 1rem;
+  }
+  
+  .course-title {
+    font-size: 1.1rem;
+  }
+  
+  .course-card-body {
+    padding: 1rem;
+  }
+  
+  .action-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+  
   .improvement-summary {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
-  .course-actions {
+  
+  .improvement-value {
+    font-size: 2rem;
+  }
+  
+  .score-row {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
-
-  .learning-path-timeline::before {
-    left: 15px;
+  
+  .score-label {
+    min-width: auto;
   }
-
-  .week-card {
-    margin-left: 30px;
+  
+  .score-bar {
+    width: 100%;
   }
-
-  .week-card::before {
-    left: -25px;
-    width: 15px;
-    height: 15px;
+  
+  .level-filter-button {
+    min-width: 100px;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
   }
 }
 
-@media (max-width: 480px) {
+/* الهواتف العادية (375px - 639px) */
+@media (max-width: 639px) {
   .course-recommendations-dashboard {
-    padding: 1rem;
+    padding: 1.25rem;
+    margin: 1rem 0;
   }
 
   .course-recommendations-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
+  }
+  
+  .course-recommendations-subtitle {
+    font-size: 0.95rem;
   }
 
   .course-recommendations-actions {
@@ -697,6 +739,26 @@
     justify-content: center;
   }
 
+  .course-recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  
+  .improvement-summary {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .course-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .enroll-button,
+  .details-button {
+    width: 100%;
+  }
+
   .score-row {
     flex-direction: column;
     align-items: flex-start;
@@ -705,6 +767,239 @@
 
   .score-bar {
     width: 100%;
+  }
+  
+  .course-details {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .learning-path-timeline::before {
+    left: 15px;
+  }
+
+  .week-card {
+    margin-left: 30px;
+    padding: 1rem;
+  }
+
+  .week-card::before {
+    left: -25px;
+    width: 15px;
+    height: 15px;
+  }
+  
+  .level-filter-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .level-filter-button {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .filter-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
+
+/* الأجهزة اللوحية (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .course-recommendations-dashboard {
+    padding: 1.75rem;
+  }
+  
+  .course-recommendations-title {
+    font-size: 2rem;
+  }
+
+  .course-recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .improvement-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .course-details {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .level-filter-buttons {
+    justify-content: center;
+  }
+}
+
+/* الشاشات الكبيرة (> 1024px) */
+@media (min-width: 1024px) {
+  .course-recommendations-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+  
+  .improvement-summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Landscape Mode للهواتف */
+@media (max-height: 500px) and (orientation: landscape) {
+  .course-recommendations-dashboard {
+    padding: 1rem;
+  }
+  
+  .course-recommendations-header {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .course-recommendations-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .course-recommendations-subtitle {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  
+  .course-recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .course-card-header {
+    padding: 1rem;
+  }
+  
+  .course-card-body {
+    padding: 1rem;
+  }
+  
+  .course-actions {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .action-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .improvement-summary {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .improvement-card {
+    padding: 1rem;
+  }
+  
+  .improvement-value {
+    font-size: 2rem;
+  }
+}
+
+/* تحسينات Touch للأجهزة المحمولة */
+@media (hover: none) and (pointer: coarse) {
+  .action-button,
+  .enroll-button,
+  .details-button,
+  .level-filter-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .quick-recommendations-button,
+  .reset-filter-button {
+    min-height: 44px;
+  }
+  
+  .course-recommendation-card {
+    -webkit-tap-highlight-color: rgba(48, 75, 96, 0.1);
+  }
+  
+  .skill-tag {
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* Safe Area Support (iPhone notch) */
+@supports (padding: max(0px)) {
+  .course-recommendations-dashboard {
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+  
+  @media (max-width: 639px) {
+    .course-recommendations-dashboard {
+      padding-left: max(1.25rem, env(safe-area-inset-left));
+      padding-right: max(1.25rem, env(safe-area-inset-right));
+      padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* منع التمرير الأفقي */
+.course-recommendations-dashboard,
+.course-recommendation-card,
+.course-recommendations-grid,
+.improvement-summary,
+.learning-path-timeline {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* تحسين الصور للأجهزة المحمولة */
+@media (max-width: 639px) {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* تحسين النصوص للقراءة على الأجهزة الصغيرة */
+@media (max-width: 639px) {
+  .course-description,
+  .benefit-item,
+  .plan-section li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+}
+
+/* تحسين الجداول والقوائم للأجهزة الصغيرة */
+@media (max-width: 639px) {
+  .skills-tags {
+    gap: 0.4rem;
+  }
+  
+  .skill-tag {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.6rem;
+  }
+  
+  .benefits-list {
+    font-size: 0.9rem;
+  }
+}
+
+/* تحسين الأزرار للأجهزة الصغيرة */
+@media (max-width: 374px) {
+  .course-actions {
+    gap: 0.5rem;
+  }
+  
+  .enroll-button,
+  .details-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
   }
 }
 

@@ -285,6 +285,139 @@ router.post('/notify-candidate-match', recommendationController.notifyCandidateM
  */
 router.post('/notify-update', recommendationController.notifyRecommendationUpdate);
 
+/**
+ * @route   GET /api/recommendations/collaborative
+ * @desc    الحصول على توصيات بناءً على المستخدمين المشابهين
+ * @access  Private
+ * @query   {number} [limit=10] - الحد الأقصى لعدد التوصيات
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - recommendations: Array<Object> - قائمة التوصيات
+ *     - count: number - عدد التوصيات
+ *     - type: string - نوع التوصيات ['collaborative']
+ * 
+ * @example
+ * GET /api/recommendations/collaborative?limit=10
+ */
+router.get('/collaborative', recommendationController.getCollaborativeRecommendations);
+
+/**
+ * @route   GET /api/recommendations/hybrid
+ * @desc    الحصول على توصيات هجينة (Content-Based + Collaborative)
+ * @access  Private
+ * @query   {number} [limit=10] - الحد الأقصى لعدد التوصيات
+ * @query   {number} [contentWeight] - وزن Content-Based (0-1)
+ * @query   {number} [collaborativeWeight] - وزن Collaborative (0-1)
+ * @query   {number} [minScore=0] - الحد الأدنى للنتيجة
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - recommendations: Array<Object> - قائمة التوصيات
+ *     - count: number - عدد التوصيات
+ *     - type: string - نوع التوصيات ['hybrid']
+ *     - weights: Object - الأوزان المستخدمة
+ * 
+ * @example
+ * GET /api/recommendations/hybrid?limit=10&contentWeight=0.6&collaborativeWeight=0.4
+ */
+router.get('/hybrid', recommendationController.getHybridRecommendations);
+
+/**
+ * @route   GET /api/recommendations/smart
+ * @desc    الحصول على توصيات ذكية مع أوزان تلقائية
+ * @access  Private
+ * @query   {number} [limit=10] - الحد الأقصى لعدد التوصيات
+ * @query   {number} [minScore=0] - الحد الأدنى للنتيجة
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - recommendations: Array<Object> - قائمة التوصيات
+ *     - count: number - عدد التوصيات
+ *     - type: string - نوع التوصيات ['smart']
+ *     - weights: Object - الأوزان المحددة تلقائياً
+ * 
+ * @example
+ * GET /api/recommendations/smart?limit=10
+ */
+router.get('/smart', recommendationController.getSmartRecommendations);
+
+/**
+ * @route   POST /api/recommendations/rebuild-matrix
+ * @desc    إعادة بناء User-Item Matrix
+ * @access  Private (Admin only)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - stats: Object - إحصائيات المصفوفة
+ *     - matrixSize: number - حجم المصفوفة
+ * 
+ * @example
+ * POST /api/recommendations/rebuild-matrix
+ */
+router.post('/rebuild-matrix', recommendationController.rebuildMatrix);
+
+/**
+ * @route   GET /api/recommendations/matrix-stats
+ * @desc    الحصول على إحصائيات User-Item Matrix
+ * @access  Private
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object - إحصائيات المصفوفة
+ * 
+ * @example
+ * GET /api/recommendations/matrix-stats
+ */
+router.get('/matrix-stats', recommendationController.getMatrixStats);
+
+/**
+ * @route   GET /api/recommendations/similar-users
+ * @desc    إيجاد المستخدمين المشابهين
+ * @access  Private
+ * @query   {number} [topK=10] - عدد المستخدمين المشابهين
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - similarUsers: Array<Object> - قائمة المستخدمين المشابهين
+ *     - count: number - عدد المستخدمين
+ * 
+ * @example
+ * GET /api/recommendations/similar-users?topK=10
+ */
+router.get('/similar-users', recommendationController.getSimilarUsers);
+
+/**
+ * @route   POST /api/recommendations/evaluate
+ * @desc    تقييم جودة التوصيات
+ * @access  Private
+ * @body    {Object} - بيانات التقييم:
+ *   - recommendations: Array<Object> - قائمة التوصيات (مطلوب)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object - نتائج التقييم
+ * 
+ * @example
+ * POST /api/recommendations/evaluate
+ * {
+ *   "recommendations": [...]
+ * }
+ */
+router.post('/evaluate', recommendationController.evaluateRecommendations);
+
 module.exports = router;
 
 /**
@@ -346,3 +479,109 @@ router.get('/accuracy/system', recommendationController.getSystemAccuracy);
  * GET /api/recommendations/accuracy/improvement?itemType=job&periods=7,14,30
  */
 router.get('/accuracy/improvement', recommendationController.getAccuracyImprovement);
+
+/**
+ * @route   POST /api/recommendations/notify-new-job
+ * @desc    إرسال إشعارات فورية للمستخدمين عند نشر وظيفة جديدة
+ * @access  Private (Company/Admin)
+ * @body    {ObjectId} jobId - معرف الوظيفة الجديدة
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - notified: number - عدد المستخدمين الذين تم إشعارهم
+ *     - failed: number - عدد الإشعارات الفاشلة
+ *     - jobTitle: string - عنوان الوظيفة
+ *     - matchingUsers: number - عدد المستخدمين المطابقين
+ *     - averageMatchScore: number - متوسط نسبة التطابق
+ * 
+ * @example
+ * POST /api/recommendations/notify-new-job
+ * Body: { "jobId": "507f1f77bcf86cd799439011" }
+ * 
+ * Requirements: 7.1
+ */
+router.post('/notify-new-job', protect, recommendationController.notifyUsersForNewJob);
+
+/**
+ * @route   POST /api/recommendations/notify-new-candidate
+ * @desc    إرسال إشعارات فورية للشركات عند تسجيل مرشح جديد
+ * @access  Private (Admin)
+ * @body    {ObjectId} candidateId - معرف المرشح الجديد
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - notified: number - عدد الشركات التي تم إشعارها
+ *     - failed: number - عدد الإشعارات الفاشلة
+ *     - candidateName: string - اسم المرشح
+ *     - matchingJobs: number - عدد الوظائف المطابقة
+ *     - averageMatchScore: number - متوسط نسبة التطابق
+ * 
+ * @example
+ * POST /api/recommendations/notify-new-candidate
+ * Body: { "candidateId": "507f1f77bcf86cd799439011" }
+ * 
+ * Requirements: 7.2
+ */
+router.post('/notify-new-candidate', protect, recommendationController.notifyCompaniesForNewCandidate);
+
+/**
+ * @route   POST /api/recommendations/notify-profile-update
+ * @desc    إرسال إشعار فوري عند تحديث الملف الشخصي
+ * @access  Private (User)
+ * @body    {Object} changes - التغييرات في الملف الشخصي
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - notified: boolean - هل تم إرسال إشعار
+ *     - highMatches: number - عدد التطابقات العالية (80%+)
+ *     - topMatchScore: number - أعلى نسبة تطابق
+ * 
+ * @example
+ * POST /api/recommendations/notify-profile-update
+ * Body: { "changes": { "skills": ["JavaScript", "React"] } }
+ * 
+ * Requirements: 7.2
+ */
+router.post('/notify-profile-update', protect, recommendationController.notifyProfileUpdateRecommendations);
+
+/**
+ * @route   GET /api/recommendations/notification-settings
+ * @desc    الحصول على إعدادات الإشعارات الفورية
+ * @access  Private (Admin)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - data: Object
+ *     - minMatchScore: number - الحد الأدنى لنسبة التطابق (0-100)
+ *     - pusherEnabled: boolean - هل Pusher مفعّل
+ * 
+ * @example
+ * GET /api/recommendations/notification-settings
+ */
+router.get('/notification-settings', protect, recommendationController.getNotificationSettings);
+
+/**
+ * @route   PUT /api/recommendations/notification-settings
+ * @desc    تحديث إعدادات الإشعارات الفورية
+ * @access  Private (Admin)
+ * @body    {number} [minMatchScore] - الحد الأدنى لنسبة التطابق (0-100)
+ * 
+ * @response {Object} - استجابة JSON تحتوي على:
+ *   - success: boolean
+ *   - message: string
+ *   - data: Object
+ *     - minMatchScore: number - الحد الأدنى الجديد
+ * 
+ * @example
+ * PUT /api/recommendations/notification-settings
+ * Body: { "minMatchScore": 70 }
+ */
+router.put('/notification-settings', protect, recommendationController.updateNotificationSettings);
+
+module.exports = router;

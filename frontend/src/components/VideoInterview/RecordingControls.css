@@ -1,0 +1,207 @@
+/**
+ * Recording Controls Styles
+ * تنسيقات مكون التحكم في التسجيل
+ */
+
+.recording-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+/* زر التسجيل */
+.recording-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.recording-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.recording-btn:active {
+  transform: translateY(0);
+}
+
+/* زر بدء التسجيل */
+.start-recording {
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}
+
+.start-recording:hover {
+  background: linear-gradient(135deg, #c0392b 0%, #a93226 100%);
+}
+
+.record-icon {
+  font-size: 1.2rem;
+}
+
+/* زر إيقاف التسجيل */
+.stop-recording {
+  background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+  color: white;
+}
+
+.stop-recording:hover {
+  background: linear-gradient(135deg, #7f8c8d 0%, #6c7a7b 100%);
+}
+
+.stop-icon {
+  font-size: 1.2rem;
+}
+
+/* حالة التسجيل النشط */
+.recording-active {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* مؤشر التسجيل */
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(231, 76, 60, 0.1);
+  border: 2px solid #e74c3c;
+  border-radius: 8px;
+}
+
+/* النقطة الحمراء الوامضة */
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  background: #e74c3c;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.recording-label {
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.recording-time {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* مؤشر الرفع */
+.uploading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(52, 152, 219, 0.1);
+  border: 2px solid #3498db;
+  border-radius: 8px;
+}
+
+.upload-label {
+  font-weight: 600;
+  color: #3498db;
+}
+
+/* شريط التقدم */
+.upload-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(52, 152, 219, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 150px;
+}
+
+.upload-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3498db 0%, #2980b9 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.upload-percentage {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  color: #3498db;
+  min-width: 45px;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .recording-controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .recording-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .recording-active {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .recording-indicator,
+  .uploading-indicator {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .upload-progress-bar {
+    min-width: 100px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .recording-controls {
+  direction: rtl;
+}
+
+[dir="rtl"] .recording-btn,
+[dir="rtl"] .recording-indicator,
+[dir="rtl"] .uploading-indicator {
+  flex-direction: row-reverse;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .recording-time {
+    color: #ecf0f1;
+  }
+
+  .recording-indicator {
+    background: rgba(231, 76, 60, 0.2);
+  }
+
+  .uploading-indicator {
+    background: rgba(52, 152, 219, 0.2);
+  }
+}

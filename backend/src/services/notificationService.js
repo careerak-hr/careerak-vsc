@@ -438,6 +438,222 @@ class NotificationService {
     );
   }
   
+  // تحديث تكرار الإشعارات
+  async updateNotificationFrequency(userId, frequencySettings) {
+    try {
+      const preferences = await this.getUserPreferences(userId);
+      
+      // تحديث إعدادات التكرار
+      if (frequencySettings.recommendations !== undefined) {
+        preferences.notificationFrequency.recommendations = frequencySettings.recommendations;
+      }
+      if (frequencySettings.applications !== undefined) {
+        preferences.notificationFrequency.applications = frequencySettings.applications;
+      }
+      if (frequencySettings.system !== undefined) {
+        preferences.notificationFrequency.system = frequencySettings.system;
+      }
+      
+      await preferences.save();
+      logger.info(`Notification frequency updated for user ${userId}`);
+      
+      return preferences;
+    } catch (error) {
+      logger.error('Error updating notification frequency:', error);
+      throw error;
+    }
+  }
+  
+  // الحصول على تكرار الإشعارات
+  async getNotificationFrequency(userId) {
+    const preferences = await this.getUserPreferences(userId);
+    return preferences.notificationFrequency;
+  }
+  
+  // التحقق من إمكانية إرسال إشعار بناءً على التكرار
+  async canSendNotification(userId, notificationType) {
+    try {
+      const preferences = await this.getUserPreferences(userId);
+      const frequency = preferences.notificationFrequency;
+      
+      // تحديد فئة الإشعار
+      let category;
+      if (['job_match', 'course_match'].includes(notificationType)) {
+        category = 'recommendations';
+      } else if (['application_accepted', 'application_rejected', 'application_reviewed', 'new_application'].includes(notificationType)) {
+        category = 'applications';
+      } else if (notificationType === 'system') {
+        category = 'system';
+      } else {
+        // أنواع أخرى تُرسل فوراً
+        return true;
+      }
+      
+      const frequencySetting = frequency[category];
+      
+      // إذا كان معطلاً
+      if (frequencySetting === 'disabled') {
+        return false;
+      }
+      
+      // إذا كان فورياً
+      if (frequencySetting === 'instant') {
+        return true;
+      }
+      
+      // التحقق من آخر مرة تم إرسال إشعارات مجمعة
+      const lastBatchSent = frequency.lastBatchSent[category];
+      if (!lastBatchSent) {
+        return true; // أول مرة
+      }
+      
+      const now = new Date();
+      const timeDiff = now - lastBatchSent;
+      
+      // التحقق بناءً على التكرار
+      switch (frequencySetting) {
+        case 'hourly':
+          return timeDiff >= 60 * 60 * 1000; // ساعة واحدة
+        case 'daily':
+          return timeDiff >= 24 * 60 * 60 * 1000; // يوم واحد
+        case 'weekly':
+          return timeDiff >= 7 * 24 * 60 * 60 * 1000; // أسبوع واحد
+        default:
+          return true;
+      }
+    } catch (error) {
+      logger.error('Error checking notification frequency:', error);
+      return true; // في حالة الخطأ، نسمح بالإرسال
+    }
+  }
+  
+  // تحديث وقت آخر إرسال مجمع
+  async updateLastBatchSent(userId, category) {
+    try {
+      const preferences = await this.getUserPreferences(userId);
+      preferences.notificationFrequency.lastBatchSent[category] = new Date();
+      await preferences.save();
+    } catch (error) {
+      logger.error('Error updating last batch sent:', error);
+    }
+  }
+  
+  // إنشاء إشعار مع احترام التكرار المخصص
+  async createNotificationWithFrequency({ recipient, type, title, message, relatedData = {}, priority = 'medium' }) {
+    try {
+      // التحقق من إمكانية الإرسال بناءً على التكرار
+      const canSend = await this.canSendNotification(recipient, type);
+      
+      if (!canSend) {
+        logger.info(`Notification ${type} skipped for user ${recipient} due to frequency settings`);
+        // حفظ الإشعار في قائمة الانتظار للإرسال المجمع
+        await this.queueNotificationForBatch(recipient, type, { title, message, relatedData, priority });
+        return null;
+      }
+      
+      // إرسال الإشعار فوراً
+      return await this.createNotification({ recipient, type, title, message, relatedData, priority });
+      
+    } catch (error) {
+      logger.error('Error creating notification with frequency:', error);
+      throw error;
+    }
+  }
+  
+  // إضافة إشعار لقائمة الانتظار للإرسال المجمع
+  async queueNotificationForBatch(userId, type, notificationData) {
+    try {
+      // يمكن استخدام Redis أو MongoDB لتخزين الإشعارات المؤجلة
+      // للتبسيط، نحفظها في collection منفصلة
+      const QueuedNotification = require('../models/QueuedNotification');
+      
+      await QueuedNotification.create({
+        recipient: userId,
+        type,
+        ...notificationData,
+        queuedAt: new Date()
+      });
+      
+      logger.info(`Notification ${type} queued for batch sending to user ${userId}`);
+    } catch (error) {
+      logger.error('Error queuing notification:', error);
+    }
+  }
+  
+  // إرسال الإشعارات المجمعة
+  async sendBatchNotifications(userId, category) {
+    try {
+      const QueuedNotification = require('../models/QueuedNotification');
+      
+      // تحديد أنواع الإشعارات حسب الفئة
+      let types;
+      if (category === 'recommendations') {
+        types = ['job_match', 'course_match'];
+      } else if (category === 'applications') {
+        types = ['application_accepted', 'application_rejected', 'application_reviewed', 'new_application'];
+      } else if (category === 'system') {
+        types = ['system'];
+      }
+      
+      // جلب الإشعارات المؤجلة
+      const queuedNotifications = await QueuedNotification.find({
+        recipient: userId,
+        type: { $in: types }
+      }).sort({ queuedAt: 1 });
+      
+      if (queuedNotifications.length === 0) {
+        logger.info(`No queued notifications for user ${userId} in category ${category}`);
+        return { sent: 0 };
+      }
+      
+      // إنشاء إشعار مجمع واحد
+      const count = queuedNotifications.length;
+      let title, message;
+      
+      if (category === 'recommendations') {
+        title = `لديك ${count} توصيات جديدة! 🎯`;
+        message = `تحقق من ${count} وظائف ودورات جديدة مناسبة لك`;
+      } else if (category === 'applications') {
+        title = `${count} تحديثات على طلباتك 📋`;
+        message = `لديك ${count} تحديثات جديدة على طلبات التوظيف`;
+      } else if (category === 'system') {
+        title = `${count} إشعارات نظام جديدة 🔔`;
+        message = `لديك ${count} إشعارات نظام جديدة`;
+      }
+      
+      // إرسال الإشعار المجمع
+      await this.createNotification({
+        recipient: userId,
+        type: 'batch_notification',
+        title,
+        message,
+        relatedData: {
+          category,
+          count,
+          notifications: queuedNotifications.map(n => n._id)
+        },
+        priority: 'medium'
+      });
+      
+      // حذف الإشعارات المؤجلة
+      await QueuedNotification.deleteMany({
+        recipient: userId,
+        type: { $in: types }
+      });
+      
+      // تحديث وقت آخر إرسال مجمع
+      await this.updateLastBatchSent(userId, category);
+      
+      logger.info(`Sent batch notification with ${count} items to user ${userId}`);
+      
+      return { sent: count };
+      
+    } catch (error) {
+      logger.error('Error sending batch notifications:', error);
+      throw error;
+    }
+  }
+  
   // إضافة Push Subscription
   async addPushSubscription(userId, subscription) {
     const preferences = await this.getUserPreferences(userId);

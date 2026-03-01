@@ -1,0 +1,321 @@
+/* Device Test Component Styles */
+
+.device-test-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #304B60 0%, #1a2a38 100%);
+}
+
+.device-test-card {
+  background: #E3DAD1;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 800px;
+  width: 100%;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.device-test-title {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #304B60;
+  text-align: center;
+  margin: 0 0 10px 0;
+}
+
+.device-test-subtitle {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+  margin: 0 0 30px 0;
+}
+
+.device-test-error {
+  background: #fee;
+  border: 2px solid #fcc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  color: #c33;
+  text-align: center;
+  font-family: 'Amiri', 'Cairo', serif;
+}
+
+.device-test-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  border: 2px solid #D4816180;
+}
+
+.device-test-section-title {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: #304B60;
+  margin: 0 0 15px 0;
+}
+
+.device-test-select-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.device-test-select {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 14px;
+  background: white;
+  color: #304B60;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.device-test-select:hover:not(:disabled) {
+  border-color: #D48161;
+}
+
+.device-test-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.device-test-button {
+  padding: 12px 24px;
+  border: 2px solid #D48161;
+  border-radius: 8px;
+  background: white;
+  color: #D48161;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.device-test-button:hover:not(:disabled) {
+  background: #D48161;
+  color: white;
+}
+
+.device-test-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.device-test-button.success {
+  background: #4CAF50;
+  border-color: #4CAF50;
+  color: white;
+}
+
+.device-test-button.success:hover:not(:disabled) {
+  background: #45a049;
+  border-color: #45a049;
+}
+
+.device-test-preview {
+  position: relative;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+}
+
+.device-test-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.device-test-status {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.device-test-status.success {
+  background: rgba(76, 175, 80, 0.9);
+  color: white;
+}
+
+.device-test-audio {
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.device-test-audio-label {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.device-test-audio-meter {
+  width: 100%;
+  height: 30px;
+  background: #ddd;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.device-test-audio-level {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 50%, #FFC107 75%, #FF5722 100%);
+  transition: width 0.1s ease;
+  border-radius: 15px;
+}
+
+.device-test-audio-value {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  text-align: center;
+}
+
+.device-test-continue {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+
+.device-test-continue.enabled {
+  background: #D48161;
+  color: white;
+}
+
+.device-test-continue.enabled:hover {
+  background: #c57050;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.device-test-continue.disabled {
+  background: #ccc;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .device-test-card {
+    padding: 20px;
+  }
+
+  .device-test-title {
+    font-size: 24px;
+  }
+
+  .device-test-subtitle {
+    font-size: 14px;
+  }
+
+  .device-test-select-group {
+    flex-direction: column;
+  }
+
+  .device-test-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .device-test-container {
+    padding: 10px;
+  }
+
+  .device-test-card {
+    padding: 15px;
+  }
+
+  .device-test-title {
+    font-size: 20px;
+  }
+
+  .device-test-section {
+    padding: 15px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .device-test-select-group {
+  direction: rtl;
+}
+
+[dir="rtl"] .device-test-status {
+  direction: rtl;
+}
+
+/* Dark Mode Support (optional) */
+@media (prefers-color-scheme: dark) {
+  .device-test-card {
+    background: #2a2a2a;
+  }
+
+  .device-test-title {
+    color: #E3DAD1;
+  }
+
+  .device-test-subtitle {
+    color: #aaa;
+  }
+
+  .device-test-section {
+    background: #333;
+    border-color: #D48161;
+  }
+
+  .device-test-section-title {
+    color: #E3DAD1;
+  }
+
+  .device-test-select {
+    background: #444;
+    color: #E3DAD1;
+    border-color: #D48161;
+  }
+
+  .device-test-button {
+    background: #444;
+  }
+
+  .device-test-audio {
+    background: #444;
+  }
+
+  .device-test-audio-label,
+  .device-test-audio-value {
+    color: #aaa;
+  }
+}

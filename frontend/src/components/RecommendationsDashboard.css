@@ -320,25 +320,207 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* الهواتف الصغيرة جداً (< 375px) */
+@media (max-width: 374px) {
+  .recommendations-dashboard {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+  }
+  
+  .recommendations-title {
+    font-size: 1.25rem;
+  }
+  
+  .recommendations-subtitle {
+    font-size: 0.85rem;
+  }
+  
   .recommendations-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .recommendation-card {
+    padding: 1rem;
+  }
+  
+  .job-title {
+    font-size: 1rem;
+  }
+  
+  .score-value {
+    font-size: 1.25rem;
+  }
+  
+  .action-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* الهواتف العادية (375px - 639px) */
+@media (max-width: 639px) {
+  .recommendations-dashboard {
+    padding: 1.25rem;
+    margin: 1rem 0;
+    border-radius: 10px;
+  }
+  
+  .recommendations-title {
+    font-size: 1.5rem;
+  }
+  
+  .recommendations-subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
   
   .recommendations-meta {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 0.75rem;
   }
   
-  .action-buttons {
+  .refresh-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .recommendation-card {
+    padding: 1.25rem;
+  }
+  
+  .recommendation-actions {
     flex-direction: column;
     gap: 0.5rem;
   }
   
   .action-button {
     width: 100%;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
+  }
+  
+  .recommendation-reasons {
+    padding: 0.75rem;
+  }
+  
+  .job-details {
+    font-size: 0.9rem;
+  }
+}
+
+/* الأجهزة اللوحية (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .recommendations-dashboard {
+    padding: 1.75rem;
+  }
+  
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .recommendations-title {
+    font-size: 1.6rem;
+  }
+  
+  .recommendation-card {
+    padding: 1.5rem;
+  }
+}
+
+/* الشاشات الكبيرة (> 1024px) */
+@media (min-width: 1024px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  }
+}
+
+/* Landscape Mode للهواتف */
+@media (max-height: 500px) and (orientation: landscape) {
+  .recommendations-dashboard {
+    padding: 1rem;
+  }
+  
+  .recommendations-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  .recommendations-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .recommendations-subtitle {
+    font-size: 0.85rem;
+    margin: 0.25rem 0;
+  }
+  
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .recommendation-card {
+    padding: 1rem;
+  }
+  
+  .recommendation-actions {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  
+  .action-button {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* تحسينات Touch للأجهزة المحمولة */
+@media (hover: none) and (pointer: coarse) {
+  .action-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .refresh-button {
+    min-height: 44px;
+  }
+  
+  .recommendation-card {
+    -webkit-tap-highlight-color: rgba(48, 75, 96, 0.1);
+  }
+}
+
+/* Safe Area Support (iPhone notch) */
+@supports (padding: max(0px)) {
+  .recommendations-dashboard {
+    padding-left: max(2rem, env(safe-area-inset-left));
+    padding-right: max(2rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* منع التمرير الأفقي */
+.recommendations-dashboard,
+.recommendation-card,
+.recommendations-grid {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* تحسين الصور للأجهزة المحمولة */
+@media (max-width: 639px) {
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }
 

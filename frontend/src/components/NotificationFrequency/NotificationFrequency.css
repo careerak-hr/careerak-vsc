@@ -1,0 +1,249 @@
+/* Notification Frequency Component Styles */
+
+.notification-frequency-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification-frequency-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.notification-frequency-header h2 {
+  font-size: 1.75rem;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.notification-frequency-header p {
+  font-size: 1rem;
+  color: #666;
+}
+
+.notification-frequency-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.notification-frequency-message {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.notification-frequency-message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.notification-frequency-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.notification-frequency-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.frequency-section {
+  border: 2px solid #E3DAD1;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: #FAFAFA;
+}
+
+.section-header {
+  margin-bottom: 1rem;
+}
+
+.section-header h3 {
+  font-size: 1.25rem;
+  color: #304B60;
+  margin-bottom: 0.25rem;
+}
+
+.section-header p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.frequency-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.frequency-option {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.frequency-option:hover {
+  border-color: #D48161;
+  box-shadow: 0 2px 8px rgba(212, 129, 97, 0.2);
+}
+
+.frequency-option input[type="radio"] {
+  margin: 0;
+  margin-inline-end: 1rem;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #D48161;
+}
+
+.option-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.option-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.option-desc {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.notification-frequency-note {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #FFF9E6;
+  border: 1px solid #FFE066;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.notification-frequency-note strong {
+  color: #304B60;
+}
+
+.notification-frequency-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.save-button {
+  padding: 0.75rem 2rem;
+  background: #D48161;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-button:hover:not(:disabled) {
+  background: #C06F51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.save-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* RTL Support */
+[dir="rtl"] .frequency-option input[type="radio"] {
+  margin-inline-end: 0;
+  margin-inline-start: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .notification-frequency-container {
+    padding: 1.5rem;
+  }
+
+  .notification-frequency-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .frequency-section {
+    padding: 1rem;
+  }
+
+  .section-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .frequency-option {
+    padding: 0.75rem;
+  }
+
+  .option-label {
+    font-size: 0.95rem;
+  }
+
+  .option-desc {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-frequency-container {
+    padding: 1rem;
+  }
+
+  .notification-frequency-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .frequency-section {
+    padding: 0.75rem;
+  }
+
+  .frequency-option {
+    padding: 0.5rem;
+  }
+
+  .frequency-option input[type="radio"] {
+    width: 18px;
+    height: 18px;
+  }
+
+  .save-button {
+    width: 100%;
+  }
+}

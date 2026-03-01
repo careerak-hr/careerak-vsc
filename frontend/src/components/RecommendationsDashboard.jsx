@@ -6,6 +6,8 @@ import './RecommendationsDashboard.css';
  * RecommendationsDashboard Component
  * Displays 10-20 recommended jobs daily with match scores and explanations
  * 
+ * ✅ دعم كامل للعربية والإنجليزية والفرنسية
+ * 
  * Validates: Requirements 1.1, 1.3, 1.4
  * Task: 14.1 Recommendations Dashboard
  */

@@ -1,5 +1,6 @@
 const JobPosting = require('../models/JobPosting');
 const notificationService = require('../services/notificationService');
+const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
 
 exports.createJobPosting = async (req, res) => {
   try {
@@ -19,10 +20,12 @@ exports.createJobPosting = async (req, res) => {
     await jobPosting.save();
     
     // إرسال إشعارات فورية للمستخدمين المناسبين (بشكل غير متزامن)
-    notificationService.notifyMatchingUsersForNewJob(jobPosting._id)
+    // استخدام الخدمة الجديدة للإشعارات الفورية
+    realtimeNotificationService.notifyUsersForNewJob(jobPosting._id)
       .then(result => {
         if (result.success) {
           console.log(`✅ Sent ${result.notified} real-time notifications for job: ${result.jobTitle}`);
+          console.log(`📊 Matching users: ${result.matchingUsers}, Average match: ${result.averageMatchScore?.toFixed(1)}%`);
         } else {
           console.error('❌ Failed to send job match notifications:', result.error);
         }

@@ -1,0 +1,175 @@
+/* Latency Indicator Styles */
+
+.latency-indicator {
+  position: relative;
+  display: inline-block;
+}
+
+/* المؤشر الأساسي */
+.latency-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.latency-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.latency-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.latency-value {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* التفاصيل */
+.latency-details {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: white;
+  border: 2px solid #304B60;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 280px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.latency-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #E3DAD1;
+}
+
+.latency-detail-item:last-of-type {
+  border-bottom: none;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #304B60;
+  font-family: 'Courier New', monospace;
+}
+
+/* التحذيرات والنصائح */
+.latency-warning,
+.latency-tip {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.latency-warning {
+  background: #FFF3E0;
+  border: 1px solid #FFB74D;
+  color: #E65100;
+}
+
+.latency-tip {
+  background: #E3F2FD;
+  border: 1px solid #64B5F6;
+  color: #1565C0;
+}
+
+/* RTL Support */
+[dir="rtl"] .latency-details {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .latency-detail-item {
+  flex-direction: row-reverse;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .latency-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .latency-icon {
+    font-size: 14px;
+  }
+
+  .latency-details {
+    min-width: 240px;
+    padding: 12px;
+  }
+
+  .detail-label,
+  .detail-value {
+    font-size: 12px;
+  }
+
+  .latency-warning,
+  .latency-tip {
+    font-size: 11px;
+    padding: 8px;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .latency-details {
+    background: #1E1E1E;
+    border-color: #D48161;
+  }
+
+  .detail-label {
+    color: #B0B0B0;
+  }
+
+  .detail-value {
+    color: #E3DAD1;
+  }
+
+  .latency-warning {
+    background: #3E2723;
+    border-color: #D48161;
+    color: #FFB74D;
+  }
+
+  .latency-tip {
+    background: #1A237E;
+    border-color: #64B5F6;
+    color: #90CAF9;
+  }
+}

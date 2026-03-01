@@ -35,10 +35,30 @@ class CVParserService {
     
     // كلمات مفتاحية للأقسام
     this.sectionKeywords = {
-      experience: ['experience', 'work history', 'employment', 'خبرة', 'الخبرات', 'العمل'],
-      education: ['education', 'academic', 'qualification', 'تعليم', 'التعليم', 'المؤهلات'],
-      skills: ['skills', 'technical skills', 'competencies', 'مهارات', 'المهارات', 'الكفاءات'],
-      summary: ['summary', 'profile', 'objective', 'ملخص', 'نبذة', 'الهدف'],
+      experience: [
+        'experience', 'work history', 'employment', 'work experience', 
+        'professional experience', 'career history', 'employment history',
+        'خبرة', 'الخبرات', 'العمل', 'الخبرات العملية', 'خبرات عملية'
+      ],
+      education: [
+        'education', 'academic', 'qualification', 'academic background',
+        'educational background',
+        'تعليم', 'التعليم', 'المؤهلات', 'المؤهلات العلمية', 'التعليم الأكاديمي'
+      ],
+      skills: [
+        'skills', 'technical skills', 'competencies', 'core competencies',
+        'key skills', 'professional skills',
+        'مهارات', 'المهارات', 'الكفاءات', 'المهارات التقنية', 'مهارات تقنية'
+      ],
+      summary: [
+        'summary', 'profile', 'objective', 'professional summary',
+        'career objective', 'about me',
+        'ملخص', 'نبذة', 'الهدف', 'الملخص المهني', 'نبذة مهنية'
+      ],
+      contact: [
+        'contact', 'contact information', 'personal information',
+        'اتصال', 'معلومات الاتصال', 'معلومات شخصية'
+      ],
     };
   }
 
@@ -52,7 +72,7 @@ class CVParserService {
       'kotlin', 'typescript', 'scala', 'r', 'matlab', 'perl', 'shell', 'bash',
       
       // Web Technologies
-      'html', 'css', 'react', 'angular', 'vue', 'node.js', 'express', 'django', 'flask',
+      'html', 'css', 'react', 'angular', 'vue', 'vue.js', 'node.js', 'express', 'django', 'flask',
       'spring', 'asp.net', 'laravel', 'jquery', 'bootstrap', 'tailwind', 'sass', 'webpack',
       
       // Databases
@@ -74,9 +94,18 @@ class CVParserService {
       'leadership', 'communication', 'teamwork', 'problem solving', 'project management',
       'agile', 'scrum', 'time management',
       
-      // Arabic Skills
-      'جافاسكريبت', 'بايثون', 'جافا', 'تطوير ويب', 'قواعد بيانات', 'تعلم آلي',
-      'ذكاء اصطناعي', 'إدارة مشاريع', 'قيادة', 'تواصل', 'عمل جماعي',
+      // Arabic Skills (محسّن جداً)
+      'جافاسكريبت', 'بايثون', 'جافا', 'سي بلس بلس', 'سي شارب',
+      'تطوير ويب', 'تطوير تطبيقات', 'برمجة',
+      'قواعد بيانات', 'قاعدة بيانات',
+      'تعلم آلي', 'ذكاء اصطناعي', 'تعلم عميق',
+      'إدارة مشاريع', 'قيادة', 'تواصل', 'عمل جماعي',
+      'أمن سيبراني', 'حوسبة سحابية',
+      'تحليل بيانات', 'علم بيانات',
+      // إضافات جديدة
+      'ريأكت', 'نود', 'مونجو', 'ماي إس كيو إل',
+      'دوكر', 'كوبرنيتس', 'أمازون ويب سيرفيسز',
+      'فلاسك', 'جانغو', 'إكسبريس',
     ];
   }
 
@@ -150,6 +179,32 @@ class CVParserService {
     const textLower = text.toLowerCase();
     const foundSkills = [];
 
+    // قاموس المرادفات للمهارات
+    const skillSynonyms = {
+      'javascript': ['javascript', 'js', 'جافاسكريبت'],
+      'python': ['python', 'بايثون'],
+      'java': ['java', 'جافا'],
+      'typescript': ['typescript', 'ts'],
+      'react': ['react', 'reactjs', 'react.js', 'ريأكت'],
+      'vue': ['vue', 'vuejs', 'vue.js'],
+      'angular': ['angular', 'angularjs'],
+      'node.js': ['node', 'nodejs', 'node.js', 'نود'],
+      'express': ['express', 'expressjs', 'إكسبريس'],
+      'django': ['django', 'جانغو'],
+      'flask': ['flask', 'فلاسك'],
+      'mongodb': ['mongodb', 'mongo', 'مونجو', 'مونجو دي بي'],
+      'postgresql': ['postgresql', 'postgres'],
+      'mysql': ['mysql', 'ماي إس كيو إل'],
+      'redis': ['redis'],
+      'aws': ['aws', 'amazon web services', 'أمازون ويب سيرفيسز'],
+      'azure': ['azure', 'microsoft azure'],
+      'docker': ['docker', 'دوكر'],
+      'kubernetes': ['kubernetes', 'k8s', 'كوبرنيتس'],
+      'git': ['git'],
+      'jenkins': ['jenkins'],
+      'webpack': ['webpack'],
+    };
+
     // البحث عن المهارات المعروفة
     for (const skill of this.knownSkills) {
       const skillLower = skill.toLowerCase();
@@ -164,6 +219,22 @@ class CVParserService {
       }
     }
 
+    // البحث باستخدام المرادفات
+    for (const [mainSkill, synonyms] of Object.entries(skillSynonyms)) {
+      let found = false;
+      for (const synonym of synonyms) {
+        const escapedSynonym = synonym.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b${escapedSynonym}\\b`, 'gi');
+        if (regex.test(textLower)) {
+          found = true;
+          break;
+        }
+      }
+      if (found && !foundSkills.includes(mainSkill)) {
+        foundSkills.push(mainSkill);
+      }
+    }
+
     // إزالة التكرارات
     return [...new Set(foundSkills)];
   }
@@ -173,51 +244,107 @@ class CVParserService {
    */
   extractExperience(text) {
     const experiences = [];
-    const lines = text.split('\n');
+    const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
     
     // البحث عن قسم الخبرات
     let inExperienceSection = false;
-    let currentExperience = null;
+    let experienceSectionStart = -1;
+    let experienceSectionEnd = lines.length;
 
+    // إيجاد حدود قسم الخبرات
     for (let i = 0; i < lines.length; i++) {
-      const line = lines[i].trim();
-      const lineLower = line.toLowerCase();
+      const lineLower = lines[i].toLowerCase();
 
-      // التحقق من بداية قسم الخبرات
-      if (this.sectionKeywords.experience.some(keyword => lineLower.includes(keyword))) {
-        inExperienceSection = true;
-        continue;
+      // بداية قسم الخبرات (يجب أن يكون السطر يحتوي فقط على الكلمة المفتاحية)
+      if (!inExperienceSection) {
+        const isExperienceHeader = this.sectionKeywords.experience.some(keyword => {
+          const keywordLower = keyword.toLowerCase();
+          // التحقق من أن السطر يحتوي على الكلمة المفتاحية فقط (أو مع كلمات قليلة)
+          return lineLower === keywordLower || 
+                 lineLower.startsWith(keywordLower) && lineLower.length < keywordLower.length + 20;
+        });
+        
+        if (isExperienceHeader) {
+          inExperienceSection = true;
+          experienceSectionStart = i + 1;
+          continue;
+        }
       }
 
-      // التحقق من نهاية قسم الخبرات (بداية قسم آخر)
-      if (inExperienceSection && (
-        this.sectionKeywords.education.some(keyword => lineLower.includes(keyword)) ||
-        this.sectionKeywords.skills.some(keyword => lineLower.includes(keyword))
-      )) {
+      // نهاية قسم الخبرات (بداية قسم آخر)
+      if (inExperienceSection) {
+        const isOtherSectionHeader = 
+          this.sectionKeywords.education.some(keyword => lineLower.includes(keyword.toLowerCase())) ||
+          this.sectionKeywords.skills.some(keyword => lineLower.includes(keyword.toLowerCase())) ||
+          this.sectionKeywords.summary.some(keyword => lineLower.includes(keyword.toLowerCase())) ||
+          this.sectionKeywords.contact.some(keyword => lineLower.includes(keyword.toLowerCase()));
+        
+        if (isOtherSectionHeader) {
+          experienceSectionEnd = i;
+          break;
+        }
+      }
+    }
+
+    // إذا لم نجد قسم الخبرات، نرجع مصفوفة فارغة
+    if (!inExperienceSection || experienceSectionStart === -1) {
+      return experiences;
+    }
+
+    // استخراج الخبرات من القسم
+    let currentExperience = null;
+
+    for (let i = experienceSectionStart; i < experienceSectionEnd; i++) {
+      const line = lines[i];
+      
+      // تجاهل السطور الفارغة
+      if (line.length === 0) continue;
+      
+      // البحث عن نمط "المسمى الوظيفي | الشركة | التواريخ"
+      const pipePattern = /^(.+?)\s*\|\s*(.+?)\s*\|\s*(\d{4}\s*[-–—]\s*(?:\d{4}|present|current|الآن|حالياً))/i;
+      const pipeMatch = line.match(pipePattern);
+      
+      if (pipeMatch) {
+        // حفظ الخبرة السابقة
         if (currentExperience) {
           experiences.push(currentExperience);
         }
-        break;
+
+        // بداية خبرة جديدة (نمط pipe)
+        currentExperience = {
+          title: pipeMatch[1].trim(),
+          company: pipeMatch[2].trim(),
+          period: pipeMatch[3].trim(),
+          description: [],
+        };
+        continue;
       }
 
-      if (inExperienceSection && line.length > 0) {
-        // البحث عن تواريخ
-        const dateMatches = line.match(this.patterns.dateRange);
-        
-        if (dateMatches) {
-          // حفظ الخبرة السابقة
-          if (currentExperience) {
-            experiences.push(currentExperience);
-          }
+      // البحث عن تواريخ في السطر
+      const dateMatches = line.match(this.patterns.dateRange);
+      
+      if (dateMatches && dateMatches.length > 0) {
+        // حفظ الخبرة السابقة
+        if (currentExperience) {
+          experiences.push(currentExperience);
+        }
 
-          // بداية خبرة جديدة
-          currentExperience = {
-            title: line.replace(this.patterns.dateRange, '').trim(),
-            period: dateMatches[0],
-            description: [],
-          };
-        } else if (currentExperience) {
-          // إضافة وصف للخبرة الحالية
+        // بداية خبرة جديدة (نمط عادي)
+        const titleAndCompany = line.replace(this.patterns.dateRange, '').replace(/\|/g, '').trim();
+        currentExperience = {
+          title: titleAndCompany,
+          period: dateMatches[0],
+          description: [],
+        };
+        continue;
+      }
+
+      // إضافة وصف للخبرة الحالية
+      if (currentExperience && line.length > 0) {
+        // تجاهل السطور التي تبدأ بـ "-" أو "•" (نقاط)
+        if (line.startsWith('-') || line.startsWith('•')) {
+          currentExperience.description.push(line.substring(1).trim());
+        } else {
           currentExperience.description.push(line);
         }
       }
@@ -305,16 +432,44 @@ class CVParserService {
    * حساب سنوات الخبرة من قائمة الخبرات
    */
   calculateTotalExperience(experiences) {
-    let totalYears = 0;
+    if (experiences.length === 0) return 0;
 
+    // جمع جميع الفترات
+    const periods = [];
+    
     for (const exp of experiences) {
       const match = exp.period.match(/(\d{4})\s*[-–—]\s*(\d{4}|present|current|الآن|حالياً)/i);
       if (match) {
         const startYear = parseInt(match[1]);
         const endYear = match[2].match(/\d{4}/) ? parseInt(match[2]) : new Date().getFullYear();
-        totalYears += (endYear - startYear);
+        periods.push({ start: startYear, end: endYear });
       }
     }
+
+    if (periods.length === 0) return 0;
+
+    // ترتيب الفترات حسب تاريخ البداية
+    periods.sort((a, b) => a.start - b.start);
+
+    // دمج الفترات المتداخلة وحساب الإجمالي
+    let totalYears = 0;
+    let currentPeriod = periods[0];
+
+    for (let i = 1; i < periods.length; i++) {
+      const nextPeriod = periods[i];
+      
+      if (nextPeriod.start <= currentPeriod.end) {
+        // فترات متداخلة - دمجها
+        currentPeriod.end = Math.max(currentPeriod.end, nextPeriod.end);
+      } else {
+        // فترة جديدة - حساب الفترة السابقة
+        totalYears += (currentPeriod.end - currentPeriod.start);
+        currentPeriod = nextPeriod;
+      }
+    }
+
+    // إضافة آخر فترة
+    totalYears += (currentPeriod.end - currentPeriod.start);
 
     return totalYears;
   }

@@ -28,8 +28,14 @@
     "accuracy:analyze": "node scripts/improve-recommendation-accuracy.js",
     "daily:update": "node -e \"require('./src/jobs/dailyRecommendationCron').runManually()\"",
     "daily:status": "node -e \"console.log(require('./src/jobs/dailyRecommendationCron').getStatus())\"",
+    "checkpoint:final": "node scripts/final-checkpoint.js",
     "daily:start": "node -e \"require('./src/jobs/dailyRecommendationCron').start()\"",
-    "daily:stop": "node -e \"require('./src/jobs/dailyRecommendationCron').stop()\""
+    "daily:stop": "node -e \"require('./src/jobs/dailyRecommendationCron').stop()\"",
+    "train:models": "node scripts/train-models.js",
+    "train:content": "node scripts/train-models.js --models content_based",
+    "train:collaborative": "node scripts/train-models.js --models collaborative",
+    "train:hybrid": "node scripts/train-models.js --models hybrid",
+    "train:test": "node scripts/train-models.js --no-save"
   },
   "devDependencies": {
     "chai": "^5.1.1",

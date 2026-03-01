@@ -204,4 +204,114 @@ exports.unsubscribePush = async (req, res) => {
   }
 };
 
+// الحصول على إعدادات تكرار الإشعارات
+exports.getNotificationFrequency = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const frequency = await notificationService.getNotificationFrequency(userId);
+    
+    res.json({
+      success: true,
+      data: frequency
+    });
+    
+  } catch (error) {
+    logger.error('Error getting notification frequency:', error);
+    res.status(500).json({
+      success: false,
+      message: 'خطأ في جلب إعدادات التكرار'
+    });
+  }
+};
+
+// تحديث إعدادات تكرار الإشعارات
+exports.updateNotificationFrequency = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { recommendations, applications, system } = req.body;
+    
+    // التحقق من القيم الصحيحة
+    const validFrequencies = ['instant', 'hourly', 'daily', 'weekly', 'disabled'];
+    
+    const frequencySettings = {};
+    
+    if (recommendations !== undefined) {
+      if (!validFrequencies.includes(recommendations) && recommendations !== 'weekly') {
+        return res.status(400).json({
+          success: false,
+          message: 'قيمة غير صحيحة لتكرار التوصيات'
+        });
+      }
+      frequencySettings.recommendations = recommendations;
+    }
+    
+    if (applications !== undefined) {
+      const validAppFrequencies = ['instant', 'hourly', 'daily', 'disabled'];
+      if (!validAppFrequencies.includes(applications)) {
+        return res.status(400).json({
+          success: false,
+          message: 'قيمة غير صحيحة لتكرار إشعارات التطبيقات'
+        });
+      }
+      frequencySettings.applications = applications;
+    }
+    
+    if (system !== undefined) {
+      const validSystemFrequencies = ['instant', 'daily', 'weekly', 'disabled'];
+      if (!validSystemFrequencies.includes(system)) {
+        return res.status(400).json({
+          success: false,
+          message: 'قيمة غير صحيحة لتكرار إشعارات النظام'
+        });
+      }
+      frequencySettings.system = system;
+    }
+    
+    const updated = await notificationService.updateNotificationFrequency(userId, frequencySettings);
+    
+    res.json({
+      success: true,
+      data: updated.notificationFrequency,
+      message: 'تم تحديث إعدادات التكرار بنجاح'
+    });
+    
+  } catch (error) {
+    logger.error('Error updating notification frequency:', error);
+    res.status(500).json({
+      success: false,
+      message: 'خطأ في تحديث إعدادات التكرار'
+    });
+  }
+};
+
+// إرسال الإشعارات المجمعة يدوياً
+exports.sendBatchNotifications = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { category } = req.body;
+    
+    if (!['recommendations', 'applications', 'system'].includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: 'فئة غير صحيحة'
+      });
+    }
+    
+    const result = await notificationService.sendBatchNotifications(userId, category);
+    
+    res.json({
+      success: true,
+      data: result,
+      message: result.sent > 0 ? `تم إرسال ${result.sent} إشعارات` : 'لا توجد إشعارات مؤجلة'
+    });
+    
+  } catch (error) {
+    logger.error('Error sending batch notifications:', error);
+    res.status(500).json({
+      success: false,
+      message: 'خطأ في إرسال الإشعارات المجمعة'
+    });
+  }
+};
+
 module.exports = exports;

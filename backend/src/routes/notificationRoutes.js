@@ -33,4 +33,13 @@ router.post('/push/subscribe', notificationController.subscribePush);
 // إزالة Push Subscription
 router.post('/push/unsubscribe', notificationController.unsubscribePush);
 
+// الحصول على إعدادات تكرار الإشعارات
+router.get('/frequency', notificationController.getNotificationFrequency);
+
+// تحديث إعدادات تكرار الإشعارات
+router.put('/frequency', notificationController.updateNotificationFrequency);
+
+// إرسال الإشعارات المجمعة يدوياً
+router.post('/batch/send', notificationController.sendBatchNotifications);
+
 module.exports = router;

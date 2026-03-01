@@ -1,0 +1,608 @@
+/**
+ * Profile Improvement Component Styles
+ * تنسيقات مكون تحسين الملف الشخصي
+ */
+
+.profile-improvement {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: inherit;
+}
+
+/* Header */
+.improvement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.improvement-header h2 {
+  font-size: 2rem;
+  color: #304B60;
+  margin: 0;
+}
+
+.refresh-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.refresh-button:hover {
+  background-color: #c06d4f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading State */
+.profile-improvement.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error State */
+.profile-improvement.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+}
+
+.error-message {
+  color: #F44336;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #304B60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: #243a4d;
+  transform: translateY(-2px);
+}
+
+/* Scores Section */
+.scores-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.score-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.score-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.score-label {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  border: 8px solid;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  transition: all 0.3s ease;
+}
+
+.score-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #304B60;
+}
+
+.score-level {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Completeness Details */
+.completeness-details {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-detail {
+  margin-bottom: 1.5rem;
+}
+
+.category-detail:last-child {
+  margin-bottom: 0;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.category-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+.category-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.category-progress {
+  width: 100%;
+  height: 12px;
+  background-color: #E3DAD1;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  height: 100%;
+  transition: width 0.5s ease;
+  border-radius: 6px;
+}
+
+.category-stats {
+  font-size: 0.9rem;
+  color: #666;
+  text-align: right;
+}
+
+/* Strengths Section */
+.strengths-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.strengths-section h3 {
+  font-size: 1.5rem;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+}
+
+.strengths-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.strength-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  background: #f0f9ff;
+  border-left: 4px solid #4CAF50;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.strength-item:hover {
+  background: #e0f2fe;
+  transform: translateX(5px);
+}
+
+.strength-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.strength-content {
+  flex: 1;
+}
+
+.strength-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.25rem;
+}
+
+.strength-description {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+/* Suggestions Section */
+.suggestions-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.suggestions-section h3 {
+  font-size: 1.5rem;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+}
+
+.suggestions-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.suggestion-item {
+  background: #fff;
+  border: 2px solid #E3DAD1;
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.suggestion-item:hover {
+  border-color: #D48161;
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.2);
+  transform: translateY(-2px);
+}
+
+.suggestion-item.expanded {
+  border-color: #D48161;
+  box-shadow: 0 6px 16px rgba(212, 129, 97, 0.3);
+}
+
+.suggestion-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.suggestion-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.suggestion-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.suggestion-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.suggestion-priority {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: white;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.suggestion-impact {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+  flex-shrink: 0;
+}
+
+.suggestion-details {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #E3DAD1;
+}
+
+.suggestion-description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.suggestion-action {
+  padding: 1rem;
+  background: #f8f9fa;
+  border-left: 4px solid #D48161;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.suggestion-action strong {
+  color: #304B60;
+}
+
+/* No Suggestions */
+.no-suggestions {
+  text-align: center;
+  padding: 3rem;
+}
+
+.success-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.no-suggestions p {
+  font-size: 1.2rem;
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+/* Weaknesses Section */
+.weaknesses-section {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.weaknesses-section h3 {
+  font-size: 1.5rem;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+}
+
+.weaknesses-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.weakness-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 1rem;
+  background: #fff3e0;
+  border-left: 4px solid #FF9800;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.weakness-item:hover {
+  background: #ffe0b2;
+  transform: translateX(5px);
+}
+
+.weakness-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+}
+
+.weakness-content {
+  flex: 1;
+}
+
+.weakness-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.25rem;
+}
+
+.weakness-description {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .profile-improvement {
+    padding: 1rem;
+  }
+
+  .improvement-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .improvement-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .scores-section {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .score-circle {
+    width: 100px;
+    height: 100px;
+    border-width: 6px;
+  }
+
+  .score-value {
+    font-size: 1.5rem;
+  }
+
+  .suggestion-header {
+    flex-wrap: wrap;
+  }
+
+  .suggestion-impact {
+    width: 100%;
+    text-align: right;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-improvement {
+    padding: 0.5rem;
+  }
+
+  .improvement-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .refresh-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .score-card {
+    padding: 1.5rem;
+  }
+
+  .completeness-details,
+  .strengths-section,
+  .suggestions-section,
+  .weaknesses-section {
+    padding: 1.5rem;
+  }
+
+  .suggestion-item {
+    padding: 1rem;
+  }
+
+  .suggestion-icon,
+  .strength-icon,
+  .weakness-icon {
+    font-size: 1.5rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .category-icon,
+[dir="rtl"] .strength-icon,
+[dir="rtl"] .weakness-icon,
+[dir="rtl"] .suggestion-icon {
+  margin-right: 0;
+  margin-left: 0.75rem;
+}
+
+[dir="rtl"] .category-stats {
+  text-align: left;
+}
+
+[dir="rtl"] .strength-item:hover,
+[dir="rtl"] .weakness-item:hover {
+  transform: translateX(-5px);
+}
+
+[dir="rtl"] .suggestion-action {
+  border-left: none;
+  border-right: 4px solid #D48161;
+}
+
+[dir="rtl"] .strength-item {
+  border-left: none;
+  border-right: 4px solid #4CAF50;
+}
+
+[dir="rtl"] .weakness-item {
+  border-left: none;
+  border-right: 4px solid #FF9800;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .score-card,
+  .completeness-details,
+  .strengths-section,
+  .suggestions-section,
+  .weaknesses-section {
+    background: #1e1e1e;
+  }
+
+  .improvement-header h2,
+  .suggestions-section h3,
+  .strengths-section h3,
+  .weaknesses-section h3,
+  .score-value,
+  .category-name,
+  .strength-title,
+  .weakness-title,
+  .suggestion-title {
+    color: #E3DAD1;
+  }
+
+  .suggestion-item {
+    background: #2a2a2a;
+    border-color: #444;
+  }
+
+  .suggestion-item:hover,
+  .suggestion-item.expanded {
+    border-color: #D48161;
+  }
+
+  .suggestion-details {
+    border-top-color: #444;
+  }
+
+  .suggestion-action {
+    background: #2a2a2a;
+  }
+
+  .strength-item {
+    background: #1a3a1a;
+  }
+
+  .strength-item:hover {
+    background: #2a4a2a;
+  }
+
+  .weakness-item {
+    background: #3a2a1a;
+  }
+
+  .weakness-item:hover {
+    background: #4a3a2a;
+  }
+}

@@ -859,10 +859,13 @@ class ContentBasedFiltering {
   // ===== طرق مساعدة لحساب التشابه =====
   
   /**
-   * حساب تشابه المهارات
+   * حساب تشابه المهارات (مُحسّن مع fallback)
    */
   calculateSkillsSimilarity(userSkills, jobSkills) {
-    if (!jobSkills.length) return 0.5; // إذا لم تذكر مهارات مطلوبة
+    // إذا لم تذكر مهارات مطلوبة، نرجع 1.0 (افتراض أن الوظيفة مناسبة)
+    // هذا يسمح للمعايير الأخرى (الخبرة، التعليم، الموقع) بالتأثير
+    // ويضمن أن المستخدمين ذوي المهارات يحصلون على توصيات حتى مع بيانات وظائف ناقصة
+    if (!jobSkills.length) return 1.0;
     
     let matchedSkills = 0;
     let totalWeight = 0;
@@ -886,10 +889,12 @@ class ContentBasedFiltering {
   }
   
   /**
-   * حساب تشابه الخبرة
+   * حساب تشابه الخبرة (مُحسّن مع fallback)
    */
   calculateExperienceSimilarity(userExperience, jobExperience) {
-    if (jobExperience.minYears === 0) return 0.5; // إذا لم تذكر خبرة مطلوبة
+    // إذا لم تذكر خبرة مطلوبة، نرجع 1.0 (افتراض أن الوظيفة مناسبة)
+    // هذا يضمن أن المستخدمين ذوي الخبرة يحصلون على توصيات حتى مع بيانات وظائف ناقصة
+    if (jobExperience.minYears === 0) return 1.0;
     
     const userYears = userExperience.totalYears || 0;
     const requiredYears = jobExperience.minYears || 0;
@@ -904,10 +909,12 @@ class ContentBasedFiltering {
   }
   
   /**
-   * حساب تشابه التعليم
+   * حساب تشابه التعليم (مُحسّن مع fallback)
    */
   calculateEducationSimilarity(userEducation, jobEducation) {
-    if (jobEducation.requiredDegree === 'none') return 0.5;
+    // إذا لم تذكر متطلبات تعليمية، نرجع 1.0 (افتراض أن الوظيفة مناسبة)
+    // هذا يضمن أن المستخدمين ذوي المؤهلات يحصلون على توصيات حتى مع بيانات وظائف ناقصة
+    if (jobEducation.requiredDegree === 'none') return 1.0;
     
     const degreeHierarchy = {
       'دكتوراه': 5,
@@ -932,11 +939,13 @@ class ContentBasedFiltering {
   }
   
   /**
-   * حساب تشابه الموقع
+   * حساب تشابه الموقع (مُحسّن مع fallback)
    */
   calculateLocationSimilarity(userLocation, jobLocation) {
-    if (!userLocation.city && !userLocation.country) return 0.5;
-    if (!jobLocation.city && !jobLocation.country) return 0.5;
+    // إذا لم تتوفر بيانات الموقع، نرجع 0.9 (افتراض أن الوظيفة مناسبة)
+    // هذا يضمن أن نقص بيانات الموقع لا يؤثر سلباً على التوصيات
+    if (!userLocation.city && !userLocation.country) return 0.9;
+    if (!jobLocation.city && !jobLocation.country) return 0.9;
     
     let score = 0;
     
@@ -960,21 +969,21 @@ class ContentBasedFiltering {
   }
   
   /**
-   * حساب تشابه الراتب
+   * حساب تشابه الراتب (مُحسّن مع fallback)
    */
   calculateSalarySimilarity(userPreferences, jobSalary) {
     // يمكن تطوير هذا ليشمل تفضيلات الراتب للمستخدم
-    // حالياً نرجع قيمة متوسطة
-    return 0.5;
+    // حالياً نرجع قيمة عالية لعدم التأثير السلبي عند نقص البيانات
+    return 0.9;
   }
   
   /**
-   * حساب تشابه نوع العمل
+   * حساب تشابه نوع العمل (مُحسّن مع fallback)
    */
   calculateJobTypeSimilarity(userPreferences, jobType) {
     // يمكن تطوير هذا ليشمل تفضيلات نوع العمل للمستخدم
-    // حالياً نرجع قيمة متوسطة
-    return 0.5;
+    // حالياً نرجع قيمة عالية لعدم التأثير السلبي عند نقص البيانات
+    return 0.9;
   }
   
   // ===== طرق مساعدة عامة =====

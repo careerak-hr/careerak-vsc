@@ -1,0 +1,295 @@
+/* RecordingNotification.css */
+
+/* Base Notification Styles */
+.recording-notification {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, rgba(244, 67, 54, 0.95) 0%, rgba(211, 47, 47, 0.95) 100%);
+  color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+  font-family: 'Amiri', 'Cairo', serif;
+  z-index: 1000;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Position Variants */
+.recording-notification-top {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+}
+
+.recording-notification-bottom {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 300px;
+}
+
+.recording-notification-floating {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 320px;
+  max-width: 400px;
+}
+
+/* Recording Indicator */
+.recording-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recording-dot {
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+.recording-text {
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Recording Details */
+.recording-details {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1;
+}
+
+.recording-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recording-icon {
+  font-size: 1.2rem;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.recording-message {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.recording-duration {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  font-family: 'Courier New', monospace;
+}
+
+.duration-label {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.duration-value {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Privacy Notice (Floating only) */
+.recording-privacy-notice {
+  margin-top: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  border-left: 3px solid #fff;
+}
+
+.notice-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.notice-text {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.95;
+  line-height: 1.4;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.recording-notification-floating {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .recording-notification {
+    padding: 10px 15px;
+    gap: 10px;
+    min-width: auto;
+    max-width: calc(100vw - 40px);
+  }
+
+  .recording-notification-top,
+  .recording-notification-bottom {
+    left: 20px;
+    right: 20px;
+    transform: none;
+  }
+
+  .recording-notification-floating {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+
+  .recording-text {
+    font-size: 0.9rem;
+  }
+
+  .recording-message {
+    font-size: 0.85rem;
+  }
+
+  .recording-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .recording-duration {
+    padding: 3px 10px;
+  }
+
+  .duration-label,
+  .duration-value {
+    font-size: 0.85rem;
+  }
+
+  .notice-title {
+    font-size: 0.85rem;
+  }
+
+  .notice-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Tablet */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .recording-notification {
+    padding: 11px 18px;
+  }
+
+  .recording-notification-floating {
+    min-width: 280px;
+    max-width: 350px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .recording-notification {
+    box-shadow: 0 4px 16px rgba(244, 67, 54, 0.5);
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .recording-notification {
+    border: 2px solid #fff;
+  }
+
+  .recording-dot {
+    border: 2px solid #fff;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .recording-notification {
+    animation: none;
+  }
+
+  .recording-dot,
+  .recording-icon {
+    animation: none;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .recording-notification-floating {
+  right: auto;
+  left: 20px;
+}
+
+[dir="rtl"] .recording-privacy-notice {
+  border-left: none;
+  border-right: 3px solid #fff;
+}
+
+@media (max-width: 639px) {
+  [dir="rtl"] .recording-notification-floating {
+    left: 10px;
+    right: 10px;
+  }
+}

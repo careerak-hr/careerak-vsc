@@ -3,38 +3,45 @@
  * وحدة تحكم لتوصيات الوظائف الذكية
  * 
  * يوفر واجهات API لتوصيات الوظائف المخصصة باستخدام Content-Based Filtering
+ * 
+ * ✅ دعم كامل للعربية والإنجليزية
  */
 
 const ContentBasedFiltering = require('../services/contentBasedFiltering');
+const CollaborativeFiltering = require('../services/collaborativeFiltering');
+const HybridRecommendation = require('../services/hybridRecommendation');
 const AIJobMatcher = require('../services/aiJobMatcher');
 const SkillGapAnalysis = require('../services/skillGapAnalysis');
 const CourseRecommendationService = require('../services/courseRecommendationService');
 const JobPosting = require('../models/JobPosting');
 const { Individual } = require('../models/User');
+const { t, detectLanguage } = require('../utils/translations');
 
 class RecommendationController {
   constructor() {
     this.contentBasedFiltering = new ContentBasedFiltering();
-    this.aiJobMatcher = new AIJobMatcher();
-    this.skillGapAnalysis = new SkillGapAnalysis();
-    this.courseRecommendationService = new CourseRecommendationService();
+    this.collaborativeFiltering = new CollaborativeFiltering();
+    this.hybridRecommendation = new HybridRecommendation();
   }
+
 
   /**
    * GET /api/recommendations/jobs
    * الحصول على توصيات الوظائف المخصصة للمستخدم
+   * ✅ دعم كامل للعربية والإنجليزية
    */
   async getJobRecommendations(req, res) {
     try {
       const userId = req.user.id;
       const { limit = 20, minScore = 0.5 } = req.query;
+      const lang = detectLanguage(req);
 
       // 1. جلب بيانات المستخدم
       const user = await Individual.findById(userId);
       if (!user) {
         return res.status(404).json({
           success: false,
-          message: 'المستخدم غير موجود'
+          message: t('user.notFound', lang)
         });
       }
 
@@ -46,7 +53,7 @@ class RecommendationController {
       if (!jobs.length) {
         return res.status(200).json({
           success: true,
-          message: 'لا توجد وظائف متاحة حالياً',
+          message: t('job.noJobsAvailable', lang),
           recommendations: [],
           total: 0
         });
@@ -88,7 +95,7 @@ class RecommendationController {
       // 5. إرجاع النتائج
       res.status(200).json({
         success: true,
-        message: 'تم توليد التوصيات بنجاح',
+        message: t('recommendations.generated', lang),
         recommendations: enhancedRecommendations,
         total: enhancedRecommendations.length,
         userProfile: {
@@ -102,7 +109,7 @@ class RecommendationController {
       console.error('Error in getJobRecommendations:', error);
       res.status(500).json({
         success: false,
-        message: 'حدث خطأ في توليد التوصيات',
+        message: t('recommendations.error', lang),
         error: error.message
       });
     }
@@ -1732,3 +1739,495 @@ module.exports = new RecommendationController();
       });
     }
   }
+
+
+  /**
+   * GET /api/recommendations/collaborative
+   * الحصول على توصيات بناءً على المستخدمين المشابهين
+   * Requirements: 1.2
+   */
+  async getCollaborativeRecommendations(req, res) {
+    try {
+      const userId = req.user.id;
+      const { limit = 10 } = req.query;
+      const lang = detectLanguage(req);
+
+      console.log(`Getting collaborative recommendations for user ${userId}`);
+
+      // الحصول على التوصيات
+      const recommendations = await this.collaborativeFiltering.getCollaborativeRecommendations(
+        userId,
+        parseInt(limit)
+      );
+
+      res.json({
+        success: true,
+        message: t('recommendations.success', lang),
+        data: {
+          recommendations,
+          count: recommendations.length,
+          type: 'collaborative'
+        }
+      });
+    } catch (error) {
+      console.error('Error getting collaborative recommendations:', error);
+      res.status(500).json({
+        success: false,
+        message: t('recommendations.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * GET /api/recommendations/hybrid
+   * الحصول على توصيات هجينة (Content-Based + Collaborative)
+   * Requirements: 1.1, 1.2
+   */
+  async getHybridRecommendations(req, res) {
+    try {
+      const userId = req.user.id;
+      const { 
+        limit = 10,
+        contentWeight,
+        collaborativeWeight,
+        minScore = 0
+      } = req.query;
+      const lang = detectLanguage(req);
+
+      console.log(`Getting hybrid recommendations for user ${userId}`);
+
+      const options = {
+        limit: parseInt(limit),
+        minScore: parseFloat(minScore)
+      };
+
+      if (contentWeight) options.contentWeight = parseFloat(contentWeight);
+      if (collaborativeWeight) options.collaborativeWeight = parseFloat(collaborativeWeight);
+
+      // الحصول على التوصيات
+      const recommendations = await this.hybridRecommendation.getHybridRecommendations(
+        userId,
+        options
+      );
+
+      res.json({
+        success: true,
+        message: t('recommendations.success', lang),
+        data: {
+          recommendations,
+          count: recommendations.length,
+          type: 'hybrid',
+          weights: {
+            content: options.contentWeight || this.hybridRecommendation.defaultWeights.contentBased,
+            collaborative: options.collaborativeWeight || this.hybridRecommendation.defaultWeights.collaborative
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error getting hybrid recommendations:', error);
+      res.status(500).json({
+        success: false,
+        message: t('recommendations.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * GET /api/recommendations/smart
+   * الحصول على توصيات ذكية مع أوزان تلقائية
+   * Requirements: 1.1, 1.2, 6.2
+   */
+  async getSmartRecommendations(req, res) {
+    try {
+      const userId = req.user.id;
+      const { limit = 10, minScore = 0 } = req.query;
+      const lang = detectLanguage(req);
+
+      console.log(`Getting smart recommendations for user ${userId}`);
+
+      // الحصول على التوصيات الذكية
+      const recommendations = await this.hybridRecommendation.getSmartRecommendations(
+        userId,
+        {
+          limit: parseInt(limit),
+          minScore: parseFloat(minScore)
+        }
+      );
+
+      // تحديد الأوزان المستخدمة
+      const weights = await this.hybridRecommendation.determineOptimalWeights(userId);
+
+      res.json({
+        success: true,
+        message: t('recommendations.success', lang),
+        data: {
+          recommendations,
+          count: recommendations.length,
+          type: 'smart',
+          weights: {
+            content: weights.contentBased,
+            collaborative: weights.collaborative,
+            reason: weights.reason
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error getting smart recommendations:', error);
+      res.status(500).json({
+        success: false,
+        message: t('recommendations.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/rebuild-matrix
+   * إعادة بناء User-Item Matrix
+   * Requirements: 6.1
+   */
+  async rebuildMatrix(req, res) {
+    try {
+      const lang = detectLanguage(req);
+
+      console.log('Rebuilding user-item matrix...');
+
+      // إعادة بناء المصفوفة
+      const matrix = await this.collaborativeFiltering.rebuildMatrix();
+
+      // الحصول على الإحصائيات
+      const stats = this.collaborativeFiltering.getMatrixStats();
+
+      res.json({
+        success: true,
+        message: t('matrix.rebuilt', lang),
+        data: {
+          stats,
+          matrixSize: Object.keys(matrix).length
+        }
+      });
+    } catch (error) {
+      console.error('Error rebuilding matrix:', error);
+      res.status(500).json({
+        success: false,
+        message: t('matrix.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * GET /api/recommendations/matrix-stats
+   * الحصول على إحصائيات User-Item Matrix
+   * Requirements: 6.1
+   */
+  async getMatrixStats(req, res) {
+    try {
+      const lang = detectLanguage(req);
+
+      const stats = this.collaborativeFiltering.getMatrixStats();
+
+      res.json({
+        success: true,
+        message: t('matrix.stats', lang),
+        data: stats
+      });
+    } catch (error) {
+      console.error('Error getting matrix stats:', error);
+      res.status(500).json({
+        success: false,
+        message: t('matrix.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * GET /api/recommendations/similar-users
+   * إيجاد المستخدمين المشابهين
+   * Requirements: 1.2
+   */
+  async getSimilarUsers(req, res) {
+    try {
+      const userId = req.user.id;
+      const { topK = 10 } = req.query;
+      const lang = detectLanguage(req);
+
+      console.log(`Finding similar users for user ${userId}`);
+
+      // إيجاد المستخدمين المشابهين
+      const similarUsers = await this.collaborativeFiltering.findSimilarUsers(
+        userId,
+        parseInt(topK)
+      );
+
+      res.json({
+        success: true,
+        message: t('similarUsers.found', lang),
+        data: {
+          similarUsers,
+          count: similarUsers.length
+        }
+      });
+    } catch (error) {
+      console.error('Error finding similar users:', error);
+      res.status(500).json({
+        success: false,
+        message: t('similarUsers.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/evaluate
+   * تقييم جودة التوصيات
+   * Requirements: 6.3
+   */
+  async evaluateRecommendations(req, res) {
+    try {
+      const userId = req.user.id;
+      const { recommendations } = req.body;
+      const lang = detectLanguage(req);
+
+      if (!recommendations || !Array.isArray(recommendations)) {
+        return res.status(400).json({
+          success: false,
+          message: t('recommendations.invalid', lang)
+        });
+      }
+
+      console.log(`Evaluating recommendations for user ${userId}`);
+
+      // تقييم التوصيات
+      const evaluation = await this.hybridRecommendation.evaluateRecommendations(
+        userId,
+        recommendations
+      );
+
+      res.json({
+        success: true,
+        message: t('recommendations.evaluated', lang),
+        data: evaluation
+      });
+    } catch (error) {
+      console.error('Error evaluating recommendations:', error);
+      res.status(500).json({
+        success: false,
+        message: t('recommendations.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/notify-new-job
+   * إرسال إشعارات فورية للمستخدمين عند نشر وظيفة جديدة
+   * Requirements: 7.1
+   */
+  async notifyUsersForNewJob(req, res) {
+    try {
+      const { jobId } = req.body;
+      const lang = detectLanguage(req);
+
+      if (!jobId) {
+        return res.status(400).json({
+          success: false,
+          message: t('validation.required', lang, { field: 'jobId' })
+        });
+      }
+
+      const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+      const result = await realtimeNotificationService.notifyUsersForNewJob(jobId);
+
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          message: t('notifications.sendFailed', lang),
+          error: result.error
+        });
+      }
+
+      res.json({
+        success: true,
+        message: t('notifications.sent', lang),
+        data: {
+          notified: result.notified,
+          failed: result.failed || 0,
+          jobTitle: result.jobTitle,
+          matchingUsers: result.matchingUsers,
+          averageMatchScore: result.averageMatchScore
+        }
+      });
+    } catch (error) {
+      console.error('Error notifying users for new job:', error);
+      res.status(500).json({
+        success: false,
+        message: t('notifications.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/notify-new-candidate
+   * إرسال إشعارات فورية للشركات عند تسجيل مرشح جديد
+   * Requirements: 7.2
+   */
+  async notifyCompaniesForNewCandidate(req, res) {
+    try {
+      const { candidateId } = req.body;
+      const lang = detectLanguage(req);
+
+      if (!candidateId) {
+        return res.status(400).json({
+          success: false,
+          message: t('validation.required', lang, { field: 'candidateId' })
+        });
+      }
+
+      const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+      const result = await realtimeNotificationService.notifyCompaniesForNewCandidate(candidateId);
+
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          message: t('notifications.sendFailed', lang),
+          error: result.error
+        });
+      }
+
+      res.json({
+        success: true,
+        message: t('notifications.sent', lang),
+        data: {
+          notified: result.notified,
+          failed: result.failed || 0,
+          candidateName: result.candidateName,
+          matchingJobs: result.matchingJobs,
+          averageMatchScore: result.averageMatchScore
+        }
+      });
+    } catch (error) {
+      console.error('Error notifying companies for new candidate:', error);
+      res.status(500).json({
+        success: false,
+        message: t('notifications.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * POST /api/recommendations/notify-profile-update
+   * إرسال إشعار فوري عند تحديث الملف الشخصي
+   * Requirements: 7.2
+   */
+  async notifyProfileUpdateRecommendations(req, res) {
+    try {
+      const userId = req.user.id;
+      const { changes } = req.body;
+      const lang = detectLanguage(req);
+
+      const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+      const result = await realtimeNotificationService.notifyProfileUpdateRecommendations(userId, changes);
+
+      if (!result.success) {
+        return res.status(500).json({
+          success: false,
+          message: t('notifications.sendFailed', lang),
+          error: result.error
+        });
+      }
+
+      res.json({
+        success: true,
+        message: result.notified 
+          ? t('notifications.sent', lang)
+          : t('notifications.noHighMatches', lang),
+        data: {
+          notified: result.notified,
+          highMatches: result.highMatches || 0,
+          topMatchScore: result.topMatchScore || 0
+        }
+      });
+    } catch (error) {
+      console.error('Error notifying profile update:', error);
+      res.status(500).json({
+        success: false,
+        message: t('notifications.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * GET /api/recommendations/notification-settings
+   * الحصول على إعدادات الإشعارات الفورية
+   */
+  async getNotificationSettings(req, res) {
+    try {
+      const lang = detectLanguage(req);
+      const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+      
+      const settings = {
+        minMatchScore: realtimeNotificationService.getMinMatchScore(),
+        pusherEnabled: require('../services/pusherService').isEnabled()
+      };
+
+      res.json({
+        success: true,
+        data: settings
+      });
+    } catch (error) {
+      console.error('Error getting notification settings:', error);
+      res.status(500).json({
+        success: false,
+        message: t('notifications.error', lang),
+        error: error.message
+      });
+    }
+  }
+
+  /**
+   * PUT /api/recommendations/notification-settings
+   * تحديث إعدادات الإشعارات الفورية
+   */
+  async updateNotificationSettings(req, res) {
+    try {
+      const { minMatchScore } = req.body;
+      const lang = detectLanguage(req);
+
+      if (minMatchScore !== undefined) {
+        if (minMatchScore < 0 || minMatchScore > 100) {
+          return res.status(400).json({
+            success: false,
+            message: t('validation.invalidRange', lang, { field: 'minMatchScore', min: 0, max: 100 })
+          });
+        }
+
+        const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+        realtimeNotificationService.setMinMatchScore(minMatchScore);
+      }
+
+      res.json({
+        success: true,
+        message: t('settings.updated', lang),
+        data: {
+          minMatchScore
+        }
+      });
+    } catch (error) {
+      console.error('Error updating notification settings:', error);
+      res.status(500).json({
+        success: false,
+        message: t('settings.error', lang),
+        error: error.message
+      });
+    }
+  }
+}
+
+module.exports = new RecommendationController();

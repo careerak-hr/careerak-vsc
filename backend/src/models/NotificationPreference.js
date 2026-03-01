@@ -107,6 +107,34 @@ const notificationPreferenceSchema = new mongoose.Schema({
     }
   },
   
+  // تخصيص تكرار الإشعارات
+  notificationFrequency: {
+    // تكرار إشعارات التوصيات (job_match, course_match)
+    recommendations: {
+      type: String,
+      enum: ['instant', 'hourly', 'daily', 'weekly', 'disabled'],
+      default: 'daily'
+    },
+    // تكرار إشعارات التطبيقات (application_accepted, application_rejected, etc.)
+    applications: {
+      type: String,
+      enum: ['instant', 'hourly', 'daily', 'disabled'],
+      default: 'instant'
+    },
+    // تكرار إشعارات النظام (system)
+    system: {
+      type: String,
+      enum: ['instant', 'daily', 'weekly', 'disabled'],
+      default: 'instant'
+    },
+    // آخر مرة تم إرسال إشعارات مجمعة
+    lastBatchSent: {
+      recommendations: { type: Date, default: null },
+      applications: { type: Date, default: null },
+      system: { type: Date, default: null }
+    }
+  },
+  
   // Web Push Subscription
   pushSubscriptions: [{
     endpoint: String,

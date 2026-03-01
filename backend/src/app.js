@@ -196,6 +196,7 @@ app.use('/auth/2fa', require('./routes/twoFactorRoutes'));
 app.use('/oauth', oauthRoutes);
 app.use('/errors', require('./routes/errorLogRoutes'));
 app.use('/security-score', require('./routes/securityScoreRoutes'));
+app.use('/recordings', require('./routes/recordingRoutes'));
 app.use('/devices', require('./routes/deviceRoutes'));
 app.use('/recommendations', require('./routes/recommendationRoutes'));
 app.use('/recommendations', require('./routes/dailyRecommendationRoutes')); // Daily recommendations
@@ -204,6 +205,7 @@ app.use('/user-interactions', require('./routes/userInteractionRoutes'));
 app.use('/learning-paths', require('./routes/learningPathRoutes'));
 app.use('/cv', require('./routes/cvParserRoutes'));
 app.use('/profile-analysis', require('./routes/profileAnalysisRoutes'));
+app.use('/ab-testing', require('./routes/abTestingRoutes')); // A/B Testing
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

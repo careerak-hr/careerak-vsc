@@ -1,0 +1,230 @@
+/**
+ * Recording Download Styles
+ * تنسيقات مكون تحميل التسجيلات
+ */
+
+.recording-download {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.recording-info {
+  margin-bottom: 24px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #304B60;
+  font-size: 14px;
+}
+
+.info-value {
+  color: #666;
+  font-size: 14px;
+}
+
+.processing-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #666;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #D48161;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.download-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.download-button:hover:not(:disabled) {
+  background: #c06f51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.download-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.download-button.downloading {
+  background: #666;
+}
+
+.download-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.download-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D48161, #c06f51);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  color: #c33;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.retry-button {
+  padding: 6px 12px;
+  background: #c33;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #a22;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .recording-download {
+    background: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .info-row {
+    border-bottom-color: #333;
+  }
+
+  .info-label {
+    color: #E3DAD1;
+  }
+
+  .info-value {
+    color: #aaa;
+  }
+
+  .processing-status {
+    background: #2a2a2a;
+    color: #aaa;
+  }
+
+  .progress-bar {
+    background: #333;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .recording-download {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .info-row {
+    padding: 10px 0;
+  }
+
+  .info-label,
+  .info-value {
+    font-size: 13px;
+  }
+
+  .download-button {
+    padding: 14px 20px;
+    font-size: 15px;
+  }
+
+  .download-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .recording-download {
+  direction: rtl;
+}
+
+[dir="rtl"] .info-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .download-button {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .error-message {
+  flex-direction: row-reverse;
+}

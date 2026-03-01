@@ -88,6 +88,21 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
+    // إرسال إشعارات فورية للشركات إذا كان المستخدم مرشح (Individual)
+    if (data.role !== 'HR') {
+      const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+      realtimeNotificationService.notifyCompaniesForNewCandidate(newUser._id)
+        .then(result => {
+          if (result.success) {
+            console.log(`✅ Sent ${result.notified} real-time notifications for candidate: ${result.candidateName}`);
+            console.log(`📊 Matching jobs: ${result.matchingJobs}, Average match: ${result.averageMatchScore?.toFixed(1)}%`);
+          } else {
+            console.error('❌ Failed to send candidate match notifications:', result.error);
+          }
+        })
+        .catch(err => console.error('❌ Error sending candidate match notifications:', err));
+    }
+
     const otpCode = Math.floor(1000 + Math.random() * 9000).toString();
     newUser.otp = {
         code: otpCode,
