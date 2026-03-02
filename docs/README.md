@@ -1,209 +1,150 @@
-# 📚 مركز التوثيق - Careerak
+# 📚 Careerak Documentation
 
-مرحباً بك في مركز التوثيق الشامل لمشروع Careerak!
+> **آخر تحديث**: 2026-03-02
 
----
-
-## 📁 هيكل التوثيق
-
-### 🖥️ [backend-setup/](backend-setup/) (12 ملف)
-توثيق إعداد وتشغيل Backend
-
-**المواضيع:**
-- تشغيل Backend بشكل دائم (PM2)
-- MongoDB
-- إعدادات السيرفر
-- دليل البدء السريع
-
-**الملفات الرئيسية:**
-- `BACKEND_NOW_RUNNING.md` - الحالة الحالية
-- `BACKEND_PERMANENT_RUNNING.md` - دليل شامل
-- `HOW_TO_START.md` - دليل مفصل
-- `PM2_QUICK_START.md` - دليل PM2
+مرحباً بك في توثيق Careerak! هذا المجلد يحتوي على جميع التوثيقات منظمة حسب الموضوع.
 
 ---
 
-### ⚙️ [systems/](systems/) (21 ملف)
-الأنظمة المضافة (Notification, Chat, Review, Pusher)
+## 📁 هيكل المجلدات الرئيسي
 
-**المواضيع:**
-- نظام الإشعارات الذكية
-- نظام المحادثات المباشرة
-- نظام التقييمات والمراجعات
-- Pusher للمحادثات الفورية
+### 🎯 الأداء والتحسين
+- **Performance/** - تحسين الأداء، Bundle Size، Lazy Loading، Compression
+- **Caching/** - التخزين المؤقت، Cache Headers، API Caching
 
-**الملفات الرئيسية:**
-- `NOTIFICATION_SYSTEM.md` - نظام الإشعارات
-- `CHAT_SYSTEM.md` - نظام المحادثات
-- `REVIEW_SYSTEM.md` - نظام التقييمات
-- `PUSHER_SETUP_GUIDE.md` - إعداد Pusher
+### ♿ إمكانية الوصول والجودة
+- **Accessibility/** - WCAG، Screen Readers، Keyboard Navigation، Color Contrast
+- **PWA/** - Progressive Web App، Service Worker، Offline Support
 
----
+### 🛠️ التطوير والصيانة
+- **Error Handling/** - معالجة الأخطاء، Error Boundaries، Error Tracking
+- **Testing/** - اختبارات المتصفحات، Mobile Testing، Integration Tests
 
-### 🎨 [frontend-fixes/](frontend-fixes/) (39 ملف)
-إصلاحات وتحسينات الواجهة الأمامية
+### 🎨 واجهة المستخدم
+- **UI Components/** - Animations، Loading States، Buttons، Modals
+- **Dark Mode/** - Dark Mode Implementation، Testing، Integration
+- **Frontend Fixes/** - إصلاحات Frontend، Image Upload، Responsive Design
+- **Audio System/** - نظام الصوت، Audio Player، Audio Files
 
-**المواضيع:**
-- صفحات Admin Dashboard
-- صفحة التسجيل (AuthPage)
-- نظام الصور والقص
-- التصميم المتجاوب
-- Modals والنماذج
-- فحص العمر
+### 🤖 الذكاء الاصطناعي
+- **AI Recommendations/** - التوصيات الذكية، Content-Based، Collaborative Filtering
 
-**الملفات الرئيسية:**
-- `RESPONSIVE_DESIGN_FIX.md` - التصميم المتجاوب
-- `IMAGE_CROP_BLACK_FIX_FINAL.md` - إصلاح قص الصور
-- `AUTH_PAGE_MOBILE_FIXES.md` - إصلاحات صفحة التسجيل
-- `ADMIN_DASHBOARD_ENHANCEMENT.md` - تحسينات لوحة الأدمن
+### 📹 الميزات الرئيسية
+- **Video Interviews/** - المقابلات المرئية، WebRTC، Recording، Screen Share
+- **Enhanced Auth/** - المصادقة المحسّنة، OAuth، 2FA، Security
 
----
+### 🔧 الإعداد والنشر
+- **Backend Setup/** - إعداد Backend، PM2، MongoDB، Environment Variables
+- **Build & Deploy/** - البناء والنشر، Vercel، Build Scripts
 
-### 🔨 [build-deploy/](build-deploy/) (6 ملفات)
-البناء والنشر
+### 📊 الأنظمة والتحليلات
+- **Systems/** - Chat، Notifications، Pusher، Reviews
+- **Analytics/** - Dark Mode Tracking، PWA Install Rate Monitoring
+- **SEO/** - تحسين محركات البحث، Meta Tags، Structured Data
 
-**المواضيع:**
-- بناء APK
-- النشر على Vercel
-- حل مشاكل البناء
-- CORS
+### 👨‍💼 الإدارة والتقارير
+- **Admin Dashboard/** - لوحة التحكم، User Management، Content Management
+- **OAuth Integration/** - تكامل OAuth، Google، Facebook
+- **Task Reports/** - تقارير المهام المكتملة، Task Summaries
 
-**الملفات الرئيسية:**
-- `BUILD_README.md` - دليل البناء
-- `BUILD_QUICK_START_AR.md` - البدء السريع
-- `BUILD_ISSUES_SOLUTIONS_AR.md` - حل المشاكل
-- `DEPLOYMENT_STATUS.md` - حالة النشر
+### 📖 التوثيق والإرشادات
+- **Documentation/** - تنظيم التوثيق، Standards، Guidelines
+- **Git/** - إدارة Git، Git Workflow، Git Guide
+- **General/** - Getting Started، Rules، Security، Updates
 
 ---
 
-### 🔀 [git/](git/) (3 ملفات)
-Git والتحكم بالإصدارات
+## 🚀 البدء السريع
 
-**المواضيع:**
-- دليل Git السريع
-- سير العمل
-- تقارير الحالة
+### للمطورين الجدد:
+1. 📖 اقرأ `general/GETTING_STARTED.md`
+2. 📋 راجع `../PROJECT_STANDARDS.md` (في المجلد الرئيسي)
+3. 🔧 اتبع `backend-setup/QUICK_START.md`
+4. 🌐 راجع `build-deploy/BUILD_QUICK_START_AR.md`
 
-**الملفات الرئيسية:**
-- `GIT_QUICK_GUIDE.md` - دليل سريع
-- `GIT_WORKFLOW_AR.md` - سير العمل
-- `GIT_STATUS_REPORT.md` - تقرير الحالة
-
----
-
-### 📖 [documentation/](documentation/) (4 ملفات)
-توثيق التوثيق نفسه
-
-**المواضيع:**
-- تنظيم التوثيق
-- موقع ملفات المعايير
-- دليل التوثيق
-
-**الملفات الرئيسية:**
-- `DOCUMENTATION_ORGANIZATION.md` - تنظيم التوثيق
-- `PROJECT_STANDARDS_LOCATION.md` - موقع المعايير
-- `DOCUMENTATION.md` - دليل التوثيق
+### للميزات الجديدة:
+1. 🔍 ابحث في `DOCUMENTATION_INDEX.md`
+2. 📘 اقرأ الـ Quick Start Guide
+3. 📝 راجع الـ Implementation Summary
+4. 🧪 اختبر باستخدام Testing Guide
 
 ---
 
-### 🎵 [audio-system/](audio-system/) (12 ملف)
-نظام الصوت
+## 📖 المستندات الرئيسية
 
-**المواضيع:**
-- إعداد نظام الصوت
-- إصلاحات الصوت
-- دليل البدء السريع
+### الإعداد والبدء
+- **معايير المشروع**: `../PROJECT_STANDARDS.md`
+- **البدء**: `general/GETTING_STARTED.md`
+- **Backend**: `backend-setup/HOW_TO_START.md`
+- **البناء**: `build-deploy/BUILD_README.md`
 
-**الملفات الرئيسية:**
-- `AUDIO_DOCS_INDEX.md` - فهرس التوثيق
-- `AUDIO_SYSTEM_README.md` - دليل النظام
-- `QUICK_START_AUDIO.md` - البدء السريع
+### الأنظمة
+- **فهرس الأنظمة**: `general/SYSTEMS_INDEX.md`
+- **الإشعارات**: `systems/NOTIFICATION_SYSTEM.md`
+- **المحادثات**: `systems/CHAT_SYSTEM.md`
+- **التقييمات**: `systems/REVIEW_SYSTEM.md`
 
----
+### الأداء
+- **Bundle Size**: `Performance/BUNDLE_SIZE_MONITORING.md`
+- **Compression**: `Performance/COMPRESSION_CONFIGURATION.md`
+- **Lighthouse**: `Performance/LIGHTHOUSE_CI_SETUP.md`
 
-### 📋 [general/](general/) (20 ملف)
-ملفات عامة ومتنوعة
-
-**المواضيع:**
-- API
-- الأمان
-- الاختبار
-- الملخصات والفهارس
-- الدراسات
-
-**الملفات الرئيسية:**
-- `API.md` - توثيق API
-- `SECURITY.md` - الأمان
-- `TESTING_CHECKLIST.md` - قائمة الاختبار
-- `GETTING_STARTED.md` - البدء
+### إمكانية الوصول
+- **Color Contrast**: `Accessibility/COLOR_CONTRAST_AUDIT.md`
+- **Keyboard**: `Accessibility/KEYBOARD_ACCESSIBILITY_IMPLEMENTATION.md`
+- **Screen Readers**: `Accessibility/NVDA_SCREEN_READER_TESTING.md`
 
 ---
 
-## 🔍 البحث السريع
+## 🔍 البحث في التوثيق
 
-### حسب الموضوع:
+### استخدم ملفات الفهرس:
+- 📚 **الفهرس الشامل**: `DOCUMENTATION_INDEX.md`
+- 🎵 **نظام الصوت**: `audio-system/AUDIO_DOCS_INDEX.md`
+- 🔧 **Backend**: `backend-setup/BACKEND_DOCS_INDEX.md`
+- 🏗️ **البناء**: `build-deploy/BUILD_INDEX.md`
+- 🔔 **الإشعارات**: `systems/NOTIFICATION_INDEX.md`
 
-**Backend:**
-```
-backend-setup/ → BACKEND_NOW_RUNNING.md
-```
-
-**الأنظمة:**
-```
-systems/ → NOTIFICATION_SYSTEM.md
-systems/ → CHAT_SYSTEM.md
-systems/ → REVIEW_SYSTEM.md
-```
-
-**الواجهة:**
-```
-frontend-fixes/ → RESPONSIVE_DESIGN_FIX.md
-frontend-fixes/ → AUTH_PAGE_MOBILE_FIXES.md
-```
-
-**البناء:**
-```
-build-deploy/ → BUILD_README.md
-```
+### أنواع الملفات:
+- `*_QUICK_START.md` - أدلة البدء السريع
+- `*_SUMMARY.md` - ملخصات التنفيذ
+- `*_IMPLEMENTATION.md` - تفاصيل التنفيذ
+- `*_GUIDE.md` - أدلة شاملة
+- `*_REPORT.md` - تقارير
+- `README.md` - نظرة عامة
 
 ---
 
-## 📊 الإحصائيات
+## 📝 معايير التوثيق
 
-- **إجمالي المجلدات**: 8
-- **إجمالي الملفات**: 117+ ملف
-- **اللغات**: العربية، الإنجليزية
-- **آخر تحديث**: 2026-02-17
-
----
-
-## 🎯 للمبتدئين
-
-### ابدأ من هنا:
-1. 📄 `backend-setup/HOW_TO_START.md` - كيفية تشغيل Backend
-2. 📄 `build-deploy/BUILD_QUICK_START_AR.md` - كيفية بناء التطبيق
-3. 📄 `general/GETTING_STARTED.md` - البدء مع المشروع
+جميع ملفات التوثيق يجب أن:
+- ✅ تكون بصيغة Markdown
+- ✅ تحتوي على أسماء واضحة ووصفية
+- ✅ تتضمن تاريخ "آخر تحديث"
+- ✅ تتبع معايير التوثيق في المشروع
+- ✅ تكون في المجلد المناسب
 
 ---
 
-## 🔗 روابط مهمة
+## 🆕 آخر التحديثات
 
-- 📄 [PROJECT_STANDARDS.md](../PROJECT_STANDARDS.md) - معايير المشروع (المجلد الرئيسي)
-- 📄 [CORE_RULES.md](../CORE_RULES.md) - القواعد الأساسية
-- 📄 [backend/README.md](../backend/README.md) - Backend README
+- **2026-03-02**: تنظيم شامل للتوثيق في 21 مجلد فرعي
+- **2026-03-02**: إضافة فهرس شامل `DOCUMENTATION_INDEX.md`
+- **2026-03-02**: نقل 150+ ملف إلى المجلدات المناسبة
+- **2026-03-02**: تحديث جميع ملفات README
 
----
-
-## 💡 نصائح
-
-- استخدم Ctrl+F للبحث في هذا الملف
-- كل مجلد يحتوي على ملفات متعلقة بموضوع واحد
-- الملفات المنتهية بـ `_AR` هي بالعربية
-- الملفات المنتهية بـ `_FIX` هي إصلاحات
-- الملفات المنتهية بـ `_SUMMARY` هي ملخصات
+راجع `general/UPDATES.md` للتغييرات التفصيلية.
 
 ---
 
-**المطور**: Eng.AlaaUddien  
-**البريد**: careerak.hr@gmail.com  
-**آخر تحديث**: 2026-02-17
+## 📞 الدعم والمساعدة
+
+- **الأسئلة العامة**: `general/README.md`
+- **مشاكل Backend**: `backend-setup/README.md`
+- **مشاكل Frontend**: `frontend-fixes/README.md`
+- **مشاكل البناء**: `build-deploy/README.md`
+- **مشاكل Git**: `git/README.md`
+
+---
+
+**ملاحظة**: هذا التوثيق يُحدّث باستمرار. آخر تحديث: 2026-03-02
