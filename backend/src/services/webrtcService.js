@@ -47,9 +47,11 @@ class WebRTCService {
   /**
    * إنشاء peer connection جديد
    * @param {string} connectionId - معرف الاتصال الفريد
+   * @param {Function} onTrack - callback عند استقبال track
+   * @param {Function} onICECandidate - callback عند توليد ICE candidate
    * @returns {RTCPeerConnection}
    */
-  createPeerConnection(connectionId) {
+  createPeerConnection(connectionId, onTrack, onICECandidate) {
     try {
       const peerConnection = new RTCPeerConnection(this.peerConnectionConfig);
 
@@ -58,8 +60,8 @@ class WebRTCService {
 
       // معالجة ICE candidates
       peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-          this.handleICECandidate(connectionId, event.candidate);
+        if (event.candidate && onICECandidate) {
+          onICECandidate(event.candidate);
         }
       };
 
@@ -75,6 +77,9 @@ class WebRTCService {
 
       // معالجة استقبال media tracks
       peerConnection.ontrack = (event) => {
+        if (onTrack) {
+          onTrack(event);
+        }
         this.handleTrack(connectionId, event);
       };
 
@@ -368,6 +373,50 @@ class WebRTCService {
       console.error('Error switching camera:', error);
       throw new Error('Failed to switch camera');
     }
+  }
+
+  /**
+   * الحصول على جميع الاتصالات النشطة
+   * @returns {Map}
+   */
+  getAllPeerConnections() {
+    return this.activePeerConnections;
+  }
+
+  /**
+   * الحصول على عدد الاتصالات النشطة
+   * @returns {number}
+   */
+  getActivePeerConnectionsCount() {
+    return this.activePeerConnections.size;
+  }
+
+  /**
+   * إغلاق جميع الاتصالات
+   */
+  closeAllPeerConnections() {
+    this.activePeerConnections.forEach((peerConnection, connectionId) => {
+      peerConnection.close();
+    });
+    this.activePeerConnections.clear();
+  }
+
+  /**
+   * استبدال track في جميع الاتصالات
+   * @param {MediaStreamTrack} oldTrack - track القديم
+   * @param {MediaStreamTrack} newTrack - track الجديد
+   */
+  async replaceTrackInAllConnections(oldTrack, newTrack) {
+    const promises = [];
+
+    this.activePeerConnections.forEach((peerConnection) => {
+      const sender = peerConnection.getSenders().find(s => s.track === oldTrack);
+      if (sender) {
+        promises.push(sender.replaceTrack(newTrack));
+      }
+    });
+
+    await Promise.all(promises);
   }
 }
 

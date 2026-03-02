@@ -1,0 +1,230 @@
+.file-message {
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fff;
+  border: 1px solid #D4816180;
+  margin: 0.5rem 0;
+}
+
+.image-message {
+  position: relative;
+}
+
+.message-image {
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.message-image:hover {
+  opacity: 0.9;
+}
+
+.file-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: #f5f5f5;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  color: #304B60;
+  font-family: 'Amiri', serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  color: #666;
+  margin-left: 0.5rem;
+}
+
+.delete-file-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.delete-file-btn:hover {
+  background-color: #fee;
+  transform: scale(1.1);
+}
+
+.delete-file-btn svg {
+  width: 18px;
+  height: 18px;
+  color: #c33;
+}
+
+.document-message {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.file-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.file-icon {
+  width: 40px;
+  height: 40px;
+  color: #D48161;
+  flex-shrink: 0;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.file-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.download-btn,
+.delete-btn {
+  background-color: transparent;
+  border: 1px solid #D4816180;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #D48161;
+  border-color: #D48161;
+}
+
+.download-btn:hover svg {
+  color: #fff;
+}
+
+.delete-btn:hover {
+  background-color: #fee;
+  border-color: #fcc;
+}
+
+.delete-btn:hover svg {
+  color: #c33;
+}
+
+.download-btn svg,
+.delete-btn svg {
+  width: 20px;
+  height: 20px;
+  color: #304B60;
+  transition: color 0.3s ease;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .file-message {
+    background-color: #2a2a2a;
+    border-color: #D4816180;
+  }
+
+  .file-info {
+    background-color: #333;
+  }
+
+  .file-name {
+    color: #E3DAD1;
+  }
+
+  .file-size {
+    color: #999;
+  }
+
+  .download-btn svg,
+  .delete-btn svg {
+    color: #E3DAD1;
+  }
+
+  .download-btn:hover {
+    background-color: #D48161;
+  }
+
+  .delete-btn:hover {
+    background-color: #4a2020;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .file-message {
+    max-width: 100%;
+  }
+
+  .message-image {
+    max-height: 250px;
+  }
+
+  .file-info {
+    padding: 0.5rem;
+  }
+
+  .file-name {
+    font-size: 0.8125rem;
+  }
+
+  .file-size {
+    font-size: 0.6875rem;
+  }
+
+  .document-message {
+    padding: 0.75rem;
+  }
+
+  .file-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .download-btn,
+  .delete-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .download-btn svg,
+  .delete-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}

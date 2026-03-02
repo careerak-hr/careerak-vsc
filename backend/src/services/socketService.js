@@ -102,6 +102,27 @@ class SocketService {
       this.handleMessageRead(socket, data);
     });
     
+    // أحداث الدردشة أثناء مقابلة الفيديو
+    socket.on('join_video_interview', (interviewId) => {
+      this.handleJoinVideoInterview(socket, interviewId);
+    });
+    
+    socket.on('leave_video_interview', (interviewId) => {
+      this.handleLeaveVideoInterview(socket, interviewId);
+    });
+    
+    socket.on('video_chat_message', (data) => {
+      this.handleVideoChatMessage(socket, data);
+    });
+    
+    socket.on('video_chat_typing', (data) => {
+      this.handleVideoChatTyping(socket, data);
+    });
+    
+    socket.on('video_chat_stop_typing', (data) => {
+      this.handleVideoChatStopTyping(socket, data);
+    });
+    
     socket.on('disconnect', () => {
       this.handleDisconnect(socket);
     });
@@ -174,6 +195,67 @@ class SocketService {
     this.userSockets.delete(socket.id);
     
     // إرسال حالة "غير متصل" للمستخدمين الآخرين
+    this.broadcastUserStatus(userId, 'offline', new Date());
+  }
+  
+  // === أحداث الدردشة أثناء مقابلة الفيديو ===
+  
+  // الانضمام لمقابلة فيديو
+  handleJoinVideoInterview(socket, interviewId) {
+    socket.join(`video_interview:${interviewId}`);
+    logger.info(`User ${socket.userId} joined video interview ${interviewId}`);
+  }
+  
+  // مغادرة مقابلة فيديو
+  handleLeaveVideoInterview(socket, interviewId) {
+    socket.leave(`video_interview:${interviewId}`);
+    logger.info(`User ${socket.userId} left video interview ${interviewId}`);
+  }
+  
+  // إرسال رسالة دردشة أثناء الفيديو
+  handleVideoChatMessage(socket, data) {
+    const { interviewId, message } = data;
+    
+    // إرسال الرسالة لجميع المشاركين في المقابلة
+    this.io.to(`video_interview:${interviewId}`).emit('video_chat_message', {
+      interviewId,
+      message
+    });
+    
+    logger.info(`Video chat message sent in interview ${interviewId}`);
+  }
+  
+  // المستخدم يكتب في دردشة الفيديو
+  handleVideoChatTyping(socket, data) {
+    const { interviewId, userId } = data;
+    
+    socket.to(`video_interview:${interviewId}`).emit('video_chat_typing', {
+      interviewId,
+      userId
+    });
+  }
+  
+  // المستخدم توقف عن الكتابة في دردشة الفيديو
+  handleVideoChatStopTyping(socket, data) {
+    const { interviewId, userId } = data;
+    
+    socket.to(`video_interview:${interviewId}`).emit('video_chat_stop_typing', {
+      interviewId,
+      userId
+    });
+  }
+  
+  // إرسال رسالة دردشة لمقابلة فيديو
+  sendVideoChatMessage(interviewId, message) {
+    if (!this.io) return;
+    
+    this.io.to(`video_interview:${interviewId}`).emit('video_chat_message', {
+      interviewId,
+      message
+    });
+  }
+  
+  // إرسال حالة "غير متصل" للمستخدمين الآخرين
     this.broadcastUserStatus(userId, 'offline', new Date());
   }
   

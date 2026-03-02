@@ -1,74 +1,91 @@
-const express = require('express');
-const router = express.Router();
-const videoInterviewController = require('../controllers/videoInterviewController');
-const { authenticate } = require('../middleware/auth');
-const multer = require('multer');
-
-// إعداد multer للرفع في الذاكرة
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 500 * 1024 * 1024, // 500 MB
-  },
-  fileFilter: (req, file, cb) => {
-    // قبول ملفات الفيديو فقط
-    if (file.mimetype.startsWith('video/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('يجب أن يكون الملف فيديو'), false);
-    }
-  },
-});
-
 /**
- * مسارات مقابلات الفيديو
- * جميع المسارات تتطلب مصادقة
+ * Video Interview Routes
+ * مسارات API لمقابلات الفيديو
  */
 
-// إنشاء مقابلة جديدة
-router.post('/create', authenticate, videoInterviewController.createInterview);
+const express = require('express');
+const router = express.Router();
+const { VideoInterviewController, uploadMiddleware } = require('../controllers/videoInterviewController');
+const { protect } = require('../middleware/auth');
 
-// الحصول على قائمة المقابلات
-router.get('/', authenticate, videoInterviewController.getInterviews);
+// جميع المسارات محمية بـ authentication
+router.use(protect);
 
-// الحصول على تفاصيل مقابلة
-router.get('/:id', authenticate, videoInterviewController.getInterview);
+/**
+ * @route   GET /api/video-interviews/upcoming
+ * @desc    الحصول على قائمة المقابلات القادمة
+ * @access  Private
+ * Requirements: 8.1
+ */
+router.get('/upcoming', VideoInterviewController.getUpcomingInterviews);
 
-// الانضمام لمقابلة
-router.post('/:id/join', authenticate, videoInterviewController.joinInterview);
+/**
+ * @route   GET /api/video-interviews/past
+ * @desc    الحصول على سجل المقابلات السابقة
+ * @access  Private
+ * Requirements: 8.2
+ */
+router.get('/past', VideoInterviewController.getPastInterviews);
 
-// مغادرة مقابلة
-router.post('/:id/leave', authenticate, videoInterviewController.leaveInterview);
+/**
+ * @route   GET /api/video-interviews/search
+ * @desc    البحث والفلترة في المقابلات
+ * @access  Private
+ * Requirements: 8.6
+ */
+router.get('/search', VideoInterviewController.searchInterviews);
 
-// إنهاء مقابلة (المضيف فقط)
-router.post('/:id/end', authenticate, videoInterviewController.endInterview);
+/**
+ * @route   GET /api/video-interviews/stats
+ * @desc    الحصول على إحصائيات المقابلات
+ * @access  Private
+ */
+router.get('/stats', VideoInterviewController.getInterviewStats);
 
-// ===== مسارات التسجيل =====
+/**
+ * @route   GET /api/video-interviews/:interviewId
+ * @desc    الحصول على تفاصيل مقابلة واحدة
+ * @access  Private
+ * Requirements: 8.1, 8.2, 8.3
+ */
+router.get('/:interviewId', VideoInterviewController.getInterviewDetails);
 
-// بدء التسجيل (المضيف فقط)
-router.post('/:id/recording/start', authenticate, videoInterviewController.startRecording);
+/**
+ * @route   PUT /api/video-interviews/:interviewId/notes
+ * @desc    إضافة ملاحظات بعد المقابلة
+ * @access  Private (Host only)
+ * Requirements: 8.4
+ */
+router.put('/:interviewId/notes', VideoInterviewController.addNotes);
 
-// إيقاف التسجيل (المضيف فقط)
-router.post('/:id/recording/stop', authenticate, videoInterviewController.stopRecording);
+/**
+ * @route   PUT /api/video-interviews/:interviewId/rating
+ * @desc    تقييم المرشح بعد المقابلة
+ * @access  Private (Host only)
+ * Requirements: 8.5
+ */
+router.put('/:interviewId/rating', VideoInterviewController.rateCandidate);
 
-// رفع التسجيل (المضيف فقط)
-router.post(
-  '/:id/recording/upload',
-  authenticate,
-  upload.single('video'),
-  videoInterviewController.uploadRecording
-);
+/**
+ * @route   POST /api/video-interviews/:interviewId/files
+ * @desc    رفع ملف أثناء المقابلة
+ * @access  Private
+ */
+router.post('/:interviewId/files', uploadMiddleware, VideoInterviewController.uploadFile);
 
-// الحصول على معلومات التسجيل
-router.get('/:id/recording', authenticate, videoInterviewController.getRecording);
+/**
+ * @route   DELETE /api/video-interviews/:interviewId/files/:fileId
+ * @desc    حذف ملف من المقابلة
+ * @access  Private
+ */
+router.delete('/:interviewId/files/:fileId', VideoInterviewController.deleteFile);
 
-// تسجيل تحميل التسجيل
-router.post('/:id/recording/download', authenticate, videoInterviewController.recordDownload);
-
-// إضافة موافقة على التسجيل
-router.post('/:id/recording/consent', authenticate, videoInterviewController.addRecordingConsent);
-
-// التحقق من موافقة جميع المشاركين
-router.get('/:id/recording/consents', authenticate, videoInterviewController.checkAllConsents);
+/**
+ * @route   POST /api/video-interviews/file-info
+ * @desc    الحصول على معلومات الملف
+ * @access  Private
+ */
+router.post('/file-info', uploadMiddleware, VideoInterviewController.getFileInfo);
 
 module.exports = router;
+

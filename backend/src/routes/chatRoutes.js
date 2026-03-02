@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const chatController = require('../controllers/chatController');
+const chatFileController = require('../controllers/chatFileController');
 const { auth } = require('../middleware/auth');
+const upload = require('../config/multer');
 
 // جميع المسارات تحتاج مصادقة
 router.use(auth);
@@ -47,5 +49,11 @@ router.post('/typing', chatController.sendTyping);
 
 // إرسال "توقف عن الكتابة"
 router.post('/stop-typing', chatController.sendStopTyping);
+
+// رفع ملف للدردشة
+router.post('/files/upload', upload.single('file'), chatFileController.uploadChatFile);
+
+// حذف ملف من الدردشة
+router.delete('/files/:cloudinaryId', chatFileController.deleteChatFile);
 
 module.exports = router;

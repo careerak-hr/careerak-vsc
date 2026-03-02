@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import RecordingNotification from './RecordingNotification';
+import InterviewTimer from './InterviewTimer';
 import './VideoCall.css';
 
 /**
@@ -12,6 +13,7 @@ import './VideoCall.css';
  * - Audio/Video controls (mute, disable)
  * - Connection quality indicator
  * - Recording notification (Requirements 2.2)
+ * - Interview timer (Requirements 6.5)
  */
 const VideoCall = ({ 
   localStream, 
@@ -26,7 +28,11 @@ const VideoCall = ({
   isRecording = false, // Recording state
   recordingDuration = 0, // Recording duration in seconds
   language = 'ar', // Language for recording notification
-  recordingNotificationPosition = 'top' // 'top', 'bottom', 'floating'
+  recordingNotificationPosition = 'top', // 'top', 'bottom', 'floating'
+  // Interview Timer Props
+  interviewStartTime = null, // وقت بدء المقابلة (timestamp)
+  showInterviewTimer = true, // عرض المؤقت
+  timerPosition = 'top-right' // موقع المؤقت
 }) => {
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
@@ -127,6 +133,17 @@ const VideoCall = ({
         position={recordingNotificationPosition}
         showDetails={true}
       />
+
+      {/* Interview Timer */}
+      {showInterviewTimer && (
+        <InterviewTimer
+          startTime={interviewStartTime}
+          isActive={true}
+          language={language}
+          showLabel={true}
+          position={timerPosition}
+        />
+      )}
 
       {/* Remote Video (Main) */}
       <div className="remote-video-wrapper">

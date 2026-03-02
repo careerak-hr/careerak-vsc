@@ -1,0 +1,319 @@
+/**
+ * File Sharing Styles
+ * تنسيقات مكون مشاركة الملفات
+ */
+
+.file-sharing-container {
+  background: var(--bg-secondary, #f5f5f5);
+  border-radius: 12px;
+  padding: 20px;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-sharing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border-color, #e0e0e0);
+}
+
+.file-sharing-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--text-primary, #304B60);
+  font-family: 'Amiri', serif;
+}
+
+.select-file-btn {
+  background: var(--accent-color, #D48161);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: 'Amiri', serif;
+}
+
+.select-file-btn:hover:not(:disabled) {
+  background: var(--accent-hover, #c06f51);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.select-file-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.upload-progress {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D48161, #c06f51);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.upload-progress span {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary, #304B60);
+  min-width: 45px;
+  text-align: right;
+}
+
+.file-info {
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border-left: 4px solid var(--accent-color, #D48161);
+}
+
+.file-info-text {
+  margin: 5px 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #666);
+  font-family: 'Amiri', serif;
+}
+
+.files-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.files-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.files-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.files-list::-webkit-scrollbar-thumb {
+  background: var(--accent-color, #D48161);
+  border-radius: 3px;
+}
+
+.no-files {
+  text-align: center;
+  color: var(--text-secondary, #999);
+  padding: 40px 20px;
+  font-size: 1rem;
+  font-family: 'Amiri', serif;
+}
+
+.file-item {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.file-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.file-icon {
+  font-size: 2rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.file-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  margin: 0 0 5px 0;
+  font-weight: 600;
+  color: var(--text-primary, #304B60);
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Amiri', serif;
+}
+
+.file-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #999);
+  font-family: 'Amiri', serif;
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.file-action-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.file-action-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
+}
+
+.download-btn:hover {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.delete-btn:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+/* RTL Support */
+[dir="rtl"] .file-sharing-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .file-info {
+  border-left: none;
+  border-right: 4px solid var(--accent-color, #D48161);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .file-sharing-container {
+    padding: 15px;
+    max-height: 400px;
+  }
+
+  .file-sharing-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .file-sharing-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .select-file-btn {
+    width: 100%;
+  }
+
+  .file-item {
+    padding: 10px;
+  }
+
+  .file-icon {
+    font-size: 1.5rem;
+    min-width: 30px;
+  }
+
+  .file-name {
+    font-size: 0.9rem;
+  }
+
+  .file-meta {
+    font-size: 0.75rem;
+  }
+
+  .file-action-btn {
+    font-size: 1.1rem;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .file-sharing-container {
+    padding: 12px;
+    max-height: 350px;
+  }
+
+  .file-info-text {
+    font-size: 0.8rem;
+  }
+
+  .file-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .file-sharing-container {
+    background: #2a2a2a;
+  }
+
+  .file-sharing-header h3 {
+    color: #e0e0e0;
+  }
+
+  .file-info {
+    background: #333;
+  }
+
+  .file-info-text {
+    color: #aaa;
+  }
+
+  .file-item {
+    background: #333;
+    border-color: #444;
+  }
+
+  .file-name {
+    color: #e0e0e0;
+  }
+
+  .file-meta {
+    color: #aaa;
+  }
+
+  .no-files {
+    color: #777;
+  }
+
+  .progress-bar {
+    background: #444;
+  }
+}

@@ -1,0 +1,173 @@
+/* Interview Filters Styles */
+
+.interview-filters {
+  background: white;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.interview-filters h3 {
+  font-size: 1.25rem;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+}
+
+/* Filters Grid */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.filter-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.filter-group input,
+.filter-group select {
+  padding: 0.75rem;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.filter-group input:focus,
+.filter-group select:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+/* Date Range */
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-range input {
+  flex: 1;
+}
+
+.date-separator {
+  color: #666;
+  font-weight: bold;
+}
+
+/* Rating Range */
+.rating-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rating-range select {
+  flex: 1;
+}
+
+.range-separator {
+  color: #666;
+  font-weight: bold;
+}
+
+/* Filter Actions */
+.filter-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #E3DAD1;
+}
+
+.filter-actions button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.apply-btn {
+  background: #D48161;
+  color: white;
+}
+
+.apply-btn:hover {
+  background: #c06f51;
+}
+
+.clear-btn {
+  background: white;
+  color: #D48161;
+  border: 2px solid #D48161;
+}
+
+.clear-btn:hover {
+  background: #D48161;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .interview-filters {
+    padding: 1.5rem;
+  }
+
+  .filters-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .filter-group.full-width {
+    grid-column: 1;
+  }
+
+  .date-range,
+  .rating-range {
+    flex-direction: column;
+  }
+
+  .date-separator,
+  .range-separator {
+    display: none;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .filter-actions button {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .interview-filters {
+  direction: rtl;
+}
+
+[dir="rtl"] .filter-actions {
+  justify-content: flex-start;
+}
+
+[dir="rtl"] .date-range,
+[dir="rtl"] .rating-range {
+  flex-direction: row-reverse;
+}

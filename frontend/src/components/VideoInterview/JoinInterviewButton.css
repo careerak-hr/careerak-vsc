@@ -1,0 +1,303 @@
+/**
+ * تنسيقات زر الانضمام للمقابلة
+ * 
+ * الألوان:
+ * - Primary (كحلي): #304B60
+ * - Secondary (بيج): #E3DAD1
+ * - Accent (نحاسي): #D48161
+ * 
+ * الخطوط:
+ * - العربية: Amiri
+ * - الإنجليزية: Cormorant Garamond
+ */
+
+.join-interview-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #E3DAD1;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(48, 75, 96, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* حالة التحميل */
+.join-interview-button.loading {
+  justify-content: center;
+  min-height: 120px;
+}
+
+.join-interview-button .spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #304B60;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* حالة الخطأ */
+.join-interview-button.error {
+  background: #fff5f5;
+  border: 2px solid #fc8181;
+}
+
+.join-interview-button .error-message {
+  color: #c53030;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.join-interview-button .retry-button {
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #304B60;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.3s ease;
+}
+
+.join-interview-button .retry-button:hover {
+  background: #243a4d;
+}
+
+/* Countdown Timer */
+.countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(48, 75, 96, 0.1);
+}
+
+.countdown-timer .clock-icon {
+  width: 32px;
+  height: 32px;
+  color: #304B60;
+}
+
+.countdown-timer .time-remaining {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #304B60;
+  font-family: 'Courier New', monospace;
+}
+
+/* زر الانضمام */
+.join-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 2rem;
+  background: #304B60;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(48, 75, 96, 0.2);
+}
+
+.join-button:hover:not(:disabled) {
+  background: #243a4d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(48, 75, 96, 0.3);
+}
+
+.join-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(48, 75, 96, 0.2);
+}
+
+.join-button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.join-button .video-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.join-button .button-text {
+  font-size: 1.1rem;
+}
+
+/* مؤشر الحالة */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.status-indicator .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-indicator.waiting .status-dot {
+  background: #f59e0b;
+}
+
+.status-indicator.ready .status-dot {
+  background: #10b981;
+}
+
+.status-indicator.active .status-dot {
+  background: #3b82f6;
+}
+
+.status-indicator.ended .status-dot {
+  background: #6b7280;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-indicator .status-text {
+  color: #304B60;
+  font-weight: 500;
+}
+
+/* حالات مختلفة للزر */
+.join-interview-button.ready .join-button {
+  background: #10b981;
+  animation: glow 2s ease-in-out infinite;
+}
+
+.join-interview-button.ready .join-button:hover:not(:disabled) {
+  background: #059669;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+  }
+}
+
+.join-interview-button.active .join-button {
+  background: #3b82f6;
+}
+
+.join-interview-button.active .join-button:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.join-interview-button.ended .join-button {
+  background: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .join-interview-button {
+    padding: 1rem;
+  }
+
+  .countdown-timer {
+    padding: 0.75rem 1rem;
+  }
+
+  .countdown-timer .clock-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .countdown-timer .time-remaining {
+    font-size: 1.25rem;
+  }
+
+  .join-button {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .join-button .video-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .join-button .button-text {
+    font-size: 1rem;
+  }
+
+  .status-indicator {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .join-interview-button {
+    background: #1f2937;
+  }
+
+  .countdown-timer,
+  .status-indicator {
+    background: #374151;
+  }
+
+  .countdown-timer .clock-icon,
+  .countdown-timer .time-remaining,
+  .status-indicator .status-text {
+    color: #e5e7eb;
+  }
+
+  .join-interview-button.error {
+    background: #7f1d1d;
+    border-color: #dc2626;
+  }
+
+  .join-interview-button .error-message {
+    color: #fca5a5;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .join-interview-button {
+  direction: rtl;
+}
+
+[dir="rtl"] .join-button {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .countdown-timer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .status-indicator {
+  flex-direction: row-reverse;
+}

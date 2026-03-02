@@ -1,0 +1,141 @@
+.file-upload-container {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.file-upload-dropzone {
+  border: 2px dashed #D4816180;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-color: #E3DAD1;
+}
+
+.file-upload-dropzone:hover {
+  border-color: #D48161;
+  background-color: #f5f0ea;
+}
+
+.upload-icon {
+  width: 48px;
+  height: 48px;
+  color: #D48161;
+  margin: 0 auto 1rem;
+}
+
+.upload-prompt p {
+  margin: 0.5rem 0;
+  color: #304B60;
+  font-family: 'Amiri', serif;
+}
+
+.link-text {
+  color: #D48161;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.upload-hint {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.upload-progress {
+  padding: 1rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #E3DAD1;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #D48161;
+  transition: width 0.3s ease;
+}
+
+.upload-progress p {
+  color: #304B60;
+  font-family: 'Amiri', serif;
+  margin: 0;
+}
+
+.upload-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  color: #c33;
+}
+
+.error-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.upload-error p {
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: 'Amiri', serif;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .file-upload-dropzone {
+    background-color: #2a2a2a;
+    border-color: #D4816180;
+  }
+
+  .file-upload-dropzone:hover {
+    background-color: #333;
+  }
+
+  .upload-prompt p {
+    color: #E3DAD1;
+  }
+
+  .upload-hint {
+    color: #999;
+  }
+
+  .progress-bar {
+    background-color: #444;
+  }
+
+  .upload-progress p {
+    color: #E3DAD1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+  .file-upload-dropzone {
+    padding: 1.5rem 1rem;
+  }
+
+  .upload-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .upload-prompt p {
+    font-size: 0.875rem;
+  }
+
+  .upload-hint {
+    font-size: 0.75rem;
+  }
+}

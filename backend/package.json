@@ -17,6 +17,7 @@
     "test:security": "jest --testPathPattern=security",
     "test:watch": "jest --watch",
     "test:realtime": "mocha tests/realtimeUpdate.test.js --timeout 10000",
+    "test:connection-quality": "jest tests/connectionQuality.test.js",
     "track:errors": "node scripts/track-error-rates.js",
     "track:errors:production": "node scripts/track-error-rates.js --environment production",
     "track:errors:watch": "node scripts/track-error-rates.js --watch --interval 60",

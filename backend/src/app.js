@@ -206,6 +206,9 @@ app.use('/learning-paths', require('./routes/learningPathRoutes'));
 app.use('/cv', require('./routes/cvParserRoutes'));
 app.use('/profile-analysis', require('./routes/profileAnalysisRoutes'));
 app.use('/ab-testing', require('./routes/abTestingRoutes')); // A/B Testing
+app.use('/waiting-room', require('./routes/waitingRoomRoutes')); // Waiting Room
+app.use('/appointments', require('./routes/appointmentRoutes')); // Appointments
+app.use('/interviews', require('./routes/videoInterviewRoutes')); // Video Interviews
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {
@@ -234,14 +237,22 @@ app.get('/', (req, res) => {
 // 🕐 بدء جدولة التحديث اليومي للتوصيات
 if (process.env.NODE_ENV !== 'test') {
   const dailyRecommendationCron = require('./jobs/dailyRecommendationCron');
+  const { startAppointmentReminderCron } = require('./jobs/appointmentReminderCron');
+  const { startReminderJobs } = require('./jobs/videoInterviewReminderCron');
   
   // بدء الجدولة تلقائياً عند تشغيل السيرفر
   setTimeout(() => {
     try {
       dailyRecommendationCron.start();
       console.log('✅ تم بدء جدولة التحديث اليومي للتوصيات');
+      
+      startAppointmentReminderCron();
+      console.log('✅ تم بدء جدولة التذكيرات بالمواعيد');
+      
+      startReminderJobs();
+      console.log('✅ تم بدء جدولة تذكيرات مقابلات الفيديو');
     } catch (error) {
-      console.error('❌ خطأ في بدء جدولة التحديث اليومي:', error);
+      console.error('❌ خطأ في بدء الجدولة:', error);
     }
   }, 5000); // انتظار 5 ثواني بعد بدء السيرفر
 }

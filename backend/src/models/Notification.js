@@ -19,6 +19,9 @@ const notificationSchema = new mongoose.Schema({
       'job_closed',          // تم إغلاق الوظيفة
       'course_match',        // دورة مناسبة لك
       'new_device_login',    // تسجيل دخول من جهاز جديد
+      'interview_reminder_24h', // تذكير قبل 24 ساعة من المقابلة
+      'interview_reminder_15m', // تذكير قبل 15 دقيقة من المقابلة
+      'interview_rescheduled',  // تم إعادة جدولة المقابلة
       'system'               // إشعار نظام عام
     ],
     required: true
@@ -38,7 +41,16 @@ const notificationSchema = new mongoose.Schema({
   relatedData: {
     jobPosting: { type: mongoose.Schema.Types.ObjectId, ref: 'JobPosting' },
     jobApplication: { type: mongoose.Schema.Types.ObjectId, ref: 'JobApplication' },
-    course: { type: mongoose.Schema.Types.ObjectId, ref: 'TrainingCourse' }
+    course: { type: mongoose.Schema.Types.ObjectId, ref: 'TrainingCourse' },
+    appointment: { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
+    videoInterview: { type: mongoose.Schema.Types.ObjectId, ref: 'VideoInterview' },
+    meetingLink: String,
+    scheduledAt: Date,
+    canJoinNow: Boolean,
+    organizer: {
+      name: String,
+      email: String
+    }
   },
   
   // حالة الإشعار

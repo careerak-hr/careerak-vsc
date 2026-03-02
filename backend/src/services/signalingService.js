@@ -32,6 +32,30 @@ class SignalingService {
       // إرسال ICE candidate
       socket.on('ice-candidate', (data) => this.handleICECandidate(socket, data));
 
+      // رفع اليد
+      socket.on('raise-hand', (data) => this.handleRaiseHand(socket, data));
+
+      // خفض اليد
+      socket.on('lower-hand', (data) => this.handleLowerHand(socket, data));
+
+      // تبديل الصوت
+      socket.on('toggle-audio', (data) => this.handleToggleAudio(socket, data));
+
+      // تبديل الفيديو
+      socket.on('toggle-video', (data) => this.handleToggleVideo(socket, data));
+
+      // بدء مشاركة الشاشة
+      socket.on('start-screen-share', (data) => this.handleStartScreenShare(socket, data));
+
+      // إيقاف مشاركة الشاشة
+      socket.on('stop-screen-share', (data) => this.handleStopScreenShare(socket, data));
+
+      // كتم الجميع (للمضيف فقط)
+      socket.on('mute-all', (data) => this.handleMuteAll(socket, data));
+
+      // إزالة مشارك (للمضيف فقط)
+      socket.on('remove-participant', (data) => this.handleRemoveParticipant(socket, data));
+
       // قطع الاتصال
       socket.on('disconnect', () => this.handleDisconnect(socket));
     });
@@ -40,26 +64,50 @@ class SignalingService {
   /**
    * معالجة الانضمام لغرفة
    * @param {Socket} socket - socket instance
-   * @param {Object} data - {roomId, userId, userName}
+   * @param {Object} data - {roomId, userId, userName, maxParticipants, isHost}
    */
-  handleJoinRoom(socket, data) {
-    const { roomId, userId, userName } = data;
+  async handleJoinRoom(socket, data) {
+    const { roomId, userId, userName, maxParticipants = 10, isHost = false } = data;
 
     // إنشاء الغرفة إذا لم تكن موجودة
     if (!this.rooms.has(roomId)) {
       this.rooms.set(roomId, {
         participants: new Map(),
+        maxParticipants: maxParticipants,
+        hostId: isHost ? userId : null, // تعيين المضيف عند إنشاء الغرفة
         createdAt: new Date()
       });
     }
 
     const room = this.rooms.get(roomId);
 
+    // تعيين المضيف إذا لم يكن محدداً بعد
+    if (!room.hostId && isHost) {
+      room.hostId = userId;
+    }
+
+    // التحقق من الحد الأقصى للمشاركين (Property 8)
+    if (room.participants.size >= room.maxParticipants) {
+      socket.emit('room-full', {
+        roomId,
+        maxParticipants: room.maxParticipants,
+        currentCount: room.participants.size
+      });
+      console.log(`Room ${roomId} is full. User ${userId} rejected.`);
+      return;
+    }
+
     // إضافة المشارك للغرفة
     room.participants.set(socket.id, {
       userId,
       userName,
-      joinedAt: new Date()
+      joinedAt: new Date(),
+      handRaised: false,
+      handRaisedAt: null,
+      audioEnabled: true,
+      videoEnabled: true,
+      screenSharing: false,
+      isHost: isHost || userId === room.hostId
     });
 
     // الانضمام للغرفة في Socket.IO
@@ -69,7 +117,8 @@ class SignalingService {
     socket.to(roomId).emit('user-joined', {
       socketId: socket.id,
       userId,
-      userName
+      userName,
+      participantCount: room.participants.size
     });
 
     // إرسال قائمة المشاركين الحاليين للمستخدم الجديد
@@ -80,10 +129,13 @@ class SignalingService {
 
     socket.emit('room-joined', {
       roomId,
-      participants: participants.filter(p => p.socketId !== socket.id)
+      participants: participants.filter(p => p.socketId !== socket.id),
+      participantCount: room.participants.size,
+      maxParticipants: room.maxParticipants,
+      hostId: room.hostId
     });
 
-    console.log(`User ${userId} joined room ${roomId}`);
+    console.log(`User ${userId} joined room ${roomId} (${room.participants.size}/${room.maxParticipants})`);
   }
 
   /**
@@ -173,6 +225,69 @@ class SignalingService {
   }
 
   /**
+   * معالجة رفع اليد
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId}
+   */
+  handleRaiseHand(socket, data) {
+    const { roomId } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const participant = room.participants.get(socket.id);
+
+    if (participant) {
+      // تحديث حالة رفع اليد
+      participant.handRaised = true;
+      participant.handRaisedAt = new Date();
+
+      // إخبار جميع المشاركين
+      this.io.to(roomId).emit('hand-raised', {
+        socketId: socket.id,
+        userId: participant.userId,
+        userName: participant.userName,
+        raisedAt: participant.handRaisedAt
+      });
+
+      console.log(`User ${participant.userId} raised hand in room ${roomId}`);
+    }
+  }
+
+  /**
+   * معالجة خفض اليد
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId}
+   */
+  handleLowerHand(socket, data) {
+    const { roomId } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const participant = room.participants.get(socket.id);
+
+    if (participant) {
+      // تحديث حالة رفع اليد
+      participant.handRaised = false;
+      participant.handRaisedAt = null;
+
+      // إخبار جميع المشاركين
+      this.io.to(roomId).emit('hand-lowered', {
+        socketId: socket.id,
+        userId: participant.userId,
+        userName: participant.userName
+      });
+
+      console.log(`User ${participant.userId} lowered hand in room ${roomId}`);
+    }
+  }
+
+  /**
    * معالجة قطع الاتصال
    * @param {Socket} socket - socket instance
    */
@@ -188,7 +303,8 @@ class SignalingService {
         // إخبار المشاركين الآخرين
         socket.to(roomId).emit('user-left', {
           socketId: socket.id,
-          userId: participant.userId
+          userId: participant.userId,
+          participantCount: room.participants.size
         });
 
         // حذف الغرفة إذا أصبحت فارغة
@@ -201,6 +317,237 @@ class SignalingService {
     });
 
     console.log('User disconnected:', socket.id);
+  }
+
+  /**
+   * معالجة تبديل الصوت
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId, enabled}
+   */
+  handleToggleAudio(socket, data) {
+    const { roomId, enabled } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const participant = room.participants.get(socket.id);
+
+    if (participant) {
+      participant.audioEnabled = enabled;
+
+      // إخبار جميع المشاركين
+      this.io.to(roomId).emit('audio-toggled', {
+        socketId: socket.id,
+        userId: participant.userId,
+        enabled
+      });
+    }
+  }
+
+  /**
+   * معالجة تبديل الفيديو
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId, enabled}
+   */
+  handleToggleVideo(socket, data) {
+    const { roomId, enabled } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const participant = room.participants.get(socket.id);
+
+    if (participant) {
+      participant.videoEnabled = enabled;
+
+      // إخبار جميع المشاركين
+      this.io.to(roomId).emit('video-toggled', {
+        socketId: socket.id,
+        userId: participant.userId,
+        enabled
+      });
+    }
+  }
+
+  /**
+   * معالجة بدء مشاركة الشاشة
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId}
+   */
+  handleStartScreenShare(socket, data) {
+    const { roomId } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const participant = room.participants.get(socket.id);
+
+    if (participant) {
+      // التحقق من عدم وجود مشارك آخر يشارك الشاشة (Property 5)
+      const someoneSharing = Array.from(room.participants.values()).some(
+        p => p.screenSharing && p.userId !== participant.userId
+      );
+
+      if (someoneSharing) {
+        socket.emit('screen-share-rejected', {
+          reason: 'Someone else is already sharing their screen'
+        });
+        return;
+      }
+
+      participant.screenSharing = true;
+
+      // إخبار جميع المشاركين
+      this.io.to(roomId).emit('screen-share-started', {
+        socketId: socket.id,
+        userId: participant.userId,
+        userName: participant.userName
+      });
+
+      console.log(`User ${participant.userId} started screen sharing in room ${roomId}`);
+    }
+  }
+
+  /**
+   * معالجة إيقاف مشاركة الشاشة
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId}
+   */
+  handleStopScreenShare(socket, data) {
+    const { roomId } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const participant = room.participants.get(socket.id);
+
+    if (participant) {
+      participant.screenSharing = false;
+
+      // إخبار جميع المشاركين
+      this.io.to(roomId).emit('screen-share-stopped', {
+        socketId: socket.id,
+        userId: participant.userId,
+        userName: participant.userName
+      });
+
+      console.log(`User ${participant.userId} stopped screen sharing in room ${roomId}`);
+    }
+  }
+
+  /**
+   * معالجة كتم الجميع (للمضيف فقط)
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId}
+   */
+  handleMuteAll(socket, data) {
+    const { roomId } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const requester = room.participants.get(socket.id);
+
+    // التحقق من أن المستخدم موجود في الغرفة
+    if (!requester) {
+      socket.emit('action-rejected', {
+        reason: 'You are not in this room'
+      });
+      return;
+    }
+
+    // التحقق من أن المستخدم هو المضيف الحقيقي للغرفة
+    if (requester.userId !== room.hostId) {
+      socket.emit('action-rejected', {
+        reason: 'Only the host can mute all participants'
+      });
+      return;
+    }
+
+    // كتم جميع المشاركين (ما عدا المضيف)
+    room.participants.forEach((participant, socketId) => {
+      if (socketId !== socket.id) {
+        participant.audioEnabled = false;
+      }
+    });
+
+    // إخبار جميع المشاركين
+    this.io.to(roomId).emit('all-muted', {
+      byUserId: requester.userId,
+      byUserName: requester.userName
+    });
+
+    console.log(`Host ${requester.userId} muted all participants in room ${roomId}`);
+  }
+
+  /**
+   * معالجة إزالة مشارك (للمضيف فقط)
+   * @param {Socket} socket - socket instance
+   * @param {Object} data - {roomId, targetSocketId}
+   */
+  handleRemoveParticipant(socket, data) {
+    const { roomId, targetSocketId } = data;
+
+    if (!this.rooms.has(roomId)) {
+      return;
+    }
+
+    const room = this.rooms.get(roomId);
+    const requester = room.participants.get(socket.id);
+
+    // التحقق من أن المستخدم موجود في الغرفة
+    if (!requester) {
+      socket.emit('action-rejected', {
+        reason: 'You are not in this room'
+      });
+      return;
+    }
+
+    // التحقق من أن المستخدم هو المضيف الحقيقي للغرفة
+    if (requester.userId !== room.hostId) {
+      socket.emit('action-rejected', {
+        reason: 'Only the host can remove participants'
+      });
+      return;
+    }
+
+    // التحقق من وجود المشارك المستهدف
+    const targetParticipant = room.participants.get(targetSocketId);
+    if (!targetParticipant) {
+      return;
+    }
+
+    // إزالة المشارك
+    room.participants.delete(targetSocketId);
+
+    // إخبار المشارك المستهدف
+    this.io.to(targetSocketId).emit('removed-from-room', {
+      roomId,
+      byUserId: requester.userId,
+      byUserName: requester.userName,
+      reason: 'Removed by host'
+    });
+
+    // إخبار باقي المشاركين
+    socket.to(roomId).emit('user-removed', {
+      socketId: targetSocketId,
+      userId: targetParticipant.userId,
+      userName: targetParticipant.userName,
+      byUserId: requester.userId,
+      participantCount: room.participants.size
+    });
+
+    console.log(`Host ${requester.userId} removed user ${targetParticipant.userId} from room ${roomId}`);
   }
 
   /**

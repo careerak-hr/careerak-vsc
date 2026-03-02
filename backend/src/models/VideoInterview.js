@@ -55,7 +55,7 @@ const videoInterviewSchema = new mongoose.Schema({
   // حالة المقابلة
   status: {
     type: String,
-    enum: ['scheduled', 'waiting', 'active', 'ended', 'cancelled'],
+    enum: ['scheduled', 'waiting', 'active', 'ended', 'cancelled', 'rescheduled'],
     default: 'scheduled',
     index: true,
   },

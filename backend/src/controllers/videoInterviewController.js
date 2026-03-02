@@ -1,491 +1,545 @@
-const VideoInterview = require('../models/VideoInterview');
-const recordingService = require('../services/recordingService');
-const { v4: uuidv4 } = require('uuid');
-
 /**
+ * Video Interview Controller
  * معالج طلبات مقابلات الفيديو
- * 
- * Requirements: 1.1, 2.1, 2.3, 2.4, 2.5, 5.1
  */
 
-/**
- * إنشاء مقابلة فيديو جديدة
- * 
- * @route POST /api/interviews/create
- * @access Private
- */
-exports.createInterview = async (req, res) => {
-  try {
-    const {
-      appointmentId,
-      participants,
-      scheduledAt,
-      settings,
-      welcomeMessage,
-    } = req.body;
+const InterviewFileService = require('../services/interviewFileService');
+const VideoInterview = require('../models/VideoInterview');
+const multer = require('multer');
+const path = require('path');
 
-    const hostId = req.user._id;
-
-    // توليد roomId فريد
-    const roomId = uuidv4();
-
-    // إنشاء المقابلة
-    const interview = new VideoInterview({
-      roomId,
-      hostId,
-      appointmentId: appointmentId || null,
-      participants: [
-        { userId: hostId, role: 'host' },
-        ...participants.map(p => ({ userId: p, role: 'participant' })),
-      ],
-      scheduledAt: scheduledAt || null,
-      settings: settings || {},
-      welcomeMessage: welcomeMessage || 'مرحباً بك! سيتم قبولك في المقابلة قريباً.',
-    });
-
-    await interview.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'تم إنشاء المقابلة بنجاح',
-      interview: {
-        id: interview._id,
-        roomId: interview.roomId,
-        scheduledAt: interview.scheduledAt,
-        settings: interview.settings,
-      },
-    });
-  } catch (error) {
-    console.error('Error creating interview:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل إنشاء المقابلة',
-      error: error.message,
-    });
+// إعداد multer للرفع المؤقت
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: InterviewFileService.MAX_FILE_SIZE
+  },
+  fileFilter: (req, file, cb) => {
+    const validation = InterviewFileService.validateFile(file);
+    if (validation.valid) {
+      cb(null, true);
+    } else {
+      cb(new Error(validation.errors.join(', ')), false);
+    }
   }
-};
+});
 
-/**
- * الحصول على تفاصيل مقابلة
- * 
- * @route GET /api/interviews/:id
- * @access Private
- */
-exports.getInterview = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
+class VideoInterviewController {
+  /**
+   * الحصول على قائمة المقابلات القادمة
+   * Requirements: 8.1
+   */
+  static async getUpcomingInterviews(req, res) {
+    try {
+      const userId = req.user._id;
+      const { page = 1, limit = 10 } = req.query;
 
-    const interview = await VideoInterview.findById(id)
-      .populate('hostId', 'name email profilePicture')
-      .populate('participants.userId', 'name email profilePicture');
+      const skip = (page - 1) * limit;
 
-    if (!interview) {
-      return res.status(404).json({
+      // البحث عن المقابلات القادمة
+      const interviews = await VideoInterview.find({
+        $or: [
+          { hostId: userId },
+          { 'participants.userId': userId }
+        ],
+        status: { $in: ['scheduled', 'waiting'] },
+        scheduledAt: { $gte: new Date() }
+      })
+        .populate('hostId', 'name email profilePicture')
+        .populate('participants.userId', 'name email profilePicture')
+        .populate('appointmentId')
+        .sort({ scheduledAt: 1 })
+        .skip(skip)
+        .limit(parseInt(limit));
+
+      const total = await VideoInterview.countDocuments({
+        $or: [
+          { hostId: userId },
+          { 'participants.userId': userId }
+        ],
+        status: { $in: ['scheduled', 'waiting'] },
+        scheduledAt: { $gte: new Date() }
+      });
+
+      res.status(200).json({
+        success: true,
+        interviews,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      });
+    } catch (error) {
+      console.error('Error in getUpcomingInterviews:', error);
+      res.status(500).json({
         success: false,
-        message: 'المقابلة غير موجودة',
+        message: error.message || 'حدث خطأ أثناء جلب المقابلات القادمة'
       });
     }
-
-    // التحقق من أن المستخدم مشارك في المقابلة
-    const isParticipant = interview.participants.some(
-      p => p.userId._id.toString() === userId.toString()
-    );
-
-    if (!isParticipant) {
-      return res.status(403).json({
-        success: false,
-        message: 'ليس لديك صلاحية الوصول لهذه المقابلة',
-      });
-    }
-
-    res.json({
-      success: true,
-      interview,
-    });
-  } catch (error) {
-    console.error('Error getting interview:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل الحصول على تفاصيل المقابلة',
-      error: error.message,
-    });
   }
-};
 
-/**
- * الانضمام لمقابلة
- * 
- * @route POST /api/interviews/:id/join
- * @access Private
- */
-exports.joinInterview = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
+  /**
+   * الحصول على سجل المقابلات السابقة
+   * Requirements: 8.2
+   */
+  static async getPastInterviews(req, res) {
+    try {
+      const userId = req.user._id;
+      const { page = 1, limit = 10, status } = req.query;
 
-    const interview = await VideoInterview.findById(id);
+      const skip = (page - 1) * limit;
 
-    if (!interview) {
-      return res.status(404).json({
-        success: false,
-        message: 'المقابلة غير موجودة',
-      });
-    }
+      // بناء الاستعلام
+      const query = {
+        $or: [
+          { hostId: userId },
+          { 'participants.userId': userId }
+        ],
+        status: { $in: ['ended', 'cancelled'] }
+      };
 
-    // التحقق من أن المستخدم مشارك في المقابلة
-    const isParticipant = interview.participants.some(
-      p => p.userId.toString() === userId.toString()
-    );
-
-    if (!isParticipant) {
-      return res.status(403).json({
-        success: false,
-        message: 'ليس لديك صلاحية الانضمام لهذه المقابلة',
-      });
-    }
-
-    // تسجيل الانضمام
-    await interview.recordJoin(userId);
-
-    // بدء المقابلة إذا كانت أول انضمام
-    if (interview.status === 'scheduled' || interview.status === 'waiting') {
-      await interview.start();
-    }
-
-    res.json({
-      success: true,
-      message: 'تم الانضمام للمقابلة بنجاح',
-      interview: {
-        roomId: interview.roomId,
-        status: interview.status,
-        settings: interview.settings,
-      },
-    });
-  } catch (error) {
-    console.error('Error joining interview:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل الانضمام للمقابلة',
-      error: error.message,
-    });
-  }
-};
-
-/**
- * مغادرة مقابلة
- * 
- * @route POST /api/interviews/:id/leave
- * @access Private
- */
-exports.leaveInterview = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    const interview = await VideoInterview.findById(id);
-
-    if (!interview) {
-      return res.status(404).json({
-        success: false,
-        message: 'المقابلة غير موجودة',
-      });
-    }
-
-    // تسجيل المغادرة
-    await interview.recordLeave(userId);
-
-    res.json({
-      success: true,
-      message: 'تم تسجيل مغادرتك للمقابلة',
-    });
-  } catch (error) {
-    console.error('Error leaving interview:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل تسجيل المغادرة',
-      error: error.message,
-    });
-  }
-};
-
-/**
- * إنهاء مقابلة
- * 
- * @route POST /api/interviews/:id/end
- * @access Private (Host only)
- */
-exports.endInterview = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    const interview = await VideoInterview.findById(id);
-
-    if (!interview) {
-      return res.status(404).json({
-        success: false,
-        message: 'المقابلة غير موجودة',
-      });
-    }
-
-    // التحقق من أن المستخدم هو المضيف
-    if (interview.hostId.toString() !== userId.toString()) {
-      return res.status(403).json({
-        success: false,
-        message: 'فقط المضيف يمكنه إنهاء المقابلة',
-      });
-    }
-
-    // إنهاء المقابلة
-    await interview.end();
-
-    res.json({
-      success: true,
-      message: 'تم إنهاء المقابلة بنجاح',
-      interview: {
-        status: interview.status,
-        duration: interview.duration,
-      },
-    });
-  } catch (error) {
-    console.error('Error ending interview:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل إنهاء المقابلة',
-      error: error.message,
-    });
-  }
-};
-
-/**
- * بدء التسجيل
- * 
- * @route POST /api/interviews/:id/recording/start
- * @access Private (Host only)
- */
-exports.startRecording = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    const result = await recordingService.startRecording(id, userId);
-
-    res.json(result);
-  } catch (error) {
-    console.error('Error starting recording:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'فشل بدء التسجيل',
-    });
-  }
-};
-
-/**
- * إيقاف التسجيل
- * 
- * @route POST /api/interviews/:id/recording/stop
- * @access Private (Host only)
- */
-exports.stopRecording = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
-
-    const result = await recordingService.stopRecording(id, userId);
-
-    res.json(result);
-  } catch (error) {
-    console.error('Error stopping recording:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'فشل إيقاف التسجيل',
-    });
-  }
-};
-
-/**
- * رفع التسجيل
- * 
- * @route POST /api/interviews/:id/recording/upload
- * @access Private (Host only)
- */
-exports.uploadRecording = async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: 'لم يتم رفع ملف',
-      });
-    }
-
-    const result = await recordingService.uploadRecording(
-      id,
-      req.file.buffer,
-      {
-        filename: req.file.originalname,
+      // تصفية حسب الحالة إذا تم تحديدها
+      if (status) {
+        query.status = status;
       }
-    );
 
-    res.json(result);
-  } catch (error) {
-    console.error('Error uploading recording:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'فشل رفع التسجيل',
-    });
-  }
-};
+      const interviews = await VideoInterview.find(query)
+        .populate('hostId', 'name email profilePicture')
+        .populate('participants.userId', 'name email profilePicture')
+        .populate('appointmentId')
+        .sort({ endedAt: -1, scheduledAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit));
 
-/**
- * الحصول على معلومات التسجيل
- * 
- * @route GET /api/interviews/:id/recording
- * @access Private
- */
-exports.getRecording = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
+      const total = await VideoInterview.countDocuments(query);
 
-    const result = await recordingService.getRecordingInfo(id, userId);
-
-    res.json(result);
-  } catch (error) {
-    console.error('Error getting recording:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'فشل الحصول على معلومات التسجيل',
-    });
-  }
-};
-
-/**
- * تسجيل تحميل التسجيل
- * 
- * @route POST /api/interviews/:id/recording/download
- * @access Private
- */
-exports.recordDownload = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    await recordingService.recordDownload(id);
-
-    res.json({
-      success: true,
-      message: 'تم تسجيل التحميل',
-    });
-  } catch (error) {
-    console.error('Error recording download:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل تسجيل التحميل',
-    });
-  }
-};
-
-/**
- * إضافة موافقة على التسجيل
- * 
- * @route POST /api/interviews/:id/recording/consent
- * @access Private
- */
-exports.addRecordingConsent = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user._id;
-    const { consented } = req.body;
-
-    if (typeof consented !== 'boolean') {
-      return res.status(400).json({
+      res.status(200).json({
+        success: true,
+        interviews,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      });
+    } catch (error) {
+      console.error('Error in getPastInterviews:', error);
+      res.status(500).json({
         success: false,
-        message: 'يجب تحديد الموافقة (true أو false)',
+        message: error.message || 'حدث خطأ أثناء جلب المقابلات السابقة'
       });
     }
-
-    const result = await recordingService.addRecordingConsent(id, userId, consented);
-
-    res.json(result);
-  } catch (error) {
-    console.error('Error adding recording consent:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'فشل إضافة الموافقة',
-    });
   }
-};
 
-/**
- * التحقق من موافقة جميع المشاركين
- * 
- * @route GET /api/interviews/:id/recording/consents
- * @access Private
- */
-exports.checkAllConsents = async (req, res) => {
-  try {
-    const { id } = req.params;
+  /**
+   * الحصول على تفاصيل مقابلة واحدة
+   * Requirements: 8.1, 8.2, 8.3
+   */
+  static async getInterviewDetails(req, res) {
+    try {
+      const { interviewId } = req.params;
+      const userId = req.user._id;
 
-    const result = await recordingService.checkAllConsents(id);
+      const interview = await VideoInterview.findById(interviewId)
+        .populate('hostId', 'name email profilePicture')
+        .populate('participants.userId', 'name email profilePicture')
+        .populate('appointmentId');
 
-    res.json(result);
-  } catch (error) {
-    console.error('Error checking consents:', error);
-    res.status(500).json({
-      success: false,
-      message: error.message || 'فشل التحقق من الموافقات',
-    });
-  }
-};
+      if (!interview) {
+        return res.status(404).json({
+          success: false,
+          message: 'المقابلة غير موجودة'
+        });
+      }
 
-/**
- * الحصول على قائمة المقابلات
- * 
- * @route GET /api/interviews
- * @access Private
- */
-exports.getInterviews = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const { status, limit = 20, page = 1 } = req.query;
+      // التحقق من صلاحية الوصول
+      const isHost = interview.hostId._id.toString() === userId.toString();
+      const isParticipant = interview.participants.some(
+        p => p.userId._id.toString() === userId.toString()
+      );
 
-    const query = {
-      'participants.userId': userId,
-    };
+      if (!isHost && !isParticipant) {
+        return res.status(403).json({
+          success: false,
+          message: 'ليس لديك صلاحية للوصول لهذه المقابلة'
+        });
+      }
 
-    if (status) {
-      query.status = status;
+      res.status(200).json({
+        success: true,
+        interview,
+        userRole: isHost ? 'host' : 'participant'
+      });
+    } catch (error) {
+      console.error('Error in getInterviewDetails:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء جلب تفاصيل المقابلة'
+      });
     }
-
-    const interviews = await VideoInterview.find(query)
-      .populate('hostId', 'name email profilePicture')
-      .populate('participants.userId', 'name email profilePicture')
-      .sort({ scheduledAt: -1, createdAt: -1 })
-      .limit(parseInt(limit))
-      .skip((parseInt(page) - 1) * parseInt(limit));
-
-    const total = await VideoInterview.countDocuments(query);
-
-    res.json({
-      success: true,
-      interviews,
-      pagination: {
-        total,
-        page: parseInt(page),
-        limit: parseInt(limit),
-        pages: Math.ceil(total / parseInt(limit)),
-      },
-    });
-  } catch (error) {
-    console.error('Error getting interviews:', error);
-    res.status(500).json({
-      success: false,
-      message: 'فشل الحصول على قائمة المقابلات',
-      error: error.message,
-    });
   }
-};
 
-module.exports = exports;
+  /**
+   * إضافة ملاحظات بعد المقابلة
+   * Requirements: 8.4
+   */
+  static async addNotes(req, res) {
+    try {
+      const { interviewId } = req.params;
+      const { notes } = req.body;
+      const userId = req.user._id;
+
+      const interview = await VideoInterview.findById(interviewId);
+
+      if (!interview) {
+        return res.status(404).json({
+          success: false,
+          message: 'المقابلة غير موجودة'
+        });
+      }
+
+      // التحقق من أن المستخدم هو المضيف
+      if (interview.hostId.toString() !== userId.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: 'فقط المضيف يمكنه إضافة ملاحظات'
+        });
+      }
+
+      // التحقق من أن المقابلة انتهت
+      if (interview.status !== 'ended') {
+        return res.status(400).json({
+          success: false,
+          message: 'لا يمكن إضافة ملاحظات إلا بعد انتهاء المقابلة'
+        });
+      }
+
+      interview.notes = notes;
+      await interview.save();
+
+      res.status(200).json({
+        success: true,
+        message: 'تم حفظ الملاحظات بنجاح',
+        interview
+      });
+    } catch (error) {
+      console.error('Error in addNotes:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء حفظ الملاحظات'
+      });
+    }
+  }
+
+  /**
+   * تقييم المرشح بعد المقابلة
+   * Requirements: 8.5
+   */
+  static async rateCandidate(req, res) {
+    try {
+      const { interviewId } = req.params;
+      const { rating } = req.body;
+      const userId = req.user._id;
+
+      // التحقق من صحة التقييم
+      if (!rating || rating < 1 || rating > 5) {
+        return res.status(400).json({
+          success: false,
+          message: 'التقييم يجب أن يكون بين 1 و 5'
+        });
+      }
+
+      const interview = await VideoInterview.findById(interviewId);
+
+      if (!interview) {
+        return res.status(404).json({
+          success: false,
+          message: 'المقابلة غير موجودة'
+        });
+      }
+
+      // التحقق من أن المستخدم هو المضيف
+      if (interview.hostId.toString() !== userId.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: 'فقط المضيف يمكنه تقييم المرشح'
+        });
+      }
+
+      // التحقق من أن المقابلة انتهت
+      if (interview.status !== 'ended') {
+        return res.status(400).json({
+          success: false,
+          message: 'لا يمكن التقييم إلا بعد انتهاء المقابلة'
+        });
+      }
+
+      interview.rating = rating;
+      await interview.save();
+
+      res.status(200).json({
+        success: true,
+        message: 'تم حفظ التقييم بنجاح',
+        interview
+      });
+    } catch (error) {
+      console.error('Error in rateCandidate:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء حفظ التقييم'
+      });
+    }
+  }
+
+  /**
+   * البحث والفلترة في المقابلات
+   * Requirements: 8.6
+   */
+  static async searchInterviews(req, res) {
+    try {
+      const userId = req.user._id;
+      const {
+        page = 1,
+        limit = 10,
+        status,
+        startDate,
+        endDate,
+        search
+      } = req.query;
+
+      const skip = (page - 1) * limit;
+
+      // بناء الاستعلام
+      const query = {
+        $or: [
+          { hostId: userId },
+          { 'participants.userId': userId }
+        ]
+      };
+
+      // تصفية حسب الحالة
+      if (status) {
+        query.status = status;
+      }
+
+      // تصفية حسب التاريخ
+      if (startDate || endDate) {
+        query.scheduledAt = {};
+        if (startDate) {
+          query.scheduledAt.$gte = new Date(startDate);
+        }
+        if (endDate) {
+          query.scheduledAt.$lte = new Date(endDate);
+        }
+      }
+
+      const interviews = await VideoInterview.find(query)
+        .populate('hostId', 'name email profilePicture')
+        .populate('participants.userId', 'name email profilePicture')
+        .populate('appointmentId')
+        .sort({ scheduledAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit));
+
+      // البحث النصي إذا تم تحديده
+      let filteredInterviews = interviews;
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredInterviews = interviews.filter(interview => {
+          const hostName = interview.hostId?.name?.toLowerCase() || '';
+          const participantNames = interview.participants
+            .map(p => p.userId?.name?.toLowerCase() || '')
+            .join(' ');
+          const notes = interview.notes?.toLowerCase() || '';
+          
+          return hostName.includes(searchLower) ||
+                 participantNames.includes(searchLower) ||
+                 notes.includes(searchLower);
+        });
+      }
+
+      const total = await VideoInterview.countDocuments(query);
+
+      res.status(200).json({
+        success: true,
+        interviews: filteredInterviews,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          pages: Math.ceil(total / limit)
+        }
+      });
+    } catch (error) {
+      console.error('Error in searchInterviews:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء البحث في المقابلات'
+      });
+    }
+  }
+
+  /**
+   * الحصول على إحصائيات المقابلات
+   */
+  static async getInterviewStats(req, res) {
+    try {
+      const userId = req.user._id;
+
+      const stats = {
+        upcoming: await VideoInterview.countDocuments({
+          $or: [
+            { hostId: userId },
+            { 'participants.userId': userId }
+          ],
+          status: { $in: ['scheduled', 'waiting'] },
+          scheduledAt: { $gte: new Date() }
+        }),
+        completed: await VideoInterview.countDocuments({
+          $or: [
+            { hostId: userId },
+            { 'participants.userId': userId }
+          ],
+          status: 'ended'
+        }),
+        cancelled: await VideoInterview.countDocuments({
+          $or: [
+            { hostId: userId },
+            { 'participants.userId': userId }
+          ],
+          status: 'cancelled'
+        }),
+        withRecordings: await VideoInterview.countDocuments({
+          $or: [
+            { hostId: userId },
+            { 'participants.userId': userId }
+          ],
+          'recording.status': 'ready'
+        })
+      };
+
+      res.status(200).json({
+        success: true,
+        stats
+      });
+    } catch (error) {
+      console.error('Error in getInterviewStats:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء جلب الإحصائيات'
+      });
+    }
+  }
+
+
+  /**
+   * رفع ملف أثناء المقابلة
+   */
+  static async uploadFile(req, res) {
+    try {
+      const { interviewId } = req.params;
+      const userId = req.user._id;
+      const file = req.file;
+
+      if (!file) {
+        return res.status(400).json({
+          success: false,
+          message: 'لم يتم تحديد ملف'
+        });
+      }
+
+      // رفع الملف
+      const result = await InterviewFileService.uploadFile(file, interviewId, userId);
+
+      // إرسال إشعار عبر Socket.IO (إذا كان متاحاً)
+      if (req.app.get('io')) {
+        req.app.get('io').to(`interview-${interviewId}`).emit('file-shared', {
+          file: result.file,
+          sender: {
+            id: userId,
+            name: req.user.name
+          }
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'تم رفع الملف بنجاح',
+        file: result.file
+      });
+    } catch (error) {
+      console.error('Error in uploadFile:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء رفع الملف'
+      });
+    }
+  }
+
+  /**
+   * حذف ملف من المقابلة
+   */
+  static async deleteFile(req, res) {
+    try {
+      const { interviewId, fileId } = req.params;
+      const { category } = req.body;
+
+      // حذف الملف
+      const result = await InterviewFileService.deleteFile(fileId, category);
+
+      // إرسال إشعار عبر Socket.IO
+      if (req.app.get('io')) {
+        req.app.get('io').to(`interview-${interviewId}`).emit('file-deleted', {
+          fileId: fileId
+        });
+      }
+
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error in deleteFile:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء حذف الملف'
+      });
+    }
+  }
+
+  /**
+   * الحصول على معلومات الملف
+   */
+  static getFileInfo(req, res) {
+    try {
+      const file = req.file;
+
+      if (!file) {
+        return res.status(400).json({
+          success: false,
+          message: 'لم يتم تحديد ملف'
+        });
+      }
+
+      const fileInfo = InterviewFileService.getFileInfo(file);
+
+      res.status(200).json({
+        success: true,
+        fileInfo: fileInfo
+      });
+    } catch (error) {
+      console.error('Error in getFileInfo:', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'حدث خطأ أثناء الحصول على معلومات الملف'
+      });
+    }
+  }
+}
+
+// تصدير Controller و Multer middleware
+module.exports = {
+  VideoInterviewController,
+  uploadMiddleware: upload.single('file')
+};

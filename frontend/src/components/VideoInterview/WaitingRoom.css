@@ -1,0 +1,368 @@
+/* Waiting Room Styles */
+
+.waiting-room-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #304B60 0%, #1a2a38 100%);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.waiting-room-header {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.waiting-room-header h2 {
+  color: #E3DAD1;
+  font-size: 2rem;
+  font-family: 'Amiri', serif;
+  margin: 0;
+}
+
+.btn-leave {
+  background: rgba(212, 129, 97, 0.2);
+  border: 2px solid #D48161;
+  color: #D48161;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-leave:hover {
+  background: rgba(212, 129, 97, 0.3);
+  transform: translateY(-2px);
+}
+
+.waiting-room-content {
+  width: 100%;
+  max-width: 1200px;
+  background: rgba(227, 218, 209, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* رسالة الترحيب */
+.welcome-message {
+  background: rgba(212, 129, 97, 0.1);
+  border: 2px solid rgba(212, 129, 97, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-message i {
+  color: #D48161;
+  font-size: 1.5rem;
+}
+
+.welcome-message p {
+  color: #E3DAD1;
+  font-size: 1.1rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* معلومات الانتظار */
+.waiting-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.info-card {
+  background: rgba(48, 75, 96, 0.5);
+  border: 2px solid rgba(227, 218, 209, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(212, 129, 97, 0.2);
+}
+
+.info-card i {
+  color: #D48161;
+  font-size: 2rem;
+}
+
+.info-card > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-label {
+  color: rgba(227, 218, 209, 0.7);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: #E3DAD1;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* معاينة الفيديو */
+.video-preview-section {
+  margin-bottom: 2rem;
+}
+
+.video-preview-section h3 {
+  color: #E3DAD1;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Amiri', serif;
+}
+
+.video-preview-container {
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.video-preview {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.control-btn {
+  background: rgba(227, 218, 209, 0.2);
+  border: 2px solid rgba(227, 218, 209, 0.3);
+  color: #E3DAD1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.control-btn:hover {
+  background: rgba(227, 218, 209, 0.3);
+  transform: translateY(-2px);
+}
+
+.control-btn.disabled {
+  background: rgba(212, 129, 97, 0.2);
+  border-color: rgba(212, 129, 97, 0.3);
+  color: #D48161;
+}
+
+.control-btn i {
+  font-size: 1.2rem;
+}
+
+/* مؤشر الانتظار */
+.waiting-indicator {
+  text-align: center;
+  padding: 2rem;
+}
+
+.pulse-animation {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #D48161;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+}
+
+.waiting-indicator p {
+  color: #E3DAD1;
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Loading State */
+.waiting-room-loading {
+  text-align: center;
+  padding: 3rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  margin: 0 auto 1rem;
+  border: 4px solid rgba(227, 218, 209, 0.2);
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.waiting-room-loading p {
+  color: #E3DAD1;
+  font-size: 1.2rem;
+}
+
+/* Error State */
+.waiting-room-error {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(212, 129, 97, 0.1);
+  border: 2px solid rgba(212, 129, 97, 0.3);
+  border-radius: 12px;
+}
+
+.waiting-room-error i {
+  color: #D48161;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.waiting-room-error h3 {
+  color: #E3DAD1;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.waiting-room-error p {
+  color: rgba(227, 218, 209, 0.7);
+  margin-bottom: 1.5rem;
+}
+
+.btn-retry {
+  background: #D48161;
+  border: none;
+  color: #fff;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-retry:hover {
+  background: #c06f51;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .waiting-room-container {
+    padding: 1rem;
+  }
+
+  .waiting-room-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .waiting-room-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .waiting-room-content {
+    padding: 1.5rem;
+  }
+
+  .waiting-info {
+    grid-template-columns: 1fr;
+  }
+
+  .video-controls {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .control-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .waiting-room-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .welcome-message {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .info-value {
+    font-size: 1.25rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .waiting-room-header {
+  direction: rtl;
+}
+
+[dir="rtl"] .welcome-message,
+[dir="rtl"] .info-card,
+[dir="rtl"] .control-btn {
+  direction: rtl;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .waiting-room-container {
+    background: linear-gradient(135deg, #1a2a38 0%, #0d1419 100%);
+  }
+}
