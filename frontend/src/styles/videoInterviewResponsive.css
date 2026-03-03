@@ -1,0 +1,1166 @@
+/**
+ * Video Interview Responsive Design
+ * تحسينات شاملة للتصميم المتجاوب لنظام الفيديو للمقابلات
+ * 
+ * Requirements: معايير القبول النهائية
+ * Task: 15. التصميم متجاوب على جميع الأجهزة
+ * 
+ * Breakpoints:
+ * - Mobile Small: < 480px
+ * - Mobile: 480px - 768px
+ * - Tablet: 768px - 1024px
+ * - Desktop: > 1024px
+ * - Landscape: max-height 500px
+ */
+
+/* ============================================
+   1. VideoCall Component - Mobile Optimizations
+   ============================================ */
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
+  /* Video Container */
+  .video-call-container {
+    height: 100dvh; /* Dynamic viewport height */
+    padding: 0;
+  }
+
+  /* Remote Video - Full screen */
+  .remote-video-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .remote-video {
+    object-fit: cover; /* Better fit on mobile */
+  }
+
+  /* Local Video - Smaller and repositioned */
+  .local-video-wrapper {
+    width: 90px; /* Smaller on mobile */
+    height: 120px;
+    bottom: max(90px, calc(90px + env(safe-area-inset-bottom)));
+    right: max(8px, calc(8px + env(safe-area-inset-right)));
+    border-width: 2px;
+    border-radius: 8px;
+  }
+
+  /* Video Controls - Touch optimized */
+  .video-controls {
+    bottom: max(16px, calc(16px + env(safe-area-inset-bottom)));
+    gap: 10px;
+    padding: 0 8px;
+    width: calc(100% - 16px);
+    justify-content: center;
+  }
+
+  .control-btn {
+    width: 48px; /* Min 44px for touch */
+    height: 48px;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  /* Connection Quality - Compact */
+  .connection-quality {
+    top: max(8px, calc(8px + env(safe-area-inset-top)));
+    right: max(8px, calc(8px + env(safe-area-inset-right)));
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    gap: 3px;
+  }
+
+  .quality-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Video Quality Badge - Smaller */
+  .video-quality-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+    gap: 3px;
+  }
+
+  .video-quality-badge.remote {
+    left: max(8px, calc(8px + env(safe-area-inset-left)));
+    top: max(8px, calc(8px + env(safe-area-inset-top)));
+  }
+
+  .video-quality-badge.local {
+    display: none; /* Hide on very small screens */
+  }
+
+  .resolution {
+    display: none; /* Hide resolution text on mobile */
+  }
+
+  /* No Video Placeholder */
+  .placeholder-icon {
+    font-size: 2.5rem;
+  }
+
+  .no-video-placeholder p {
+    font-size: 0.9rem;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .video-call-container {
+    height: 100dvh;
+  }
+
+  .local-video-wrapper {
+    width: 120px;
+    height: 160px;
+    bottom: max(100px, calc(100px + env(safe-area-inset-bottom)));
+    right: max(12px, calc(12px + env(safe-area-inset-right)));
+  }
+
+  .video-controls {
+    bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+    gap: 14px;
+  }
+
+  .control-btn {
+    width: 52px;
+    height: 52px;
+    font-size: 1.4rem;
+  }
+
+  .connection-quality {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+
+  .video-quality-badge {
+    font-size: 0.75rem;
+    padding: 3px 7px;
+  }
+}
+
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .local-video-wrapper {
+    width: 100px;
+    height: 75px;
+    bottom: max(16px, calc(16px + env(safe-area-inset-bottom)));
+    right: max(16px, calc(16px + env(safe-area-inset-right)));
+  }
+
+  .video-controls {
+    bottom: max(12px, calc(12px + env(safe-area-inset-bottom)));
+    gap: 10px;
+  }
+
+  .control-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+
+  .connection-quality {
+    top: 8px;
+    right: 8px;
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+
+  .video-quality-badge {
+    font-size: 0.65rem;
+    padding: 2px 5px;
+  }
+}
+
+/* ============================================
+   2. RecordingNotification - Mobile Optimizations
+   ============================================ */
+
+@media (max-width: 480px) {
+  .recording-notification {
+    padding: 6px 10px;
+    gap: 6px;
+    min-width: auto;
+    max-width: calc(100vw - 24px);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .recording-notification-top,
+  .recording-notification-bottom {
+    left: 12px;
+    right: 12px;
+    transform: none;
+  }
+
+  .recording-notification-top {
+    top: max(12px, calc(12px + env(safe-area-inset-top)));
+  }
+
+  .recording-notification-bottom {
+    bottom: max(75px, calc(75px + env(safe-area-inset-bottom)));
+  }
+
+  .recording-notification-floating {
+    top: max(10px, calc(10px + env(safe-area-inset-top)));
+    right: 10px;
+    left: 10px;
+    min-width: auto;
+    max-width: none;
+  }
+
+  .recording-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .recording-text {
+    font-size: 0.8rem;
+  }
+
+  .recording-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .recording-icon {
+    font-size: 0.9rem;
+  }
+
+  .recording-message {
+    font-size: 0.75rem;
+  }
+
+  .recording-duration {
+    padding: 2px 8px;
+    align-self: flex-start;
+  }
+
+  .duration-label {
+    font-size: 0.7rem;
+  }
+
+  .duration-value {
+    font-size: 0.8rem;
+  }
+
+  .recording-privacy-notice {
+    margin-top: 6px;
+    padding: 8px;
+  }
+
+  .notice-title {
+    font-size: 0.75rem;
+    margin-bottom: 3px;
+  }
+
+  .notice-text {
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+}
+
+/* ============================================
+   3. InterviewTimer - Mobile Optimizations
+   ============================================ */
+
+@media (max-width: 480px) {
+  .interview-timer {
+    padding: 3px 8px;
+    font-size: 11px;
+    gap: 3px;
+  }
+
+  .timer-label {
+    font-size: 9px;
+    display: none; /* Hide on very small screens */
+  }
+
+  .timer-value {
+    font-size: 12px;
+  }
+
+  .timer-status {
+    font-size: 10px;
+  }
+
+  .interview-timer.top-left,
+  .interview-timer.top-right {
+    top: max(8px, calc(8px + env(safe-area-inset-top)));
+  }
+
+  .interview-timer.top-left {
+    left: max(8px, calc(8px + env(safe-area-inset-left)));
+  }
+
+  .interview-timer.top-right {
+    right: max(8px, calc(8px + env(safe-area-inset-right)));
+  }
+
+  .interview-timer.bottom-left,
+  .interview-timer.bottom-right {
+    bottom: max(65px, calc(65px + env(safe-area-inset-bottom)));
+  }
+
+  .interview-timer.bottom-left {
+    left: max(8px, calc(8px + env(safe-area-inset-left)));
+  }
+
+  .interview-timer.bottom-right {
+    right: max(8px, calc(8px + env(safe-area-inset-right)));
+  }
+}
+
+/* ============================================
+   4. GroupVideoCall - Mobile Optimizations
+   ============================================ */
+
+@media (max-width: 768px) {
+  .group-video-call {
+    height: 100dvh;
+  }
+
+  .video-controls {
+    top: max(10px, calc(10px + env(safe-area-inset-top)));
+    padding: 10px 12px;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .control-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .participant-count {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .video-grid {
+    padding: max(65px, calc(65px + env(safe-area-inset-top))) 10px 10px;
+    gap: 5px;
+  }
+
+  .speaker-view {
+    padding: max(65px, calc(65px + env(safe-area-inset-top))) 10px 10px;
+  }
+
+  .other-participants {
+    height: 100px;
+    padding-bottom: max(10px, calc(10px + env(safe-area-inset-bottom)));
+  }
+
+  .video-container.small {
+    min-width: 130px;
+    width: 130px;
+    height: 100px;
+  }
+
+  .video-label {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+
+  .remove-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .video-controls {
+    flex-direction: row;
+    gap: 4px;
+    padding: 8px 10px;
+  }
+
+  .control-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .participant-count {
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .video-grid {
+    grid-template-columns: 1fr !important;
+    padding: max(60px, calc(60px + env(safe-area-inset-top))) 8px 8px;
+  }
+
+  .other-participants {
+    height: 90px;
+  }
+
+  .video-container.small {
+    min-width: 110px;
+    width: 110px;
+    height: 90px;
+  }
+
+  .video-label {
+    font-size: 10px;
+    padding: 2px 8px;
+  }
+}
+
+/* ============================================
+   5. WaitingRoom - Mobile Optimizations
+   ============================================ */
+
+@media (max-width: 768px) {
+  .waiting-room-container {
+    padding: 1rem;
+    min-height: 100dvh;
+  }
+
+  .waiting-room-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .waiting-room-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .btn-leave {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .waiting-room-content {
+    padding: 1.25rem;
+  }
+
+  .welcome-message {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .welcome-message i {
+    font-size: 1.25rem;
+  }
+
+  .welcome-message p {
+    font-size: 1rem;
+  }
+
+  .waiting-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .info-card {
+    flex-direction: row;
+    text-align: left;
+  }
+
+  .info-card i {
+    font-size: 1.75rem;
+  }
+
+  .info-value {
+    font-size: 1.3rem;
+  }
+
+  .video-preview-section h3 {
+    font-size: 1.3rem;
+  }
+
+  .video-preview {
+    max-height: 300px;
+  }
+
+  .video-controls {
+    flex-direction: column;
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .control-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .control-btn i {
+    font-size: 1.1rem;
+  }
+
+  .waiting-indicator {
+    padding: 1.5rem;
+  }
+
+  .pulse-animation {
+    width: 50px;
+    height: 50px;
+  }
+
+  .waiting-indicator p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .waiting-room-container {
+    padding: 0.75rem;
+  }
+
+  .waiting-room-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .btn-leave {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .waiting-room-content {
+    padding: 1rem;
+  }
+
+  .welcome-message {
+    padding: 1rem;
+  }
+
+  .welcome-message i {
+    font-size: 1.1rem;
+  }
+
+  .welcome-message p {
+    font-size: 0.9rem;
+  }
+
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .info-card i {
+    font-size: 1.5rem;
+  }
+
+  .info-label {
+    font-size: 0.85rem;
+  }
+
+  .info-value {
+    font-size: 1.15rem;
+  }
+
+  .video-preview-section h3 {
+    font-size: 1.15rem;
+  }
+
+  .video-preview {
+    max-height: 250px;
+  }
+
+  .control-btn {
+    padding: 0.55rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .control-btn i {
+    font-size: 1rem;
+  }
+
+  .waiting-indicator {
+    padding: 1.25rem;
+  }
+
+  .pulse-animation {
+    width: 45px;
+    height: 45px;
+  }
+
+  .waiting-indicator p {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================
+   6. InterviewDashboard - Mobile Optimizations
+   ============================================ */
+
+@media (max-width: 768px) {
+  .interview-dashboard {
+    padding: 1rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.4rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .stats-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+  }
+
+  .stat-icon {
+    font-size: 1.75rem;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+  }
+
+  .dashboard-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 0.5rem;
+  }
+
+  .dashboard-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dashboard-tabs button {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .filters-section {
+    flex-direction: column;
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    padding: 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .filters-section button {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .interviews-list {
+    gap: 1.25rem;
+  }
+
+  .interview-card {
+    padding: 1.25rem;
+  }
+
+  .interview-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .status-badge {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .interview-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .interview-info p {
+    font-size: 0.85rem;
+  }
+
+  .interview-body {
+    gap: 0.65rem;
+  }
+
+  .info-row .label {
+    min-width: 100px;
+    font-size: 0.9rem;
+  }
+
+  .info-row .value {
+    font-size: 0.9rem;
+  }
+
+  .interview-actions {
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .interview-actions button,
+  .interview-actions .download-btn {
+    width: 100%;
+    text-align: center;
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .pagination button {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .pagination span {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .interview-dashboard {
+    padding: 0.75rem;
+  }
+
+  .dashboard-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .stats-cards {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-icon {
+    font-size: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+  }
+
+  .dashboard-tabs button {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .filters-section {
+    padding: 1rem;
+  }
+
+  .filter-group label {
+    font-size: 0.85rem;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .filters-section button {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .interview-card {
+    padding: 1rem;
+  }
+
+  .interview-info h3 {
+    font-size: 1rem;
+  }
+
+  .interview-info p {
+    font-size: 0.8rem;
+  }
+
+  .status-badge {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .info-row .label {
+    min-width: 90px;
+    font-size: 0.85rem;
+  }
+
+  .info-row .value {
+    font-size: 0.85rem;
+  }
+
+  .interview-actions button,
+  .interview-actions .download-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================
+   7. UpcomingInterviewsList - Mobile Optimizations
+   ============================================ */
+
+@media (max-width: 768px) {
+  .upcoming-interviews-container {
+    padding: 1rem;
+  }
+
+  .upcoming-interviews-title {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .upcoming-interviews-list {
+    gap: 1.25rem;
+  }
+
+  .interview-card {
+    padding: 1.25rem;
+  }
+
+  .interview-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .interview-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .status-badge {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+  }
+
+  .time-until {
+    font-size: 0.8rem;
+  }
+
+  .interview-body {
+    gap: 1.25rem;
+  }
+
+  .interview-date {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .interview-date .icon-calendar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .interview-date .date {
+    font-size: 0.95rem;
+  }
+
+  .interview-date .time {
+    font-size: 0.8rem;
+  }
+
+  .interview-participants .label {
+    font-size: 0.9rem;
+  }
+
+  .participants-list {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .participant {
+    padding: 0.4rem 0.85rem;
+  }
+
+  .participant-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .participant-name {
+    font-size: 0.8rem;
+  }
+
+  .host-badge {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  .interview-appointment {
+    padding: 0.85rem;
+  }
+
+  .appointment-title {
+    font-size: 0.95rem;
+  }
+
+  .appointment-description {
+    font-size: 0.8rem;
+  }
+
+  .interview-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-disabled {
+    width: 100%;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pagination-btn {
+    padding: 0.65rem 1.25rem;
+    font-size: 0.9rem;
+  }
+
+  .pagination-info {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .upcoming-interviews-container {
+    padding: 0.75rem;
+  }
+
+  .upcoming-interviews-title {
+    font-size: 1.2rem;
+  }
+
+  .interview-card {
+    padding: 1rem;
+  }
+
+  .status-badge {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .time-until {
+    font-size: 0.75rem;
+  }
+
+  .interview-date .icon-calendar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .interview-date .date {
+    font-size: 0.9rem;
+  }
+
+  .interview-date .time {
+    font-size: 0.75rem;
+  }
+
+  .interview-participants .label {
+    font-size: 0.85rem;
+  }
+
+  .participant {
+    padding: 0.35rem 0.75rem;
+  }
+
+  .participant-avatar {
+    width: 26px;
+    height: 26px;
+  }
+
+  .participant-name {
+    font-size: 0.75rem;
+  }
+
+  .host-badge {
+    padding: 0.15rem 0.35rem;
+    font-size: 0.65rem;
+  }
+
+  .interview-appointment {
+    padding: 0.75rem;
+  }
+
+  .appointment-title {
+    font-size: 0.9rem;
+  }
+
+  .appointment-description {
+    font-size: 0.75rem;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-disabled {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .pagination-info {
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================
+   8. Touch Optimization (All Components)
+   ============================================ */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Ensure all touch targets are at least 44x44px */
+  button,
+  .control-btn,
+  .btn-primary,
+  .btn-secondary,
+  .pagination-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Larger tap areas */
+  button::before,
+  .control-btn::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+  }
+
+  /* Remove hover effects on touch devices */
+  button:hover,
+  .control-btn:hover,
+  .btn-primary:hover,
+  .btn-secondary:hover {
+    transform: none;
+  }
+
+  /* Prevent text selection */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Allow text selection in inputs */
+  input,
+  textarea {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+}
+
+/* ============================================
+   9. Safe Area Support (Notch devices)
+   ============================================ */
+
+@supports (padding: max(0px)) {
+  .video-call-container,
+  .group-video-call,
+  .waiting-room-container,
+  .interview-dashboard,
+  .upcoming-interviews-container {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ============================================
+   10. Prevent Zoom on Input Focus (iOS)
+   ============================================ */
+
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents iOS zoom */
+  }
+}
+
+/* ============================================
+   11. High DPI Screens
+   ============================================ */
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .video-quality-badge,
+  .connection-quality,
+  .status-badge {
+    border-width: 1px;
+  }
+}
+
+/* ============================================
+   12. Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   13. Print Styles
+   ============================================ */
+
+@media print {
+  .video-call-container,
+  .group-video-call,
+  .video-controls,
+  .control-btn,
+  .recording-notification,
+  .interview-timer {
+    display: none !important;
+  }
+}

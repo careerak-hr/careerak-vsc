@@ -4,7 +4,9 @@
  * 
  * Features:
  * - HD video constraints (1280x720 minimum)
- * - Audio enhancements (echo cancellation, noise suppression)
+ * - Adaptive bitrate based on network conditions
+ * - Automatic lighting enhancement (brightness/contrast)
+ * - Advanced noise suppression
  * - Connection quality monitoring
  * - ICE candidate handling
  */
@@ -15,6 +17,9 @@ class WebRTCService {
     this.localStream = null;
     this.remoteStream = null;
     this.connectionQuality = 'unknown';
+    this.currentBitrate = 2500000; // 2.5 Mbps default for HD
+    this.adaptiveBitrateEnabled = true;
+    this.lightingEnhancementEnabled = true;
     
     // HD Video Constraints (720p minimum)
     this.mediaConstraints = {
@@ -25,11 +30,30 @@ class WebRTCService {
         facingMode: 'user'
       },
       audio: {
-        echoCancellation: true,
-        noiseSuppression: true,
-        autoGainControl: true,
-        sampleRate: 48000
+        echoCancellation: { exact: true },
+        noiseSuppression: { exact: true },
+        autoGainControl: { exact: true },
+        sampleRate: 48000,
+        // Advanced noise suppression settings
+        channelCount: 1, // Mono for better noise suppression
+        latency: 0.01 // Low latency
       }
+    };
+
+    // Bitrate levels for adaptive streaming
+    this.bitratePresets = {
+      excellent: 2500000, // 2.5 Mbps - Full HD quality
+      good: 1500000,      // 1.5 Mbps - HD quality
+      poor: 800000,       // 800 Kbps - Reduced quality
+      minimum: 500000     // 500 Kbps - Minimum acceptable
+    };
+
+    // Bitrate levels for adaptive streaming
+    this.bitratePresets = {
+      excellent: 2500000, // 2.5 Mbps - Full HD quality
+      good: 1500000,      // 1.5 Mbps - HD quality
+      poor: 800000,       // 800 Kbps - Reduced quality
+      minimum: 500000     // 500 Kbps - Minimum acceptable
     };
 
     // ICE Servers Configuration
@@ -46,6 +70,11 @@ class WebRTCService {
         // }
       ]
     };
+
+    // Canvas for lighting enhancement
+    this.videoCanvas = null;
+    this.canvasContext = null;
+    this.enhancedStream = null;
   }
 
   /**
@@ -73,7 +102,12 @@ class WebRTCService {
         console.log('✅ HD video quality achieved:', `${settings.width}x${settings.height}`);
       }
 
-      return this.localStream;
+      // Apply lighting enhancement if enabled
+      if (this.lightingEnhancementEnabled) {
+        await this.applyLightingEnhancement();
+      }
+
+      return this.enhancedStream || this.localStream;
     } catch (error) {
       console.error('Error accessing media devices:', error);
       
@@ -96,6 +130,114 @@ class WebRTCService {
   }
 
   /**
+   * Apply lighting enhancement to video stream
+   * تطبيق تحسين الإضاءة على بث الفيديو
+   * 
+   * Uses canvas to adjust brightness and contrast automatically
+   */
+  async applyLightingEnhancement() {
+    try {
+      if (!this.localStream) {
+        throw new Error('No local stream available for enhancement');
+      }
+
+      const videoTrack = this.localStream.getVideoTracks()[0];
+      const settings = videoTrack.getSettings();
+
+      // Create canvas for processing
+      this.videoCanvas = document.createElement('canvas');
+      this.videoCanvas.width = settings.width || 1280;
+      this.videoCanvas.height = settings.height || 720;
+      this.canvasContext = this.videoCanvas.getContext('2d', { willReadFrequently: true });
+
+      // Create video element to draw from
+      const videoElement = document.createElement('video');
+      videoElement.srcObject = this.localStream;
+      videoElement.play();
+
+      // Process video frames
+      const processFrame = () => {
+        if (!this.canvasContext || !this.lightingEnhancementEnabled) return;
+
+        // Draw current frame
+        this.canvasContext.drawImage(videoElement, 0, 0, this.videoCanvas.width, this.videoCanvas.height);
+
+        // Get image data
+        const imageData = this.canvasContext.getImageData(0, 0, this.videoCanvas.width, this.videoCanvas.height);
+        const data = imageData.data;
+
+        // Calculate average brightness
+        let totalBrightness = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          totalBrightness += (r + g + b) / 3;
+        }
+        const avgBrightness = totalBrightness / (data.length / 4);
+
+        // Determine adjustment needed
+        const targetBrightness = 128; // Mid-range brightness
+        const brightnessFactor = targetBrightness / avgBrightness;
+        
+        // Apply brightness and contrast adjustment
+        const contrast = 1.1; // Slight contrast boost
+        const brightness = (brightnessFactor - 1) * 30; // Brightness adjustment
+
+        for (let i = 0; i < data.length; i += 4) {
+          // Apply contrast
+          data[i] = ((data[i] - 128) * contrast + 128) + brightness;
+          data[i + 1] = ((data[i + 1] - 128) * contrast + 128) + brightness;
+          data[i + 2] = ((data[i + 2] - 128) * contrast + 128) + brightness;
+
+          // Clamp values
+          data[i] = Math.max(0, Math.min(255, data[i]));
+          data[i + 1] = Math.max(0, Math.min(255, data[i + 1]));
+          data[i + 2] = Math.max(0, Math.min(255, data[i + 2]));
+        }
+
+        // Put processed image back
+        this.canvasContext.putImageData(imageData, 0, 0);
+
+        // Continue processing
+        requestAnimationFrame(processFrame);
+      };
+
+      // Start processing after video is ready
+      videoElement.onloadedmetadata = () => {
+        processFrame();
+      };
+
+      // Capture enhanced stream from canvas
+      const canvasStream = this.videoCanvas.captureStream(30); // 30 FPS
+      const enhancedVideoTrack = canvasStream.getVideoTracks()[0];
+
+      // Combine enhanced video with original audio
+      const audioTrack = this.localStream.getAudioTracks()[0];
+      this.enhancedStream = new MediaStream([enhancedVideoTrack, audioTrack]);
+
+      console.log('✅ Lighting enhancement applied successfully');
+    } catch (error) {
+      console.error('Error applying lighting enhancement:', error);
+      // Continue without enhancement
+      this.lightingEnhancementEnabled = false;
+    }
+  }
+
+  /**
+   * Toggle lighting enhancement
+   * تبديل تحسين الإضاءة
+   */
+  toggleLightingEnhancement(enabled) {
+    this.lightingEnhancementEnabled = enabled;
+    if (!enabled && this.enhancedStream) {
+      // Stop enhanced stream and use original
+      this.enhancedStream.getTracks().forEach(track => track.stop());
+      this.enhancedStream = null;
+    }
+  }
+
+  /**
    * Create peer connection
    * إنشاء اتصال peer
    */
@@ -104,9 +246,10 @@ class WebRTCService {
       this.peerConnection = new RTCPeerConnection(this.iceServers);
 
       // Add local stream tracks
-      if (this.localStream) {
-        this.localStream.getTracks().forEach(track => {
-          this.peerConnection.addTrack(track, this.localStream);
+      const streamToUse = this.enhancedStream || this.localStream;
+      if (streamToUse) {
+        streamToUse.getTracks().forEach(track => {
+          this.peerConnection.addTrack(track, streamToUse);
         });
       }
 
@@ -125,14 +268,145 @@ class WebRTCService {
         this.updateConnectionQuality();
       };
 
-      // Start monitoring stats
+      // Start monitoring stats and adaptive bitrate
       this.startStatsMonitoring();
+      if (this.adaptiveBitrateEnabled) {
+        this.startAdaptiveBitrate();
+      }
 
       return this.peerConnection;
     } catch (error) {
       console.error('Error creating peer connection:', error);
       throw error;
     }
+  }
+
+  /**
+   * Start adaptive bitrate adjustment
+   * بدء تعديل معدل البت التكيفي
+   * 
+   * Automatically adjusts video bitrate based on network conditions
+   */
+  startAdaptiveBitrate() {
+    if (!this.peerConnection) return;
+
+    this.bitrateInterval = setInterval(async () => {
+      try {
+        const stats = await this.peerConnection.getStats();
+        let outboundRtp = null;
+        let candidatePair = null;
+
+        stats.forEach(report => {
+          if (report.type === 'outbound-rtp' && report.kind === 'video') {
+            outboundRtp = report;
+          }
+          if (report.type === 'candidate-pair' && report.state === 'succeeded') {
+            candidatePair = report;
+          }
+        });
+
+        if (outboundRtp && candidatePair) {
+          // Calculate packet loss rate
+          const packetsLost = outboundRtp.packetsLost || 0;
+          const packetsSent = outboundRtp.packetsSent || 0;
+          const lossRate = packetsSent > 0 ? (packetsLost / packetsSent) * 100 : 0;
+
+          // Calculate available bandwidth (rough estimate)
+          const currentRoundTripTime = candidatePair.currentRoundTripTime || 0;
+          
+          // Determine target bitrate based on conditions
+          let targetBitrate;
+          if (lossRate < 1 && currentRoundTripTime < 0.1) {
+            // Excellent conditions - use highest quality
+            targetBitrate = this.bitratePresets.excellent;
+          } else if (lossRate < 3 && currentRoundTripTime < 0.2) {
+            // Good conditions - use high quality
+            targetBitrate = this.bitratePresets.good;
+          } else if (lossRate < 5 && currentRoundTripTime < 0.3) {
+            // Poor conditions - reduce quality
+            targetBitrate = this.bitratePresets.poor;
+          } else {
+            // Very poor conditions - minimum quality
+            targetBitrate = this.bitratePresets.minimum;
+          }
+
+          // Apply bitrate if changed significantly
+          if (Math.abs(targetBitrate - this.currentBitrate) > 200000) {
+            await this.adjustBitrate(targetBitrate);
+          }
+        }
+      } catch (error) {
+        console.error('Error in adaptive bitrate:', error);
+      }
+    }, 3000); // Check every 3 seconds
+  }
+
+  /**
+   * Adjust video bitrate
+   * تعديل معدل بت الفيديو
+   */
+  async adjustBitrate(targetBitrate) {
+    try {
+      if (!this.peerConnection) return;
+
+      const senders = this.peerConnection.getSenders();
+      const videoSender = senders.find(sender => sender.track?.kind === 'video');
+
+      if (!videoSender) return;
+
+      const parameters = videoSender.getParameters();
+      
+      if (!parameters.encodings || parameters.encodings.length === 0) {
+        parameters.encodings = [{}];
+      }
+
+      // Set max bitrate
+      parameters.encodings[0].maxBitrate = targetBitrate;
+
+      await videoSender.setParameters(parameters);
+      
+      this.currentBitrate = targetBitrate;
+      console.log(`✅ Bitrate adjusted to: ${(targetBitrate / 1000000).toFixed(2)} Mbps`);
+    } catch (error) {
+      console.error('Error adjusting bitrate:', error);
+    }
+  }
+
+  /**
+   * Toggle adaptive bitrate
+   * تبديل معدل البت التكيفي
+   */
+  toggleAdaptiveBitrate(enabled) {
+    this.adaptiveBitrateEnabled = enabled;
+    if (enabled && this.peerConnection) {
+      this.startAdaptiveBitrate();
+    } else if (this.bitrateInterval) {
+      clearInterval(this.bitrateInterval);
+      this.bitrateInterval = null;
+    }
+  }
+
+  /**
+   * Get current bitrate
+   * الحصول على معدل البت الحالي
+   */
+  getCurrentBitrate() {
+    return {
+      bitrate: this.currentBitrate,
+      mbps: (this.currentBitrate / 1000000).toFixed(2),
+      quality: this.getBitrateQuality()
+    };
+  }
+
+  /**
+   * Get bitrate quality level
+   * الحصول على مستوى جودة معدل البت
+   */
+  getBitrateQuality() {
+    if (this.currentBitrate >= this.bitratePresets.excellent) return 'excellent';
+    if (this.currentBitrate >= this.bitratePresets.good) return 'good';
+    if (this.currentBitrate >= this.bitratePresets.poor) return 'poor';
+    return 'minimum';
   }
 
   /**
@@ -352,6 +626,24 @@ class WebRTCService {
       clearInterval(this.statsInterval);
     }
 
+    // Stop adaptive bitrate
+    if (this.bitrateInterval) {
+      clearInterval(this.bitrateInterval);
+    }
+
+    // Stop lighting enhancement
+    this.lightingEnhancementEnabled = false;
+    if (this.enhancedStream) {
+      this.enhancedStream.getTracks().forEach(track => track.stop());
+      this.enhancedStream = null;
+    }
+
+    // Clean up canvas
+    if (this.videoCanvas) {
+      this.videoCanvas = null;
+      this.canvasContext = null;
+    }
+
     // Stop local stream
     if (this.localStream) {
       this.localStream.getTracks().forEach(track => track.stop());
@@ -371,6 +663,7 @@ class WebRTCService {
     }
 
     this.connectionQuality = 'unknown';
+    this.currentBitrate = this.bitratePresets.good;
   }
 }
 

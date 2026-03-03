@@ -1,302 +1,225 @@
 const mongoose = require('mongoose');
 
-/**
- * نموذج مقابلة الفيديو
- * يحتوي على معلومات المقابلة، المشاركين، الإعدادات، والتسجيل
- * 
- * Requirements: 1.1, 2.1, 2.4, 4.1, 5.1, 7.1
- */
 const videoInterviewSchema = new mongoose.Schema({
-  // معرف فريد للغرفة
+  // معلومات أساسية
+  interviewId: {
+    type: String,
+    required: true,
+    unique: true,
+    default: () => `interview_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  },
+  
+  // ربط مع الموعد
+  appointmentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Appointment',
+    required: false
+  },
+  
+  // معرف الغرفة
   roomId: {
     type: String,
     required: true,
     unique: true,
-    index: true,
+    index: true
   },
-
-  // ربط بموعد (إذا كانت مجدولة)
-  appointmentId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Appointment',
-    default: null,
-  },
-
-  // المضيف (الشركة أو مسؤول التوظيف)
+  
+  // المضيف
   hostId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
-    index: true,
+    index: true
   },
-
-  // المشاركون في المقابلة
+  
+  // المشاركون
   participants: [{
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      required: true
     },
     role: {
       type: String,
       enum: ['host', 'participant'],
-      default: 'participant',
+      default: 'participant'
     },
-    joinedAt: {
-      type: Date,
-      default: null,
-    },
-    leftAt: {
-      type: Date,
-      default: null,
-    },
+    joinedAt: Date,
+    leftAt: Date,
+    connectionQuality: {
+      type: String,
+      enum: ['excellent', 'good', 'fair', 'poor'],
+      default: 'good'
+    }
   }],
-
+  
   // حالة المقابلة
   status: {
     type: String,
-    enum: ['scheduled', 'waiting', 'active', 'ended', 'cancelled', 'rescheduled'],
+    enum: ['scheduled', 'waiting', 'active', 'ended', 'cancelled'],
     default: 'scheduled',
-    index: true,
+    index: true
   },
-
+  
   // التوقيت
   scheduledAt: {
     type: Date,
-    default: null,
+    required: true,
+    index: true
   },
-  startedAt: {
-    type: Date,
-    default: null,
-  },
-  endedAt: {
-    type: Date,
-    default: null,
-  },
+  startedAt: Date,
+  endedAt: Date,
   duration: {
-    type: Number, // بالثواني
-    default: 0,
+    type: Number, // بالدقائق
+    default: 0
   },
-
-  // إعدادات المقابلة
+  
+  // الإعدادات
   settings: {
-    // تفعيل التسجيل
     recordingEnabled: {
       type: Boolean,
-      default: false,
+      default: false
     },
-    // تفعيل غرفة الانتظار
     waitingRoomEnabled: {
       type: Boolean,
-      default: true,
+      default: true
     },
-    // تفعيل مشاركة الشاشة
     screenShareEnabled: {
       type: Boolean,
-      default: true,
+      default: true
     },
-    // تفعيل الدردشة
     chatEnabled: {
       type: Boolean,
-      default: true,
+      default: true
     },
-    // الحد الأقصى للمشاركين
     maxParticipants: {
       type: Number,
-      default: 2,
+      default: 10,
       min: 2,
-      max: 10,
-    },
+      max: 50
+    }
   },
-
-  // معلومات التسجيل
-  recording: {
-    // حالة التسجيل
-    status: {
-      type: String,
-      enum: ['not_started', 'recording', 'stopped', 'processing', 'ready', 'failed'],
-      default: 'not_started',
-    },
-    // وقت بدء التسجيل
-    startedAt: {
-      type: Date,
-      default: null,
-    },
-    // وقت إيقاف التسجيل
-    stoppedAt: {
-      type: Date,
-      default: null,
-    },
-    // مدة التسجيل (بالثواني)
-    duration: {
-      type: Number,
-      default: 0,
-    },
-    // رابط الفيديو في Cloudinary
-    videoUrl: {
-      type: String,
-      default: null,
-    },
-    // معرف Cloudinary العام
-    cloudinaryPublicId: {
-      type: String,
-      default: null,
-    },
-    // رابط الصورة المصغرة
-    thumbnailUrl: {
-      type: String,
-      default: null,
-    },
-    // حجم الملف (بالبايت)
-    fileSize: {
-      type: Number,
-      default: 0,
-    },
-    // تاريخ انتهاء الصلاحية (حذف تلقائي بعد 90 يوم)
-    expiresAt: {
-      type: Date,
-      default: null,
-    },
-    // عدد مرات التحميل
-    downloadCount: {
-      type: Number,
-      default: 0,
-    },
-  },
-
-  // موافقة المشاركين على التسجيل
+  
+  // التسجيل
+  recordingUrl: String,
   recordingConsent: [{
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+      ref: 'User'
     },
     consented: {
       type: Boolean,
-      required: true,
+      default: false
     },
-    consentedAt: {
-      type: Date,
-      default: Date.now,
-    },
+    consentedAt: Date
   }],
-
-  // رسالة الترحيب في غرفة الانتظار
-  welcomeMessage: {
-    type: String,
-    default: 'مرحباً بك! سيتم قبولك في المقابلة قريباً.',
-  },
-
-  // ملاحظات بعد المقابلة
-  notes: {
-    type: String,
-    default: '',
-  },
-
-  // تقييم المرشح (للمضيف فقط)
+  
+  // الملاحظات
+  notes: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    content: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  
+  // التقييم
   rating: {
-    type: Number,
-    min: 1,
-    max: 5,
-    default: null,
+    score: {
+      type: Number,
+      min: 1,
+      max: 5
+    },
+    feedback: String,
+    ratedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    ratedAt: Date
   },
-
+  
+  // معلومات إضافية
+  metadata: {
+    platform: String, // web, android, ios
+    browser: String,
+    deviceType: String, // desktop, mobile, tablet
+    networkType: String // wifi, 4g, 5g
+  }
 }, {
-  timestamps: true,
+  timestamps: true
 });
 
 // Indexes للأداء
 videoInterviewSchema.index({ hostId: 1, status: 1 });
 videoInterviewSchema.index({ 'participants.userId': 1 });
-videoInterviewSchema.index({ scheduledAt: 1 });
-videoInterviewSchema.index({ 'recording.expiresAt': 1 });
+videoInterviewSchema.index({ scheduledAt: 1, status: 1 });
+videoInterviewSchema.index({ createdAt: -1 });
 
-// Virtual للحصول على المشاركين النشطين
-videoInterviewSchema.virtual('activeParticipants').get(function() {
-  return this.participants.filter(p => p.joinedAt && !p.leftAt);
-});
-
-// Method لإضافة مشارك
+// Methods
 videoInterviewSchema.methods.addParticipant = function(userId, role = 'participant') {
-  const exists = this.participants.some(p => p.userId.toString() === userId.toString());
-  if (!exists) {
-    this.participants.push({ userId, role });
+  const existing = this.participants.find(p => p.userId.toString() === userId.toString());
+  if (!existing) {
+    this.participants.push({
+      userId,
+      role,
+      joinedAt: new Date()
+    });
   }
   return this.save();
 };
 
-// Method لتسجيل انضمام مشارك
-videoInterviewSchema.methods.recordJoin = function(userId) {
+videoInterviewSchema.methods.removeParticipant = function(userId) {
   const participant = this.participants.find(p => p.userId.toString() === userId.toString());
-  if (participant && !participant.joinedAt) {
-    participant.joinedAt = new Date();
-  }
-  return this.save();
-};
-
-// Method لتسجيل مغادرة مشارك
-videoInterviewSchema.methods.recordLeave = function(userId) {
-  const participant = this.participants.find(p => p.userId.toString() === userId.toString());
-  if (participant && !participant.leftAt) {
+  if (participant) {
     participant.leftAt = new Date();
   }
   return this.save();
 };
 
-// Method لبدء المقابلة
-videoInterviewSchema.methods.start = function() {
+videoInterviewSchema.methods.startInterview = function() {
   this.status = 'active';
   this.startedAt = new Date();
   return this.save();
 };
 
-// Method لإنهاء المقابلة
-videoInterviewSchema.methods.end = function() {
+videoInterviewSchema.methods.endInterview = function() {
   this.status = 'ended';
   this.endedAt = new Date();
   if (this.startedAt) {
-    this.duration = Math.floor((this.endedAt - this.startedAt) / 1000);
+    this.duration = Math.round((this.endedAt - this.startedAt) / 60000); // دقائق
   }
   return this.save();
 };
 
-// Method لبدء التسجيل
-videoInterviewSchema.methods.startRecording = function() {
-  this.recording.status = 'recording';
-  this.recording.startedAt = new Date();
-  return this.save();
-};
-
-// Method لإيقاف التسجيل
-videoInterviewSchema.methods.stopRecording = function() {
-  this.recording.status = 'stopped';
-  this.recording.stoppedAt = new Date();
-  if (this.recording.startedAt) {
-    this.recording.duration = Math.floor((this.recording.stoppedAt - this.recording.startedAt) / 1000);
-  }
-  return this.save();
-};
-
-// Method لإضافة موافقة على التسجيل
-videoInterviewSchema.methods.addRecordingConsent = function(userId, consented) {
-  const exists = this.recordingConsent.find(c => c.userId.toString() === userId.toString());
-  if (!exists) {
-    this.recordingConsent.push({ userId, consented });
+videoInterviewSchema.methods.addConsent = function(userId) {
+  const existing = this.recordingConsent.find(c => c.userId.toString() === userId.toString());
+  if (!existing) {
+    this.recordingConsent.push({
+      userId,
+      consented: true,
+      consentedAt: new Date()
+    });
   } else {
-    exists.consented = consented;
-    exists.consentedAt = new Date();
+    existing.consented = true;
+    existing.consentedAt = new Date();
   }
   return this.save();
 };
 
-// Method للتحقق من موافقة جميع المشاركين
 videoInterviewSchema.methods.hasAllConsents = function() {
-  const participantIds = this.participants.map(p => p.userId.toString());
-  const consentedIds = this.recordingConsent
-    .filter(c => c.consented)
-    .map(c => c.userId.toString());
+  if (!this.settings.recordingEnabled) return true;
   
-  return participantIds.every(id => consentedIds.includes(id));
+  const activeParticipants = this.participants.filter(p => !p.leftAt);
+  if (activeParticipants.length === 0) return false;
+  
+  return activeParticipants.every(p => {
+    const consent = this.recordingConsent.find(c => c.userId.toString() === p.userId.toString());
+    return consent && consent.consented;
+  });
 };
 
 const VideoInterview = mongoose.model('VideoInterview', videoInterviewSchema);

@@ -400,16 +400,111 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
+  /* Hide sidebar on very small screens, show grid instead */
   .participants-sidebar {
-    width: 120px;
+    display: none;
+  }
+
+  /* Full width for main speaker */
+  .main-speaker-area {
+    width: 100%;
+  }
+
+  /* Participant Info - Compact */
+  .participant-info {
+    bottom: 12px;
+    left: 12px;
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
+  .participant-name {
+    font-size: 13px;
+  }
+
+  .pin-indicator,
+  .speaking-indicator {
+    font-size: 11px;
+  }
+
+  /* Connection Quality - Compact */
+  .connection-quality,
+  .recording-indicator-speaker,
+  .interview-timer-display {
+    top: 12px;
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .connection-quality {
+    right: 12px;
+  }
+
+  .recording-indicator-speaker {
+    left: 12px;
+  }
+
+  .interview-timer-display {
+    top: 60px;
+    right: 12px;
+  }
+
+  .quality-dot,
+  .recording-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Controls - Touch optimized */
+  .speaker-view-controls {
+    bottom: 16px;
+    padding: 10px 16px;
+    gap: 10px;
+  }
+
+  .control-btn {
+    width: 44px; /* Min touch target */
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .participants-count {
+    font-size: 13px;
+    padding: 0 8px;
+    margin-left: 6px;
+  }
+
+  /* No Speaker Placeholder */
+  .no-speaker-placeholder {
+    gap: 12px;
+  }
+
+  .placeholder-icon {
+    font-size: 48px;
+  }
+
+  .no-speaker-placeholder p {
+    font-size: 15px;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  /* Narrower sidebar */
+  .participants-sidebar {
+    width: 100px;
     padding: 12px 6px;
     gap: 8px;
   }
 
+  /* Participant Info */
   .participant-info {
-    bottom: 10px;
-    left: 10px;
+    bottom: 14px;
+    left: 14px;
     padding: 6px 12px;
   }
 
@@ -417,44 +512,121 @@
     font-size: 14px;
   }
 
+  /* Indicators */
   .connection-quality,
   .recording-indicator-speaker,
   .interview-timer-display {
-    top: 10px;
+    top: 14px;
     padding: 6px 12px;
     font-size: 12px;
   }
 
+  .interview-timer-display {
+    top: 64px;
+  }
+
+  /* Controls */
   .speaker-view-controls {
     bottom: 20px;
-    padding: 12px 16px;
+    padding: 12px 18px;
     gap: 12px;
   }
 
   .control-btn {
-    width: 45px;
-    height: 45px;
-    font-size: 20px;
+    width: 46px;
+    height: 46px;
+    font-size: 21px;
   }
 
+  .participants-count {
+    font-size: 14px;
+  }
+
+  /* Thumbnails */
   .thumbnail-name {
+    font-size: 10px;
+  }
+
+  .pin-icon,
+  .speaking-icon {
     font-size: 10px;
   }
 }
 
-@media (max-width: 480px) {
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .participants-sidebar {
+    width: 160px;
+    padding: 14px 8px;
+    gap: 10px;
+  }
+
+  .participant-info {
+    padding: 7px 14px;
+  }
+
+  .participant-name {
+    font-size: 15px;
+  }
+
+  .connection-quality,
+  .recording-indicator-speaker,
+  .interview-timer-display {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .speaker-view-controls {
+    padding: 14px 20px;
+    gap: 14px;
+  }
+
+  .control-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+  }
+
+  .thumbnail-name {
+    font-size: 11px;
+  }
+}
+
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Very compact sidebar in landscape */
   .participants-sidebar {
     width: 80px;
     padding: 8px 4px;
     gap: 6px;
   }
 
-  .participant-thumbnail {
-    border-radius: 6px;
+  .participant-info {
+    bottom: 8px;
+    left: 8px;
+    padding: 4px 8px;
   }
 
-  .thumbnail-name {
-    font-size: 9px;
+  .participant-name {
+    font-size: 12px;
+  }
+
+  .connection-quality,
+  .recording-indicator-speaker,
+  .interview-timer-display {
+    top: 8px;
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .interview-timer-display {
+    top: 48px;
+  }
+
+  .speaker-view-controls {
+    bottom: 12px;
+    padding: 8px 12px;
+    gap: 8px;
   }
 
   .control-btn {
@@ -464,7 +636,156 @@
   }
 
   .participants-count {
-    font-size: 14px;
+    font-size: 12px;
+  }
+
+  .thumbnail-name {
+    font-size: 9px;
+  }
+}
+
+/* Safe Area Support (Notch devices) */
+@supports (padding: max(0px)) {
+  .speaker-view-container {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+
+  .participant-info {
+    bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+    left: max(20px, calc(20px + env(safe-area-inset-left)));
+  }
+
+  .connection-quality {
+    top: max(20px, calc(20px + env(safe-area-inset-top)));
+    right: max(20px, calc(20px + env(safe-area-inset-right)));
+  }
+
+  .recording-indicator-speaker {
+    top: max(20px, calc(20px + env(safe-area-inset-top)));
+    left: max(20px, calc(20px + env(safe-area-inset-left)));
+  }
+
+  .interview-timer-display {
+    top: max(70px, calc(70px + env(safe-area-inset-top)));
+    right: max(20px, calc(20px + env(safe-area-inset-right)));
+  }
+
+  .speaker-view-controls {
+    bottom: max(30px, calc(30px + env(safe-area-inset-bottom)));
+  }
+
+  @media (max-width: 768px) {
+    .participant-info {
+      bottom: max(14px, calc(14px + env(safe-area-inset-bottom)));
+      left: max(14px, calc(14px + env(safe-area-inset-left)));
+    }
+
+    .connection-quality {
+      top: max(14px, calc(14px + env(safe-area-inset-top)));
+      right: max(14px, calc(14px + env(safe-area-inset-right)));
+    }
+
+    .recording-indicator-speaker {
+      top: max(14px, calc(14px + env(safe-area-inset-top)));
+      left: max(14px, calc(14px + env(safe-area-inset-left)));
+    }
+
+    .interview-timer-display {
+      top: max(64px, calc(64px + env(safe-area-inset-top)));
+      right: max(14px, calc(14px + env(safe-area-inset-right)));
+    }
+
+    .speaker-view-controls {
+      bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+    }
+  }
+}
+
+/* Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  /* Ensure all touch targets are at least 44x44px */
+  .control-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Larger tap areas */
+  .control-btn::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+  }
+
+  /* Easier to tap thumbnails */
+  .participant-thumbnail {
+    min-height: 60px;
+  }
+
+  /* Prevent text selection */
+  .participant-info,
+  .connection-quality,
+  .recording-indicator-speaker,
+  .interview-timer-display {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+/* Grid View for Mobile (when sidebar is hidden) */
+@media (max-width: 480px) {
+  /* Add a floating participants button */
+  .speaker-view-controls::after {
+    content: '👥';
+    position: absolute;
+    top: -60px;
+    right: 0;
+    width: 44px;
+    height: 44px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .participant-thumbnail.active,
+  .participant-thumbnail.speaking {
+    border-width: 3px;
+  }
+
+  .participant-info,
+  .connection-quality,
+  .recording-indicator-speaker,
+  .interview-timer-display {
+    border: 2px solid white;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .participant-video.speaking,
+  .participant-thumbnail.speaking,
+  .pin-indicator,
+  .speaking-indicator,
+  .quality-dot,
+  .recording-dot {
+    animation: none;
+  }
+
+  .participant-thumbnail:hover,
+  .control-btn:hover {
+    transform: none;
   }
 }
 

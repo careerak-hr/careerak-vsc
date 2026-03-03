@@ -25,19 +25,75 @@ const jobPostingSchema = new mongoose.Schema({
   },
   
   salary: { min: Number, max: Number },
-  location: { type: String, required: true },
+  location: { 
+    type: String, 
+    required: true,
+    city: String,
+    country: String,
+    coordinates: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point'
+      },
+      coordinates: {
+        type: [Number], // [longitude, latitude]
+        index: '2dsphere'
+      }
+    }
+  },
   jobType: { type: String, enum: ['Full-time', 'Part-time', 'Contract', 'Temporary'], default: 'Full-time' },
+  
+  // حقول إضافية للبحث المتقدم
+  skills: [{ type: String, trim: true }],
+  company: {
+    name: { type: String, trim: true },
+    size: { type: String, enum: ['Small', 'Medium', 'Large'] }
+  },
+  experienceLevel: { 
+    type: String, 
+    enum: ['Entry', 'Mid', 'Senior', 'Expert'],
+    default: 'Entry'
+  },
+  
   postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   status: { type: String, enum: ['Open', 'Closed'], default: 'Open' },
   applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobApplication' }],
   createdAt: { type: Date, default: Date.now }
 });
 
-// Indexes for performance optimization (admin dashboard queries)
+// Indexes for performance optimization
 jobPostingSchema.index({ createdAt: -1 }); // For time-based queries
 jobPostingSchema.index({ status: 1, createdAt: -1 }); // For filtering by status
 jobPostingSchema.index({ postedBy: 1, createdAt: -1 }); // For company's jobs
 jobPostingSchema.index({ postingType: 1 }); // For filtering by type
-jobPostingSchema.index({ title: 'text', description: 'text' }); // For text search
+
+// Text index للبحث النصي المتقدم (يدعم العربية والإنجليزية)
+jobPostingSchema.index({
+  title: 'text',
+  description: 'text',
+  requirements: 'text',
+  skills: 'text',
+  'company.name': 'text'
+}, {
+  weights: {
+    title: 10,           // أعلى وزن للعنوان
+    skills: 5,           // وزن متوسط للمهارات
+    'company.name': 3,   // وزن متوسط لاسم الشركة
+    description: 2,      // وزن أقل للوصف
+    requirements: 1      // أقل وزن للمتطلبات
+  },
+  default_language: 'none', // دعم جميع اللغات
+  name: 'job_text_search'
+});
+
+// Compound indexes للفلاتر المتعددة
+jobPostingSchema.index({ 'salary.min': 1, 'salary.max': 1 });
+jobPostingSchema.index({ jobType: 1, experienceLevel: 1 });
+jobPostingSchema.index({ skills: 1 });
+jobPostingSchema.index({ 'company.size': 1 });
+
+// Geo index للبحث الجغرافي
+jobPostingSchema.index({ 'location.coordinates': '2dsphere' });
 
 module.exports = mongoose.model('JobPosting', jobPostingSchema);

@@ -1,365 +1,364 @@
 /**
- * Frontend Screen Share Service
- * خدمة مشاركة الشاشة من جانب العميل
+ * Screen Share Service
+ * خدمة مشاركة الشاشة مع دعم 1080p
  * 
- * الميزات:
- * - مشاركة الشاشة الكاملة
- * - مشاركة نافذة محددة
- * - مشاركة تبويب المتصفح
- * - معالجة الأخطاء
+ * Features:
+ * - Share entire screen
+ * - Share specific window
+ * - Share browser tab
+ * - High quality (1080p) screen sharing
+ * - Switch between sources
+ * - Stop sharing
+ * 
+ * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
  */
 
 class ScreenShareService {
   constructor() {
-    this.currentStream = null;
-    this.shareType = null;
+    this.screenStream = null;
+    this.isSharing = false;
+    this.currentSource = null; // 'screen', 'window', or 'tab'
+    
+    // High quality constraints for screen sharing (1080p)
+    this.displayMediaConstraints = {
+      video: {
+        width: { ideal: 1920, max: 3840 },      // Up to 4K
+        height: { ideal: 1080, max: 2160 },     // Up to 4K
+        frameRate: { ideal: 30, max: 60 },
+        cursor: 'always',                        // Show cursor
+        displaySurface: 'monitor'                // Prefer full screen
+      },
+      audio: false // Screen audio can be enabled if needed
+    };
   }
 
   /**
-   * بدء مشاركة الشاشة الكاملة
-   * @returns {Promise<MediaStream>}
-   */
-  async startFullScreenShare() {
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          displaySurface: 'monitor', // شاشة كاملة
-          width: { min: 1280, ideal: 1920, max: 3840 }, // دعم حتى 4K
-          height: { min: 720, ideal: 1080, max: 2160 }, // دعم حتى 4K
-          frameRate: { min: 24, ideal: 30, max: 60 }
-        },
-        audio: false
-      });
-
-      this.currentStream = stream;
-      this.shareType = 'screen';
-
-      // التحقق من جودة المشاركة
-      this.logShareQuality(stream, 'Full Screen');
-
-      // الاستماع لحدث إيقاف المشاركة من المتصفح
-      stream.getVideoTracks()[0].addEventListener('ended', () => {
-        this.handleStreamEnded();
-      });
-
-      return stream;
-    } catch (error) {
-      console.error('Error starting full screen share:', error);
-      throw this.handleError(error);
-    }
-  }
-
-  /**
-   * بدء مشاركة نافذة محددة
-   * @returns {Promise<MediaStream>}
-   */
-  async startWindowShare() {
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          displaySurface: 'window', // نافذة محددة
-          width: { min: 1280, ideal: 1920, max: 3840 },
-          height: { min: 720, ideal: 1080, max: 2160 },
-          frameRate: { min: 24, ideal: 30, max: 60 }
-        },
-        audio: false
-      });
-
-      this.currentStream = stream;
-      this.shareType = 'window';
-
-      // التحقق من جودة المشاركة
-      this.logShareQuality(stream, 'Window');
-
-      // الاستماع لحدث إيقاف المشاركة
-      stream.getVideoTracks()[0].addEventListener('ended', () => {
-        this.handleStreamEnded();
-      });
-
-      return stream;
-    } catch (error) {
-      console.error('Error starting window share:', error);
-      throw this.handleError(error);
-    }
-  }
-
-  /**
-   * بدء مشاركة تبويب المتصفح
-   * @returns {Promise<MediaStream>}
-   */
-  async startTabShare() {
-    try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: {
-          displaySurface: 'browser', // تبويب المتصفح
-          width: { min: 1280, ideal: 1920, max: 3840 },
-          height: { min: 720, ideal: 1080, max: 2160 },
-          frameRate: { min: 24, ideal: 30, max: 60 }
-        },
-        audio: true // يمكن مشاركة صوت التبويب
-      });
-
-      this.currentStream = stream;
-      this.shareType = 'tab';
-
-      // التحقق من جودة المشاركة
-      this.logShareQuality(stream, 'Tab');
-
-      // الاستماع لحدث إيقاف المشاركة
-      stream.getVideoTracks()[0].addEventListener('ended', () => {
-        this.handleStreamEnded();
-      });
-
-      return stream;
-    } catch (error) {
-      console.error('Error starting tab share:', error);
-      throw this.handleError(error);
-    }
-  }
-
-  /**
-   * بدء مشاركة الشاشة (يعرض خيارات للمستخدم)
-   * @param {Object} options - خيارات المشاركة
-   * @returns {Promise<MediaStream>}
+   * Start screen sharing
+   * بدء مشاركة الشاشة
+   * 
+   * @param {Object} options - Sharing options
+   * @param {boolean} options.audio - Include system audio (default: false)
+   * @param {string} options.preferredSource - 'screen', 'window', or 'tab'
+   * @returns {Promise<MediaStream>} - Screen share stream
    */
   async startScreenShare(options = {}) {
     try {
+      console.log('Starting screen share...');
+
+      // Check if already sharing
+      if (this.isSharing) {
+        console.warn('Screen sharing already active');
+        return this.screenStream;
+      }
+
+      // Prepare constraints
       const constraints = {
-        video: {
-          width: { 
-            min: options.minWidth || 1280,
-            ideal: options.width || 1920,
-            max: options.maxWidth || 3840
-          },
-          height: { 
-            min: options.minHeight || 720,
-            ideal: options.height || 1080,
-            max: options.maxHeight || 2160
-          },
-          frameRate: { 
-            min: options.minFrameRate || 24,
-            ideal: options.frameRate || 30,
-            max: options.maxFrameRate || 60
-          }
-        },
+        video: { ...this.displayMediaConstraints.video },
         audio: options.audio || false
       };
 
-      // إذا كان displaySurface محدد، أضفه
-      if (options.displaySurface) {
-        constraints.video.displaySurface = options.displaySurface;
+      // Set preferred source if specified
+      if (options.preferredSource) {
+        switch (options.preferredSource) {
+          case 'screen':
+            constraints.video.displaySurface = 'monitor';
+            break;
+          case 'window':
+            constraints.video.displaySurface = 'window';
+            break;
+          case 'tab':
+            constraints.video.displaySurface = 'browser';
+            break;
+        }
       }
 
-      const stream = await navigator.mediaDevices.getDisplayMedia(constraints);
+      // Request screen share
+      this.screenStream = await navigator.mediaDevices.getDisplayMedia(constraints);
 
-      this.currentStream = stream;
-      this.shareType = this.detectShareType(stream);
-
-      // التحقق من جودة المشاركة
-      this.logShareQuality(stream, 'Custom');
-
-      // الاستماع لحدث إيقاف المشاركة
-      stream.getVideoTracks()[0].addEventListener('ended', () => {
-        this.handleStreamEnded();
+      // Log actual settings
+      const videoTrack = this.screenStream.getVideoTracks()[0];
+      const settings = videoTrack.getSettings();
+      
+      console.log('Screen share started:', {
+        width: settings.width,
+        height: settings.height,
+        frameRate: settings.frameRate,
+        displaySurface: settings.displaySurface,
+        cursor: settings.cursor,
+        isHD: settings.height >= 1080
       });
 
-      return stream;
+      // Determine source type
+      this.currentSource = this.determineSourceType(settings.displaySurface);
+
+      // Set sharing flag
+      this.isSharing = true;
+
+      // Handle track ended (user stops sharing from browser UI)
+      videoTrack.onended = () => {
+        console.log('Screen sharing stopped by user');
+        this.stopScreenShare();
+      };
+
+      // Verify quality
+      if (settings.height >= 1080) {
+        console.log('✅ Full HD (1080p) screen sharing achieved');
+      } else if (settings.height >= 720) {
+        console.log('⚠️ HD (720p) screen sharing - lower than target 1080p');
+      } else {
+        console.warn('⚠️ Screen sharing quality below HD:', `${settings.width}x${settings.height}`);
+      }
+
+      return this.screenStream;
     } catch (error) {
       console.error('Error starting screen share:', error);
-      throw this.handleError(error);
+      
+      // Handle specific errors
+      if (error.name === 'NotAllowedError') {
+        throw new Error('Screen sharing permission denied by user');
+      } else if (error.name === 'NotFoundError') {
+        throw new Error('No screen sharing source available');
+      } else if (error.name === 'NotSupportedError') {
+        throw new Error('Screen sharing not supported in this browser');
+      } else if (error.name === 'AbortError') {
+        throw new Error('Screen sharing cancelled by user');
+      }
+      
+      throw error;
     }
   }
 
   /**
+   * Stop screen sharing
    * إيقاف مشاركة الشاشة
    */
   stopScreenShare() {
-    if (this.currentStream) {
-      this.currentStream.getTracks().forEach(track => track.stop());
-      this.currentStream = null;
-      this.shareType = null;
+    try {
+      console.log('Stopping screen share...');
+
+      if (this.screenStream) {
+        // Stop all tracks
+        this.screenStream.getTracks().forEach(track => {
+          track.stop();
+          console.log(`Stopped ${track.kind} track`);
+        });
+
+        this.screenStream = null;
+      }
+
+      this.isSharing = false;
+      this.currentSource = null;
+
+      console.log('✅ Screen sharing stopped');
+    } catch (error) {
+      console.error('Error stopping screen share:', error);
+      throw error;
     }
   }
 
   /**
-   * الحصول على stream الحالي
+   * Switch screen share source
+   * تبديل مصدر مشاركة الشاشة
+   * 
+   * Allows user to switch between screen/window/tab without stopping
+   * 
+   * @param {Object} options - New source options
+   * @returns {Promise<MediaStream>} - New screen share stream
+   */
+  async switchSource(options = {}) {
+    try {
+      console.log('Switching screen share source...');
+
+      // Stop current sharing
+      this.stopScreenShare();
+
+      // Start new sharing with new options
+      return await this.startScreenShare(options);
+    } catch (error) {
+      console.error('Error switching screen share source:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Replace track in peer connection
+   * استبدال المسار في اتصال peer
+   * 
+   * @param {RTCPeerConnection} peerConnection - The peer connection
+   * @param {MediaStreamTrack} newTrack - New screen share track
+   * @returns {Promise<void>}
+   */
+  async replaceTrackInPeerConnection(peerConnection, newTrack) {
+    try {
+      if (!peerConnection) {
+        throw new Error('No peer connection provided');
+      }
+
+      // Find video sender
+      const senders = peerConnection.getSenders();
+      const videoSender = senders.find(sender => sender.track?.kind === 'video');
+
+      if (!videoSender) {
+        throw new Error('No video sender found in peer connection');
+      }
+
+      // Replace track
+      await videoSender.replaceTrack(newTrack);
+      console.log('✅ Screen share track replaced in peer connection');
+    } catch (error) {
+      console.error('Error replacing track in peer connection:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Add screen share track to peer connection
+   * إضافة مسار مشاركة الشاشة إلى اتصال peer
+   * 
+   * @param {RTCPeerConnection} peerConnection - The peer connection
+   * @returns {Promise<void>}
+   */
+  async addTrackToPeerConnection(peerConnection) {
+    try {
+      if (!peerConnection) {
+        throw new Error('No peer connection provided');
+      }
+
+      if (!this.screenStream) {
+        throw new Error('No screen share stream available');
+      }
+
+      const videoTrack = this.screenStream.getVideoTracks()[0];
+      
+      // Add track to peer connection
+      peerConnection.addTrack(videoTrack, this.screenStream);
+      console.log('✅ Screen share track added to peer connection');
+    } catch (error) {
+      console.error('Error adding track to peer connection:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Determine source type from display surface
+   * تحديد نوع المصدر من سطح العرض
+   * 
+   * @param {string} displaySurface - Display surface type
+   * @returns {string} - Source type ('screen', 'window', or 'tab')
+   */
+  determineSourceType(displaySurface) {
+    switch (displaySurface) {
+      case 'monitor':
+        return 'screen';
+      case 'window':
+        return 'window';
+      case 'browser':
+        return 'tab';
+      default:
+        return 'unknown';
+    }
+  }
+
+  /**
+   * Get screen share stream
+   * الحصول على بث مشاركة الشاشة
+   * 
    * @returns {MediaStream|null}
    */
-  getCurrentStream() {
-    return this.currentStream;
+  getScreenStream() {
+    return this.screenStream;
   }
 
   /**
-   * الحصول على نوع المشاركة الحالي
-   * @returns {string|null}
-   */
-  getShareType() {
-    return this.shareType;
-  }
-
-  /**
-   * التحقق من وجود مشاركة نشطة
+   * Check if currently sharing
+   * التحقق من المشاركة الحالية
+   * 
    * @returns {boolean}
    */
-  isSharing() {
-    return this.currentStream !== null && 
-           this.currentStream.getVideoTracks().length > 0 &&
-           this.currentStream.getVideoTracks()[0].readyState === 'live';
+  isScreenSharing() {
+    return this.isSharing;
   }
 
   /**
-   * الحصول على معلومات جودة المشاركة
-   * @returns {Object}
+   * Get current source type
+   * الحصول على نوع المصدر الحالي
+   * 
+   * @returns {string|null} - 'screen', 'window', 'tab', or null
    */
-  getQuality() {
-    if (!this.currentStream) {
+  getCurrentSource() {
+    return this.currentSource;
+  }
+
+  /**
+   * Get screen share settings
+   * الحصول على إعدادات مشاركة الشاشة
+   * 
+   * @returns {Object|null} - Current screen share settings
+   */
+  getScreenShareSettings() {
+    if (!this.screenStream) {
       return null;
     }
 
-    const videoTrack = this.currentStream.getVideoTracks()[0];
-    if (!videoTrack) {
-      return null;
-    }
-
+    const videoTrack = this.screenStream.getVideoTracks()[0];
     const settings = videoTrack.getSettings();
-    
+
     return {
-      width: settings.width || 0,
-      height: settings.height || 0,
-      frameRate: settings.frameRate || 0,
-      aspectRatio: settings.aspectRatio || 0,
-      isHD: settings.height >= 720,
-      isFullHD: settings.height >= 1080,
-      is4K: settings.height >= 2160
-    };
-  }
-
-  /**
-   * تسجيل جودة المشاركة
-   * @param {MediaStream} stream
-   * @param {string} type
-   */
-  logShareQuality(stream, type) {
-    const videoTrack = stream.getVideoTracks()[0];
-    if (!videoTrack) {
-      console.warn('⚠️ No video track found in stream');
-      return;
-    }
-
-    const settings = videoTrack.getSettings();
-    const quality = {
       width: settings.width,
       height: settings.height,
       frameRate: settings.frameRate,
-      aspectRatio: settings.aspectRatio
+      displaySurface: settings.displaySurface,
+      cursor: settings.cursor,
+      source: this.currentSource,
+      isHD: settings.height >= 1080,
+      quality: this.getQualityLevel(settings.height)
     };
-
-    console.log(`📺 ${type} Share Quality:`, quality);
-
-    // التحقق من تحقيق جودة 1080p
-    if (settings.height >= 1080) {
-      console.log('✅ Full HD (1080p) quality achieved!');
-    } else if (settings.height >= 720) {
-      console.log('✅ HD (720p) quality achieved');
-    } else {
-      console.warn('⚠️ Quality is below HD (720p):', settings.height);
-    }
-
-    // تحذير إذا كان frame rate منخفض
-    if (settings.frameRate < 24) {
-      console.warn('⚠️ Frame rate is below 24fps:', settings.frameRate);
-    }
   }
 
   /**
-   * تبديل مصدر المشاركة
-   * @param {string} newType - النوع الجديد (screen/window/tab)
-   * @returns {Promise<MediaStream>}
+   * Get quality level based on resolution
+   * الحصول على مستوى الجودة بناءً على الدقة
+   * 
+   * @param {number} height - Video height
+   * @returns {string} - Quality level
    */
-  async switchSource(newType) {
-    // إيقاف المشاركة الحالية
-    this.stopScreenShare();
-
-    // بدء مشاركة جديدة
-    switch (newType) {
-      case 'screen':
-        return await this.startFullScreenShare();
-      case 'window':
-        return await this.startWindowShare();
-      case 'tab':
-        return await this.startTabShare();
-      default:
-        return await this.startScreenShare();
-    }
+  getQualityLevel(height) {
+    if (height >= 2160) return '4K';
+    if (height >= 1440) return '2K';
+    if (height >= 1080) return 'Full HD';
+    if (height >= 720) return 'HD';
+    return 'SD';
   }
 
   /**
-   * اكتشاف نوع المشاركة من stream
-   * @param {MediaStream} stream
-   * @returns {string}
-   */
-  detectShareType(stream) {
-    const videoTrack = stream.getVideoTracks()[0];
-    if (!videoTrack) {
-      return 'unknown';
-    }
-
-    const settings = videoTrack.getSettings();
-    
-    // محاولة اكتشاف النوع من displaySurface
-    if (settings.displaySurface) {
-      switch (settings.displaySurface) {
-        case 'monitor':
-          return 'screen';
-        case 'window':
-          return 'window';
-        case 'browser':
-          return 'tab';
-        default:
-          return 'unknown';
-      }
-    }
-
-    return 'unknown';
-  }
-
-  /**
-   * معالجة انتهاء stream
-   */
-  handleStreamEnded() {
-    console.log('Screen share ended by user');
-    this.currentStream = null;
-    this.shareType = null;
-    
-    // يمكن إطلاق حدث مخصص هنا
-    window.dispatchEvent(new CustomEvent('screenshare-ended'));
-  }
-
-  /**
-   * معالجة الأخطاء
-   * @param {Error} error
-   * @returns {Error}
-   */
-  handleError(error) {
-    if (error.name === 'NotAllowedError') {
-      return new Error('تم رفض إذن مشاركة الشاشة');
-    } else if (error.name === 'NotFoundError') {
-      return new Error('لم يتم العثور على شاشة للمشاركة');
-    } else if (error.name === 'NotSupportedError') {
-      return new Error('مشاركة الشاشة غير مدعومة في هذا المتصفح');
-    } else if (error.name === 'AbortError') {
-      return new Error('تم إلغاء مشاركة الشاشة');
-    } else {
-      return new Error(`خطأ في مشاركة الشاشة: ${error.message}`);
-    }
-  }
-
-  /**
+   * Check if screen sharing is supported
    * التحقق من دعم مشاركة الشاشة
+   * 
    * @returns {boolean}
    */
   static isSupported() {
     return !!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia);
+  }
+
+  /**
+   * Get supported constraints
+   * الحصول على القيود المدعومة
+   * 
+   * @returns {Object}
+   */
+  getSupportedConstraints() {
+    if (navigator.mediaDevices && navigator.mediaDevices.getSupportedConstraints) {
+      return navigator.mediaDevices.getSupportedConstraints();
+    }
+    return {};
+  }
+
+  /**
+   * Cleanup resources
+   * تنظيف الموارد
+   */
+  cleanup() {
+    this.stopScreenShare();
   }
 }
 

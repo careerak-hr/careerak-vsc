@@ -10,6 +10,7 @@ import { transformJobToSchema } from '../utils/seoHelpers';
 import { RelatedLinks, Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import { JobCardSkeleton } from '../components/SkeletonLoaders';
+import SavedSearchesPanel from '../components/SavedSearchesPanel';
 
 const JobPostingsPage = () => {
     const { language, startBgMusic } = useApp();
@@ -147,6 +148,11 @@ const JobPostingsPage = () => {
                 
                 <h1 className="text-3xl font-bold mb-6">Job Postings</h1>
                 <p className="text-gray-600 mb-8">Language: {language}</p>
+                
+                {/* Saved Searches Panel */}
+                <ComponentErrorBoundary componentName="SavedSearchesPanel">
+                    <SavedSearchesPanel />
+                </ComponentErrorBoundary>
                 
                 {/* Job listings with stagger animation */}
                 <section aria-labelledby="job-results">

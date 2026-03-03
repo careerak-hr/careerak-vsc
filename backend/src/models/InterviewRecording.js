@@ -1,29 +1,34 @@
 const mongoose = require('mongoose');
-const { v4: uuidv4 } = require('uuid');
 
 const interviewRecordingSchema = new mongoose.Schema({
+  // معرف فريد
   recordingId: {
     type: String,
-    default: () => uuidv4(),
+    required: true,
     unique: true,
-    required: true
+    default: () => `rec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
   },
+  
+  // ربط مع المقابلة
   interviewId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'VideoInterview',
-    required: true
+    required: true,
+    index: true
   },
+  
+  // التوقيت
   startTime: {
     type: Date,
     required: true
   },
-  endTime: {
-    type: Date
-  },
+  endTime: Date,
   duration: {
     type: Number, // بالثواني
     default: 0
   },
+  
+  // معلومات الملف
   fileSize: {
     type: Number, // بالبايتات
     default: 0
@@ -32,87 +37,190 @@ const interviewRecordingSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  thumbnailUrl: {
-    type: String
-  },
+  thumbnailUrl: String,
+  
+  // الحالة
   status: {
     type: String,
-    enum: ['recording', 'processing', 'ready', 'deleted'],
-    default: 'recording'
+    enum: ['recording', 'processing', 'ready', 'failed', 'deleted'],
+    default: 'recording',
+    index: true
   },
+  
+  // معلومات المعالجة
+  processing: {
+    startedAt: Date,
+    completedAt: Date,
+    error: String,
+    progress: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0
+    }
+  },
+  
+  // الحذف التلقائي
   expiresAt: {
     type: Date,
     required: true,
-    index: true // فهرس للبحث السريع عن التسجيلات المنتهية
+    index: true,
+    default: () => new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 يوم
   },
-  retentionDays: {
-    type: Number,
-    default: 90, // قابل للتخصيص
-    min: 1,
-    max: 365
+  autoDeleteScheduled: {
+    type: Boolean,
+    default: true
   },
+  
+  // الإحصائيات
   downloadCount: {
     type: Number,
-    default: 0
+    default: 0,
+    min: 0
   },
-  deletedAt: {
-    type: Date
+  viewCount: {
+    type: Number,
+    default: 0,
+    min: 0
   },
-  deletedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+  lastAccessedAt: Date,
+  
+  // الوصول
+  accessList: [{
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    accessType: {
+      type: String,
+      enum: ['view', 'download'],
+      default: 'view'
+    },
+    accessedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }],
+  
+  // معلومات التسجيل
+  metadata: {
+    codec: String,
+    resolution: String, // e.g., "1280x720"
+    bitrate: Number,
+    frameRate: Number,
+    audioCodec: String,
+    format: {
+      type: String,
+      default: 'mp4'
+    }
   },
-  deletionReason: {
-    type: String,
-    enum: ['auto_expired', 'manual', 'user_request', 'admin_action'],
-    default: 'auto_expired'
-  }
+  
+  // الأمان
+  encrypted: {
+    type: Boolean,
+    default: false
+  },
+  encryptionKey: String,
+  
+  // ملاحظات
+  notes: String
 }, {
   timestamps: true
 });
 
-// Index مركب للبحث عن التسجيلات المنتهية
-interviewRecordingSchema.index({ status: 1, expiresAt: 1 });
+// Indexes للأداء
+interviewRecordingSchema.index({ interviewId: 1, status: 1 });
+interviewRecordingSchema.index({ expiresAt: 1, status: 1 }); // للحذف التلقائي
+interviewRecordingSchema.index({ createdAt: -1 });
 
-// دالة لحساب تاريخ الانتهاء
-interviewRecordingSchema.methods.calculateExpiryDate = function() {
-  const retentionMs = this.retentionDays * 24 * 60 * 60 * 1000;
-  return new Date(this.createdAt.getTime() + retentionMs);
+// Methods
+interviewRecordingSchema.methods.startProcessing = function() {
+  this.status = 'processing';
+  this.processing.startedAt = new Date();
+  this.processing.progress = 0;
+  return this.save();
 };
 
-// دالة للتحقق من انتهاء الصلاحية
-interviewRecordingSchema.methods.isExpired = function() {
-  return this.expiresAt && new Date() > this.expiresAt;
+interviewRecordingSchema.methods.updateProgress = function(progress) {
+  this.processing.progress = Math.min(100, Math.max(0, progress));
+  return this.save();
 };
 
-// Middleware قبل الحفظ لحساب expiresAt تلقائياً
-interviewRecordingSchema.pre('save', function(next) {
-  if (this.isNew && !this.expiresAt) {
-    this.expiresAt = this.calculateExpiryDate();
+interviewRecordingSchema.methods.completeProcessing = function() {
+  this.status = 'ready';
+  this.processing.completedAt = new Date();
+  this.processing.progress = 100;
+  return this.save();
+};
+
+interviewRecordingSchema.methods.failProcessing = function(error) {
+  this.status = 'failed';
+  this.processing.error = error;
+  return this.save();
+};
+
+interviewRecordingSchema.methods.stopRecording = function() {
+  this.endTime = new Date();
+  if (this.startTime) {
+    this.duration = Math.round((this.endTime - this.startTime) / 1000); // ثواني
   }
-  next();
-});
+  return this.save();
+};
 
-// Static method للحصول على التسجيلات المنتهية
+interviewRecordingSchema.methods.incrementDownloadCount = function() {
+  this.downloadCount += 1;
+  this.lastAccessedAt = new Date();
+  return this.save();
+};
+
+interviewRecordingSchema.methods.incrementViewCount = function() {
+  this.viewCount += 1;
+  this.lastAccessedAt = new Date();
+  return this.save();
+};
+
+interviewRecordingSchema.methods.addAccess = function(userId, accessType = 'view') {
+  this.accessList.push({
+    userId,
+    accessType,
+    accessedAt: new Date()
+  });
+  
+  if (accessType === 'view') {
+    this.viewCount += 1;
+  } else if (accessType === 'download') {
+    this.downloadCount += 1;
+  }
+  
+  this.lastAccessedAt = new Date();
+  return this.save();
+};
+
+interviewRecordingSchema.methods.markAsDeleted = function() {
+  this.status = 'deleted';
+  return this.save();
+};
+
+interviewRecordingSchema.methods.isExpired = function() {
+  return this.expiresAt && this.expiresAt < new Date();
+};
+
+interviewRecordingSchema.methods.extendExpiry = function(days = 30) {
+  this.expiresAt = new Date(this.expiresAt.getTime() + days * 24 * 60 * 60 * 1000);
+  return this.save();
+};
+
+// Static methods
 interviewRecordingSchema.statics.findExpired = function() {
   return this.find({
+    expiresAt: { $lt: new Date() },
     status: { $ne: 'deleted' },
-    expiresAt: { $lt: new Date() }
+    autoDeleteScheduled: true
   });
 };
 
-// Static method للحصول على التسجيلات التي ستنتهي قريباً
-interviewRecordingSchema.statics.findExpiringSoon = function(daysAhead = 7) {
-  const futureDate = new Date();
-  futureDate.setDate(futureDate.getDate() + daysAhead);
-  
-  return this.find({
-    status: { $ne: 'deleted' },
-    expiresAt: {
-      $gte: new Date(),
-      $lte: futureDate
-    }
-  });
+interviewRecordingSchema.statics.findByInterview = function(interviewId) {
+  return this.find({ interviewId }).sort({ createdAt: -1 });
 };
 
 const InterviewRecording = mongoose.model('InterviewRecording', interviewRecordingSchema);

@@ -1,0 +1,530 @@
+/* ScreenShareDisplay.css */
+
+.screen-share-display {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Screen Share Video */
+.screen-share-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* Overlay */
+.screen-share-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+}
+
+/* Sharer Info */
+.sharer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  align-self: flex-start;
+  pointer-events: auto;
+  animation: fadeIn 0.3s ease;
+}
+
+.sharer-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.sharer-name {
+  font-weight: 600;
+}
+
+.sharing-text {
+  opacity: 0.9;
+}
+
+/* Source Badge */
+.source-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(76, 175, 80, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  align-self: flex-start;
+  margin-top: 8px;
+  pointer-events: auto;
+  animation: fadeIn 0.3s ease 0.1s backwards;
+}
+
+.source-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.source-label {
+  white-space: nowrap;
+}
+
+/* Quality Indicator */
+.quality-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  align-self: flex-end;
+  pointer-events: auto;
+  animation: fadeIn 0.3s ease 0.2s backwards;
+}
+
+.quality-label {
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.resolution-label {
+  opacity: 0.9;
+}
+
+/* Full Screen Button */
+.fullscreen-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease 0.3s backwards;
+}
+
+.fullscreen-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.fullscreen-btn:active {
+  transform: scale(0.95);
+}
+
+/* No Share Placeholder */
+.screen-share-display.no-share {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+}
+
+.no-share-placeholder {
+  text-align: center;
+  color: #666;
+}
+
+.placeholder-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.no-share-placeholder p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* RTL Support */
+.screen-share-display.ar .sharer-info {
+  flex-direction: row-reverse;
+}
+
+.screen-share-display.ar .source-badge {
+  flex-direction: row-reverse;
+}
+
+.screen-share-display.ar .quality-indicator {
+  flex-direction: row-reverse;
+}
+
+.screen-share-display.ar .fullscreen-btn {
+  right: auto;
+  left: 16px;
+}
+
+/* Fullscreen Mode */
+.screen-share-display:fullscreen {
+  border-radius: 0;
+}
+
+.screen-share-display:fullscreen .screen-share-video {
+  object-fit: contain;
+}
+
+.screen-share-display:fullscreen .screen-share-overlay {
+  padding: 24px;
+}
+
+.screen-share-display:fullscreen .sharer-info,
+.screen-share-display:fullscreen .source-badge,
+.screen-share-display:fullscreen .quality-indicator {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+.screen-share-display:fullscreen .fullscreen-btn {
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  bottom: 24px;
+  right: 24px;
+}
+
+/* Responsive Design */
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
+  .screen-share-overlay {
+    padding: 8px;
+  }
+
+  /* Sharer Info - Compact */
+  .sharer-info {
+    padding: 4px 10px;
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .sharer-icon {
+    font-size: 12px;
+  }
+
+  .sharing-text {
+    display: none; /* Hide "يشارك الشاشة" text on very small screens */
+  }
+
+  /* Source Badge - Icon only */
+  .source-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .source-icon {
+    font-size: 12px;
+  }
+
+  .source-label {
+    display: none; /* Show icon only */
+  }
+
+  /* Quality Indicator - Compact */
+  .quality-indicator {
+    padding: 4px 8px;
+    font-size: 10px;
+    gap: 4px;
+  }
+
+  .resolution-label {
+    display: none; /* Show quality only */
+  }
+
+  /* Fullscreen Button - Touch optimized */
+  .fullscreen-btn {
+    width: 44px; /* Min touch target */
+    height: 44px;
+    font-size: 18px;
+    bottom: 8px;
+    right: 8px;
+    border-width: 1px;
+  }
+
+  /* Placeholder - Smaller */
+  .placeholder-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .no-share-placeholder p {
+    font-size: 13px;
+    padding: 0 16px;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .screen-share-overlay {
+    padding: 12px;
+  }
+
+  /* Sharer Info */
+  .sharer-info {
+    padding: 6px 12px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .sharer-icon {
+    font-size: 14px;
+  }
+
+  /* Source Badge */
+  .source-badge {
+    padding: 5px 10px;
+    font-size: 11px;
+    margin-top: 6px;
+  }
+
+  .source-icon {
+    font-size: 14px;
+  }
+
+  /* Quality Indicator */
+  .quality-indicator {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  /* Fullscreen Button */
+  .fullscreen-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    bottom: 12px;
+    right: 12px;
+  }
+
+  /* Placeholder */
+  .placeholder-icon {
+    font-size: 52px;
+  }
+
+  .no-share-placeholder p {
+    font-size: 15px;
+  }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .screen-share-overlay {
+    padding: 14px;
+  }
+
+  .sharer-info {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .source-badge {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .quality-indicator {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+
+  .fullscreen-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+  }
+}
+
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .screen-share-overlay {
+    padding: 8px;
+  }
+
+  .sharer-info {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .source-badge {
+    padding: 3px 8px;
+    font-size: 10px;
+    margin-top: 4px;
+  }
+
+  .quality-indicator {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+
+  .fullscreen-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    bottom: 8px;
+    right: 8px;
+  }
+}
+
+/* Safe Area Support (Notch devices) */
+@supports (padding: max(0px)) {
+  .screen-share-overlay {
+    padding-left: max(16px, calc(16px + env(safe-area-inset-left)));
+    padding-right: max(16px, calc(16px + env(safe-area-inset-right)));
+    padding-top: max(16px, calc(16px + env(safe-area-inset-top)));
+    padding-bottom: max(16px, calc(16px + env(safe-area-inset-bottom)));
+  }
+
+  @media (max-width: 768px) {
+    .screen-share-overlay {
+      padding-left: max(12px, calc(12px + env(safe-area-inset-left)));
+      padding-right: max(12px, calc(12px + env(safe-area-inset-right)));
+      padding-top: max(12px, calc(12px + env(safe-area-inset-top)));
+      padding-bottom: max(12px, calc(12px + env(safe-area-inset-bottom)));
+    }
+  }
+}
+
+/* Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  .fullscreen-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Larger tap area */
+  .fullscreen-btn::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+  }
+}
+
+/* Fullscreen Mode - Responsive */
+.screen-share-display:fullscreen {
+  border-radius: 0;
+}
+
+.screen-share-display:fullscreen .screen-share-video {
+  object-fit: contain;
+}
+
+.screen-share-display:fullscreen .screen-share-overlay {
+  padding: 24px;
+}
+
+.screen-share-display:fullscreen .sharer-info,
+.screen-share-display:fullscreen .source-badge,
+.screen-share-display:fullscreen .quality-indicator {
+  font-size: 16px;
+  padding: 10px 20px;
+}
+
+.screen-share-display:fullscreen .fullscreen-btn {
+  width: 56px;
+  height: 56px;
+  font-size: 24px;
+  bottom: 24px;
+  right: 24px;
+}
+
+@media (max-width: 768px) {
+  .screen-share-display:fullscreen .sharer-info,
+  .screen-share-display:fullscreen .source-badge,
+  .screen-share-display:fullscreen .quality-indicator {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .screen-share-display:fullscreen .fullscreen-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .screen-share-display.no-share {
+    background: #1e1e1e;
+  }
+
+  .no-share-placeholder {
+    color: #999;
+  }
+}
+
+/* Loading State */
+.screen-share-display.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.screen-share-display.loading::after {
+  content: '⏳';
+  font-size: 48px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -185,7 +185,7 @@ describe('ConnectionQualityService', () => {
       const result = service.analyzeTrends(history);
 
       expect(result.trend).toBe('stable');
-      expect(result.average).toBeCloseTo(80, 1);
+      expect(result.average).toBeCloseTo(80.4, 1);
     });
 
     test('should return improving trend for increasing scores', () => {

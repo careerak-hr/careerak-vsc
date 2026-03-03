@@ -1,0 +1,636 @@
+/* ScreenShareControls.css */
+
+.screen-share-controls {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Sharing Indicator */
+.sharing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(76, 175, 80, 0.1);
+  border: 2px solid #4CAF50;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4CAF50;
+  animation: fadeIn 0.3s ease;
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  background: #4CAF50;
+  border-radius: 50%;
+}
+
+.indicator-dot.pulsing {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.2);
+  }
+}
+
+.indicator-text {
+  white-space: nowrap;
+}
+
+/* Quality Badge */
+.quality-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #304B60;
+  margin-left: 8px;
+}
+
+.quality-label {
+  color: #4CAF50;
+}
+
+.resolution-label {
+  color: #666;
+  font-size: 11px;
+}
+
+/* Control Button Wrapper */
+.control-button-wrapper {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+
+/* Control Buttons */
+.control-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #304B60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.control-btn:hover:not(:disabled) {
+  background: #3d5f7a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.control-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.control-btn.loading {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Start Sharing Button */
+.control-btn.start-sharing {
+  background: #4CAF50;
+}
+
+.control-btn.start-sharing:hover:not(:disabled) {
+  background: #45a049;
+}
+
+/* Stop Sharing Button */
+.control-btn.stop-sharing {
+  background: #F44336;
+}
+
+.control-btn.stop-sharing:hover:not(:disabled) {
+  background: #da190b;
+}
+
+/* Switch Source Button */
+.control-btn.switch-source {
+  padding: 12px 16px;
+  background: #304B60;
+}
+
+/* Button Icons and Text */
+.btn-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.btn-text {
+  font-size: 14px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Sharing Controls Group */
+.sharing-controls {
+  display: flex;
+  gap: 8px;
+}
+
+/* Source Menu */
+.source-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  background: white;
+  border: 2px solid #304B60;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  z-index: 1000;
+  min-width: 200px;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.menu-header {
+  padding: 12px 16px;
+  background: #304B60;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.source-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background: white;
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.source-option:last-child {
+  border-bottom: none;
+}
+
+.source-option:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.source-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.source-option.active {
+  background: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+  font-weight: 600;
+}
+
+.option-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.option-text {
+  font-size: 14px;
+  flex: 1;
+}
+
+/* RTL Support */
+.screen-share-controls.ar .source-menu {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.screen-share-controls.ar .source-option {
+  text-align: right;
+}
+
+.screen-share-controls.ar .quality-badge {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+/* Responsive Design */
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
+  .screen-share-controls {
+    gap: 10px;
+  }
+
+  /* Control Buttons - Touch optimized */
+  .control-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-width: 44px; /* Min touch target */
+    min-height: 44px;
+  }
+
+  .btn-text {
+    display: none; /* Icon only on small screens */
+  }
+
+  .btn-icon {
+    font-size: 20px;
+  }
+
+  /* Sharing Indicator - Compact */
+  .sharing-indicator {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .indicator-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .indicator-text {
+    display: none; /* Icon only */
+  }
+
+  /* Quality Badge - Hide on very small screens */
+  .quality-badge {
+    display: none;
+  }
+
+  /* Source Menu - Full width on mobile */
+  .source-menu {
+    min-width: calc(100vw - 32px);
+    max-width: calc(100vw - 32px);
+    left: 16px;
+    right: 16px;
+    transform: none;
+  }
+
+  .menu-header {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .source-option {
+    padding: 12px 14px;
+    min-height: 48px; /* Touch target */
+  }
+
+  .option-icon {
+    font-size: 18px;
+  }
+
+  .option-text {
+    font-size: 13px;
+  }
+
+  /* Control Button Wrapper */
+  .control-button-wrapper {
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sharing-controls {
+    gap: 8px;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .screen-share-controls {
+    gap: 11px;
+  }
+
+  .control-btn {
+    padding: 11px 16px;
+    font-size: 13px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .btn-text {
+    font-size: 13px;
+  }
+
+  .btn-icon {
+    font-size: 18px;
+  }
+
+  .sharing-indicator {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .indicator-text {
+    font-size: 12px;
+  }
+
+  .quality-badge {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .resolution-label {
+    font-size: 10px;
+  }
+
+  .source-menu {
+    min-width: 220px;
+  }
+
+  .menu-header {
+    padding: 11px 14px;
+    font-size: 12px;
+  }
+
+  .source-option {
+    padding: 11px 14px;
+  }
+
+  .option-text {
+    font-size: 13px;
+  }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .control-btn {
+    padding: 11px 18px;
+    font-size: 13px;
+  }
+
+  .btn-text {
+    font-size: 13px;
+  }
+
+  .sharing-indicator {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  .quality-badge {
+    padding: 4px 9px;
+    font-size: 11px;
+  }
+}
+
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .screen-share-controls {
+    gap: 8px;
+  }
+
+  .control-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .btn-text {
+    display: none;
+  }
+
+  .btn-icon {
+    font-size: 18px;
+  }
+
+  .sharing-indicator {
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+
+  .indicator-text {
+    display: none;
+  }
+
+  .quality-badge {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
+
+  .source-menu {
+    min-width: 180px;
+  }
+
+  .menu-header {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+
+  .source-option {
+    padding: 8px 12px;
+  }
+
+  .option-text {
+    font-size: 12px;
+  }
+}
+
+/* Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  /* Ensure all touch targets are at least 44x44px */
+  .control-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .source-option {
+    min-height: 48px;
+  }
+
+  /* Larger tap areas */
+  .control-btn::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+  }
+
+  /* Remove hover effects on touch devices */
+  .control-btn:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .source-option:hover:not(:disabled) {
+    background: white;
+  }
+
+  /* Prevent text selection */
+  .control-btn,
+  .source-option {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+/* Safe Area Support (Notch devices) */
+@supports (padding: max(0px)) {
+  @media (max-width: 480px) {
+    .source-menu {
+      left: max(16px, calc(16px + env(safe-area-inset-left)));
+      right: max(16px, calc(16px + env(safe-area-inset-right)));
+    }
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .control-btn {
+    border: 2px solid white;
+  }
+
+  .sharing-indicator {
+    border-width: 3px;
+  }
+
+  .source-menu {
+    border-width: 3px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .control-btn:hover:not(:disabled) {
+    transform: none;
+  }
+
+  .indicator-dot.pulsing,
+  .spinner {
+    animation: none;
+  }
+
+  .source-menu {
+    animation: none;
+  }
+
+  .sharing-indicator {
+    animation: none;
+  }
+}
+
+/* RTL Support - Enhanced */
+[dir="rtl"] .screen-share-controls .source-menu {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+[dir="rtl"] .screen-share-controls .source-option {
+  text-align: right;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .screen-share-controls .quality-badge {
+  margin-left: 0;
+  margin-right: 8px;
+}
+
+@media (max-width: 480px) {
+  [dir="rtl"] .source-menu {
+    left: max(16px, calc(16px + env(safe-area-inset-left)));
+    right: max(16px, calc(16px + env(safe-area-inset-right)));
+    transform: none;
+  }
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .source-menu {
+    background: #1e1e1e;
+    border-color: #444;
+  }
+
+  .source-option {
+    background: #1e1e1e;
+    color: #e0e0e0;
+    border-bottom-color: #333;
+  }
+
+  .source-option:hover:not(:disabled) {
+    background: #2a2a2a;
+  }
+
+  .source-option.active {
+    background: rgba(76, 175, 80, 0.2);
+  }
+
+  .quality-badge {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+  }
+
+  .quality-label {
+    color: #4CAF50;
+  }
+
+  .resolution-label {
+    color: #999;
+  }
+}

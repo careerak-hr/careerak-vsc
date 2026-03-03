@@ -206,45 +206,240 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .local-video-wrapper {
-    width: 120px;
-    height: 90px;
-    bottom: 100px;
-    right: 10px;
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
+  .video-call-container {
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
   }
 
+  /* Local Video - Smaller on mobile */
+  .local-video-wrapper {
+    width: 100px;
+    height: 75px;
+    bottom: 90px; /* Above controls */
+    right: 8px;
+    border-width: 2px;
+    border-radius: 8px;
+  }
+
+  /* Video Controls - Touch-optimized */
   .video-controls {
-    bottom: 20px;
-    gap: 15px;
+    bottom: 16px;
+    gap: 12px;
+    padding: 0 8px;
   }
 
   .control-btn {
-    width: 50px;
-    height: 50px;
+    width: 48px; /* Min 44px for touch targets */
+    height: 48px;
+    font-size: 1.3rem;
+  }
+
+  /* Connection Quality - Compact */
+  .connection-quality {
+    top: 8px;
+    right: 8px;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    gap: 4px;
+  }
+
+  .quality-dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  /* Video Quality Badge - Compact */
+  .video-quality-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    gap: 4px;
+  }
+
+  .video-quality-badge.remote {
+    left: 8px;
+    top: 8px;
+  }
+
+  .video-quality-badge.local {
+    right: 8px;
+    top: 8px;
+  }
+
+  .resolution {
+    font-size: 0.65rem;
+  }
+
+  /* No Video Placeholder - Smaller */
+  .placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .no-video-placeholder p {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .video-call-container {
+    height: 100dvh;
+  }
+
+  /* Local Video */
+  .local-video-wrapper {
+    width: 140px;
+    height: 105px;
+    bottom: 100px;
+    right: 12px;
+    border-width: 2px;
+  }
+
+  /* Video Controls */
+  .video-controls {
+    bottom: 20px;
+    gap: 16px;
+  }
+
+  .control-btn {
+    width: 52px; /* Min 44px for touch */
+    height: 52px;
     font-size: 1.5rem;
   }
 
+  /* Connection Quality */
   .connection-quality {
-    font-size: 0.8rem;
-    padding: 4px 8px;
+    font-size: 0.85rem;
+    padding: 5px 10px;
   }
 
+  /* Video Quality Badge */
   .video-quality-badge {
     font-size: 0.75rem;
     padding: 3px 8px;
   }
 }
 
-@media (max-width: 480px) {
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  /* Local Video */
   .local-video-wrapper {
-    width: 100px;
-    height: 75px;
+    width: 200px;
+    height: 150px;
+    bottom: 24px;
+    right: 16px;
+  }
+
+  /* Video Controls */
+  .video-controls {
+    bottom: 24px;
+    gap: 18px;
   }
 
   .control-btn {
-    width: 45px;
-    height: 45px;
-    font-size: 1.3rem;
+    width: 56px;
+    height: 56px;
+    font-size: 1.6rem;
+  }
+}
+
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
+  /* Local Video - Smaller in landscape */
+  .local-video-wrapper {
+    width: 120px;
+    height: 90px;
+    bottom: 16px;
+    right: 16px;
+  }
+
+  /* Video Controls - Compact */
+  .video-controls {
+    bottom: 12px;
+    gap: 12px;
+  }
+
+  .control-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+
+  /* Connection Quality - Top left in landscape */
+  .connection-quality {
+    top: 12px;
+    right: 12px;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+
+  /* Video Quality Badge - Smaller */
+  .video-quality-badge {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+  }
+}
+
+/* Safe Area Support (Notch devices) */
+@supports (padding: max(0px)) {
+  .video-call-container {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+
+  .video-controls {
+    bottom: max(30px, calc(30px + env(safe-area-inset-bottom)));
+  }
+
+  @media (max-width: 768px) {
+    .video-controls {
+      bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .video-controls {
+      bottom: max(16px, calc(16px + env(safe-area-inset-bottom)));
+    }
+  }
+}
+
+/* Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  /* Ensure all touch targets are at least 44x44px */
+  .control-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Larger tap areas */
+  .control-btn::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+  }
+}
+
+/* Prevent zoom on input focus (iOS) */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents iOS zoom */
+  }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .video-quality-badge,
+  .connection-quality {
+    border-width: 1px;
   }
 }

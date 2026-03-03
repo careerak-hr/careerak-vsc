@@ -1,0 +1,533 @@
+/**
+ * Video Interview System - Centralized Translations
+ * نظام الفيديو للمقابلات - الترجمات المركزية
+ * 
+ * يحتوي على جميع الترجمات لمكونات نظام الفيديو للمقابلات
+ * Supports: Arabic (ar), English (en), French (fr)
+ */
+
+const videoInterviewTranslations = {
+  ar: {
+    // Common / مشترك
+    common: {
+      close: 'إغلاق',
+      cancel: 'إلغاء',
+      confirm: 'تأكيد',
+      save: 'حفظ',
+      delete: 'حذف',
+      edit: 'تعديل',
+      send: 'إرسال',
+      retry: 'إعادة المحاولة',
+      continue: 'متابعة',
+      back: 'رجوع',
+      next: 'التالي',
+      loading: 'جاري التحميل...',
+      error: 'حدث خطأ',
+      success: 'تم بنجاح',
+      warning: 'تحذير',
+      info: 'معلومة',
+      yes: 'نعم',
+      no: 'لا',
+      on: 'مفعّل',
+      off: 'معطّل',
+      enabled: 'مفعّل',
+      disabled: 'معطّل',
+    },
+
+    // Video Call / مكالمة الفيديو
+    videoCall: {
+      title: 'مقابلة فيديو',
+      connecting: 'جاري الاتصال...',
+      connected: 'متصل',
+      disconnected: 'غير متصل',
+      reconnecting: 'إعادة الاتصال...',
+      callEnded: 'انتهت المكالمة',
+      muteAudio: 'كتم الصوت',
+      unmuteAudio: 'إلغاء كتم الصوت',
+      stopVideo: 'إيقاف الفيديو',
+      startVideo: 'تشغيل الفيديو',
+      shareScreen: 'مشاركة الشاشة',
+      stopSharing: 'إيقاف المشاركة',
+      endCall: 'إنهاء المكالمة',
+      switchCamera: 'تبديل الكاميرا',
+      settings: 'الإعدادات',
+      fullscreen: 'ملء الشاشة',
+      exitFullscreen: 'الخروج من ملء الشاشة',
+    },
+
+
+    // Device Test / اختبار الأجهزة
+    deviceTest: {
+      title: 'اختبار الكاميرا والميكروفون',
+      subtitle: 'تأكد من أن أجهزتك تعمل بشكل صحيح قبل الانضمام',
+      cameraLabel: 'الكاميرا',
+      microphoneLabel: 'الميكروفون',
+      selectCamera: 'اختر الكاميرا',
+      selectMicrophone: 'اختر الميكروفون',
+      testCamera: 'اختبار الكاميرا',
+      testMicrophone: 'اختبار الميكروفون',
+      retestCamera: 'إعادة اختبار الكاميرا',
+      retestMicrophone: 'إعادة اختبار الميكروفون',
+      cameraWorking: 'الكاميرا تعمل بشكل جيد',
+      microphoneWorking: 'الميكروفون يعمل بشكل جيد',
+      speakToTest: 'تحدث لاختبار الميكروفون',
+      audioLevel: 'مستوى الصوت',
+      permissionDenied: 'تم رفض الإذن. يرجى السماح بالوصول للكاميرا والميكروفون.',
+      deviceError: 'حدث خطأ في الوصول للأجهزة',
+      noDevices: 'لم يتم العثور على أجهزة',
+    },
+
+    // Waiting Room / غرفة الانتظار
+    waitingRoom: {
+      title: 'غرفة الانتظار',
+      waiting: 'في الانتظار...',
+      position: 'موقعك في الطابور',
+      waitingTime: 'وقت الانتظار',
+      totalWaiting: 'إجمالي المنتظرين',
+      testDevices: 'اختبار الأجهزة',
+      microphone: 'الميكروفون',
+      camera: 'الكاميرا',
+      admitted: 'تم قبولك! جاري الانضمام للمقابلة...',
+      rejected: 'عذراً، تم رفض طلبك',
+      leave: 'مغادرة',
+      seconds: 'ثانية',
+      minutes: 'دقيقة',
+      hours: 'ساعة',
+    },
+
+    // Recording / التسجيل
+    recording: {
+      startRecording: 'بدء التسجيل',
+      stopRecording: 'إيقاف التسجيل',
+      pauseRecording: 'إيقاف مؤقت',
+      resumeRecording: 'استئناف',
+      recording: 'جاري التسجيل',
+      paused: 'متوقف مؤقتاً',
+      duration: 'المدة',
+      size: 'الحجم',
+      uploading: 'جاري الرفع...',
+      uploadComplete: 'تم الرفع بنجاح',
+      uploadFailed: 'فشل الرفع',
+      download: 'تحميل',
+      delete: 'حذف',
+      consentRequired: 'يجب موافقة جميع المشاركين قبل بدء التسجيل',
+      consentTitle: 'موافقة على التسجيل',
+      consentMessage: 'هل توافق على تسجيل هذه المقابلة؟',
+      consentAccept: 'أوافق',
+      consentDecline: 'لا أوافق',
+      recordingNotification: 'هذه المقابلة يتم تسجيلها',
+    },
+
+
+    // Screen Share / مشاركة الشاشة
+    screenShare: {
+      startSharing: 'مشاركة الشاشة',
+      stopSharing: 'إيقاف المشاركة',
+      selectSource: 'اختر ما تريد مشاركته',
+      entireScreen: 'الشاشة بالكامل',
+      window: 'نافذة',
+      tab: 'تبويب',
+      sharing: 'يشارك الشاشة الآن',
+      youAreSharing: 'أنت تشارك شاشتك',
+      stopSharingConfirm: 'هل تريد إيقاف مشاركة الشاشة؟',
+      sharingQuality: 'جودة المشاركة',
+      high: 'عالية',
+      medium: 'متوسطة',
+      low: 'منخفضة',
+    },
+
+    // Chat / الدردشة
+    chat: {
+      title: 'الدردشة',
+      placeholder: 'اكتب رسالتك...',
+      send: 'إرسال',
+      typing: 'يكتب...',
+      noMessages: 'لا توجد رسائل بعد',
+      sendFile: 'إرسال ملف',
+      fileShared: 'تم مشاركة ملف',
+      downloadFile: 'تحميل الملف',
+      fileTooLarge: 'الملف كبير جداً (الحد الأقصى 10 ميجابايت)',
+      fileTypeNotAllowed: 'نوع الملف غير مسموح',
+    },
+
+    // Connection Quality / جودة الاتصال
+    connectionQuality: {
+      title: 'جودة الاتصال',
+      excellent: 'ممتازة',
+      good: 'جيدة',
+      fair: 'مقبولة',
+      poor: 'ضعيفة',
+      veryPoor: 'ضعيفة جداً',
+      latency: 'زمن الانتقال',
+      packetLoss: 'فقدان الحزم',
+      bandwidth: 'النطاق الترددي',
+      jitter: 'التذبذب',
+      reconnecting: 'إعادة الاتصال...',
+      checkingConnection: 'فحص الاتصال...',
+    },
+
+    // Raise Hand / رفع اليد
+    raiseHand: {
+      raise: 'رفع اليد',
+      lower: 'خفض اليد',
+      raised: 'رفع يده',
+      notification: 'رفع يده للإشارة',
+    },
+
+    // Group Call / المكالمة الجماعية
+    groupCall: {
+      participants: 'المشاركون',
+      participantCount: 'عدد المشاركين',
+      gridView: 'عرض شبكي',
+      speakerView: 'عرض المتحدث',
+      muteAll: 'كتم الجميع',
+      unmuteAll: 'إلغاء كتم الجميع',
+      removeParticipant: 'إزالة المشارك',
+      removeConfirm: 'هل تريد إزالة هذا المشارك من المقابلة؟',
+      hostControls: 'أدوات المضيف',
+      youAreHost: 'أنت المضيف',
+      host: 'مضيف',
+      participant: 'مشارك',
+      speaking: 'يتحدث',
+      muted: 'مكتوم',
+    },
+
+
+    // Interview Management / إدارة المقابلات
+    interviewManagement: {
+      title: 'إدارة المقابلات',
+      upcomingInterviews: 'المقابلات القادمة',
+      pastInterviews: 'المقابلات السابقة',
+      noUpcoming: 'لا توجد مقابلات قادمة',
+      noPast: 'لا توجد مقابلات سابقة',
+      scheduledFor: 'مجدولة في',
+      duration: 'المدة',
+      status: 'الحالة',
+      scheduled: 'مجدولة',
+      active: 'نشطة',
+      ended: 'انتهت',
+      cancelled: 'ملغاة',
+      joinNow: 'انضم الآن',
+      viewRecording: 'عرض التسجيل',
+      addNotes: 'إضافة ملاحظات',
+      viewNotes: 'عرض الملاحظات',
+      reschedule: 'إعادة الجدولة',
+      cancel: 'إلغاء',
+      delete: 'حذف',
+    },
+
+    // Interview Notes / ملاحظات المقابلة
+    interviewNotes: {
+      title: 'ملاحظات المقابلة',
+      addNote: 'إضافة ملاحظة',
+      editNote: 'تعديل الملاحظة',
+      deleteNote: 'حذف الملاحظة',
+      notePlaceholder: 'اكتب ملاحظاتك هنا...',
+      rating: 'التقييم',
+      rateCandidate: 'تقييم المرشح',
+      technicalSkills: 'المهارات التقنية',
+      communication: 'التواصل',
+      problemSolving: 'حل المشكلات',
+      cultureFit: 'التوافق الثقافي',
+      overallRating: 'التقييم الإجمالي',
+      recommendation: 'التوصية',
+      stronglyRecommend: 'أوصي بشدة',
+      recommend: 'أوصي',
+      neutral: 'محايد',
+      notRecommend: 'لا أوصي',
+      stronglyNotRecommend: 'لا أوصي بشدة',
+      saveNotes: 'حفظ الملاحظات',
+      noteSaved: 'تم حفظ الملاحظات',
+      noteDeleted: 'تم حذف الملاحظة',
+    },
+
+    // Timer / المؤقت
+    timer: {
+      interviewDuration: 'مدة المقابلة',
+      elapsed: 'الوقت المنقضي',
+      remaining: 'الوقت المتبقي',
+      hours: 'ساعة',
+      minutes: 'دقيقة',
+      seconds: 'ثانية',
+    },
+
+    // Errors / الأخطاء
+    errors: {
+      connectionFailed: 'فشل الاتصال',
+      cameraAccessDenied: 'تم رفض الوصول للكاميرا',
+      microphoneAccessDenied: 'تم رفض الوصول للميكروفون',
+      screenShareFailed: 'فشلت مشاركة الشاشة',
+      recordingFailed: 'فشل التسجيل',
+      uploadFailed: 'فشل الرفع',
+      networkError: 'خطأ في الشبكة',
+      serverError: 'خطأ في الخادم',
+      unknownError: 'خطأ غير معروف',
+      tryAgain: 'حاول مرة أخرى',
+      contactSupport: 'اتصل بالدعم',
+    },
+  },
+
+
+  en: {
+    // Common
+    common: {
+      close: 'Close',
+      cancel: 'Cancel',
+      confirm: 'Confirm',
+      save: 'Save',
+      delete: 'Delete',
+      edit: 'Edit',
+      send: 'Send',
+      retry: 'Retry',
+      continue: 'Continue',
+      back: 'Back',
+      next: 'Next',
+      loading: 'Loading...',
+      error: 'Error',
+      success: 'Success',
+      warning: 'Warning',
+      info: 'Info',
+      yes: 'Yes',
+      no: 'No',
+      on: 'On',
+      off: 'Off',
+      enabled: 'Enabled',
+      disabled: 'Disabled',
+    },
+
+    // Video Call
+    videoCall: {
+      title: 'Video Interview',
+      connecting: 'Connecting...',
+      connected: 'Connected',
+      disconnected: 'Disconnected',
+      reconnecting: 'Reconnecting...',
+      callEnded: 'Call Ended',
+      muteAudio: 'Mute Audio',
+      unmuteAudio: 'Unmute Audio',
+      stopVideo: 'Stop Video',
+      startVideo: 'Start Video',
+      shareScreen: 'Share Screen',
+      stopSharing: 'Stop Sharing',
+      endCall: 'End Call',
+      switchCamera: 'Switch Camera',
+      settings: 'Settings',
+      fullscreen: 'Fullscreen',
+      exitFullscreen: 'Exit Fullscreen',
+    },
+
+    // Device Test
+    deviceTest: {
+      title: 'Camera and Microphone Test',
+      subtitle: 'Make sure your devices work properly before joining',
+      cameraLabel: 'Camera',
+      microphoneLabel: 'Microphone',
+      selectCamera: 'Select Camera',
+      selectMicrophone: 'Select Microphone',
+      testCamera: 'Test Camera',
+      testMicrophone: 'Test Microphone',
+      retestCamera: 'Retest Camera',
+      retestMicrophone: 'Retest Microphone',
+      cameraWorking: 'Camera is working well',
+      microphoneWorking: 'Microphone is working well',
+      speakToTest: 'Speak to test microphone',
+      audioLevel: 'Audio Level',
+      permissionDenied: 'Permission denied. Please allow access to camera and microphone.',
+      deviceError: 'Error accessing devices',
+      noDevices: 'No devices found',
+    },
+
+
+    // Waiting Room
+    waitingRoom: {
+      title: 'Waiting Room',
+      waiting: 'Waiting...',
+      position: 'Your Position',
+      waitingTime: 'Waiting Time',
+      totalWaiting: 'Total Waiting',
+      testDevices: 'Test Devices',
+      microphone: 'Microphone',
+      camera: 'Camera',
+      admitted: 'You have been admitted! Joining interview...',
+      rejected: 'Sorry, your request was rejected',
+      leave: 'Leave',
+      seconds: 'seconds',
+      minutes: 'minutes',
+      hours: 'hours',
+    },
+
+    // Recording
+    recording: {
+      startRecording: 'Start Recording',
+      stopRecording: 'Stop Recording',
+      pauseRecording: 'Pause',
+      resumeRecording: 'Resume',
+      recording: 'Recording',
+      paused: 'Paused',
+      duration: 'Duration',
+      size: 'Size',
+      uploading: 'Uploading...',
+      uploadComplete: 'Upload Complete',
+      uploadFailed: 'Upload Failed',
+      download: 'Download',
+      delete: 'Delete',
+      consentRequired: 'All participants must consent before recording',
+      consentTitle: 'Recording Consent',
+      consentMessage: 'Do you consent to recording this interview?',
+      consentAccept: 'I Consent',
+      consentDecline: 'I Decline',
+      recordingNotification: 'This interview is being recorded',
+    },
+
+    // Screen Share
+    screenShare: {
+      startSharing: 'Share Screen',
+      stopSharing: 'Stop Sharing',
+      selectSource: 'Select what to share',
+      entireScreen: 'Entire Screen',
+      window: 'Window',
+      tab: 'Tab',
+      sharing: 'is sharing screen',
+      youAreSharing: 'You are sharing your screen',
+      stopSharingConfirm: 'Stop sharing your screen?',
+      sharingQuality: 'Sharing Quality',
+      high: 'High',
+      medium: 'Medium',
+      low: 'Low',
+    },
+
+    // Chat
+    chat: {
+      title: 'Chat',
+      placeholder: 'Type your message...',
+      send: 'Send',
+      typing: 'typing...',
+      noMessages: 'No messages yet',
+      sendFile: 'Send File',
+      fileShared: 'File shared',
+      downloadFile: 'Download File',
+      fileTooLarge: 'File too large (max 10MB)',
+      fileTypeNotAllowed: 'File type not allowed',
+    },
+
+
+    // Connection Quality
+    connectionQuality: {
+      title: 'Connection Quality',
+      excellent: 'Excellent',
+      good: 'Good',
+      fair: 'Fair',
+      poor: 'Poor',
+      veryPoor: 'Very Poor',
+      latency: 'Latency',
+      packetLoss: 'Packet Loss',
+      bandwidth: 'Bandwidth',
+      jitter: 'Jitter',
+      reconnecting: 'Reconnecting...',
+      checkingConnection: 'Checking connection...',
+    },
+
+    // Raise Hand
+    raiseHand: {
+      raise: 'Raise Hand',
+      lower: 'Lower Hand',
+      raised: 'raised hand',
+      notification: 'raised hand to signal',
+    },
+
+    // Group Call
+    groupCall: {
+      participants: 'Participants',
+      participantCount: 'Participant Count',
+      gridView: 'Grid View',
+      speakerView: 'Speaker View',
+      muteAll: 'Mute All',
+      unmuteAll: 'Unmute All',
+      removeParticipant: 'Remove Participant',
+      removeConfirm: 'Remove this participant from the interview?',
+      hostControls: 'Host Controls',
+      youAreHost: 'You are the host',
+      host: 'Host',
+      participant: 'Participant',
+      speaking: 'Speaking',
+      muted: 'Muted',
+    },
+
+    // Interview Management
+    interviewManagement: {
+      title: 'Interview Management',
+      upcomingInterviews: 'Upcoming Interviews',
+      pastInterviews: 'Past Interviews',
+      noUpcoming: 'No upcoming interviews',
+      noPast: 'No past interviews',
+      scheduledFor: 'Scheduled for',
+      duration: 'Duration',
+      status: 'Status',
+      scheduled: 'Scheduled',
+      active: 'Active',
+      ended: 'Ended',
+      cancelled: 'Cancelled',
+      joinNow: 'Join Now',
+      viewRecording: 'View Recording',
+      addNotes: 'Add Notes',
+      viewNotes: 'View Notes',
+      reschedule: 'Reschedule',
+      cancel: 'Cancel',
+      delete: 'Delete',
+    },
+
+
+    // Interview Notes
+    interviewNotes: {
+      title: 'Interview Notes',
+      addNote: 'Add Note',
+      editNote: 'Edit Note',
+      deleteNote: 'Delete Note',
+      notePlaceholder: 'Write your notes here...',
+      rating: 'Rating',
+      rateCandidate: 'Rate Candidate',
+      technicalSkills: 'Technical Skills',
+      communication: 'Communication',
+      problemSolving: 'Problem Solving',
+      cultureFit: 'Culture Fit',
+      overallRating: 'Overall Rating',
+      recommendation: 'Recommendation',
+      stronglyRecommend: 'Strongly Recommend',
+      recommend: 'Recommend',
+      neutral: 'Neutral',
+      notRecommend: 'Not Recommend',
+      stronglyNotRecommend: 'Strongly Not Recommend',
+      saveNotes: 'Save Notes',
+      noteSaved: 'Notes Saved',
+      noteDeleted: 'Note Deleted',
+    },
+
+    // Timer
+    timer: {
+      interviewDuration: 'Interview Duration',
+      elapsed: 'Elapsed',
+      remaining: 'Remaining',
+      hours: 'hours',
+      minutes: 'minutes',
+      seconds: 'seconds',
+    },
+
+    // Errors
+    errors: {
+      connectionFailed: 'Connection Failed',
+      cameraAccessDenied: 'Camera Access Denied',
+      microphoneAccessDenied: 'Microphone Access Denied',
+      screenShareFailed: 'Screen Share Failed',
+      recordingFailed: 'Recording Failed',
+      uploadFailed: 'Upload Failed',
+      networkError: 'Network Error',
+      serverError: 'Server Error',
+      unknownError: 'Unknown Error',
+      tryAgain: 'Try Again',
+      contactSupport: 'Contact Support',
+    },
+  },
+};
+
+export default videoInterviewTranslations;
+

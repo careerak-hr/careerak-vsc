@@ -1,9 +1,8 @@
 /**
- * خدمة تسجيل المقابلات - Frontend
- * تتعامل مع MediaRecorder API لتسجيل الفيديو والصوت
+ * Frontend Recording Service
+ * إدارة تسجيل المقابلات من جانب العميل باستخدام MediaRecorder API
  * 
  * Requirements: 2.1, 2.4
- * Design: Section 6 - RecordingService
  */
 class RecordingService {
   constructor() {
@@ -12,8 +11,8 @@ class RecordingService {
     this.stream = null;
     this.isRecording = false;
     this.startTime = null;
-    this.recordingTimer = null;
-    
+    this.recordingId = null;
+
     // إعدادات التسجيل
     this.options = {
       mimeType: this.getSupportedMimeType(),
@@ -23,10 +22,8 @@ class RecordingService {
   }
 
   /**
-   * الحصول على نوع MIME المدعوم
-   * يختار أفضل تنسيق متاح في المتصفح
-   * 
-   * @returns {string} نوع MIME
+   * الحصول على mimeType المدعوم
+   * @returns {string} mimeType
    */
   getSupportedMimeType() {
     const types = [
@@ -48,33 +45,34 @@ class RecordingService {
 
   /**
    * بدء التسجيل
-   * يبدأ تسجيل الفيديو والصوت من stream معين
-   * 
-   * @param {MediaStream} stream - stream الفيديو والصوت
-   * @param {function} onDataAvailable - callback عند توفر بيانات
-   * @param {function} onStop - callback عند إيقاف التسجيل
-   * @returns {Promise<void>}
-   * 
-   * Requirements: 2.1
+   * @param {MediaStream} stream - media stream للتسجيل
+   * @param {Function} onDataAvailable - callback عند توفر بيانات
+   * @param {Function} onStop - callback عند إيقاف التسجيل
+   * @returns {Promise<Object>} معلومات التسجيل
    */
   async startRecording(stream, onDataAvailable = null, onStop = null) {
     try {
       if (this.isRecording) {
-        throw new Error('التسجيل قيد التشغيل بالفعل');
+        throw new Error('Recording is already in progress');
       }
 
       if (!stream) {
-        throw new Error('لا يوجد stream للتسجيل');
+        throw new Error('Media stream is required');
       }
 
-      // حفظ stream
+      // التحقق من دعم MediaRecorder
+      if (!window.MediaRecorder) {
+        throw new Error('MediaRecorder is not supported in this browser');
+      }
+
       this.stream = stream;
       this.recordedChunks = [];
-      
+      this.startTime = new Date();
+
       // إنشاء MediaRecorder
       this.mediaRecorder = new MediaRecorder(stream, this.options);
 
-      // معالج البيانات المتاحة
+      // معالجة البيانات المتاحة
       this.mediaRecorder.ondataavailable = (event) => {
         if (event.data && event.data.size > 0) {
           this.recordedChunks.push(event.data);
@@ -85,35 +83,30 @@ class RecordingService {
         }
       };
 
-      // معالج إيقاف التسجيل
-      this.mediaRecorder.onstop = async () => {
+      // معالجة إيقاف التسجيل
+      this.mediaRecorder.onstop = () => {
         this.isRecording = false;
-        this.stopTimer();
         
         if (onStop) {
-          const blob = this.getRecordedBlob();
+          const blob = this.getRecordingBlob();
           onStop(blob);
         }
       };
 
-      // معالج الأخطاء
+      // معالجة الأخطاء
       this.mediaRecorder.onerror = (event) => {
         console.error('MediaRecorder error:', event.error);
         this.isRecording = false;
-        this.stopTimer();
       };
 
       // بدء التسجيل
-      this.mediaRecorder.start(1000); // حفظ كل ثانية
+      this.mediaRecorder.start(1000); // حفظ chunk كل ثانية
       this.isRecording = true;
-      this.startTime = Date.now();
-      this.startTimer();
 
-      console.log('Recording started with mimeType:', this.options.mimeType);
-      
       return {
         success: true,
-        message: 'تم بدء التسجيل بنجاح',
+        startTime: this.startTime,
+        mimeType: this.options.mimeType,
       };
     } catch (error) {
       console.error('Error starting recording:', error);
@@ -123,25 +116,24 @@ class RecordingService {
 
   /**
    * إيقاف التسجيل
-   * يوقف MediaRecorder ويعيد Blob الفيديو
-   * 
-   * @returns {Promise<Blob>} ملف الفيديو
-   * 
-   * Requirements: 2.1
+   * @returns {Promise<Blob>} blob التسجيل
    */
   async stopRecording() {
     try {
-      if (!this.isRecording) {
-        throw new Error('لا يوجد تسجيل نشط');
+      if (!this.isRecording || !this.mediaRecorder) {
+        throw new Error('No active recording');
       }
 
       return new Promise((resolve, reject) => {
         this.mediaRecorder.onstop = () => {
           this.isRecording = false;
-          this.stopTimer();
-          
-          const blob = this.getRecordedBlob();
+          const blob = this.getRecordingBlob();
           resolve(blob);
+        };
+
+        this.mediaRecorder.onerror = (event) => {
+          this.isRecording = false;
+          reject(event.error);
         };
 
         this.mediaRecorder.stop();
@@ -154,48 +146,38 @@ class RecordingService {
 
   /**
    * إيقاف مؤقت للتسجيل
-   * 
-   * @returns {void}
    */
   pauseRecording() {
-    if (this.isRecording && this.mediaRecorder.state === 'recording') {
+    if (this.isRecording && this.mediaRecorder && this.mediaRecorder.state === 'recording') {
       this.mediaRecorder.pause();
-      this.stopTimer();
     }
   }
 
   /**
    * استئناف التسجيل
-   * 
-   * @returns {void}
    */
   resumeRecording() {
-    if (this.isRecording && this.mediaRecorder.state === 'paused') {
+    if (this.isRecording && this.mediaRecorder && this.mediaRecorder.state === 'paused') {
       this.mediaRecorder.resume();
-      this.startTimer();
     }
   }
 
   /**
-   * الحصول على Blob المسجل
-   * 
-   * @returns {Blob} ملف الفيديو
+   * الحصول على blob التسجيل
+   * @returns {Blob} blob التسجيل
    */
-  getRecordedBlob() {
+  getRecordingBlob() {
     if (this.recordedChunks.length === 0) {
       return null;
     }
 
-    const blob = new Blob(this.recordedChunks, {
+    return new Blob(this.recordedChunks, {
       type: this.options.mimeType,
     });
-
-    return blob;
   }
 
   /**
    * الحصول على مدة التسجيل
-   * 
    * @returns {number} المدة بالثواني
    */
   getRecordingDuration() {
@@ -203,48 +185,27 @@ class RecordingService {
       return 0;
     }
 
-    const duration = Math.floor((Date.now() - this.startTime) / 1000);
-    return duration;
+    const endTime = new Date();
+    return Math.floor((endTime - this.startTime) / 1000);
   }
 
   /**
-   * بدء مؤقت التسجيل
+   * الحصول على حجم التسجيل
+   * @returns {number} الحجم بالبايت
    */
-  startTimer() {
-    this.recordingTimer = setInterval(() => {
-      const duration = this.getRecordingDuration();
-      
-      // إطلاق حدث تحديث المدة
-      const event = new CustomEvent('recording-duration-update', {
-        detail: { duration },
-      });
-      window.dispatchEvent(event);
-    }, 1000);
+  getRecordingSize() {
+    const blob = this.getRecordingBlob();
+    return blob ? blob.size : 0;
   }
 
   /**
-   * إيقاف مؤقت التسجيل
-   */
-  stopTimer() {
-    if (this.recordingTimer) {
-      clearInterval(this.recordingTimer);
-      this.recordingTimer = null;
-    }
-  }
-
-  /**
-   * حفظ التسجيل كملف
-   * 
-   * @param {Blob} blob - ملف الفيديو
+   * تحميل التسجيل كملف
    * @param {string} filename - اسم الملف
-   * @returns {void}
-   * 
-   * Requirements: 2.5
    */
-  downloadRecording(blob, filename = 'interview-recording.webm') {
+  downloadRecording(filename = 'recording.webm') {
+    const blob = this.getRecordingBlob();
     if (!blob) {
-      console.error('No recording blob available');
-      return;
+      throw new Error('No recording available');
     }
 
     const url = URL.createObjectURL(blob);
@@ -252,11 +213,9 @@ class RecordingService {
     a.style.display = 'none';
     a.href = url;
     a.download = filename;
-    
     document.body.appendChild(a);
     a.click();
     
-    // تنظيف
     setTimeout(() => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
@@ -265,46 +224,41 @@ class RecordingService {
 
   /**
    * رفع التسجيل إلى الخادم
-   * 
    * @param {string} interviewId - معرف المقابلة
-   * @param {Blob} blob - ملف الفيديو
-   * @param {function} onProgress - callback لتتبع التقدم
-   * @returns {Promise<object>} نتيجة الرفع
-   * 
-   * Requirements: 2.4, 2.5
+   * @param {string} token - token المصادقة
+   * @returns {Promise<Object>} نتيجة الرفع
    */
-  async uploadRecording(interviewId, blob, onProgress = null) {
+  async uploadRecording(interviewId, token) {
     try {
+      const blob = this.getRecordingBlob();
       if (!blob) {
-        throw new Error('لا يوجد تسجيل للرفع');
+        throw new Error('No recording available');
       }
 
       // إنشاء FormData
       const formData = new FormData();
-      formData.append('video', blob, 'recording.webm');
+      formData.append('recording', blob, `interview-${interviewId}.webm`);
       formData.append('interviewId', interviewId);
+      formData.append('duration', this.getRecordingDuration());
+      formData.append('fileSize', blob.size);
 
-      // رفع الملف
-      const response = await fetch(`/api/interviews/${interviewId}/recording/upload`, {
+      // رفع إلى الخادم
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/recordings/upload`, {
         method: 'POST',
-        body: formData,
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
+        body: formData,
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.message || 'فشل رفع التسجيل');
+        throw new Error(error.message || 'Upload failed');
       }
 
       const result = await response.json();
-      
-      return {
-        success: true,
-        message: 'تم رفع التسجيل بنجاح',
-        recording: result.recording,
-      };
+      return result;
     } catch (error) {
       console.error('Error uploading recording:', error);
       throw error;
@@ -312,195 +266,82 @@ class RecordingService {
   }
 
   /**
-   * الحصول على معلومات التسجيل من الخادم
-   * 
-   * @param {string} interviewId - معرف المقابلة
-   * @returns {Promise<object>} معلومات التسجيل
+   * إعادة تعيين التسجيل
    */
-  async getRecordingInfo(interviewId) {
-    try {
-      const response = await fetch(`/api/interviews/${interviewId}/recording`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'فشل الحصول على معلومات التسجيل');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error getting recording info:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * إضافة موافقة على التسجيل
-   * 
-   * @param {string} interviewId - معرف المقابلة
-   * @param {boolean} consented - الموافقة
-   * @returns {Promise<object>} نتيجة الإضافة
-   * 
-   * Requirements: 2.3
-   */
-  async addRecordingConsent(interviewId, consented) {
-    try {
-      const response = await fetch(`/api/interviews/${interviewId}/recording/consent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify({ consented }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'فشل إضافة الموافقة');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error adding recording consent:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * التحقق من موافقة جميع المشاركين
-   * 
-   * @param {string} interviewId - معرف المقابلة
-   * @returns {Promise<object>} نتيجة التحقق
-   */
-  async checkAllConsents(interviewId) {
-    try {
-      const response = await fetch(`/api/interviews/${interviewId}/recording/consents`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'فشل التحقق من الموافقات');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error checking consents:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * بدء التسجيل على الخادم
-   * 
-   * @param {string} interviewId - معرف المقابلة
-   * @returns {Promise<object>} نتيجة بدء التسجيل
-   */
-  async startRecordingOnServer(interviewId) {
-    try {
-      const response = await fetch(`/api/interviews/${interviewId}/recording/start`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'فشل بدء التسجيل');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error starting recording on server:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * إيقاف التسجيل على الخادم
-   * 
-   * @param {string} interviewId - معرف المقابلة
-   * @returns {Promise<object>} نتيجة إيقاف التسجيل
-   */
-  async stopRecordingOnServer(interviewId) {
-    try {
-      const response = await fetch(`/api/interviews/${interviewId}/recording/stop`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'فشل إيقاف التسجيل');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Error stopping recording on server:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * تنظيف الموارد
-   */
-  cleanup() {
-    this.stopTimer();
-    
-    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
-      this.mediaRecorder.stop();
-    }
-    
+  reset() {
     this.mediaRecorder = null;
     this.recordedChunks = [];
     this.stream = null;
     this.isRecording = false;
     this.startTime = null;
+    this.recordingId = null;
   }
 
   /**
-   * التحقق من دعم المتصفح للتسجيل
-   * 
-   * @returns {boolean} true إذا كان المتصفح يدعم التسجيل
+   * التحقق من دعم التسجيل
+   * @returns {boolean}
    */
   static isSupported() {
-    return !!(navigator.mediaDevices && 
-              navigator.mediaDevices.getUserMedia && 
-              window.MediaRecorder);
+    return !!(window.MediaRecorder && navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
   }
 
   /**
-   * الحصول على معلومات الدعم
-   * 
-   * @returns {object} معلومات الدعم
+   * الحصول على قائمة mimeTypes المدعومة
+   * @returns {Array<string>}
    */
-  static getSupportInfo() {
-    return {
-      isSupported: RecordingService.isSupported(),
-      hasMediaDevices: !!navigator.mediaDevices,
-      hasGetUserMedia: !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia),
-      hasMediaRecorder: !!window.MediaRecorder,
-      supportedMimeTypes: [
-        'video/webm;codecs=vp9,opus',
-        'video/webm;codecs=vp8,opus',
-        'video/webm;codecs=h264,opus',
-        'video/webm',
-        'video/mp4',
-      ].filter(type => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(type)),
-    };
+  static getSupportedMimeTypes() {
+    const types = [
+      'video/webm;codecs=vp9,opus',
+      'video/webm;codecs=vp8,opus',
+      'video/webm;codecs=h264,opus',
+      'video/webm',
+      'video/mp4',
+    ];
+
+    return types.filter(type => MediaRecorder.isTypeSupported(type));
+  }
+
+  /**
+   * تقدير حجم التسجيل
+   * @param {number} durationSeconds - المدة بالثواني
+   * @param {number} videoBitrate - bitrate الفيديو
+   * @param {number} audioBitrate - bitrate الصوت
+   * @returns {number} الحجم المقدر بالبايت
+   */
+  static estimateRecordingSize(durationSeconds, videoBitrate = 2500000, audioBitrate = 128000) {
+    const totalBitrate = videoBitrate + audioBitrate;
+    return Math.floor((totalBitrate / 8) * durationSeconds);
+  }
+
+  /**
+   * تنسيق حجم الملف
+   * @param {number} bytes - الحجم بالبايت
+   * @returns {string} الحجم المنسق
+   */
+  static formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  /**
+   * تنسيق المدة
+   * @param {number} seconds - المدة بالثواني
+   * @returns {string} المدة المنسقة
+   */
+  static formatDuration(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   }
 }
 

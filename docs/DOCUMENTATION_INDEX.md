@@ -1,6 +1,6 @@
 # 📚 فهرس التوثيق الشامل - Careerak
 
-> **آخر تحديث**: 2026-03-02
+> **آخر تحديث**: 2026-03-03
 
 ---
 
@@ -47,6 +47,9 @@
 
 ### 14. **Frontend Fixes** - إصلاحات Frontend
 ملفات Image Upload، Responsive Design، Modal Fixes
+
+### 15. **Advanced Search** - البحث المتقدم (جديد)
+ملفات Bilingual Search، Autocomplete، Filters، Saved Searches
 
 ### 15. **Testing** - الاختبار
 ملفات Browser Testing، Mobile Testing، Integration Tests
@@ -273,3 +276,41 @@
 ---
 
 **ملاحظة**: هذا الفهرس يُحدّث تلقائياً. آخر تحديث: 2026-03-02
+
+
+---
+
+## 15. Advanced Search - البحث المتقدم
+
+### 📂 المجلد: `docs/Advanced Search/`
+
+#### ملفات دعم البحث ثنائي اللغة
+- **BILINGUAL_SEARCH_SUPPORT.md** - توثيق شامل لدعم البحث بالعربية والإنجليزية (500+ سطر)
+- **BILINGUAL_SEARCH_QUICK_START.md** - دليل البدء السريع (5 دقائق)
+- **BILINGUAL_SEARCH_IMPLEMENTATION_SUMMARY.md** - ملخص تنفيذي للإدارة
+- **README.md** - نظرة عامة على نظام البحث المتقدم
+
+#### الميزات المكتملة
+- ✅ البحث بالعربية في جميع الحقول
+- ✅ البحث بالإنجليزية في جميع الحقول
+- ✅ البحث المختلط (عربي + إنجليزي)
+- ✅ عدم حساسية لحالة الأحرف
+- ✅ Pagination و Sorting
+- ✅ 18 اختبار شامل (100% نجاح)
+
+#### الميزات القادمة
+- 🔜 نظام الاقتراحات التلقائية (Autocomplete)
+- 🔜 نظام الفلترة المتقدم
+- 🔜 حفظ عمليات البحث
+- 🔜 التنبيهات الذكية
+- 🔜 عرض الخريطة التفاعلية
+
+#### الملفات المرتبطة
+- Backend: `backend/src/services/searchService.js`
+- Model: `backend/src/models/JobPosting.js`
+- Tests: `backend/tests/bilingual-search.test.js`
+- Spec: `.kiro/specs/advanced-search-filter/`
+
+---
+
+**ملاحظة**: هذا الفهرس يُحدّث تلقائياً. آخر تحديث: 2026-03-03

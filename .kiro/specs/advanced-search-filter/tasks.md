@@ -23,7 +23,7 @@
   - _Requirements: جميع المتطلبات التقنية_
 
 - [ ] 2. تنفيذ محرك البحث الأساسي
-  - [ ] 2.1 إنشاء SearchService مع البحث النصي
+  - [x] 2.1 إنشاء SearchService مع البحث النصي
     - تنفيذ البحث في الحقول المتعددة (title, description, skills, company.name)
     - دعم البحث بالعربية والإنجليزية
     - إضافة pagination و sorting
@@ -33,12 +33,12 @@
     - **Property 1: Multi-field Search Coverage**
     - **Validates: Requirements 1.1**
   
-  - [ ]* 2.3 كتابة property test للدعم ثنائي اللغة
+  - [x]* 2.3 كتابة property test للدعم ثنائي اللغة
     - **Property 3: Bilingual Search Support**
     - **Validates: Requirements 1.4**
 
 - [ ] 3. تنفيذ نظام الاقتراحات التلقائية (Autocomplete)
-  - [ ] 3.1 إنشاء Autocomplete API endpoint
+  - [x] 3.1 إنشاء Autocomplete API endpoint
     - تنفيذ منطق الاقتراحات بناءً على البحث السابق
     - إضافة حد أدنى 3 أحرف للاقتراحات
     - تحسين الأداء مع caching
@@ -49,8 +49,8 @@
     - **Validates: Requirements 1.3**
 
 
-- [ ] 4. تنفيذ نظام الفلترة المتقدم
-  - [ ] 4.1 إنشاء FilterService مع جميع أنواع الفلاتر
+- [x] 4. تنفيذ نظام الفلترة المتقدم
+  - [x] 4.1 إنشاء FilterService مع جميع أنواع الفلاتر
     - فلترة حسب الراتب (نطاق من-إلى)
     - فلترة حسب الموقع (المدينة/الدولة)
     - فلترة حسب نوع العمل (دوام كامل، جزئي، عن بعد، هجين)
@@ -67,7 +67,7 @@
     - **Property 6: Result Count Accuracy**
     - **Validates: Requirements 2.4**
   
-  - [ ] 4.4 تنفيذ حفظ الفلاتر في URL
+  - [x] 4.4 تنفيذ حفظ الفلاتر في URL
     - إنشاء دوال serializeFiltersToURL و deserializeFiltersFromURL
     - دعم مشاركة الروابط مع الفلاتر
     - _Requirements: 2.3_
@@ -76,7 +76,7 @@
     - **Property 5: Filter URL Persistence**
     - **Validates: Requirements 2.3**
   
-  - [ ] 4.6 تنفيذ زر "مسح الفلاتر"
+  - [x] 4.6 تنفيذ زر "مسح الفلاتر"
     - إعادة الحالة للوضع الافتراضي
     - _Requirements: 2.5_
   
@@ -91,27 +91,27 @@
 
 
 - [ ] 6. تنفيذ نظام حفظ عمليات البحث
-  - [ ] 6.1 إنشاء SavedSearchService
+  - [x] 6.1 إنشاء SavedSearchService
     - تنفيذ CRUD operations لعمليات البحث المحفوظة
     - إضافة قيد 10 عمليات بحث كحد أقصى لكل مستخدم
     - _Requirements: 3.1, 3.2_
   
-  - [ ]* 6.2 كتابة property test لحد عمليات البحث المحفوظة
+  - [x]* 6.2 كتابة property test لحد عمليات البحث المحفوظة
     - **Property 8: Saved Search Limit Enforcement**
     - **Validates: Requirements 3.1**
   
-  - [ ]* 6.3 كتابة property test لـ round-trip عمليات البحث
+  - [x]* 6.3 كتابة property test لـ round-trip عمليات البحث
     - **Property 9: Saved Search Round-trip**
     - **Validates: Requirements 3.2**
   
-  - [ ] 6.4 إنشاء API endpoints لعمليات البحث المحفوظة
+  - [x] 6.4 إنشاء API endpoints لعمليات البحث المحفوظة
     - POST /api/search/saved - حفظ عملية بحث
     - GET /api/search/saved - جلب العمليات المحفوظة
     - PUT /api/search/saved/:id - تعديل عملية بحث
     - DELETE /api/search/saved/:id - حذف عملية بحث
     - _Requirements: 3.2_
   
-  - [ ] 6.5 إضافة إشعارات لعمليات الحفظ/التعديل/الحذف
+  - [x] 6.5 إضافة إشعارات لعمليات الحفظ/التعديل/الحذف
     - دمج مع نظام الإشعارات الموجود
     - _Requirements: 3.4_
   
@@ -120,7 +120,7 @@
     - **Validates: Requirements 3.4**
 
 - [ ] 7. تنفيذ نظام التنبيهات الذكية
-  - [ ] 7.1 إنشاء AlertService
+  - [x] 7.1 إنشاء AlertService
     - تنفيذ منطق فحص النتائج الجديدة
     - دعم التنبيهات الفورية واليومية والأسبوعية
     - منع التنبيهات المكررة
@@ -130,7 +130,7 @@
     - **Property 11: Alert Triggering on New Match**
     - **Validates: Requirements 4.1**
   
-  - [ ]* 7.3 كتابة property test لمنع التكرار
+  - [x]* 7.3 كتابة property test لمنع التكرار
     - **Property 14: Alert Deduplication**
     - **Validates: Requirements 4.4**
   
@@ -141,11 +141,11 @@
     - DELETE /api/search/alerts/:id - حذف تنبيه
     - _Requirements: 4.2_
   
-  - [ ]* 7.5 كتابة property test لتفعيل/تعطيل التنبيهات
+  - [x]* 7.5 كتابة property test لتفعيل/تعطيل التنبيهات
     - **Property 12: Alert Toggle Behavior**
     - **Validates: Requirements 4.2**
   
-  - [ ] 7.6 إضافة روابط مباشرة في الإشعارات
+  - [x] 7.6 إضافة روابط مباشرة في الإشعارات
     - تضمين رابط الوظيفة في كل إشعار
     - _Requirements: 4.3_
   
@@ -187,12 +187,12 @@
     - **Validates: Requirements 6.3**
 
 - [ ] 10. تنفيذ عرض الخريطة التفاعلية
-  - [ ] 10.1 إضافة Geo indexes لـ JobPosting
+  - [x] 10.1 إضافة Geo indexes لـ JobPosting
     - إضافة 2dsphere index للإحداثيات
     - تحديث نموذج JobPosting بحقل location.coordinates
     - _Requirements: 5.1_
   
-  - [ ] 10.2 إنشاء Map Search API endpoint
+  - [x] 10.2 إنشاء Map Search API endpoint
     - GET /api/search/map - البحث بناءً على حدود جغرافية
     - دعم البحث داخل دائرة أو مربع
     - _Requirements: 5.2_
@@ -205,7 +205,7 @@
     - **Property 16: Geographic Boundary Filtering**
     - **Validates: Requirements 5.2**
   
-  - [ ] 10.5 إضافة دعم ثنائي اللغة للخريطة
+  - [x] 10.5 إضافة دعم ثنائي اللغة للخريطة
     - تعريب واجهة الخريطة
     - _Requirements: 5.4_
   
@@ -239,7 +239,7 @@
     - pagination
     - _Requirements: 6.4_
   
-  - [ ] 12.4 إنشاء MapView Component
+  - [x] 12.4 إنشاء MapView Component
     - تكامل مع Google Maps أو Mapbox
     - عرض علامات الوظائف
     - clustering للعلامات
@@ -258,7 +258,7 @@
     - اختيار التكرار وطريقة الإشعار
     - _Requirements: 4.2_
   
-  - [ ] 12.7 إنشاء SearchPage الرئيسية
+  - [x] 12.7 إنشاء SearchPage الرئيسية
     - دمج جميع المكونات
     - التبديل بين عرض القائمة والخريطة
     - حفظ حالة البحث في URL

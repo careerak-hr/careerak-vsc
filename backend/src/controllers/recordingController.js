@@ -1,330 +1,382 @@
-const recordingService = require('../services/recordingService');
-const recordingCleanupCron = require('../jobs/recordingCleanupCron');
-const logger = require('../utils/logger');
+const RecordingService = require('../services/recordingService');
+const VideoInterview = require('../models/VideoInterview');
+const InterviewRecording = require('../models/InterviewRecording');
+
+const recordingService = new RecordingService();
 
 /**
- * بدء تسجيل جديد
+ * Recording Controller
+ * معالجة طلبات التسجيل والموافقات
+ * 
+ * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5, 2.6
  */
-exports.startRecording = async (req, res) => {
-  try {
-    const { interviewId, retentionDays } = req.body;
 
-    if (!interviewId) {
+/**
+ * بدء تسجيل مقابلة
+ * POST /api/recordings/start
+ */
+const startRecording = async (req, res) => {
+  try {
+    const { interviewId } = req.body;
+    const userId = req.user._id;
+
+    const result = await recordingService.startRecording(interviewId, userId);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error starting recording:', error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * إيقاف تسجيل مقابلة
+ * POST /api/recordings/stop
+ */
+const stopRecording = async (req, res) => {
+  try {
+    const { interviewId } = req.body;
+    const userId = req.user._id;
+
+    const result = await recordingService.stopRecording(interviewId, userId);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error stopping recording:', error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * رفع تسجيل مقابلة
+ * POST /api/recordings/upload
+ */
+const uploadRecording = async (req, res) => {
+  try {
+    if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: 'Interview ID is required'
+        message: 'No recording file provided',
       });
     }
 
-    const recording = await recordingService.startRecording(
+    const { interviewId, duration, fileSize } = req.body;
+    const userId = req.user._id;
+
+    // التحقق من صلاحية الوصول
+    const interview = await VideoInterview.findById(interviewId);
+    if (!interview) {
+      return res.status(404).json({
+        success: false,
+        message: 'Interview not found',
+      });
+    }
+
+    if (interview.hostId.toString() !== userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Only the host can upload recordings',
+      });
+    }
+
+    // الحصول على recordingId من المقابلة
+    const recording = await InterviewRecording.findOne({
       interviewId,
-      retentionDays || 90
-    );
-
-    res.status(201).json({
-      success: true,
-      message: 'Recording started successfully',
-      data: recording
+      status: 'processing',
     });
-  } catch (error) {
-    logger.error('Error in startRecording:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to start recording',
-      error: error.message
-    });
-  }
-};
 
-/**
- * إيقاف التسجيل
- */
-exports.stopRecording = async (req, res) => {
-  try {
-    const { recordingId } = req.params;
-    const { fileUrl, fileSize, duration } = req.body;
-
-    if (!fileUrl) {
-      return res.status(400).json({
+    if (!recording) {
+      return res.status(404).json({
         success: false,
-        message: 'File URL is required'
+        message: 'Recording not found',
       });
     }
 
-    const recording = await recordingService.stopRecording(
-      recordingId,
-      fileUrl,
-      fileSize,
-      duration
+    // رفع الملف
+    const result = await recordingService.uploadRecording(
+      recording.recordingId,
+      req.file.buffer || req.file.path
     );
 
-    res.json({
-      success: true,
-      message: 'Recording stopped successfully',
-      data: recording
-    });
+    // توليد صورة مصغرة
+    await recordingService.generateThumbnail(recording.recordingId);
+
+    // جدولة الحذف التلقائي
+    await recordingService.scheduleDelete(recording.recordingId);
+
+    res.status(200).json(result);
   } catch (error) {
-    logger.error('Error in stopRecording:', error);
+    console.error('Error uploading recording:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to stop recording',
-      error: error.message
+      message: error.message,
     });
   }
 };
 
 /**
- * معالجة التسجيل
+ * إضافة موافقة على التسجيل
+ * POST /api/interviews/:interviewId/recording-consent
  */
-exports.processRecording = async (req, res) => {
+const addRecordingConsent = async (req, res) => {
   try {
-    const { recordingId } = req.params;
+    const { interviewId } = req.params;
+    const { consented } = req.body;
+    const userId = req.user._id;
 
-    const recording = await recordingService.processRecording(recordingId);
-
-    res.json({
-      success: true,
-      message: 'Recording processed successfully',
-      data: recording
-    });
-  } catch (error) {
-    logger.error('Error in processRecording:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to process recording',
-      error: error.message
-    });
-  }
-};
-
-/**
- * جدولة حذف التسجيل
- */
-exports.scheduleDelete = async (req, res) => {
-  try {
-    const { recordingId } = req.params;
-    const { retentionDays } = req.body;
-
-    const result = await recordingService.scheduleDelete(
-      recordingId,
-      retentionDays
-    );
-
-    res.json({
-      success: true,
-      message: 'Delete scheduled successfully',
-      data: result
-    });
-  } catch (error) {
-    logger.error('Error in scheduleDelete:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to schedule delete',
-      error: error.message
-    });
-  }
-};
-
-/**
- * تحديث فترة الاحتفاظ
- */
-exports.updateRetentionPeriod = async (req, res) => {
-  try {
-    const { recordingId } = req.params;
-    const { retentionDays } = req.body;
-
-    if (!retentionDays || retentionDays < 1 || retentionDays > 365) {
-      return res.status(400).json({
+    const interview = await VideoInterview.findById(interviewId);
+    if (!interview) {
+      return res.status(404).json({
         success: false,
-        message: 'Retention days must be between 1 and 365'
+        message: 'Interview not found',
       });
     }
 
-    const recording = await recordingService.updateRetentionPeriod(
-      recordingId,
-      retentionDays
+    // التحقق من أن المستخدم مشارك في المقابلة
+    const isParticipant = interview.participants.some(
+      p => p.userId.toString() === userId.toString()
     );
 
-    res.json({
+    if (!isParticipant) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not a participant in this interview',
+      });
+    }
+
+    // إضافة الموافقة
+    await interview.addRecordingConsent(userId, consented);
+
+    res.status(200).json({
       success: true,
-      message: 'Retention period updated successfully',
-      data: recording
+      message: consented ? 'Consent given successfully' : 'Consent denied',
+      hasAllConsents: interview.hasAllConsents(),
     });
   } catch (error) {
-    logger.error('Error in updateRetentionPeriod:', error);
+    console.error('Error adding recording consent:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update retention period',
-      error: error.message
+      message: error.message,
     });
   }
 };
 
 /**
- * حذف تسجيل يدوياً
+ * الحصول على حالة الموافقات
+ * GET /api/interviews/:interviewId/recording-consents
  */
-exports.deleteRecording = async (req, res) => {
+const getRecordingConsents = async (req, res) => {
+  try {
+    const { interviewId } = req.params;
+    const userId = req.user._id;
+
+    const interview = await VideoInterview.findById(interviewId)
+      .populate('participants.userId', 'name email')
+      .populate('recordingConsent.userId', 'name email');
+
+    if (!interview) {
+      return res.status(404).json({
+        success: false,
+        message: 'Interview not found',
+      });
+    }
+
+    // التحقق من صلاحية الوصول
+    const isParticipant = interview.participants.some(
+      p => p.userId._id.toString() === userId.toString()
+    );
+
+    if (!isParticipant) {
+      return res.status(403).json({
+        success: false,
+        message: 'You are not a participant in this interview',
+      });
+    }
+
+    // تنسيق الموافقات
+    const consents = interview.recordingConsent.map(consent => ({
+      userId: consent.userId._id,
+      userName: consent.userId.name,
+      consented: consent.consented,
+      consentedAt: consent.consentedAt,
+    }));
+
+    res.status(200).json({
+      success: true,
+      consents,
+      hasAllConsents: interview.hasAllConsents(),
+    });
+  } catch (error) {
+    console.error('Error getting recording consents:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * الحصول على معلومات تسجيل
+ * GET /api/recordings/:recordingId
+ */
+const getRecording = async (req, res) => {
   try {
     const { recordingId } = req.params;
     const userId = req.user._id;
-    const { reason } = req.body;
 
-    const recording = await recordingService.deleteRecording(
-      recordingId,
-      userId,
-      reason || 'manual'
-    );
+    // التحقق من صلاحية الوصول
+    const canAccess = await recordingService.canAccessRecording(recordingId, userId);
+    if (!canAccess) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have access to this recording',
+      });
+    }
 
-    res.json({
+    const recording = await recordingService.getRecordingInfo(recordingId);
+
+    res.status(200).json({
       success: true,
-      message: 'Recording deleted successfully',
-      data: recording
+      recording,
     });
   } catch (error) {
-    logger.error('Error in deleteRecording:', error);
+    console.error('Error getting recording:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to delete recording',
-      error: error.message
-    });
-  }
-};
-
-/**
- * الحصول على تسجيل
- */
-exports.getRecording = async (req, res) => {
-  try {
-    const { recordingId } = req.params;
-
-    const recording = await recordingService.getRecording(recordingId);
-
-    res.json({
-      success: true,
-      data: recording
-    });
-  } catch (error) {
-    logger.error('Error in getRecording:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get recording',
-      error: error.message
-    });
-  }
-};
-
-/**
- * الحصول على تسجيلات مقابلة
- */
-exports.getInterviewRecordings = async (req, res) => {
-  try {
-    const { interviewId } = req.params;
-
-    const recordings = await recordingService.getInterviewRecordings(interviewId);
-
-    res.json({
-      success: true,
-      data: recordings
-    });
-  } catch (error) {
-    logger.error('Error in getInterviewRecordings:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get interview recordings',
-      error: error.message
+      message: error.message,
     });
   }
 };
 
 /**
  * تحميل تسجيل
+ * GET /api/recordings/:recordingId/download
  */
-exports.downloadRecording = async (req, res) => {
+const downloadRecording = async (req, res) => {
   try {
     const { recordingId } = req.params;
+    const userId = req.user._id;
 
-    const recording = await recordingService.incrementDownloadCount(recordingId);
+    // التحقق من صلاحية الوصول
+    const canAccess = await recordingService.canAccessRecording(recordingId, userId);
+    if (!canAccess) {
+      return res.status(403).json({
+        success: false,
+        message: 'You do not have access to this recording',
+      });
+    }
 
-    res.json({
-      success: true,
-      message: 'Download URL generated',
-      data: {
-        downloadUrl: recording.fileUrl,
-        expiresAt: recording.expiresAt
+    const recording = await recordingService.getRecordingInfo(recordingId);
+
+    if (!recording || !recording.fileUrl) {
+      return res.status(404).json({
+        success: false,
+        message: 'Recording file not found',
+      });
+    }
+
+    // زيادة عداد التحميل
+    await recordingService.incrementDownloadCount(recordingId);
+
+    // إعادة توجيه إلى رابط Cloudinary
+    res.redirect(recording.fileUrl);
+  } catch (error) {
+    console.error('Error downloading recording:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * حذف تسجيل
+ * DELETE /api/recordings/:recordingId
+ */
+const deleteRecording = async (req, res) => {
+  try {
+    const { recordingId } = req.params;
+    const userId = req.user._id;
+
+    // التحقق من صلاحية الحذف (المضيف فقط)
+    const recording = await recordingService.getRecordingInfo(recordingId);
+    if (!recording) {
+      return res.status(404).json({
+        success: false,
+        message: 'Recording not found',
+      });
+    }
+
+    const interview = recording.interviewId;
+    if (interview.hostId.toString() !== userId.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Only the host can delete recordings',
+      });
+    }
+
+    const result = await recordingService.deleteRecording(recordingId, userId, 'manual');
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error deleting recording:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/**
+ * الحصول على التسجيلات التي ستنتهي قريباً
+ * GET /api/recordings/expiring-soon
+ */
+const getExpiringSoonRecordings = async (req, res) => {
+  try {
+    const { daysAhead = 7 } = req.query;
+    const userId = req.user._id;
+
+    const recordings = await recordingService.getExpiringSoonRecordings(parseInt(daysAhead));
+
+    // تصفية التسجيلات التي يمكن للمستخدم الوصول إليها
+    const accessibleRecordings = [];
+    for (const recording of recordings) {
+      const canAccess = await recordingService.canAccessRecording(recording.recordingId, userId);
+      if (canAccess) {
+        accessibleRecordings.push(recording);
       }
+    }
+
+    res.status(200).json({
+      success: true,
+      recordings: accessibleRecordings,
+      count: accessibleRecordings.length,
     });
   } catch (error) {
-    logger.error('Error in downloadRecording:', error);
+    console.error('Error getting expiring soon recordings:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to generate download URL',
-      error: error.message
+      message: error.message,
     });
   }
 };
 
-/**
- * الحصول على إحصائيات التسجيلات
- */
-exports.getRecordingStats = async (req, res) => {
-  try {
-    const stats = await recordingService.getRecordingStats();
+// لا حاجة لإعادة التصدير - exports تم تعريفها بالفعل في الأعلى
 
-    res.json({
-      success: true,
-      data: stats
-    });
-  } catch (error) {
-    logger.error('Error in getRecordingStats:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get recording stats',
-      error: error.message
-    });
-  }
-};
-
-/**
- * تشغيل التنظيف يدوياً (للأدمن فقط)
- */
-exports.runCleanupManually = async (req, res) => {
-  try {
-    await recordingCleanupCron.runManually();
-
-    const stats = recordingCleanupCron.getStats();
-
-    res.json({
-      success: true,
-      message: 'Cleanup completed',
-      data: stats
-    });
-  } catch (error) {
-    logger.error('Error in runCleanupManually:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to run cleanup',
-      error: error.message
-    });
-  }
-};
-
-/**
- * الحصول على إحصائيات Cron Job
- */
-exports.getCleanupStats = async (req, res) => {
-  try {
-    const stats = recordingCleanupCron.getStats();
-
-    res.json({
-      success: true,
-      data: stats
-    });
-  } catch (error) {
-    logger.error('Error in getCleanupStats:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get cleanup stats',
-      error: error.message
-    });
-  }
+module.exports = {
+  startRecording,
+  stopRecording,
+  uploadRecording,
+  addRecordingConsent,
+  getRecordingConsents,
+  getRecording,
+  downloadRecording,
+  deleteRecording,
+  getExpiringSoonRecordings,
 };

@@ -1,329 +1,367 @@
+import React, { useState, useEffect } from 'react';
+import ScreenShareService from '../services/ScreenShareService';
+import ScreenShareControls from '../components/VideoCall/ScreenShareControls';
+import ScreenShareDisplay from '../components/VideoCall/ScreenShareDisplay';
+
 /**
- * Screen Share Example
- * مثال كامل لاستخدام مشاركة الشاشة
+ * ScreenShareExample Component
+ * مثال على استخدام مشاركة الشاشة
+ * 
+ * Demonstrates:
+ * - Starting screen share
+ * - Stopping screen share
+ * - Switching sources
+ * - Displaying shared screen
+ * - Quality indicators
+ * 
+ * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
  */
-
-import React, { useState, useEffect, useRef } from 'react';
-import ScreenShareControls from '../components/VideoInterview/ScreenShareControls';
-import ScreenShareService from '../services/screenShareService';
-
 const ScreenShareExample = () => {
+  const [screenShareService] = useState(() => new ScreenShareService());
   const [isSharing, setIsSharing] = useState(false);
-  const [shareInfo, setShareInfo] = useState(null);
-  const [remoteStream, setRemoteStream] = useState(null);
-  const localVideoRef = useRef(null);
-  const remoteVideoRef = useRef(null);
-  const screenShareService = useRef(new ScreenShareService());
+  const [screenStream, setScreenStream] = useState(null);
+  const [currentSource, setCurrentSource] = useState(null);
+  const [screenShareSettings, setScreenShareSettings] = useState(null);
+  const [language, setLanguage] = useState('ar');
+  const [error, setError] = useState(null);
 
-  /**
-   * معالج بدء مشاركة الشاشة
-   */
-  const handleScreenShareStart = (stream) => {
-    console.log('Screen share started:', stream);
-    setIsSharing(true);
+  // Check if screen sharing is supported
+  const isSupported = ScreenShareService.isSupported();
 
-    // عرض المشاركة المحلية
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = stream;
-    }
-
-    // الحصول على معلومات المشاركة
-    const info = screenShareService.current.getCurrentScreenShare();
-    setShareInfo(info);
-
-    // في التطبيق الحقيقي، سترسل stream عبر WebRTC
-    // peerConnection.addStream(stream);
-  };
-
-  /**
-   * معالج إيقاف مشاركة الشاشة
-   */
-  const handleScreenShareStop = () => {
-    console.log('Screen share stopped');
-    setIsSharing(false);
-    setShareInfo(null);
-
-    // إيقاف عرض المشاركة المحلية
-    if (localVideoRef.current) {
-      localVideoRef.current.srcObject = null;
-    }
-
-    // في التطبيق الحقيقي، ستزيل stream من WebRTC
-    // peerConnection.removeStream(stream);
-  };
-
-  /**
-   * محاكاة استقبال مشاركة شاشة من مستخدم آخر
-   */
-  const simulateRemoteScreenShare = async () => {
-    try {
-      // في التطبيق الحقيقي، ستستقبل stream عبر WebRTC
-      // هنا نحاكي ذلك بالحصول على stream محلي
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { width: 1280, height: 720 }
-      });
-
-      setRemoteStream(stream);
-
-      if (remoteVideoRef.current) {
-        remoteVideoRef.current.srcObject = stream;
-      }
-
-      // إيقاف المحاكاة بعد 10 ثواني
-      setTimeout(() => {
-        stream.getTracks().forEach(track => track.stop());
-        setRemoteStream(null);
-        if (remoteVideoRef.current) {
-          remoteVideoRef.current.srcObject = null;
-        }
-      }, 10000);
-    } catch (error) {
-      console.error('Error simulating remote screen share:', error);
-    }
-  };
-
-  /**
-   * تحديث معلومات المشاركة كل ثانية
-   */
+  // Update state when sharing status changes
   useEffect(() => {
-    if (!isSharing) return;
+    const updateState = () => {
+      setIsSharing(screenShareService.isScreenSharing());
+      setScreenStream(screenShareService.getScreenStream());
+      setCurrentSource(screenShareService.getCurrentSource());
+      setScreenShareSettings(screenShareService.getScreenShareSettings());
+    };
 
-    const interval = setInterval(() => {
-      const info = screenShareService.current.getCurrentScreenShare();
-      setShareInfo(info);
-    }, 1000);
+    // Update immediately
+    updateState();
+
+    // Set up interval to check for changes
+    const interval = setInterval(updateState, 1000);
 
     return () => clearInterval(interval);
-  }, [isSharing]);
+  }, [screenShareService]);
 
-  /**
-   * تنسيق المدة
-   */
-  const formatDuration = (ms) => {
-    if (!ms) return '0:00';
-    const seconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(seconds / 60);
-    return `${minutes}:${String(seconds % 60).padStart(2, '0')}`;
+  const handleStartSharing = async (options) => {
+    try {
+      setError(null);
+      const stream = await screenShareService.startScreenShare(options);
+      setScreenStream(stream);
+      setIsSharing(true);
+      setCurrentSource(screenShareService.getCurrentSource());
+      setScreenShareSettings(screenShareService.getScreenShareSettings());
+      
+      console.log('Screen sharing started successfully');
+    } catch (err) {
+      console.error('Failed to start screen sharing:', err);
+      setError(err.message);
+    }
   };
+
+  const handleStopSharing = async () => {
+    try {
+      setError(null);
+      screenShareService.stopScreenShare();
+      setScreenStream(null);
+      setIsSharing(false);
+      setCurrentSource(null);
+      setScreenShareSettings(null);
+      
+      console.log('Screen sharing stopped successfully');
+    } catch (err) {
+      console.error('Failed to stop screen sharing:', err);
+      setError(err.message);
+    }
+  };
+
+  const handleSwitchSource = async (options) => {
+    try {
+      setError(null);
+      const stream = await screenShareService.switchSource(options);
+      setScreenStream(stream);
+      setCurrentSource(screenShareService.getCurrentSource());
+      setScreenShareSettings(screenShareService.getScreenShareSettings());
+      
+      console.log('Screen share source switched successfully');
+    } catch (err) {
+      console.error('Failed to switch source:', err);
+      setError(err.message);
+    }
+  };
+
+  if (!isSupported) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.error}>
+          <h2>❌ Screen Sharing Not Supported</h2>
+          <p>Your browser does not support screen sharing.</p>
+          <p>Please use a modern browser like Chrome, Firefox, or Edge.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>مثال مشاركة الشاشة</h1>
-
-      {/* أزرار التحكم */}
-      <div style={styles.controls}>
-        <ScreenShareControls
-          onScreenShareStart={handleScreenShareStart}
-          onScreenShareStop={handleScreenShareStop}
-          language="ar"
-        />
-
-        <button
-          style={styles.simulateButton}
-          onClick={simulateRemoteScreenShare}
-          disabled={!!remoteStream}
-        >
-          محاكاة مشاركة شاشة بعيدة
-        </button>
+      <div style={styles.header}>
+        <h1>🖥️ Screen Share Example</h1>
+        <p>مثال على مشاركة الشاشة مع دعم 1080p</p>
+        
+        {/* Language Selector */}
+        <div style={styles.languageSelector}>
+          <button
+            style={{
+              ...styles.langBtn,
+              ...(language === 'ar' ? styles.langBtnActive : {})
+            }}
+            onClick={() => setLanguage('ar')}
+          >
+            العربية
+          </button>
+          <button
+            style={{
+              ...styles.langBtn,
+              ...(language === 'en' ? styles.langBtnActive : {})
+            }}
+            onClick={() => setLanguage('en')}
+          >
+            English
+          </button>
+          <button
+            style={{
+              ...styles.langBtn,
+              ...(language === 'fr' ? styles.langBtnActive : {})
+            }}
+            onClick={() => setLanguage('fr')}
+          >
+            Français
+          </button>
+        </div>
       </div>
 
-      {/* معلومات المشاركة */}
-      {shareInfo && (
-        <div style={styles.info}>
-          <h3>معلومات المشاركة:</h3>
-          <ul>
-            <li>النوع: {shareInfo.shareType}</li>
-            <li>المدة: {formatDuration(shareInfo.duration)}</li>
-            <li>الجودة: {shareInfo.settings?.width}x{shareInfo.settings?.height}</li>
-            <li>معدل الإطارات: {shareInfo.settings?.frameRate} fps</li>
-          </ul>
+      {/* Error Display */}
+      {error && (
+        <div style={styles.errorBanner}>
+          <span>⚠️</span>
+          <span>{error}</span>
+          <button onClick={() => setError(null)} style={styles.closeBtn}>
+            ✕
+          </button>
         </div>
       )}
 
-      {/* عرض الفيديو */}
-      <div style={styles.videoContainer}>
-        {/* المشاركة المحلية */}
-        <div style={styles.videoBox}>
-          <h3>مشاركتي</h3>
-          <video
-            ref={localVideoRef}
-            autoPlay
-            muted
-            style={styles.video}
-          />
-          {!isSharing && (
-            <div style={styles.placeholder}>
-              لا توجد مشاركة نشطة
-            </div>
-          )}
-        </div>
+      {/* Screen Share Controls */}
+      <div style={styles.controls}>
+        <ScreenShareControls
+          isSharing={isSharing}
+          onStartSharing={handleStartSharing}
+          onStopSharing={handleStopSharing}
+          onSwitchSource={handleSwitchSource}
+          currentSource={currentSource}
+          screenShareSettings={screenShareSettings}
+          language={language}
+          showSourceSelector={true}
+          showQualityIndicator={true}
+        />
+      </div>
 
-        {/* المشاركة البعيدة */}
-        <div style={styles.videoBox}>
-          <h3>مشاركة المستخدم الآخر</h3>
-          <video
-            ref={remoteVideoRef}
-            autoPlay
-            style={styles.video}
-          />
-          {!remoteStream && (
-            <div style={styles.placeholder}>
-              لا توجد مشاركة بعيدة
-            </div>
+      {/* Screen Share Display */}
+      <div style={styles.display}>
+        <ScreenShareDisplay
+          screenStream={screenStream}
+          isSharing={isSharing}
+          sharerName="You"
+          currentSource={currentSource}
+          screenShareSettings={screenShareSettings}
+          language={language}
+          showControls={true}
+        />
+      </div>
+
+      {/* Info Panel */}
+      <div style={styles.infoPanel}>
+        <h3>📊 Screen Share Info</h3>
+        <div style={styles.infoGrid}>
+          <div style={styles.infoItem}>
+            <strong>Status:</strong>
+            <span style={{
+              color: isSharing ? '#4CAF50' : '#666',
+              fontWeight: 600
+            }}>
+              {isSharing ? '🟢 Sharing' : '⚪ Not Sharing'}
+            </span>
+          </div>
+          
+          {screenShareSettings && (
+            <>
+              <div style={styles.infoItem}>
+                <strong>Resolution:</strong>
+                <span>{screenShareSettings.width}x{screenShareSettings.height}</span>
+              </div>
+              
+              <div style={styles.infoItem}>
+                <strong>Quality:</strong>
+                <span style={{ color: '#4CAF50', fontWeight: 600 }}>
+                  {screenShareSettings.quality}
+                </span>
+              </div>
+              
+              <div style={styles.infoItem}>
+                <strong>Frame Rate:</strong>
+                <span>{screenShareSettings.frameRate} FPS</span>
+              </div>
+              
+              <div style={styles.infoItem}>
+                <strong>Source:</strong>
+                <span>{currentSource || 'N/A'}</span>
+              </div>
+              
+              <div style={styles.infoItem}>
+                <strong>Display Surface:</strong>
+                <span>{screenShareSettings.displaySurface}</span>
+              </div>
+              
+              <div style={styles.infoItem}>
+                <strong>Cursor:</strong>
+                <span>{screenShareSettings.cursor}</span>
+              </div>
+              
+              <div style={styles.infoItem}>
+                <strong>HD Quality:</strong>
+                <span style={{
+                  color: screenShareSettings.isHD ? '#4CAF50' : '#F44336',
+                  fontWeight: 600
+                }}>
+                  {screenShareSettings.isHD ? '✅ Yes' : '❌ No'}
+                </span>
+              </div>
+            </>
           )}
         </div>
       </div>
 
-      {/* أمثلة الكود */}
-      <div style={styles.codeExamples}>
-        <h3>أمثلة الكود:</h3>
-
-        <div style={styles.codeBlock}>
-          <h4>1. مشاركة الشاشة الكاملة (1080p)</h4>
-          <pre style={styles.code}>
-{`const service = new ScreenShareService();
-const result = await service.startScreenShare({
-  quality: 'high' // 1920x1080 @ 60fps
-});
-console.log('Sharing:', result.shareType);`}
-          </pre>
-        </div>
-
-        <div style={styles.codeBlock}>
-          <h4>2. مشاركة نافذة محددة (720p)</h4>
-          <pre style={styles.code}>
-{`const result = await service.startScreenShare({
-  preferWindow: true,
-  quality: 'medium' // 1280x720 @ 30fps
-});`}
-          </pre>
-        </div>
-
-        <div style={styles.codeBlock}>
-          <h4>3. مشاركة تبويب المتصفح (480p)</h4>
-          <pre style={styles.code}>
-{`const result = await service.startScreenShare({
-  preferCurrentTab: true,
-  quality: 'low' // 854x480 @ 15fps
-});`}
-          </pre>
-        </div>
-
-        <div style={styles.codeBlock}>
-          <h4>4. إيقاف المشاركة</h4>
-          <pre style={styles.code}>
-{`service.stopScreenShare();`}
-          </pre>
-        </div>
-
-        <div style={styles.codeBlock}>
-          <h4>5. التحقق من الحالة</h4>
-          <pre style={styles.code}>
-{`const isActive = service.isScreenShareActive();
-const info = service.getCurrentScreenShare();
-console.log('Duration:', info.duration);`}
-          </pre>
-        </div>
-      </div>
-
-      {/* ملاحظات */}
-      <div style={styles.notes}>
-        <h3>ملاحظات مهمة:</h3>
+      {/* Instructions */}
+      <div style={styles.instructions}>
+        <h3>📝 Instructions</h3>
+        <ol>
+          <li>Click "Share Screen" button to start sharing</li>
+          <li>Select what you want to share (entire screen, window, or tab)</li>
+          <li>Your screen will be displayed in the preview area</li>
+          <li>Click "Switch Source" to change what you're sharing</li>
+          <li>Click "Stop Sharing" to end the screen share</li>
+        </ol>
+        
+        <h4>Features:</h4>
         <ul>
-          <li>✅ مشاركة الشاشة تعمل فقط على HTTPS</li>
-          <li>✅ يتطلب إذن المستخدم</li>
-          <li>✅ مشاركة واحدة فقط في كل غرفة</li>
-          <li>✅ جودة عالية (1080p) افتراضياً</li>
-          <li>✅ دعم Chrome, Firefox, Edge, Safari (iOS 13+)</li>
+          <li>✅ High quality (1080p) screen sharing</li>
+          <li>✅ Share entire screen, specific window, or browser tab</li>
+          <li>✅ Switch between sources without stopping</li>
+          <li>✅ Quality indicator showing resolution and quality level</li>
+          <li>✅ Multi-language support (Arabic, English, French)</li>
+          <li>✅ Responsive design for all devices</li>
         </ul>
       </div>
     </div>
   );
 };
 
-// التنسيقات
+// Styles
 const styles = {
   container: {
     maxWidth: '1200px',
     margin: '0 auto',
     padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-    direction: 'rtl'
+    fontFamily: 'Arial, sans-serif'
   },
-  title: {
+  header: {
     textAlign: 'center',
-    color: '#304B60',
     marginBottom: '30px'
+  },
+  languageSelector: {
+    display: 'flex',
+    gap: '10px',
+    justifyContent: 'center',
+    marginTop: '20px'
+  },
+  langBtn: {
+    padding: '8px 16px',
+    border: '2px solid #304B60',
+    borderRadius: '6px',
+    background: 'white',
+    color: '#304B60',
+    cursor: 'pointer',
+    fontWeight: 500,
+    transition: 'all 0.3s ease'
+  },
+  langBtnActive: {
+    background: '#304B60',
+    color: 'white'
+  },
+  errorBanner: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '12px 16px',
+    background: '#ffebee',
+    border: '2px solid #f44336',
+    borderRadius: '8px',
+    color: '#c62828',
+    marginBottom: '20px'
+  },
+  closeBtn: {
+    marginLeft: 'auto',
+    background: 'none',
+    border: 'none',
+    fontSize: '18px',
+    cursor: 'pointer',
+    color: '#c62828'
   },
   controls: {
     display: 'flex',
-    gap: '20px',
     justifyContent: 'center',
-    marginBottom: '30px',
-    flexWrap: 'wrap'
-  },
-  simulateButton: {
-    padding: '12px 24px',
-    background: '#304B60',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontSize: '16px'
-  },
-  info: {
-    background: '#f5f5f5',
-    padding: '20px',
-    borderRadius: '8px',
     marginBottom: '30px'
   },
-  videoContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-    gap: '20px',
-    marginBottom: '30px'
-  },
-  videoBox: {
-    background: '#f5f5f5',
-    padding: '20px',
-    borderRadius: '8px',
-    position: 'relative'
-  },
-  video: {
+  display: {
     width: '100%',
-    height: '300px',
-    background: '#000',
-    borderRadius: '8px'
+    height: '500px',
+    marginBottom: '30px',
+    border: '2px solid #304B60',
+    borderRadius: '12px',
+    overflow: 'hidden'
   },
-  placeholder: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    color: '#666',
-    fontSize: '18px'
-  },
-  codeExamples: {
+  infoPanel: {
+    background: '#f5f5f5',
+    padding: '20px',
+    borderRadius: '12px',
     marginBottom: '30px'
   },
-  codeBlock: {
-    marginBottom: '20px'
+  infoGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gap: '16px',
+    marginTop: '16px'
   },
-  code: {
-    background: '#2d2d2d',
-    color: '#f8f8f2',
-    padding: '15px',
-    borderRadius: '8px',
-    overflow: 'auto',
-    fontSize: '14px',
-    direction: 'ltr',
-    textAlign: 'left'
+  infoItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px'
   },
-  notes: {
+  instructions: {
     background: '#e3f2fd',
     padding: '20px',
-    borderRadius: '8px',
-    border: '2px solid #2196f3'
+    borderRadius: '12px',
+    border: '2px solid #2196F3'
+  },
+  error: {
+    textAlign: 'center',
+    padding: '40px',
+    background: '#ffebee',
+    borderRadius: '12px',
+    color: '#c62828'
   }
 };
 

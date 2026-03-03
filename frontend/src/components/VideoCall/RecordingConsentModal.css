@@ -225,10 +225,111 @@
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
+  .recording-consent-overlay {
+    padding: 12px;
+  }
+
+  .recording-consent-modal {
+    max-width: 100%;
+    max-height: 95vh;
+    border-width: 3px;
+    border-radius: 16px;
+  }
+
+  /* Header - Compact */
+  .consent-header {
+    padding: 16px;
+    border-radius: 13px 13px 0 0;
+  }
+
+  .consent-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+
+  .consent-title {
+    font-size: 17px;
+  }
+
+  /* Content - Compact */
+  .consent-content {
+    padding: 16px;
+  }
+
+  .consent-message {
+    font-size: 14px;
+    padding: 10px;
+    margin-bottom: 16px;
+    border-left-width: 3px;
+  }
+
+  /* Sections - Compact */
+  .consent-section {
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    margin-bottom: 10px;
+    gap: 6px;
+  }
+
+  .section-list li {
+    font-size: 13px;
+    padding: 6px 0 6px 22px;
+    line-height: 1.5;
+  }
+
+  .section-list li::before {
+    font-size: 16px;
+  }
+
+  /* Question - Compact */
+  .consent-question {
+    margin: 16px 0;
+    padding: 12px;
+  }
+
+  .consent-question p {
+    font-size: 14px;
+  }
+
+  /* Actions - Stack vertically */
+  .consent-actions {
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 16px 16px;
+  }
+
+  .consent-btn {
+    padding: 14px 18px;
+    font-size: 14px;
+    min-height: 48px; /* Touch target */
+    gap: 6px;
+  }
+
+  /* Note - Compact */
+  .consent-note {
+    padding: 12px 16px 16px;
+  }
+
+  .consent-note p {
+    font-size: 11px;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .recording-consent-overlay {
+    padding: 16px;
+  }
+
   .recording-consent-modal {
     max-width: 95%;
-    max-height: 95vh;
+    max-height: 92vh;
   }
 
   .consent-header {
@@ -236,7 +337,8 @@
   }
 
   .consent-icon {
-    font-size: 40px;
+    font-size: 42px;
+    margin-bottom: 10px;
   }
 
   .consent-title {
@@ -249,16 +351,23 @@
 
   .consent-message {
     font-size: 16px;
-    padding: 12px;
+    padding: 14px;
+    margin-bottom: 20px;
   }
 
   .section-title {
     font-size: 16px;
+    margin-bottom: 11px;
   }
 
   .section-list li {
     font-size: 14px;
-    padding: 8px 0 8px 24px;
+    padding: 8px 0 8px 26px;
+  }
+
+  .consent-question {
+    margin: 20px 0;
+    padding: 14px;
   }
 
   .consent-question p {
@@ -267,71 +376,260 @@
 
   .consent-actions {
     flex-direction: column;
+    gap: 10px;
     padding: 0 20px 20px;
   }
 
   .consent-btn {
-    padding: 14px 20px;
+    padding: 15px 22px;
+    font-size: 15px;
+    min-height: 50px;
+  }
+
+  .consent-note {
+    padding: 14px 20px 20px;
+  }
+
+  .consent-note p {
+    font-size: 13px;
+  }
+}
+
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .recording-consent-modal {
+    max-width: 90%;
+  }
+
+  .consent-header {
+    padding: 22px;
+  }
+
+  .consent-icon {
+    font-size: 44px;
+  }
+
+  .consent-title {
+    font-size: 22px;
+  }
+
+  .consent-content {
+    padding: 22px;
+  }
+
+  .consent-message {
+    font-size: 17px;
+    padding: 15px;
+  }
+
+  .section-title {
+    font-size: 17px;
+  }
+
+  .section-list li {
+    font-size: 15px;
+  }
+
+  .consent-question p {
+    font-size: 17px;
+  }
+
+  .consent-btn {
+    padding: 15px 22px;
     font-size: 15px;
   }
 }
 
-@media (max-width: 480px) {
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
   .recording-consent-overlay {
     padding: 10px;
   }
 
   .recording-consent-modal {
-    border-width: 3px;
-    border-radius: 16px;
+    max-height: 98vh;
+    border-radius: 12px;
   }
 
   .consent-header {
-    padding: 16px;
-    border-radius: 13px 13px 0 0;
+    padding: 12px;
+    border-radius: 9px 9px 0 0;
   }
 
   .consent-icon {
-    font-size: 36px;
+    font-size: 28px;
+    margin-bottom: 6px;
   }
 
   .consent-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .consent-content {
-    padding: 16px;
-  }
-
-  .consent-message {
-    font-size: 15px;
-    padding: 10px;
-  }
-
-  .section-title {
-    font-size: 15px;
-  }
-
-  .section-list li {
-    font-size: 13px;
-    padding: 6px 0 6px 20px;
-  }
-
-  .consent-question {
     padding: 12px;
   }
 
+  .consent-message {
+    font-size: 13px;
+    padding: 8px;
+    margin-bottom: 12px;
+  }
+
+  .consent-section {
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .section-list li {
+    font-size: 12px;
+    padding: 4px 0 4px 20px;
+  }
+
+  .consent-question {
+    margin: 12px 0;
+    padding: 10px;
+  }
+
   .consent-question p {
-    font-size: 15px;
+    font-size: 13px;
+  }
+
+  .consent-actions {
+    flex-direction: row;
+    gap: 8px;
+    padding: 0 12px 12px;
   }
 
   .consent-btn {
-    padding: 12px 16px;
-    font-size: 14px;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .consent-note {
+    padding: 10px 12px 12px;
   }
 
   .consent-note p {
-    font-size: 12px;
+    font-size: 11px;
+  }
+}
+
+/* Safe Area Support (Notch devices) */
+@supports (padding: max(0px)) {
+  .recording-consent-overlay {
+    padding-left: max(20px, calc(20px + env(safe-area-inset-left)));
+    padding-right: max(20px, calc(20px + env(safe-area-inset-right)));
+    padding-top: max(20px, calc(20px + env(safe-area-inset-top)));
+    padding-bottom: max(20px, calc(20px + env(safe-area-inset-bottom)));
+  }
+
+  @media (max-width: 768px) {
+    .recording-consent-overlay {
+      padding-left: max(16px, calc(16px + env(safe-area-inset-left)));
+      padding-right: max(16px, calc(16px + env(safe-area-inset-right)));
+      padding-top: max(16px, calc(16px + env(safe-area-inset-top)));
+      padding-bottom: max(16px, calc(16px + env(safe-area-inset-bottom)));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .recording-consent-overlay {
+      padding-left: max(12px, calc(12px + env(safe-area-inset-left)));
+      padding-right: max(12px, calc(12px + env(safe-area-inset-right)));
+      padding-top: max(12px, calc(12px + env(safe-area-inset-top)));
+      padding-bottom: max(12px, calc(12px + env(safe-area-inset-bottom)));
+    }
+  }
+}
+
+/* Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  /* Ensure all touch targets are at least 44x44px */
+  .consent-btn {
+    min-height: 48px;
+  }
+
+  /* Remove hover effects on touch devices */
+  .consent-btn-accept:hover:not(:disabled),
+  .consent-btn-decline:hover:not(:disabled) {
+    transform: none;
+  }
+
+  /* Prevent text selection */
+  .recording-consent-modal {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* Allow text selection for content */
+  .consent-content,
+  .consent-note {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .recording-consent-modal {
+    border-width: 5px;
+  }
+
+  .consent-message {
+    border-left-width: 5px;
+  }
+
+  .consent-btn {
+    border: 2px solid white;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .recording-consent-overlay {
+    animation: none;
+  }
+
+  .recording-consent-modal {
+    animation: none;
+  }
+
+  .consent-icon {
+    animation: none;
+  }
+
+  .consent-btn-accept:hover:not(:disabled),
+  .consent-btn-decline:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+/* Scrollbar Styling for Modal */
+.recording-consent-modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.recording-consent-modal::-webkit-scrollbar-track {
+  background: rgba(48, 75, 96, 0.1);
+  border-radius: 4px;
+}
+
+.recording-consent-modal::-webkit-scrollbar-thumb {
+  background: #304B60;
+  border-radius: 4px;
+}
+
+.recording-consent-modal::-webkit-scrollbar-thumb:hover {
+  background: #3D5A70;
+}
+
+@media (max-width: 768px) {
+  .recording-consent-modal::-webkit-scrollbar {
+    width: 6px;
   }
 }
 

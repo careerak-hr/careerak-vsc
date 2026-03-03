@@ -89,20 +89,17 @@ class WaitingRoomService {
         throw new Error('Waiting room not found');
       }
 
-      // البحث عن المشارك
+      // البحث عن المشارك في حالة 'waiting' فقط
       const participant = waitingRoom.participants.find(
-        p => p.userId.toString() === userId.toString()
+        p => p.userId.toString() === userId.toString() && p.status === 'waiting'
       );
 
       if (!participant) {
         throw new Error('Participant not found in waiting room');
       }
 
-      // تحديث حالة المشارك
-      participant.status = 'admitted';
-      participant.admittedAt = new Date();
-
-      await waitingRoom.save();
+      // استخدام دالة Model لتحديث الحالة والإحصائيات
+      await waitingRoom.admitParticipant(userId, hostId);
 
       // إضافة المشارك للمقابلة
       interview.participants.push({
@@ -113,7 +110,13 @@ class WaitingRoomService {
 
       await interview.save();
 
-      return { waitingRoom, interview, participant };
+      // إعادة تحميل waitingRoom للحصول على البيانات المحدثة
+      const updatedWaitingRoom = await WaitingRoom.findById(waitingRoom._id);
+      const updatedParticipant = updatedWaitingRoom.participants.find(
+        p => p.userId.toString() === userId.toString()
+      );
+
+      return { waitingRoom: updatedWaitingRoom, interview, participant: updatedParticipant };
     } catch (error) {
       console.error('Error admitting participant:', error);
       throw error;
@@ -140,22 +143,25 @@ class WaitingRoomService {
         throw new Error('Waiting room not found');
       }
 
-      // البحث عن المشارك
+      // البحث عن المشارك في حالة 'waiting' فقط
       const participant = waitingRoom.participants.find(
-        p => p.userId.toString() === userId.toString()
+        p => p.userId.toString() === userId.toString() && p.status === 'waiting'
       );
 
       if (!participant) {
         throw new Error('Participant not found in waiting room');
       }
 
-      // تحديث حالة المشارك
-      participant.status = 'rejected';
-      participant.rejectedAt = new Date();
+      // استخدام دالة Model لتحديث الحالة والإحصائيات
+      await waitingRoom.rejectParticipant(userId, hostId);
 
-      await waitingRoom.save();
+      // إعادة تحميل waitingRoom للحصول على البيانات المحدثة
+      const updatedWaitingRoom = await WaitingRoom.findById(waitingRoom._id);
+      const updatedParticipant = updatedWaitingRoom.participants.find(
+        p => p.userId.toString() === userId.toString()
+      );
 
-      return { waitingRoom, participant };
+      return { waitingRoom: updatedWaitingRoom, participant: updatedParticipant };
     } catch (error) {
       console.error('Error rejecting participant:', error);
       throw error;

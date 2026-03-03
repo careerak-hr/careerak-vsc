@@ -1,0 +1,167 @@
+/* MapInfoWindow Styles */
+
+.map-info-window {
+  max-width: 320px;
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #E3DAD1;
+}
+
+.job-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0;
+  flex: 1;
+}
+
+.company-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.info-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  min-width: 80px;
+}
+
+.info-value {
+  font-size: 13px;
+  color: #304B60;
+  flex: 1;
+}
+
+/* Skills */
+.info-item.skills {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.skill-tag {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #E3DAD1;
+  color: #304B60;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.skill-tag.more {
+  background: #D48161;
+  color: white;
+}
+
+/* Footer */
+.info-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  border-top: 1px solid #E3DAD1;
+}
+
+.btn-view-details {
+  width: 100%;
+  padding: 10px 20px;
+  background: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-view-details:hover {
+  background: #c06d4f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(212, 129, 97, 0.3);
+}
+
+.btn-view-details:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .map-info-window {
+    max-width: 280px;
+  }
+
+  .job-title {
+    font-size: 16px;
+  }
+
+  .company-logo {
+    width: 35px;
+    height: 35px;
+  }
+
+  .info-label,
+  .info-value {
+    font-size: 12px;
+  }
+
+  .skill-tag {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .btn-view-details {
+    font-size: 13px;
+    padding: 8px 16px;
+  }
+}
+
+/* LTR Support */
+[dir="ltr"] .map-info-window {
+  direction: ltr;
+}
+
+[dir="ltr"] .company-logo {
+  margin-right: 0;
+  margin-left: 12px;
+}
+
+[dir="ltr"] .info-item {
+  flex-direction: row-reverse;
+}
+
+[dir="ltr"] .info-label {
+  text-align: right;
+}

@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@react-google-maps/api": "^2.19.2"
+  },
+  "devDependencies": {},
+  "notes": [
+    "يجب تشغيل: npm install @react-google-maps/api",
+    "يجب إضافة VITE_GOOGLE_MAPS_API_KEY في ملف .env",
+    "للحصول على API Key: https://console.cloud.google.com/google/maps-apis"
+  ]
+}

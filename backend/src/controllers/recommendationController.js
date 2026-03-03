@@ -1632,10 +1632,6 @@ class RecommendationController {
       });
     }
   }
-}
-
-module.exports = new RecommendationController();
-
   /**
    * GET /api/recommendations/accuracy
    * الحصول على دقة التوصيات للمستخدم
@@ -1647,7 +1643,6 @@ module.exports = new RecommendationController();
       
       const RecommendationAccuracyService = require('../services/recommendationAccuracyService');
       const accuracyService = new RecommendationAccuracyService();
-      
       const options = { itemType };
       if (period) {
         options.period = parseInt(period) * 24 * 60 * 60 * 1000; // تحويل الأيام إلى ميلي ثانية

@@ -44,6 +44,8 @@ const notificationSchema = new mongoose.Schema({
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'TrainingCourse' },
     appointment: { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
     videoInterview: { type: mongoose.Schema.Types.ObjectId, ref: 'VideoInterview' },
+    savedSearchId: { type: mongoose.Schema.Types.ObjectId, ref: 'SavedSearch' },
+    jobPostings: [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobPosting' }],
     meetingLink: String,
     scheduledAt: Date,
     canJoinNow: Boolean,

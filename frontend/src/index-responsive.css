@@ -1,0 +1,8 @@
+/**
+ * Video Interview Responsive Styles Import
+ * استيراد تنسيقات التصميم المتجاوب لنظام الفيديو للمقابلات
+ * 
+ * هذا الملف يجب استيراده في index.css أو App.jsx
+ */
+
+@import './styles/videoInterviewResponsive.css';

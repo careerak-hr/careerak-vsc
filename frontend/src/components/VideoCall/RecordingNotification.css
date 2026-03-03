@@ -179,27 +179,124 @@
 }
 
 /* Responsive Design */
-@media (max-width: 639px) {
+
+/* Mobile Small (< 480px) */
+@media (max-width: 480px) {
   .recording-notification {
-    padding: 10px 15px;
-    gap: 10px;
+    padding: 8px 12px;
+    gap: 8px;
     min-width: auto;
-    max-width: calc(100vw - 40px);
+    max-width: calc(100vw - 32px);
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .recording-notification-top,
   .recording-notification-bottom {
-    left: 20px;
-    right: 20px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+  }
+
+  .recording-notification-top {
+    top: max(16px, calc(16px + env(safe-area-inset-top)));
+  }
+
+  .recording-notification-bottom {
+    bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+  }
+
+  .recording-notification-floating {
+    top: max(12px, calc(12px + env(safe-area-inset-top)));
+    right: 12px;
+    left: 12px;
+    min-width: auto;
+    max-width: none;
+  }
+
+  /* Recording Indicator - Compact */
+  .recording-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .recording-text {
+    font-size: 0.85rem;
+  }
+
+  /* Recording Details - Stack vertically */
+  .recording-details {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .recording-info {
+    gap: 6px;
+  }
+
+  .recording-icon {
+    font-size: 1rem;
+  }
+
+  .recording-message {
+    font-size: 0.8rem;
+  }
+
+  /* Duration - Full width */
+  .recording-duration {
+    padding: 3px 10px;
+    align-self: flex-start;
+  }
+
+  .duration-label {
+    font-size: 0.75rem;
+  }
+
+  .duration-value {
+    font-size: 0.85rem;
+  }
+
+  /* Privacy Notice */
+  .recording-privacy-notice {
+    margin-top: 8px;
+    padding: 10px;
+  }
+
+  .notice-title {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+
+  .notice-text {
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+}
+
+/* Mobile (480px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .recording-notification {
+    padding: 10px 16px;
+    gap: 10px;
+    min-width: auto;
+    max-width: calc(100vw - 48px);
+  }
+
+  .recording-notification-top,
+  .recording-notification-bottom {
+    left: 24px;
+    right: 24px;
     transform: none;
   }
 
   .recording-notification-floating {
-    top: 10px;
-    right: 10px;
-    left: 10px;
-    min-width: auto;
-    max-width: none;
+    top: 16px;
+    right: 16px;
+    left: auto;
+    min-width: 300px;
+    max-width: 360px;
   }
 
   .recording-text {
@@ -211,22 +308,17 @@
   }
 
   .recording-details {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-
-  .recording-duration {
-    padding: 3px 10px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .duration-label,
   .duration-value {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .notice-title {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 
   .notice-text {
@@ -234,15 +326,114 @@
   }
 }
 
-/* Tablet */
-@media (min-width: 640px) and (max-width: 1023px) {
+/* Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
   .recording-notification {
     padding: 11px 18px;
   }
 
   .recording-notification-floating {
+    min-width: 320px;
+    max-width: 380px;
+  }
+
+  .recording-text {
+    font-size: 0.95rem;
+  }
+
+  .recording-message {
+    font-size: 0.9rem;
+  }
+}
+
+/* Landscape Mode (Mobile) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .recording-notification {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .recording-notification-top {
+    top: 8px;
+  }
+
+  .recording-notification-bottom {
+    bottom: 60px;
+  }
+
+  .recording-notification-floating {
+    top: 8px;
+    right: 8px;
     min-width: 280px;
-    max-width: 350px;
+  }
+
+  .recording-text {
+    font-size: 0.8rem;
+  }
+
+  .recording-message {
+    font-size: 0.75rem;
+  }
+
+  .recording-privacy-notice {
+    margin-top: 6px;
+    padding: 8px;
+  }
+
+  .notice-title {
+    font-size: 0.8rem;
+  }
+
+  .notice-text {
+    font-size: 0.75rem;
+  }
+}
+
+/* Safe Area Support (Notch devices) */
+@supports (padding: max(0px)) {
+  .recording-notification-top {
+    top: max(20px, calc(20px + env(safe-area-inset-top)));
+  }
+
+  .recording-notification-bottom {
+    bottom: max(80px, calc(80px + env(safe-area-inset-bottom)));
+  }
+
+  .recording-notification-floating {
+    top: max(20px, calc(20px + env(safe-area-inset-top)));
+    right: max(20px, calc(20px + env(safe-area-inset-right)));
+  }
+
+  @media (max-width: 768px) {
+    .recording-notification-top {
+      top: max(16px, calc(16px + env(safe-area-inset-top)));
+    }
+
+    .recording-notification-bottom {
+      bottom: max(70px, calc(70px + env(safe-area-inset-bottom)));
+    }
+
+    .recording-notification-floating {
+      top: max(12px, calc(12px + env(safe-area-inset-top)));
+      right: max(12px, calc(12px + env(safe-area-inset-right)));
+      left: max(12px, calc(12px + env(safe-area-inset-left)));
+    }
+  }
+}
+
+/* Touch Optimization */
+@media (hover: none) and (pointer: coarse) {
+  .recording-notification {
+    /* Ensure readable text on touch devices */
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* Prevent text selection on mobile */
+@media (max-width: 768px) {
+  .recording-notification {
+    user-select: none;
+    -webkit-user-select: none;
   }
 }
 

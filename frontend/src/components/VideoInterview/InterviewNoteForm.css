@@ -1,0 +1,228 @@
+.interview-note-form {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.interview-note-form h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.interview-note-form h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #E3DAD1;
+}
+
+.error-message {
+  background: #fee;
+  color: #c33;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.form-section {
+  margin-bottom: 32px;
+}
+
+.form-section:last-of-type {
+  margin-bottom: 24px;
+}
+
+/* Stars Rating */
+.stars-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.star {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: #ddd;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.star:hover,
+.star.active {
+  color: #D48161;
+  transform: scale(1.1);
+}
+
+.star:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.rating-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #304B60;
+  margin-left: 12px;
+}
+
+/* Rating Item */
+.rating-item {
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.rating-item label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #304B60;
+  margin-bottom: 8px;
+}
+
+/* Form Groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: #304B60;
+  margin-bottom: 8px;
+}
+
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+.form-group textarea {
+  min-height: 80px;
+}
+
+/* Form Row */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 24px;
+  border-top: 2px solid #E3DAD1;
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-cancel {
+  background: #E3DAD1;
+  color: #304B60;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #d4cbc3;
+}
+
+.btn-save {
+  background: #D48161;
+  color: #fff;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #c57050;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.btn-cancel:disabled,
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .interview-note-form {
+    padding: 16px;
+  }
+
+  .interview-note-form h2 {
+    font-size: 20px;
+  }
+
+  .interview-note-form h3 {
+    font-size: 16px;
+  }
+
+  .star {
+    font-size: 28px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .btn-cancel,
+  .btn-save {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .stars-rating {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rating-value {
+  margin-left: 0;
+  margin-right: 12px;
+}
+
+[dir="rtl"] .form-actions {
+  flex-direction: row-reverse;
+}

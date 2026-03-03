@@ -1,6 +1,7 @@
 const JobPosting = require('../models/JobPosting');
 const notificationService = require('../services/notificationService');
 const realtimeNotificationService = require('../services/realtimeRecommendationNotificationService');
+const alertService = require('../services/alertService');
 
 exports.createJobPosting = async (req, res) => {
   try {
@@ -31,6 +32,13 @@ exports.createJobPosting = async (req, res) => {
         }
       })
       .catch(err => console.error('❌ Error sending job match notifications:', err));
+    
+    // معالجة التنبيهات للبحث المحفوظ (بشكل غير متزامن)
+    alertService.processNewJob(jobPosting)
+      .then(() => {
+        console.log(`✅ Processed saved search alerts for job: ${jobPosting.title}`);
+      })
+      .catch(err => console.error('❌ Error processing saved search alerts:', err));
     
     res.status(201).json({ 
       message: 'Job posting created successfully', 

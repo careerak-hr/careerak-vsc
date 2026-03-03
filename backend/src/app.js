@@ -209,6 +209,8 @@ app.use('/ab-testing', require('./routes/abTestingRoutes')); // A/B Testing
 app.use('/waiting-room', require('./routes/waitingRoomRoutes')); // Waiting Room
 app.use('/appointments', require('./routes/appointmentRoutes')); // Appointments
 app.use('/interviews', require('./routes/videoInterviewRoutes')); // Video Interviews
+app.use('/interview-notes', require('./routes/interviewNoteRoutes')); // Interview Notes & Ratings
+app.use('/search', require('./routes/searchRoutes')); // Advanced Search & Filtering
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

@@ -123,6 +123,47 @@ class SocketService {
       this.handleVideoChatStopTyping(socket, data);
     });
     
+    // === أحداث WebRTC Signaling ===
+    socket.on('webrtc:join_room', (data) => {
+      this.handleWebRTCJoinRoom(socket, data);
+    });
+    
+    socket.on('webrtc:leave_room', (data) => {
+      this.handleWebRTCLeaveRoom(socket, data);
+    });
+    
+    socket.on('webrtc:offer', (data) => {
+      this.handleWebRTCOffer(socket, data);
+    });
+    
+    socket.on('webrtc:answer', (data) => {
+      this.handleWebRTCAnswer(socket, data);
+    });
+    
+    socket.on('webrtc:ice_candidate', (data) => {
+      this.handleWebRTCIceCandidate(socket, data);
+    });
+    
+    socket.on('webrtc:screen_share_start', (data) => {
+      this.handleScreenShareStart(socket, data);
+    });
+    
+    socket.on('webrtc:screen_share_stop', (data) => {
+      this.handleScreenShareStop(socket, data);
+    });
+    
+    socket.on('webrtc:recording_start', (data) => {
+      this.handleRecordingStart(socket, data);
+    });
+    
+    socket.on('webrtc:recording_stop', (data) => {
+      this.handleRecordingStop(socket, data);
+    });
+    
+    socket.on('webrtc:connection_quality', (data) => {
+      this.handleConnectionQuality(socket, data);
+    });
+    
     socket.on('disconnect', () => {
       this.handleDisconnect(socket);
     });
@@ -254,6 +295,152 @@ class SocketService {
       message
     });
   }
+  
+  // === معالجات WebRTC Signaling ===
+  
+  // الانضمام لغرفة WebRTC
+  handleWebRTCJoinRoom(socket, data) {
+    const { roomId, userId } = data;
+    
+    socket.join(`webrtc:${roomId}`);
+    
+    // إخبار المشاركين الآخرين بالانضمام
+    socket.to(`webrtc:${roomId}`).emit('webrtc:user_joined', {
+      roomId,
+      userId: socket.userId,
+      socketId: socket.id
+    });
+    
+    logger.info(`User ${socket.userId} joined WebRTC room ${roomId}`);
+  }
+  
+  // مغادرة غرفة WebRTC
+  handleWebRTCLeaveRoom(socket, data) {
+    const { roomId } = data;
+    
+    socket.leave(`webrtc:${roomId}`);
+    
+    // إخبار المشاركين الآخرين بالمغادرة
+    socket.to(`webrtc:${roomId}`).emit('webrtc:user_left', {
+      roomId,
+      userId: socket.userId,
+      socketId: socket.id
+    });
+    
+    logger.info(`User ${socket.userId} left WebRTC room ${roomId}`);
+  }
+  
+  // معالجة SDP Offer
+  handleWebRTCOffer(socket, data) {
+    const { roomId, targetSocketId, offer } = data;
+    
+    // إرسال الـ offer للمستخدم المستهدف
+    this.io.to(targetSocketId).emit('webrtc:offer', {
+      roomId,
+      fromSocketId: socket.id,
+      fromUserId: socket.userId,
+      offer
+    });
+    
+    logger.info(`WebRTC offer sent from ${socket.userId} to ${targetSocketId}`);
+  }
+  
+  // معالجة SDP Answer
+  handleWebRTCAnswer(socket, data) {
+    const { roomId, targetSocketId, answer } = data;
+    
+    // إرسال الـ answer للمستخدم المستهدف
+    this.io.to(targetSocketId).emit('webrtc:answer', {
+      roomId,
+      fromSocketId: socket.id,
+      fromUserId: socket.userId,
+      answer
+    });
+    
+    logger.info(`WebRTC answer sent from ${socket.userId} to ${targetSocketId}`);
+  }
+  
+  // معالجة ICE Candidate
+  handleWebRTCIceCandidate(socket, data) {
+    const { roomId, targetSocketId, candidate } = data;
+    
+    // إرسال الـ ICE candidate للمستخدم المستهدف
+    this.io.to(targetSocketId).emit('webrtc:ice_candidate', {
+      roomId,
+      fromSocketId: socket.id,
+      fromUserId: socket.userId,
+      candidate
+    });
+  }
+  
+  // بدء مشاركة الشاشة
+  handleScreenShareStart(socket, data) {
+    const { roomId } = data;
+    
+    // إخبار جميع المشاركين ببدء مشاركة الشاشة
+    socket.to(`webrtc:${roomId}`).emit('webrtc:screen_share_started', {
+      roomId,
+      userId: socket.userId,
+      socketId: socket.id
+    });
+    
+    logger.info(`User ${socket.userId} started screen sharing in room ${roomId}`);
+  }
+  
+  // إيقاف مشاركة الشاشة
+  handleScreenShareStop(socket, data) {
+    const { roomId } = data;
+    
+    // إخبار جميع المشاركين بإيقاف مشاركة الشاشة
+    socket.to(`webrtc:${roomId}`).emit('webrtc:screen_share_stopped', {
+      roomId,
+      userId: socket.userId,
+      socketId: socket.id
+    });
+    
+    logger.info(`User ${socket.userId} stopped screen sharing in room ${roomId}`);
+  }
+  
+  // بدء التسجيل
+  handleRecordingStart(socket, data) {
+    const { roomId } = data;
+    
+    // إخبار جميع المشاركين ببدء التسجيل
+    this.io.to(`webrtc:${roomId}`).emit('webrtc:recording_started', {
+      roomId,
+      userId: socket.userId
+    });
+    
+    logger.info(`Recording started in room ${roomId} by ${socket.userId}`);
+  }
+  
+  // إيقاف التسجيل
+  handleRecordingStop(socket, data) {
+    const { roomId } = data;
+    
+    // إخبار جميع المشاركين بإيقاف التسجيل
+    this.io.to(`webrtc:${roomId}`).emit('webrtc:recording_stopped', {
+      roomId,
+      userId: socket.userId
+    });
+    
+    logger.info(`Recording stopped in room ${roomId} by ${socket.userId}`);
+  }
+  
+  // معالجة جودة الاتصال
+  handleConnectionQuality(socket, data) {
+    const { roomId, quality, stats } = data;
+    
+    // إرسال معلومات الجودة للمشاركين الآخرين
+    socket.to(`webrtc:${roomId}`).emit('webrtc:connection_quality_update', {
+      roomId,
+      userId: socket.userId,
+      quality,
+      stats
+    });
+  }
+  
+  // === نهاية معالجات WebRTC ===
   
   // إرسال حالة "غير متصل" للمستخدمين الآخرين
     this.broadcastUserStatus(userId, 'offline', new Date());
