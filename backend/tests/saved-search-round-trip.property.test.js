@@ -18,6 +18,7 @@ const connectDB = require('../src/config/database');
 
 // Mock notification service
 jest.mock('../src/services/notificationService', () => ({
+  createNotification: jest.fn().mockResolvedValue({ success: true }),
   create: jest.fn().mockResolvedValue({ success: true })
 }));
 

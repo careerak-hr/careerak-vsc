@@ -25,6 +25,12 @@ const Notification = require('../src/models/Notification');
 const { User } = require('../src/models/User');
 const alertService = require('../src/services/alertService');
 
+// Mock notification service
+jest.mock('../src/services/notificationService', () => ({
+  createNotification: jest.fn().mockResolvedValue({ success: true }),
+  create: jest.fn().mockResolvedValue({ success: true })
+}));
+
 describe('Property 12: Alert Toggle Behavior', () => {
   
   beforeEach(async () => {

@@ -34,16 +34,19 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should return accurate count with no filters', async () => {
       // إنشاء 10 وظائف
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = Array.from({ length: 10 }, (_, i) => ({
         title: `Job ${i + 1}`,
         description: 'Test job description',
+        requirements: 'Test requirements',
         company: { name: 'Test Company', size: 'Medium' },
-        location: { city: 'Cairo', country: 'Egypt' },
+        location: 'Cairo, Egypt',
         salary: { min: 5000, max: 10000 },
         jobType: 'Full-time',
         experienceLevel: 'Mid',
         skills: ['JavaScript', 'React'],
-        status: 'Open'
+        status: 'Open',
+        postedBy: testUserId
       }));
 
       await JobPosting.insertMany(jobs);
@@ -63,12 +66,13 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should return accurate count with salary filter', async () => {
       // إنشاء وظائف برواتب مختلفة
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', salary: { min: 3000, max: 5000 }, status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, jobType: 'Full-time', experienceLevel: 'Entry', skills: ['JavaScript'] },
-        { title: 'Job 2', salary: { min: 6000, max: 8000 }, status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['Python'] },
-        { title: 'Job 3', salary: { min: 10000, max: 15000 }, status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, jobType: 'Full-time', experienceLevel: 'Senior', skills: ['Java'] },
-        { title: 'Job 4', salary: { min: 4000, max: 6000 }, status: 'Open', company: { name: 'Company D' }, location: { city: 'Cairo' }, jobType: 'Full-time', experienceLevel: 'Entry', skills: ['PHP'] },
-        { title: 'Job 5', salary: { min: 12000, max: 18000 }, status: 'Open', company: { name: 'Company E' }, location: { city: 'Cairo' }, jobType: 'Full-time', experienceLevel: 'Senior', skills: ['C++'] }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', salary: { min: 3000, max: 5000 }, status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', jobType: 'Full-time', experienceLevel: 'Entry', skills: ['JavaScript'], postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', salary: { min: 6000, max: 8000 }, status: 'Open', company: { name: 'Company B' }, location: 'Cairo, Egypt', jobType: 'Full-time', experienceLevel: 'Mid', skills: ['Python'], postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', salary: { min: 10000, max: 15000 }, status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', jobType: 'Full-time', experienceLevel: 'Senior', skills: ['Java'], postedBy: testUserId },
+        { title: 'Job 4', description: 'Test desc', requirements: 'Test req', salary: { min: 4000, max: 6000 }, status: 'Open', company: { name: 'Company D' }, location: 'Cairo, Egypt', jobType: 'Full-time', experienceLevel: 'Entry', skills: ['PHP'], postedBy: testUserId },
+        { title: 'Job 5', description: 'Test desc', requirements: 'Test req', salary: { min: 12000, max: 18000 }, status: 'Open', company: { name: 'Company E' }, location: 'Cairo, Egypt', jobType: 'Full-time', experienceLevel: 'Senior', skills: ['C++'], postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -91,12 +95,13 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should return accurate count with work type filter', async () => {
       // إنشاء وظائف بأنواع عمل مختلفة
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', jobType: 'Full-time', status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, salary: { min: 5000 }, experienceLevel: 'Mid', skills: ['JavaScript'] },
-        { title: 'Job 2', jobType: 'Part-time', status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, salary: { min: 3000 }, experienceLevel: 'Entry', skills: ['Python'] },
-        { title: 'Job 3', jobType: 'Remote', status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, salary: { min: 6000 }, experienceLevel: 'Mid', skills: ['Java'] },
-        { title: 'Job 4', jobType: 'Full-time', status: 'Open', company: { name: 'Company D' }, location: { city: 'Cairo' }, salary: { min: 5500 }, experienceLevel: 'Mid', skills: ['PHP'] },
-        { title: 'Job 5', jobType: 'Hybrid', status: 'Open', company: { name: 'Company E' }, location: { city: 'Cairo' }, salary: { min: 7000 }, experienceLevel: 'Senior', skills: ['C++'] }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', salary: { min: 5000 }, experienceLevel: 'Mid', skills: ['JavaScript'], postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', jobType: 'Part-time', status: 'Open', company: { name: 'Company B' }, location: 'Cairo, Egypt', salary: { min: 3000 }, experienceLevel: 'Entry', skills: ['Python'], postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', jobType: 'Contract', status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', salary: { min: 6000 }, experienceLevel: 'Mid', skills: ['Java'], postedBy: testUserId },
+        { title: 'Job 4', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', status: 'Open', company: { name: 'Company D' }, location: 'Cairo, Egypt', salary: { min: 5500 }, experienceLevel: 'Mid', skills: ['PHP'], postedBy: testUserId },
+        { title: 'Job 5', description: 'Test desc', requirements: 'Test req', jobType: 'Temporary', status: 'Open', company: { name: 'Company E' }, location: 'Cairo, Egypt', salary: { min: 7000 }, experienceLevel: 'Senior', skills: ['C++'], postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -118,12 +123,13 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should return accurate count with multiple filters', async () => {
       // إنشاء وظائف متنوعة
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', jobType: 'Full-time', experienceLevel: 'Mid', salary: { min: 5000 }, status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, skills: ['JavaScript', 'React'] },
-        { title: 'Job 2', jobType: 'Part-time', experienceLevel: 'Entry', salary: { min: 3000 }, status: 'Open', company: { name: 'Company B' }, location: { city: 'Alexandria' }, skills: ['Python'] },
-        { title: 'Job 3', jobType: 'Full-time', experienceLevel: 'Mid', salary: { min: 6000 }, status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, skills: ['JavaScript', 'Node.js'] },
-        { title: 'Job 4', jobType: 'Remote', experienceLevel: 'Senior', salary: { min: 10000 }, status: 'Open', company: { name: 'Company D' }, location: { city: 'Cairo' }, skills: ['Java'] },
-        { title: 'Job 5', jobType: 'Full-time', experienceLevel: 'Mid', salary: { min: 5500 }, status: 'Open', company: { name: 'Company E' }, location: { city: 'Cairo' }, skills: ['JavaScript', 'Vue'] }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', experienceLevel: 'Mid', salary: { min: 5000 }, status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', skills: ['JavaScript', 'React'], postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', jobType: 'Part-time', experienceLevel: 'Entry', salary: { min: 3000 }, status: 'Open', company: { name: 'Company B' }, location: 'Alexandria, Egypt', skills: ['Python'], postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', experienceLevel: 'Mid', salary: { min: 6000 }, status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', skills: ['JavaScript', 'Node.js'], postedBy: testUserId },
+        { title: 'Job 4', description: 'Test desc', requirements: 'Test req', jobType: 'Contract', experienceLevel: 'Senior', salary: { min: 10000 }, status: 'Open', company: { name: 'Company D' }, location: 'Cairo, Egypt', skills: ['Java'], postedBy: testUserId },
+        { title: 'Job 5', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', experienceLevel: 'Mid', salary: { min: 5500 }, status: 'Open', company: { name: 'Company E' }, location: 'Cairo, Egypt', skills: ['JavaScript', 'Vue'], postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -148,12 +154,13 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should return accurate count with skills AND logic', async () => {
       // إنشاء وظائف بمهارات مختلفة
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', skills: ['JavaScript', 'React', 'Node.js'], status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, salary: { min: 5000 }, jobType: 'Full-time', experienceLevel: 'Mid' },
-        { title: 'Job 2', skills: ['JavaScript', 'React'], status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, salary: { min: 4000 }, jobType: 'Full-time', experienceLevel: 'Entry' },
-        { title: 'Job 3', skills: ['JavaScript', 'Node.js'], status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, salary: { min: 6000 }, jobType: 'Full-time', experienceLevel: 'Mid' },
-        { title: 'Job 4', skills: ['React', 'Node.js'], status: 'Open', company: { name: 'Company D' }, location: { city: 'Cairo' }, salary: { min: 5500 }, jobType: 'Full-time', experienceLevel: 'Mid' },
-        { title: 'Job 5', skills: ['Python', 'Django'], status: 'Open', company: { name: 'Company E' }, location: { city: 'Cairo' }, salary: { min: 5000 }, jobType: 'Full-time', experienceLevel: 'Mid' }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', skills: ['JavaScript', 'React', 'Node.js'], status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', salary: { min: 5000 }, jobType: 'Full-time', experienceLevel: 'Mid', postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', skills: ['JavaScript', 'React'], status: 'Open', company: { name: 'Company B' }, location: 'Cairo, Egypt', salary: { min: 4000 }, jobType: 'Full-time', experienceLevel: 'Entry', postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', skills: ['JavaScript', 'Node.js'], status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', salary: { min: 6000 }, jobType: 'Full-time', experienceLevel: 'Mid', postedBy: testUserId },
+        { title: 'Job 4', description: 'Test desc', requirements: 'Test req', skills: ['React', 'Node.js'], status: 'Open', company: { name: 'Company D' }, location: 'Cairo, Egypt', salary: { min: 5500 }, jobType: 'Full-time', experienceLevel: 'Mid', postedBy: testUserId },
+        { title: 'Job 5', description: 'Test desc', requirements: 'Test req', skills: ['Python', 'Django'], status: 'Open', company: { name: 'Company E' }, location: 'Cairo, Egypt', salary: { min: 5000 }, jobType: 'Full-time', experienceLevel: 'Mid', postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -177,15 +184,16 @@ describe('Result Count Accuracy Tests', () => {
     test('should return accurate count with date filter', async () => {
       const now = new Date();
       const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      const lastWeek = new Date(now.getTime() - 8 * 24 * 60 * 60 * 1000);
+      const threeDaysAgo = new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000);
       const lastMonth = new Date(now.getTime() - 35 * 24 * 60 * 60 * 1000);
 
       // إنشاء وظائف بتواريخ مختلفة
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', createdAt: now, status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, salary: { min: 5000 }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['JavaScript'] },
-        { title: 'Job 2', createdAt: yesterday, status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, salary: { min: 4000 }, jobType: 'Full-time', experienceLevel: 'Entry', skills: ['Python'] },
-        { title: 'Job 3', createdAt: lastWeek, status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, salary: { min: 6000 }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['Java'] },
-        { title: 'Job 4', createdAt: lastMonth, status: 'Open', company: { name: 'Company D' }, location: { city: 'Cairo' }, salary: { min: 5500 }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['PHP'] }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', createdAt: now, status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', salary: { min: 5000 }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['JavaScript'], postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', createdAt: yesterday, status: 'Open', company: { name: 'Company B' }, location: 'Cairo, Egypt', salary: { min: 4000 }, jobType: 'Full-time', experienceLevel: 'Entry', skills: ['Python'], postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', createdAt: threeDaysAgo, status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', salary: { min: 6000 }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['Java'], postedBy: testUserId },
+        { title: 'Job 4', description: 'Test desc', requirements: 'Test req', createdAt: lastMonth, status: 'Open', company: { name: 'Company D' }, location: 'Cairo, Egypt', salary: { min: 5500 }, jobType: 'Full-time', experienceLevel: 'Mid', skills: ['PHP'], postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -207,10 +215,11 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should include filter counts in response', async () => {
       // إنشاء وظائف متنوعة
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', jobType: 'Full-time', status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, salary: { min: 5000 }, experienceLevel: 'Mid', skills: ['JavaScript'] },
-        { title: 'Job 2', jobType: 'Part-time', status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, salary: { min: 3000 }, experienceLevel: 'Entry', skills: ['Python'] },
-        { title: 'Job 3', jobType: 'Full-time', status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, salary: { min: 6000 }, experienceLevel: 'Mid', skills: ['Java'] }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', salary: { min: 5000 }, experienceLevel: 'Mid', skills: ['JavaScript'], postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', jobType: 'Part-time', status: 'Open', company: { name: 'Company B' }, location: 'Cairo, Egypt', salary: { min: 3000 }, experienceLevel: 'Entry', skills: ['Python'], postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', salary: { min: 6000 }, experienceLevel: 'Mid', skills: ['Java'], postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -234,10 +243,11 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should update count when filter changes', async () => {
       // إنشاء وظائف
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'Job 1', jobType: 'Full-time', experienceLevel: 'Entry', status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, salary: { min: 3000 }, skills: ['JavaScript'] },
-        { title: 'Job 2', jobType: 'Full-time', experienceLevel: 'Mid', status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, salary: { min: 5000 }, skills: ['Python'] },
-        { title: 'Job 3', jobType: 'Part-time', experienceLevel: 'Entry', status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, salary: { min: 2000 }, skills: ['Java'] }
+        { title: 'Job 1', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', experienceLevel: 'Entry', status: 'Open', company: { name: 'Company A' }, location: 'Cairo, Egypt', salary: { min: 3000 }, skills: ['JavaScript'], postedBy: testUserId },
+        { title: 'Job 2', description: 'Test desc', requirements: 'Test req', jobType: 'Full-time', experienceLevel: 'Mid', status: 'Open', company: { name: 'Company B' }, location: 'Cairo, Egypt', salary: { min: 5000 }, skills: ['Python'], postedBy: testUserId },
+        { title: 'Job 3', description: 'Test desc', requirements: 'Test req', jobType: 'Part-time', experienceLevel: 'Entry', status: 'Open', company: { name: 'Company C' }, location: 'Cairo, Egypt', salary: { min: 2000 }, skills: ['Java'], postedBy: testUserId }
       ];
 
       await JobPosting.insertMany(jobs);
@@ -286,34 +296,67 @@ describe('Result Count Accuracy Tests', () => {
 
     test('should return accurate count with text search and filters', async () => {
       // إنشاء وظائف
+      const testUserId = new mongoose.Types.ObjectId();
       const jobs = [
-        { title: 'JavaScript Developer', description: 'Frontend developer needed', jobType: 'Full-time', status: 'Open', company: { name: 'Company A' }, location: { city: 'Cairo' }, salary: { min: 5000 }, experienceLevel: 'Mid', skills: ['JavaScript', 'React'] },
-        { title: 'Python Developer', description: 'Backend developer needed', jobType: 'Full-time', status: 'Open', company: { name: 'Company B' }, location: { city: 'Cairo' }, salary: { min: 6000 }, experienceLevel: 'Mid', skills: ['Python', 'Django'] },
-        { title: 'JavaScript Engineer', description: 'Full stack developer needed', jobType: 'Remote', status: 'Open', company: { name: 'Company C' }, location: { city: 'Cairo' }, salary: { min: 7000 }, experienceLevel: 'Senior', skills: ['JavaScript', 'Node.js'] }
+        { 
+          title: 'JavaScript Developer', 
+          description: 'Frontend developer needed', 
+          requirements: 'Test req', 
+          jobType: 'Full-time', 
+          status: 'Open', 
+          company: { name: 'Company A' }, 
+          location: 'Cairo, Egypt', 
+          salary: { min: 5000 }, 
+          experienceLevel: 'Mid', 
+          skills: ['JavaScript', 'React'], 
+          postedBy: testUserId 
+        },
+        { 
+          title: 'Python Developer', 
+          description: 'Backend developer needed', 
+          requirements: 'Test req', 
+          jobType: 'Full-time', 
+          status: 'Open', 
+          company: { name: 'Company B' }, 
+          location: 'Cairo, Egypt', 
+          salary: { min: 6000 }, 
+          experienceLevel: 'Mid', 
+          skills: ['Python', 'Django'], 
+          postedBy: testUserId 
+        },
+        { 
+          title: 'Node.js Engineer', 
+          description: 'Full stack developer needed with JavaScript', 
+          requirements: 'Test req', 
+          jobType: 'Contract', 
+          status: 'Open', 
+          company: { name: 'Company C' }, 
+          location: 'Cairo, Egypt', 
+          salary: { min: 7000 }, 
+          experienceLevel: 'Senior', 
+          skills: ['JavaScript', 'Node.js'], 
+          postedBy: testUserId 
+        }
       ];
 
       await JobPosting.insertMany(jobs);
 
-      // إنشاء text index
-      await JobPosting.collection.createIndex({
-        title: 'text',
-        description: 'text',
-        skills: 'text'
-      });
-
-      // البحث النصي مع فلتر
+      // البحث النصي مع فلتر (لا حاجة لإنشاء index - موجود مسبقاً في النموذج)
       const result = await searchService.textSearch('JavaScript', {
         type: 'jobs',
         page: 1,
         limit: 20,
         filters: {
-          jobType: ['Full-time']
+          workType: ['Full-time']
         }
       });
 
-      // يجب أن يعيد Job 1 فقط (1 وظيفة)
+      // يجب أن يعيد Job 1 فقط (1 وظيفة Full-time تحتوي على JavaScript)
       expect(result.total).toBe(1);
       expect(result.results.length).toBe(1);
+      if (result.results.length > 0) {
+        expect(result.results[0].title).toBe('JavaScript Developer');
+      }
     });
   });
 });

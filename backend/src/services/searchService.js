@@ -2,8 +2,13 @@ const JobPosting = require('../models/JobPosting');
 const EducationalCourse = require('../models/EducationalCourse');
 const SearchHistory = require('../models/SearchHistory');
 const filterService = require('./filterService');
+const MatchingEngine = require('./matchingEngine');
 
 class SearchService {
+  constructor() {
+    this.matchingEngine = new MatchingEngine();
+  }
+
   /**
    * الحصول على اقتراحات تلقائية للبحث
    * @param {string} query - النص المدخل (يجب أن يكون 3 أحرف على الأقل)
@@ -481,6 +486,85 @@ class SearchService {
       console.error('Error in searchJobsInBounds:', error);
       throw error;
     }
+  }
+
+  /**
+   * البحث مع الترتيب حسب نسبة المطابقة
+   * @param {string} query - نص البحث (اختياري)
+   * @param {Object} userProfile - ملف المستخدم
+   * @param {Object} options - خيارات البحث
+   * @returns {Promise<Object>} - نتائج البحث مرتبة حسب المطابقة
+   */
+  async searchWithMatchScore(query, userProfile, options = {}) {
+    const {
+      type = 'jobs',
+      page = 1,
+      limit = 20,
+      filters = {}
+    } = options;
+
+    try {
+      // إذا كان هناك نص بحث، نستخدم textSearch
+      // وإلا نستخدم filterOnly
+      let searchResults;
+      if (query && query.trim().length > 0) {
+        searchResults = await this.textSearch(query, {
+          type,
+          page: 1, // نجلب كل النتائج أولاً
+          limit: 1000, // حد أقصى للنتائج قبل الترتيب
+          sort: 'relevance',
+          filters
+        });
+      } else {
+        searchResults = await this.filterOnly({
+          type,
+          page: 1,
+          limit: 1000,
+          sort: 'date',
+          filters
+        });
+      }
+
+      // إذا لم يكن هناك ملف مستخدم، نرجع النتائج كما هي
+      if (!userProfile) {
+        return {
+          ...searchResults,
+          page,
+          pages: Math.ceil(searchResults.total / limit),
+          results: searchResults.results.slice((page - 1) * limit, page * limit)
+        };
+      }
+
+      // ترتيب النتائج حسب نسبة المطابقة
+      const rankedResults = this.matchingEngine.rankByMatch(
+        searchResults.results,
+        userProfile
+      );
+
+      // تطبيق pagination على النتائج المرتبة
+      const skip = (page - 1) * limit;
+      const paginatedResults = rankedResults.slice(skip, skip + limit);
+
+      return {
+        results: paginatedResults,
+        total: searchResults.total,
+        page,
+        pages: Math.ceil(searchResults.total / limit),
+        filters: searchResults.filters,
+        sortedBy: 'match' // إشارة إلى أن النتائج مرتبة حسب المطابقة
+      };
+    } catch (error) {
+      console.error('Error in searchWithMatchScore:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * الحصول على MatchingEngine
+   * @returns {MatchingEngine}
+   */
+  getMatchingEngine() {
+    return this.matchingEngine;
   }
 }
 

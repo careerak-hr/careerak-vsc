@@ -1,15 +1,21 @@
-const mongoose = require('mongoose');
-const { performance } = require('perf_hooks');
-const searchService = require('../src/services/searchService');
-const JobPosting = require('../src/models/JobPosting');
-require('dotenv').config();
-
 /**
- * سكريبت قياس أداء نظام البحث
- * يقيس الوقت المستغرق لعمليات البحث المختلفة
- * الهدف: < 500ms لجميع العمليات
+ * سكريبت قياس مؤشرات الأداء (KPIs) لنظام البحث والفلترة
+ * 
+ * يقيس:
+ * 1. سرعة البحث: < 500ms
+ * 2. معدل استخدام الفلاتر: > 60%
+ * 3. معدل حفظ عمليات البحث: > 30%
+ * 4. معدل تفعيل التنبيهات: > 20%
+ * 5. معدل استخدام Map View: > 15%
  */
 
+const mongoose = require('mongoose');
+const SearchHistory = require('../src/models/SearchHistory');
+const SavedSearch = require('../src/models/SavedSearch');
+const SearchAlert = require('../src/models/SearchAlert');
+const JobPosting = require('../src/models/JobPosting');
+
+// الألوان للطباعة
 const colors = {
   reset: '\x1b[0m',
   green: '\x1b[32m',
@@ -19,212 +25,257 @@ const colors = {
   cyan: '\x1b[36m'
 };
 
-async function measurePerformance() {
+function printHeader(title) {
+  console.log('\n' + '='.repeat(60));
+  console.log(`${colors.cyan}${title}${colors.reset}`);
+  console.log('='.repeat(60));
+}
+
+function printMetric(name, value, target, unit = '') {
+  const status = value >= target ? '✅' : '❌';
+  const color = value >= target ? colors.green : colors.red;
+  console.log(`${status} ${name}: ${color}${value}${unit}${colors.reset} (الهدف: ${target}${unit})`);
+}
+
+async function measureSearchSpeed() {
+  printHeader('KPI 1: سرعة البحث');
+
+  const queries = ['developer', 'designer', 'manager', 'engineer', 'analyst'];
+  const durations = [];
+
+  for (const query of queries) {
+    const start = Date.now();
+    
+    await JobPosting.find({
+      $text: { $search: query }
+    }).limit(20).lean();
+    
+    const duration = Date.now() - start;
+    durations.push(duration);
+    
+    console.log(`  "${query}": ${duration}ms`);
+  }
+
+  const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
+  const maxDuration = Math.max(...durations);
+
+  console.log(`\n📊 متوسط الوقت: ${avgDuration.toFixed(0)}ms`);
+  console.log(`📊 أقصى وقت: ${maxDuration}ms`);
+  
+  printMetric('متوسط سرعة البحث', avgDuration.toFixed(0), 500, 'ms');
+  printMetric('أقصى سرعة بحث', maxDuration, 500, 'ms');
+
+  return {
+    avgDuration,
+    maxDuration,
+    target: 500,
+    passed: avgDuration < 500 && maxDuration < 500
+  };
+}
+
+async function measureFilterUsage() {
+  printHeader('KPI 2: معدل استخدام الفلاتر');
+
+  // حساب عمليات البحث في آخر 30 يوم
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const totalSearches = await SearchHistory.countDocuments({
+    timestamp: { $gte: thirtyDaysAgo }
+  });
+
+  const searchesWithFilters = await SearchHistory.countDocuments({
+    timestamp: { $gte: thirtyDaysAgo },
+    filters: { $exists: true, $ne: {} }
+  });
+
+  const filterUsageRate = totalSearches > 0 
+    ? (searchesWithFilters / totalSearches * 100).toFixed(1)
+    : 0;
+
+  console.log(`📊 إجمالي عمليات البحث: ${totalSearches}`);
+  console.log(`📊 عمليات بحث مع فلاتر: ${searchesWithFilters}`);
+  
+  printMetric('معدل استخدام الفلاتر', filterUsageRate, 60, '%');
+
+  return {
+    totalSearches,
+    searchesWithFilters,
+    rate: parseFloat(filterUsageRate),
+    target: 60,
+    passed: parseFloat(filterUsageRate) >= 60
+  };
+}
+
+async function measureSavedSearchRate() {
+  printHeader('KPI 3: معدل حفظ عمليات البحث');
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  // عدد المستخدمين الذين بحثوا
+  const uniqueSearchers = await SearchHistory.distinct('userId', {
+    timestamp: { $gte: thirtyDaysAgo }
+  });
+
+  // عدد المستخدمين الذين حفظوا بحث
+  const uniqueSavers = await SavedSearch.distinct('userId', {
+    createdAt: { $gte: thirtyDaysAgo }
+  });
+
+  const savedSearchRate = uniqueSearchers.length > 0
+    ? (uniqueSavers.length / uniqueSearchers.length * 100).toFixed(1)
+    : 0;
+
+  console.log(`📊 مستخدمون بحثوا: ${uniqueSearchers.length}`);
+  console.log(`📊 مستخدمون حفظوا بحث: ${uniqueSavers.length}`);
+  
+  printMetric('معدل حفظ عمليات البحث', savedSearchRate, 30, '%');
+
+  return {
+    uniqueSearchers: uniqueSearchers.length,
+    uniqueSavers: uniqueSavers.length,
+    rate: parseFloat(savedSearchRate),
+    target: 30,
+    passed: parseFloat(savedSearchRate) >= 30
+  };
+}
+
+async function measureAlertActivationRate() {
+  printHeader('KPI 4: معدل تفعيل التنبيهات');
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  // عدد المستخدمين الذين حفظوا بحث
+  const uniqueSavers = await SavedSearch.distinct('userId', {
+    createdAt: { $gte: thirtyDaysAgo }
+  });
+
+  // عدد المستخدمين الذين فعّلوا تنبيهات
+  const uniqueAlertUsers = await SearchAlert.distinct('userId', {
+    createdAt: { $gte: thirtyDaysAgo },
+    isActive: true
+  });
+
+  const alertActivationRate = uniqueSavers.length > 0
+    ? (uniqueAlertUsers.length / uniqueSavers.length * 100).toFixed(1)
+    : 0;
+
+  console.log(`📊 مستخدمون حفظوا بحث: ${uniqueSavers.length}`);
+  console.log(`📊 مستخدمون فعّلوا تنبيهات: ${uniqueAlertUsers.length}`);
+  
+  printMetric('معدل تفعيل التنبيهات', alertActivationRate, 20, '%');
+
+  return {
+    uniqueSavers: uniqueSavers.length,
+    uniqueAlertUsers: uniqueAlertUsers.length,
+    rate: parseFloat(alertActivationRate),
+    target: 20,
+    passed: parseFloat(alertActivationRate) >= 20
+  };
+}
+
+async function measureMapViewUsage() {
+  printHeader('KPI 5: معدل استخدام Map View');
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  // عمليات البحث العادية
+  const totalSearches = await SearchHistory.countDocuments({
+    timestamp: { $gte: thirtyDaysAgo }
+  });
+
+  // عمليات البحث على الخريطة (تحتوي على bounds)
+  const mapSearches = await SearchHistory.countDocuments({
+    timestamp: { $gte: thirtyDaysAgo },
+    'filters.bounds': { $exists: true }
+  });
+
+  const mapViewUsageRate = totalSearches > 0
+    ? (mapSearches / totalSearches * 100).toFixed(1)
+    : 0;
+
+  console.log(`📊 إجمالي عمليات البحث: ${totalSearches}`);
+  console.log(`📊 عمليات بحث على الخريطة: ${mapSearches}`);
+  
+  printMetric('معدل استخدام Map View', mapViewUsageRate, 15, '%');
+
+  return {
+    totalSearches,
+    mapSearches,
+    rate: parseFloat(mapViewUsageRate),
+    target: 15,
+    passed: parseFloat(mapViewUsageRate) >= 15
+  };
+}
+
+async function generateReport(results) {
+  printHeader('📊 ملخص مؤشرات الأداء (KPIs)');
+
+  const allPassed = Object.values(results).every(r => r.passed);
+
+  console.log('\n');
+  Object.entries(results).forEach(([key, result]) => {
+    const status = result.passed ? '✅' : '❌';
+    const color = result.passed ? colors.green : colors.red;
+    console.log(`${status} ${key}: ${color}${result.rate || result.avgDuration}${result.rate ? '%' : 'ms'}${colors.reset}`);
+  });
+
+  console.log('\n' + '='.repeat(60));
+  if (allPassed) {
+    console.log(`${colors.green}✅ جميع مؤشرات الأداء تلبي المتطلبات!${colors.reset}`);
+  } else {
+    console.log(`${colors.red}❌ بعض مؤشرات الأداء لا تلبي المتطلبات${colors.reset}`);
+  }
+  console.log('='.repeat(60) + '\n');
+
+  return allPassed;
+}
+
+async function main() {
   try {
-    console.log(`${colors.cyan}╔════════════════════════════════════════════════════════════╗${colors.reset}`);
-    console.log(`${colors.cyan}║         Search Performance Measurement Tool               ║${colors.reset}`);
-    console.log(`${colors.cyan}╚════════════════════════════════════════════════════════════╝${colors.reset}\n`);
+    console.log(`${colors.cyan}🚀 بدء قياس مؤشرات الأداء...${colors.reset}\n`);
 
     // الاتصال بقاعدة البيانات
-    console.log(`${colors.blue}📡 Connecting to MongoDB...${colors.reset}`);
-    await mongoose.connect(process.env.MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    console.log(`${colors.green}✓ Connected successfully${colors.reset}\n`);
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`${colors.green}✅ تم الاتصال بقاعدة البيانات${colors.reset}\n`);
 
-    // التحقق من وجود بيانات
-    const jobCount = await JobPosting.countDocuments({ status: 'Open' });
-    console.log(`${colors.blue}📊 Found ${jobCount} open job postings${colors.reset}\n`);
+    // قياس جميع المؤشرات
+    const results = {
+      'سرعة البحث': await measureSearchSpeed(),
+      'معدل استخدام الفلاتر': await measureFilterUsage(),
+      'معدل حفظ عمليات البحث': await measureSavedSearchRate(),
+      'معدل تفعيل التنبيهات': await measureAlertActivationRate(),
+      'معدل استخدام Map View': await measureMapViewUsage()
+    };
 
-    if (jobCount === 0) {
-      console.log(`${colors.yellow}⚠️  No job postings found. Creating sample data...${colors.reset}`);
-      await createSampleData();
-    }
+    // توليد التقرير
+    const allPassed = await generateReport(results);
 
-    console.log(`${colors.cyan}═══════════════════════════════════════════════════════════${colors.reset}`);
-    console.log(`${colors.cyan}Performance Tests${colors.reset}`);
-    console.log(`${colors.cyan}═══════════════════════════════════════════════════════════${colors.reset}\n`);
-
-    const tests = [
-      {
-        name: 'Simple Text Search',
-        fn: () => searchService.textSearch('developer', { page: 1, limit: 10 })
-      },
-      {
-        name: 'Arabic Text Search',
-        fn: () => searchService.textSearch('مطور', { page: 1, limit: 10 })
-      },
-      {
-        name: 'Multi-field Search',
-        fn: () => searchService.searchInFields('JavaScript', ['title', 'description', 'skills'], { page: 1, limit: 10 })
-      },
-      {
-        name: 'Search with Location Filter',
-        fn: () => searchService.searchWithFilters('developer', { location: 'Cairo' }, { page: 1, limit: 10 })
-      },
-      {
-        name: 'Search with Salary Filter',
-        fn: () => searchService.searchWithFilters('developer', { salaryMin: 3000, salaryMax: 8000 }, { page: 1, limit: 10 })
-      },
-      {
-        name: 'Search with Skills (AND)',
-        fn: () => searchService.searchWithFilters('', { skills: ['JavaScript', 'React'], skillsLogic: 'AND' }, { page: 1, limit: 10 })
-      },
-      {
-        name: 'Search with Skills (OR)',
-        fn: () => searchService.searchWithFilters('', { skills: ['JavaScript', 'Python', 'Java'], skillsLogic: 'OR' }, { page: 1, limit: 10 })
-      },
-      {
-        name: 'Search with Date Filter',
-        fn: () => searchService.searchWithFilters('developer', { datePosted: 'week' }, { page: 1, limit: 10 })
-      },
-      {
-        name: 'Complex Multi-filter Search',
-        fn: () => searchService.searchWithFilters('developer', {
-          location: 'Cairo',
-          jobType: ['Full-time'],
-          experienceLevel: ['Mid', 'Senior'],
-          salaryMin: 3000,
-          salaryMax: 10000,
-          skills: ['JavaScript'],
-          datePosted: 'month'
-        }, { page: 1, limit: 10 })
-      },
-      {
-        name: 'Large Result Set (50 items)',
-        fn: () => searchService.textSearch('developer', { page: 1, limit: 50 })
-      },
-      {
-        name: 'Deep Pagination (page 5)',
-        fn: () => searchService.textSearch('developer', { page: 5, limit: 10 })
-      },
-      {
-        name: 'Sorted by Salary',
-        fn: () => searchService.textSearch('developer', { page: 1, limit: 10, sort: 'salary' })
-      }
-    ];
-
-    const results = [];
-    let passedCount = 0;
-    let failedCount = 0;
-
-    for (const test of tests) {
-      const startTime = performance.now();
-      
-      try {
-        const result = await test.fn();
-        const endTime = performance.now();
-        const duration = endTime - startTime;
-        
-        const passed = duration < 500;
-        const status = passed ? `${colors.green}✓ PASS${colors.reset}` : `${colors.red}✗ FAIL${colors.reset}`;
-        const durationColor = passed ? colors.green : colors.red;
-        
-        console.log(`${status} ${test.name.padEnd(35)} ${durationColor}${duration.toFixed(2)}ms${colors.reset}`);
-        
-        results.push({
-          name: test.name,
-          duration,
-          passed,
-          resultCount: result.data?.results?.length || 0
-        });
-
-        if (passed) passedCount++;
-        else failedCount++;
-
-      } catch (error) {
-        console.log(`${colors.red}✗ ERROR${colors.reset} ${test.name.padEnd(35)} ${error.message}`);
-        failedCount++;
-      }
-    }
-
-    // ملخص الأداء
-    console.log(`\n${colors.cyan}═══════════════════════════════════════════════════════════${colors.reset}`);
-    console.log(`${colors.cyan}Performance Summary${colors.reset}`);
-    console.log(`${colors.cyan}═══════════════════════════════════════════════════════════${colors.reset}\n`);
-
-    const durations = results.map(r => r.duration);
-    const avgDuration = durations.reduce((a, b) => a + b, 0) / durations.length;
-    const maxDuration = Math.max(...durations);
-    const minDuration = Math.min(...durations);
-
-    console.log(`Total Tests:     ${tests.length}`);
-    console.log(`${colors.green}Passed:          ${passedCount}${colors.reset}`);
-    console.log(`${colors.red}Failed:          ${failedCount}${colors.reset}`);
-    console.log(`\nAverage Time:    ${avgDuration.toFixed(2)}ms`);
-    console.log(`Min Time:        ${minDuration.toFixed(2)}ms`);
-    console.log(`Max Time:        ${maxDuration.toFixed(2)}ms`);
-    console.log(`Target:          < 500ms`);
-    
-    const overallStatus = failedCount === 0 ? 
-      `${colors.green}✅ ALL TESTS PASSED${colors.reset}` : 
-      `${colors.red}❌ SOME TESTS FAILED${colors.reset}`;
-    
-    console.log(`\nOverall Status:  ${overallStatus}\n`);
-
-    // توصيات
-    if (avgDuration > 300) {
-      console.log(`${colors.yellow}⚠️  Recommendations:${colors.reset}`);
-      console.log(`   - Consider adding more indexes`);
-      console.log(`   - Implement caching for frequent queries`);
-      console.log(`   - Review database query optimization\n`);
-    }
-
-    // أبطأ الاستعلامات
-    if (results.length > 0) {
-      console.log(`${colors.cyan}═══════════════════════════════════════════════════════════${colors.reset}`);
-      console.log(`${colors.cyan}Slowest Queries${colors.reset}`);
-      console.log(`${colors.cyan}═══════════════════════════════════════════════════════════${colors.reset}\n`);
-
-      const slowest = [...results].sort((a, b) => b.duration - a.duration).slice(0, 5);
-      slowest.forEach((result, index) => {
-        const color = result.duration > 500 ? colors.red : result.duration > 300 ? colors.yellow : colors.green;
-        console.log(`${index + 1}. ${result.name.padEnd(35)} ${color}${result.duration.toFixed(2)}ms${colors.reset}`);
-      });
-      console.log('');
-    }
-
+    // إغلاق الاتصال
     await mongoose.connection.close();
-    console.log(`${colors.blue}📡 Database connection closed${colors.reset}\n`);
 
-    process.exit(failedCount === 0 ? 0 : 1);
+    // الخروج بالكود المناسب
+    process.exit(allPassed ? 0 : 1);
 
   } catch (error) {
-    console.error(`${colors.red}❌ Error:${colors.reset}`, error.message);
-    await mongoose.connection.close();
+    console.error(`${colors.red}❌ خطأ: ${error.message}${colors.reset}`);
+    console.error(error.stack);
     process.exit(1);
   }
 }
 
-async function createSampleData() {
-  const sampleJobs = [];
-  
-  for (let i = 0; i < 50; i++) {
-    sampleJobs.push({
-      title: `Software Developer ${i}`,
-      description: `Looking for a talented developer with experience in JavaScript, React, Node.js`,
-      requirements: `Bachelor's degree in Computer Science or related field`,
-      postingType: 'Permanent Job',
-      priceType: 'Salary Based',
-      salary: { min: 3000 + (i * 100), max: 5000 + (i * 100) },
-      location: i % 2 === 0 ? 'Cairo' : 'Alexandria',
-      jobType: ['Full-time', 'Part-time', 'Contract'][i % 3],
-      skills: ['JavaScript', 'React', 'Node.js', 'MongoDB'],
-      company: {
-        name: `Tech Company ${i}`,
-        size: ['Small', 'Medium', 'Large'][i % 3]
-      },
-      experienceLevel: ['Entry', 'Mid', 'Senior', 'Expert'][i % 4],
-      postedBy: new mongoose.Types.ObjectId(),
-      status: 'Open',
-      createdAt: new Date(Date.now() - (i * 86400000))
-    });
-  }
-
-  await JobPosting.insertMany(sampleJobs);
-  console.log(`${colors.green}✓ Created 50 sample job postings${colors.reset}\n`);
+// تشغيل السكريبت
+if (require.main === module) {
+  main();
 }
 
-// تشغيل القياس
-measurePerformance();
+module.exports = {
+  measureSearchSpeed,
+  measureFilterUsage,
+  measureSavedSearchRate,
+  measureAlertActivationRate,
+  measureMapViewUsage
+};

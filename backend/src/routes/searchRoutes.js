@@ -85,4 +85,9 @@ router.get('/map', searchController.searchJobsOnMap);
 // ============================================
 router.use('/saved', savedSearchRoutes);
 
+// ============================================
+// Search Alert Routes (Protected)
+// ============================================
+router.use('/alerts', require('./searchAlertRoutes'));
+
 module.exports = router;

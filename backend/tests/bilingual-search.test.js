@@ -24,6 +24,14 @@ describe('Bilingual Search Support', () => {
       });
     }
 
+    // إنشاء الـ indexes (مهم للبحث النصي)
+    try {
+      await JobPosting.createIndexes();
+      console.log('✅ تم إنشاء الـ indexes بنجاح');
+    } catch (error) {
+      console.log('ℹ️ الـ indexes موجودة بالفعل');
+    }
+
     testUserId = new mongoose.Types.ObjectId();
   });
 

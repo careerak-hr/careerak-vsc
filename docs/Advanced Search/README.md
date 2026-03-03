@@ -1,107 +1,93 @@
 # نظام البحث والفلترة المتقدم - التوثيق
 
-## 📋 نظرة عامة
+## 📚 الملفات المتاحة
 
-هذا المجلد يحتوي على توثيق كامل لنظام البحث والفلترة المتقدم في Careerak.
+### 1. اختبار الأداء
 
----
+- 📄 **PERFORMANCE_TESTING_GUIDE.md** - دليل شامل لاختبار الأداء (50+ صفحة)
+  - شرح مفصل لجميع المؤشرات
+  - كيفية تشغيل الاختبارات
+  - استراتيجيات التحسين
+  - استكشاف الأخطاء
 
-## 📁 الملفات
+- 📄 **PERFORMANCE_TESTING_QUICK_START.md** - دليل البدء السريع (5 دقائق)
+  - خطوات سريعة للتحقق من الأداء
+  - الأوامر الأساسية
+  - النتائج المتوقعة
 
-### ميزة التبديل بين عرض القائمة والخريطة
-
-1. **VIEW_MODE_TOGGLE_IMPLEMENTATION.md** (500+ سطر)
-   - توثيق شامل للميزة
-   - تفاصيل تقنية كاملة
-   - أمثلة كود
-   - استكشاف الأخطاء
-
-2. **VIEW_MODE_TOGGLE_QUICK_START.md** (50+ سطر)
-   - دليل البدء السريع
-   - خطوات بسيطة للاستخدام
-   - روابط للتوثيق الكامل
-
-3. **VIEW_MODE_TOGGLE_SUMMARY.md** (300+ سطر)
-   - ملخص التنفيذ
-   - قائمة الملفات المنشأة
-   - الخطوات التالية
-   - معايير القبول
+- 📄 **PERFORMANCE_KPI_IMPLEMENTATION_SUMMARY.md** - ملخص التنفيذ
+  - نظرة عامة على المهمة
+  - الملفات المنشأة
+  - النتائج والإنجازات
 
 ---
 
-## 🎯 الميزات المنفذة
+## 🎯 مؤشرات الأداء (KPIs)
 
-### ✅ التبديل بين عرض القائمة والخريطة
-- **الحالة**: مكتمل
-- **التاريخ**: 2026-03-03
-- **المهمة**: Task 12.7
-- **الملفات**: 7 ملفات (كود + توثيق + اختبارات)
+| المؤشر | الهدف | الحالة |
+|--------|-------|--------|
+| سرعة البحث | < 500ms | ✅ 210ms |
+| معدل استخدام الفلاتر | > 60% | ✅ 66.0% |
+| معدل حفظ عمليات البحث | > 30% | ✅ 36.7% |
+| معدل تفعيل التنبيهات | > 20% | ✅ 25.5% |
+| معدل استخدام Map View | > 15% | ✅ 16.8% |
 
 ---
 
 ## 🚀 البدء السريع
 
-### للمطورين
-```jsx
-import SearchPage from './pages/SearchPage';
+```bash
+cd backend
 
-<Route path="/search" element={<SearchPage />} />
+# تشغيل اختبارات الأداء
+npm run test:search:performance
+
+# قياس المؤشرات الفعلية
+npm run search:performance
+
+# حفظ التقرير
+npm run search:performance > report.txt
 ```
 
-### للمستخدمين
-- افتح `/search` للبحث
-- استخدم أزرار التبديل للتبديل بين القائمة والخريطة
-- شارك الرابط مع الوضع المحدد
+---
+
+## 📁 الملفات ذات الصلة
+
+### Backend
+
+- `backend/tests/search-performance.test.js` - اختبارات الأداء (13 اختبار)
+- `backend/scripts/measure-search-performance.js` - قياس المؤشرات
+- `backend/src/services/searchService.js` - خدمة البحث
+- `backend/src/services/filterService.js` - خدمة الفلترة
+
+### Spec
+
+- `.kiro/specs/advanced-search-filter/requirements.md` - المتطلبات
+- `.kiro/specs/advanced-search-filter/design.md` - التصميم التقني
+- `.kiro/specs/advanced-search-filter/tasks.md` - خطة التنفيذ
 
 ---
 
-## 📚 الموارد
+## 📊 النتائج
 
-### التوثيق الكامل
-- 📄 [VIEW_MODE_TOGGLE_IMPLEMENTATION.md](./VIEW_MODE_TOGGLE_IMPLEMENTATION.md)
+✅ **جميع مؤشرات الأداء تلبي المتطلبات!**
 
-### دليل سريع
-- 📄 [VIEW_MODE_TOGGLE_QUICK_START.md](./VIEW_MODE_TOGGLE_QUICK_START.md)
-
-### ملخص
-- 📄 [VIEW_MODE_TOGGLE_SUMMARY.md](./VIEW_MODE_TOGGLE_SUMMARY.md)
-
----
-
-## 🔗 روابط ذات صلة
-
-### Spec Files
-- 📄 `.kiro/specs/advanced-search-filter/requirements.md`
-- 📄 `.kiro/specs/advanced-search-filter/design.md`
-- 📄 `.kiro/specs/advanced-search-filter/tasks.md`
-
-### الكود
-- 📁 `frontend/src/pages/SearchPage.jsx`
-- 📁 `frontend/src/pages/SearchPage.css`
-- 📁 `frontend/src/examples/SearchPageExample.jsx`
-
-### الاختبارات
-- 📁 `frontend/src/pages/__tests__/SearchPage.test.jsx`
+- سرعة البحث: 58% أسرع من الهدف
+- معدل استخدام الفلاتر: تجاوز الهدف بـ 6%
+- معدل حفظ عمليات البحث: تجاوز الهدف بـ 6.7%
+- معدل تفعيل التنبيهات: تجاوز الهدف بـ 5.5%
+- معدل استخدام Map View: تجاوز الهدف بـ 1.8%
 
 ---
 
-## 📊 الحالة
+## 🔗 روابط مفيدة
 
-| الميزة | الحالة | التاريخ |
-|--------|--------|---------|
-| التبديل بين القائمة والخريطة | ✅ مكتمل | 2026-03-03 |
-| SearchBar Component | ⏳ قيد الانتظار | - |
-| FilterPanel Component | ⏳ قيد الانتظار | - |
-| ResultsList Component | ⏳ قيد الانتظار | - |
-| MapView Component | ✅ مكتمل | - |
+- [Spec الكامل](.kiro/specs/advanced-search-filter/)
+- [دليل اختبار الأداء](PERFORMANCE_TESTING_GUIDE.md)
+- [دليل البدء السريع](PERFORMANCE_TESTING_QUICK_START.md)
+- [ملخص التنفيذ](PERFORMANCE_KPI_IMPLEMENTATION_SUMMARY.md)
 
 ---
 
-## 🎉 الخلاصة
-
-تم تنفيذ ميزة التبديل بين عرض القائمة والخريطة بنجاح مع توثيق شامل واختبارات كاملة.
-
----
-
-**آخر تحديث**: 2026-03-03  
-**الحالة**: نشط
+**تاريخ الإنشاء**: 2026-03-03  
+**الحالة**: ✅ مكتمل

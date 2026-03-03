@@ -76,9 +76,11 @@ class FilterService {
       salaryFilter.$lte = max;
     }
 
-    // التحقق من صحة النطاق
+    // التحقق من صحة النطاق - إذا كان متناقض، أرجع query يطابق لا شيء
     if (min !== undefined && max !== undefined && min > max) {
-      throw new Error('Minimum salary cannot be greater than maximum salary');
+      // فلتر متناقض - لن يطابق أي شيء
+      query._id = { $exists: false }; // query يطابق لا شيء
+      return query;
     }
 
     if (Object.keys(salaryFilter).length > 0) {
