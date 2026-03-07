@@ -1,0 +1,713 @@
+/* 
+ * Apply Page Responsive Design
+ * Comprehensive responsive styles for Apply Page
+ * Created: 2026-03-03
+ * Requirements: 10.1-10.10
+ */
+
+/* ========================================
+   Color Palette (Project Standards)
+   ======================================== */
+:root {
+  --primary: #304B60;
+  --secondary: #E3DAD1;
+  --accent: #D48161;
+  --input-border: #D4816180; /* CRITICAL: Never change this color */
+}
+
+/* ========================================
+   Base Styles - Mobile First
+   ======================================== */
+
+.apply-page-container {
+  min-height: 100vh;
+  background-color: var(--secondary);
+  transition: opacity 1000ms;
+  overflow-x: hidden;
+}
+
+.apply-page-main {
+  max-width: 64rem; /* 1024px */
+  margin: 0 auto;
+  padding: 6rem 1rem 8rem;
+}
+
+/* ========================================
+   Apply Card - Responsive
+   ======================================== */
+
+.apply-card {
+  background-color: var(--secondary);
+  border-radius: 3rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 2rem;
+  border: 2px solid rgba(48, 75, 96, 0.05);
+  margin-bottom: 2rem;
+}
+
+/* ========================================
+   Header Section - Responsive
+   ======================================== */
+
+.apply-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.apply-header-icon-container {
+  width: 4rem;
+  height: 4rem;
+  background-color: var(--primary);
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.apply-header-text-container h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  margin: 0;
+}
+
+.apply-header-text-container p {
+  color: rgba(48, 75, 96, 0.5);
+  font-weight: 700;
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+}
+
+/* ========================================
+   Form Elements - Mobile First
+   ======================================== */
+
+.apply-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.apply-form-label {
+  display: block;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.apply-form-label-required {
+  color: #DC2626;
+  margin-left: 0.25rem;
+}
+
+.apply-form-input,
+.apply-form-textarea,
+.apply-form-select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 16px; /* CRITICAL: Prevent iOS zoom */
+  border: 2px solid var(--input-border); /* CRITICAL: Never change this color */
+  border-radius: 1rem;
+  background-color: white;
+  color: var(--primary);
+  font-weight: 600;
+  transition: all 200ms;
+  font-family: inherit;
+}
+
+.apply-form-input:focus,
+.apply-form-textarea:focus,
+.apply-form-select:focus {
+  outline: none;
+  border-color: var(--input-border); /* CRITICAL: Same color on focus */
+  box-shadow: 0 0 0 3px rgba(212, 129, 97, 0.1);
+}
+
+.apply-form-textarea {
+  min-height: 8rem;
+  resize: vertical;
+}
+
+.apply-form-error {
+  color: #DC2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 600;
+}
+
+.apply-form-help-text {
+  color: rgba(48, 75, 96, 0.6);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/* ========================================
+   File Upload - Responsive
+   ======================================== */
+
+.apply-file-upload-container {
+  border: 2px dashed var(--input-border);
+  border-radius: 1rem;
+  padding: 2rem 1rem;
+  text-align: center;
+  background-color: rgba(212, 129, 97, 0.05);
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.apply-file-upload-container:hover {
+  background-color: rgba(212, 129, 97, 0.1);
+  border-color: var(--accent);
+}
+
+.apply-file-upload-icon {
+  font-size: 3rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.apply-file-upload-text {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.apply-file-upload-subtext {
+  color: rgba(48, 75, 96, 0.6);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.apply-file-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: rgba(48, 75, 96, 0.05);
+  border-radius: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.apply-file-preview-icon {
+  font-size: 1.5rem;
+  color: var(--accent);
+}
+
+.apply-file-preview-name {
+  flex: 1;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.apply-file-preview-remove {
+  background: none;
+  border: none;
+  color: #DC2626;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.25rem;
+  min-width: 44px; /* Touch target */
+  min-height: 44px; /* Touch target */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ========================================
+   Buttons - Touch Optimized
+   ======================================== */
+
+.apply-submit-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background-color: var(--primary);
+  color: var(--accent);
+  border-radius: 2.5rem;
+  font-weight: 900;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transition: all 200ms;
+  font-size: 1.125rem;
+  border: none;
+  cursor: pointer;
+  min-height: 44px; /* Touch target */
+  font-family: inherit;
+}
+
+.apply-submit-btn:active {
+  transform: scale(0.95);
+}
+
+.apply-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.apply-cancel-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  background-color: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 2.5rem;
+  font-weight: 900;
+  transition: all 200ms;
+  font-size: 1.125rem;
+  cursor: pointer;
+  min-height: 44px; /* Touch target */
+  font-family: inherit;
+  margin-top: 1rem;
+}
+
+.apply-cancel-btn:hover {
+  background-color: rgba(48, 75, 96, 0.05);
+}
+
+/* ========================================
+   Preview Section - Responsive
+   ======================================== */
+
+.apply-preview-section {
+  background-color: rgba(48, 75, 96, 0.05);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.apply-preview-title {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--primary);
+  margin-bottom: 1rem;
+  border-right: 4px solid var(--accent);
+  padding-right: 0.75rem;
+}
+
+.apply-preview-item {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(48, 75, 96, 0.1);
+}
+
+.apply-preview-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.apply-preview-label {
+  font-weight: 700;
+  color: rgba(48, 75, 96, 0.7);
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.apply-preview-value {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 1rem;
+}
+
+/* ========================================
+   Success/Error Messages
+   ======================================== */
+
+.apply-success-message {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+  border-radius: 1.5rem;
+  font-weight: 900;
+  text-align: center;
+  border: 2px solid rgba(34, 197, 94, 0.2);
+  animation: bounce 1s infinite;
+}
+
+.apply-error-message {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #991b1b;
+  border-radius: 1.5rem;
+  font-weight: 900;
+  text-align: center;
+  border: 2px solid rgba(220, 38, 38, 0.2);
+}
+
+/* ========================================
+   Loading States
+   ======================================== */
+
+.apply-loading-spinner-container {
+  min-height: 100vh;
+  background-color: var(--secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apply-loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid var(--primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ========================================
+   Tablet Breakpoint (640px - 1023px)
+   ======================================== */
+
+@media (min-width: 640px) {
+  .apply-page-main {
+    padding: 6rem 2rem 8rem;
+  }
+
+  .apply-card {
+    padding: 3rem;
+  }
+
+  .apply-header {
+    gap: 1.5rem;
+  }
+
+  .apply-header-icon-container {
+    width: 5rem;
+    height: 5rem;
+    font-size: 2.5rem;
+  }
+
+  .apply-header-text-container h2 {
+    font-size: 2rem;
+  }
+
+  .apply-header-text-container p {
+    font-size: 1rem;
+  }
+
+  .apply-form-group {
+    margin-bottom: 2rem;
+  }
+
+  .apply-file-upload-container {
+    padding: 3rem 2rem;
+  }
+
+  /* Two-column layout for buttons */
+  .apply-button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .apply-button-group .apply-submit-btn,
+  .apply-button-group .apply-cancel-btn {
+    margin-top: 0;
+  }
+}
+
+/* ========================================
+   Desktop Breakpoint (1024px+)
+   ======================================== */
+
+@media (min-width: 1024px) {
+  .apply-page-main {
+    padding: 6rem 4rem 8rem;
+  }
+
+  .apply-card {
+    padding: 4rem;
+  }
+
+  .apply-header {
+    gap: 2rem;
+  }
+
+  .apply-header-icon-container {
+    width: 6rem;
+    height: 6rem;
+    font-size: 3rem;
+  }
+
+  .apply-header-text-container h2 {
+    font-size: 2.5rem;
+  }
+
+  .apply-header-text-container p {
+    font-size: 1.125rem;
+  }
+
+  /* Two-column form layout for some fields */
+  .apply-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .apply-form-input,
+  .apply-form-textarea,
+  .apply-form-select {
+    padding: 1rem 1.25rem;
+  }
+
+  .apply-file-upload-container {
+    padding: 4rem 3rem;
+  }
+
+  .apply-submit-btn,
+  .apply-cancel-btn {
+    font-size: 1.25rem;
+    padding: 1.25rem 2.5rem;
+  }
+}
+
+/* ========================================
+   RTL Support (Already implemented in subtask 18.2)
+   ======================================== */
+
+[dir="rtl"] .apply-header-text-container h2,
+[dir="rtl"] .apply-preview-title {
+  border-right: none;
+  border-left: 4px solid var(--accent);
+  padding-right: 0;
+  padding-left: 0.75rem;
+}
+
+[dir="rtl"] .apply-form-label-required {
+  margin-left: 0;
+  margin-right: 0.25rem;
+}
+
+/* ========================================
+   Dark Mode Support (Optional)
+   ======================================== */
+
+@media (prefers-color-scheme: dark) {
+  .apply-page-container {
+    background-color: #1a1a1a;
+  }
+
+  .apply-card {
+    background-color: #2a2a2a;
+    border-color: rgba(227, 218, 209, 0.1);
+  }
+
+  .apply-form-input,
+  .apply-form-textarea,
+  .apply-form-select {
+    background-color: #1a1a1a;
+    color: var(--secondary);
+  }
+
+  .apply-preview-section {
+    background-color: rgba(227, 218, 209, 0.05);
+  }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+
+@media print {
+  .apply-page-main {
+    padding: 1rem;
+  }
+
+  .apply-submit-btn,
+  .apply-cancel-btn {
+    display: none;
+  }
+
+  .apply-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+}
+
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+
+/* Focus visible for keyboard navigation */
+.apply-form-input:focus-visible,
+.apply-form-textarea:focus-visible,
+.apply-form-select:focus-visible,
+.apply-submit-btn:focus-visible,
+.apply-cancel-btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .apply-form-input,
+  .apply-form-textarea,
+  .apply-form-select {
+    border-width: 3px;
+  }
+
+  .apply-submit-btn,
+  .apply-cancel-btn {
+    border-width: 3px;
+  }
+}
+
+/* ========================================
+   Safe Area Support (iOS Notch)
+   ======================================== */
+
+@supports (padding: max(0px)) {
+  .apply-page-main {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(8rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* ========================================
+   Small Screens (<640px) - Additional Fixes
+   ======================================== */
+
+@media (max-width: 639px) {
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  /* Smaller padding on very small screens */
+  .apply-card {
+    padding: 1.5rem;
+    border-radius: 2rem;
+  }
+
+  .apply-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .apply-header-icon-container {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1.75rem;
+  }
+
+  .apply-header-text-container h2 {
+    font-size: 1.25rem;
+  }
+
+  .apply-header-text-container p {
+    font-size: 0.75rem;
+  }
+
+  /* Stack form elements */
+  .apply-form-row {
+    display: block;
+  }
+
+  .apply-form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  /* Smaller buttons on mobile */
+  .apply-submit-btn,
+  .apply-cancel-btn {
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+
+  /* Smaller file upload area */
+  .apply-file-upload-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .apply-file-upload-icon {
+    font-size: 2rem;
+  }
+
+  .apply-file-upload-text {
+    font-size: 0.875rem;
+  }
+
+  .apply-file-upload-subtext {
+    font-size: 0.75rem;
+  }
+}
+
+/* ========================================
+   Very Small Screens (<375px)
+   ======================================== */
+
+@media (max-width: 374px) {
+  html {
+    font-size: 14px;
+  }
+
+  .apply-card {
+    padding: 1rem;
+  }
+
+  .apply-header-text-container h2 {
+    font-size: 1.125rem;
+  }
+
+  .apply-form-input,
+  .apply-form-textarea,
+  .apply-form-select {
+    padding: 0.75rem;
+  }
+
+  .apply-submit-btn,
+  .apply-cancel-btn {
+    font-size: 0.875rem;
+    padding: 0.75rem 1.25rem;
+  }
+}
+
+/* ========================================
+   Landscape Mode (Mobile)
+   ======================================== */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .apply-page-main {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .apply-card {
+    padding: 1.5rem;
+  }
+
+  .apply-header {
+    margin-bottom: 1rem;
+  }
+
+  .apply-form-group {
+    margin-bottom: 1rem;
+  }
+}

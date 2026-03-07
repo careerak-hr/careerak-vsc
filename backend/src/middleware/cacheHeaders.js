@@ -1,134 +1,158 @@
-/**
- * Cache Headers Middleware
- * 
- * Sets appropriate Cache-Control and ETag headers for API responses.
- * Implements Requirements 11.2
- */
-
 const crypto = require('crypto');
 
 /**
- * Generate ETag from response body
- * @param {string|Object} body - Response body
- * @returns {string} ETag hash
+ * Middleware لإضافة Cache-Control headers للـ GET endpoints
  */
-const generateETag = (body) => {
-  const content = typeof body === 'string' ? body : JSON.stringify(body);
-  return crypto.createHash('md5').update(content).digest('hex');
-};
-
-/**
- * Cache headers middleware for statistics endpoints
- * Sets Cache-Control: public, max-age=30 for statistics data
- * 
- * @param {Object} options - Middleware options
- * @param {number} options.maxAge - Max age in seconds (default: 30)
- * @param {boolean} options.public - Whether cache is public (default: true)
- * @param {boolean} options.etag - Whether to generate ETag (default: true)
- * @returns {Function} Express middleware
- */
-const cacheHeaders = (options = {}) => {
-  const {
-    maxAge = 30,
-    public: isPublic = true,
-    etag: useETag = true
-  } = options;
-
+const setCacheControl = (maxAge = 300) => {
   return (req, res, next) => {
-    // Store original json method
-    const originalJson = res.json.bind(res);
-
-    // Override json method to add cache headers
-    res.json = function(body) {
-      // Set Cache-Control header
-      const cacheControl = isPublic ? 'public' : 'private';
-      res.set('Cache-Control', `${cacheControl}, max-age=${maxAge}`);
-
-      // Generate and set ETag if enabled
-      if (useETag && body) {
-        const etag = generateETag(body);
-        res.set('ETag', `"${etag}"`);
-
-        // Check if client has matching ETag
-        const clientETag = req.get('If-None-Match');
-        if (clientETag === `"${etag}"`) {
-          // Client has fresh data, return 304 Not Modified
-          return res.status(304).end();
-        }
-      }
-
-      // Set Vary header to indicate response varies by Authorization
-      res.set('Vary', 'Authorization');
-
-      // Call original json method
-      return originalJson(body);
-    };
-
+    if (req.method === 'GET') {
+      // Cache-Control header
+      res.set('Cache-Control', `public, max-age=${maxAge}`);
+    }
     next();
   };
 };
 
 /**
- * No-cache headers middleware for sensitive or frequently changing data
- * Sets Cache-Control: no-cache, no-store, must-revalidate
- * 
- * @returns {Function} Express middleware
+ * Middleware لإضافة ETag headers
  */
-const noCacheHeaders = () => {
+const setETag = (req, res, next) => {
+  if (req.method === 'GET') {
+    // حفظ الدالة الأصلية
+    const originalSend = res.send;
+    
+    // استبدال دالة send
+    res.send = function(data) {
+      // حساب ETag من البيانات
+      const etag = generateETag(data);
+      res.set('ETag', etag);
+      
+      // التحقق من If-None-Match header
+      const clientETag = req.get('If-None-Match');
+      if (clientETag === etag) {
+        // البيانات لم تتغير، إرجاع 304
+        res.status(304);
+        return originalSend.call(this, '');
+      }
+      
+      // إرسال البيانات
+      return originalSend.call(this, data);
+    };
+  }
+  
+  next();
+};
+
+/**
+ * توليد ETag من البيانات
+ */
+const generateETag = (data) => {
+  const content = typeof data === 'string' ? data : JSON.stringify(data);
+  return `"${crypto.createHash('md5').update(content).digest('hex')}"`;
+};
+
+/**
+ * Middleware لإضافة Vary header
+ */
+const setVaryHeader = (headers = ['Accept-Encoding', 'Accept-Language']) => {
   return (req, res, next) => {
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.set('Vary', headers.join(', '));
+    next();
+  };
+};
+
+/**
+ * Middleware شامل للـ caching
+ * يجمع Cache-Control, ETag, و Vary
+ */
+const cacheMiddleware = (options = {}) => {
+  const {
+    maxAge = 300, // 5 دقائق افتراضياً
+    varyHeaders = ['Accept-Encoding', 'Accept-Language'],
+    enableETag = true
+  } = options;
+  
+  return (req, res, next) => {
+    if (req.method === 'GET') {
+      // Cache-Control
+      res.set('Cache-Control', `public, max-age=${maxAge}`);
+      
+      // Vary
+      res.set('Vary', varyHeaders.join(', '));
+      
+      // ETag
+      if (enableETag) {
+        const originalSend = res.send;
+        res.send = function(data) {
+          const etag = generateETag(data);
+          res.set('ETag', etag);
+          
+          const clientETag = req.get('If-None-Match');
+          if (clientETag === etag) {
+            res.status(304);
+            return originalSend.call(this, '');
+          }
+          
+          return originalSend.call(this, data);
+        };
+      }
+    }
+    
+    next();
+  };
+};
+
+/**
+ * إعدادات cache مسبقة للاستخدامات المختلفة
+ */
+const cachePresets = {
+  // بيانات ثابتة (24 ساعة)
+  static: cacheMiddleware({ maxAge: 86400 }),
+  
+  // بيانات متوسطة التغيير (1 ساعة)
+  medium: cacheMiddleware({ maxAge: 3600 }),
+  
+  // بيانات سريعة التغيير (5 دقائق)
+  short: cacheMiddleware({ maxAge: 300 }),
+  
+  // بدون cache
+  noCache: (req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
     next();
-  };
+  }
 };
 
 /**
- * Short-lived cache headers for frequently updated data
- * Sets Cache-Control: public, max-age=10
- * 
- * @returns {Function} Express middleware
+ * Middleware خاص بالدورات
  */
-const shortCacheHeaders = () => {
-  return cacheHeaders({ maxAge: 10, public: true, etag: true });
-};
-
-/**
- * Medium-lived cache headers for moderately stable data
- * Sets Cache-Control: public, max-age=60
- * 
- * @returns {Function} Express middleware
- */
-const mediumCacheHeaders = () => {
-  return cacheHeaders({ maxAge: 60, public: true, etag: true });
-};
-
-/**
- * Long-lived cache headers for stable data
- * Sets Cache-Control: public, max-age=300
- * 
- * @returns {Function} Express middleware
- */
-const longCacheHeaders = () => {
-  return cacheHeaders({ maxAge: 300, public: true, etag: true });
-};
-
-/**
- * Private cache headers for user-specific data
- * Sets Cache-Control: private, max-age=30
- * 
- * @returns {Function} Express middleware
- */
-const privateCacheHeaders = () => {
-  return cacheHeaders({ maxAge: 30, public: false, etag: true });
+const courseCacheMiddleware = {
+  // قائمة الدورات (5 دقائق)
+  list: cacheMiddleware({ maxAge: 300 }),
+  
+  // تفاصيل الدورة (15 دقيقة)
+  details: cacheMiddleware({ maxAge: 900 }),
+  
+  // محتوى الدرس (1 ساعة)
+  lesson: cacheMiddleware({ maxAge: 3600 }),
+  
+  // المراجعات (10 دقائق)
+  reviews: cacheMiddleware({ maxAge: 600 }),
+  
+  // التقدم (بدون cache - بيانات شخصية)
+  progress: cachePresets.noCache,
+  
+  // التسجيل (بدون cache)
+  enrollment: cachePresets.noCache
 };
 
 module.exports = {
-  cacheHeaders,
-  noCacheHeaders,
-  shortCacheHeaders,
-  mediumCacheHeaders,
-  longCacheHeaders,
-  privateCacheHeaders,
+  setCacheControl,
+  setETag,
+  setVaryHeader,
+  cacheMiddleware,
+  cachePresets,
+  courseCacheMiddleware,
   generateETag
 };

@@ -1,0 +1,495 @@
+/* ===================================
+   AlertsManager Component Styles
+   =================================== */
+
+.alerts-manager {
+  background: var(--bg-primary, #ffffff);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+[data-theme="dark"] .alerts-manager {
+  background: var(--bg-secondary, #1f2937);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================
+   Header
+   =================================== */
+
+.alerts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.alerts-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin: 0;
+}
+
+[data-theme="dark"] .alerts-title {
+  color: var(--text-primary, #f9fafb);
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-secondary, #6b7280);
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: var(--bg-hover, #f3f4f6);
+  color: var(--text-primary, #1f2937);
+}
+
+[data-theme="dark"] .close-btn:hover {
+  background: var(--bg-hover, #374151);
+  color: var(--text-primary, #f9fafb);
+}
+
+.close-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ===================================
+   Description
+   =================================== */
+
+.alerts-description {
+  color: var(--text-secondary, #6b7280);
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+[data-theme="dark"] .alerts-description {
+  color: var(--text-secondary, #9ca3af);
+}
+
+/* ===================================
+   Loading
+   =================================== */
+
+.alerts-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #D4816140;
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===================================
+   Error
+   =================================== */
+
+.alerts-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+  margin-bottom: 20px;
+}
+
+[data-theme="dark"] .alerts-error {
+  background: #7f1d1d;
+  border-color: #991b1b;
+  color: #fecaca;
+}
+
+.alerts-error svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* ===================================
+   Form
+   =================================== */
+
+.alerts-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+}
+
+[data-theme="dark"] .form-label {
+  color: var(--text-primary, #f9fafb);
+}
+
+/* ===================================
+   Toggle Switch
+   =================================== */
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: relative;
+  width: 48px;
+  height: 24px;
+  background: var(--bg-tertiary, #e5e7eb);
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .toggle-slider {
+  background: var(--bg-tertiary, #4b5563);
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #ffffff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-input:checked + .toggle-slider {
+  background: linear-gradient(135deg, #D48161 0%, #c06d4f 100%);
+}
+
+.toggle-input:checked + .toggle-slider::before {
+  transform: translateX(24px);
+}
+
+[dir="rtl"] .toggle-input:checked + .toggle-slider::before {
+  transform: translateX(-24px);
+}
+
+.toggle-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary, #1f2937);
+}
+
+[data-theme="dark"] .toggle-text {
+  color: var(--text-primary, #f9fafb);
+}
+
+/* ===================================
+   Radio Group
+   =================================== */
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.radio-label:hover {
+  background: var(--bg-hover, #f9fafb);
+}
+
+[data-theme="dark"] .radio-label:hover {
+  background: var(--bg-hover, #374151);
+}
+
+.radio-label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #D48161;
+}
+
+.radio-label input[type="radio"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio-label span {
+  font-size: 15px;
+  color: var(--text-primary, #1f2937);
+}
+
+[data-theme="dark"] .radio-label span {
+  color: var(--text-primary, #f9fafb);
+}
+
+.radio-label input[type="radio"]:disabled + span {
+  opacity: 0.5;
+}
+
+/* ===================================
+   Actions
+   =================================== */
+
+.alerts-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.alerts-actions button {
+  flex: 1;
+  min-width: 120px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #D48161 0%, #c06d4f 100%);
+  color: #ffffff;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c06d4f 0%, #a85a3d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-delete {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-delete:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background: var(--bg-tertiary, #e5e7eb);
+  color: var(--text-primary, #1f2937);
+}
+
+[data-theme="dark"] .btn-cancel {
+  background: var(--bg-tertiary, #4b5563);
+  color: var(--text-primary, #f9fafb);
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: var(--bg-hover, #d1d5db);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .btn-cancel:hover:not(:disabled) {
+  background: var(--bg-hover, #6b7280);
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ===================================
+   Responsive Design
+   =================================== */
+
+/* Tablet */
+@media (max-width: 1023px) {
+  .alerts-manager {
+    padding: 20px;
+  }
+
+  .alerts-title {
+    font-size: 22px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 639px) {
+  .alerts-manager {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .alerts-title {
+    font-size: 20px;
+  }
+
+  .alerts-description {
+    font-size: 13px;
+  }
+
+  .alerts-actions {
+    flex-direction: column;
+  }
+
+  .alerts-actions button {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .radio-label {
+    padding: 10px;
+  }
+
+  .radio-label span {
+    font-size: 14px;
+  }
+}
+
+/* Very Small Mobile */
+@media (max-width: 374px) {
+  .alerts-manager {
+    padding: 14px;
+  }
+
+  .alerts-title {
+    font-size: 18px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+}
+
+/* ===================================
+   Accessibility
+   =================================== */
+
+.toggle-input:focus + .toggle-slider {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+.radio-label input[type="radio"]:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+.alerts-actions button:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .toggle-slider {
+    border: 2px solid currentColor;
+  }
+
+  .radio-label {
+    border: 1px solid currentColor;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .toggle-slider,
+  .toggle-slider::before,
+  .radio-label,
+  .alerts-actions button {
+    transition: none;
+  }
+
+  .spinner,
+  .btn-spinner {
+    animation: none;
+  }
+}
+
+/* ===================================
+   Print Styles
+   =================================== */
+
+@media print {
+  .alerts-manager {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+
+  .close-btn,
+  .alerts-actions {
+    display: none;
+  }
+}

@@ -1,0 +1,134 @@
+/* AutoSaveIndicator Styles */
+
+.auto-save-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background-color: var(--secondary, #E3DAD1);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.status-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.status-text {
+  color: var(--primary, #304B60);
+}
+
+/* Status-specific styles */
+.status-saving .status-icon {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.status-saved .status-text {
+  color: #22c55e;
+}
+
+.status-error .status-text {
+  color: #ef4444;
+}
+
+.status-not-saved .status-text {
+  color: #6b7280;
+}
+
+/* Last saved time */
+.last-saved-time {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Error message */
+.error-message {
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Manual save button */
+.manual-save-button {
+  padding: 6px 12px;
+  background-color: var(--accent, #D48161);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.manual-save-button:hover:not(:disabled) {
+  background-color: #c06d4f;
+  transform: translateY(-1px);
+}
+
+.manual-save-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.manual-save-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 639px) {
+  .auto-save-indicator {
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+  }
+  
+  .last-saved-time {
+    font-size: 12px;
+  }
+  
+  .manual-save-button {
+    width: 100%;
+    padding: 8px 12px;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .auto-save-indicator {
+  direction: rtl;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .auto-save-indicator {
+    background-color: rgba(48, 75, 96, 0.1);
+  }
+  
+  .status-text {
+    color: #e5e7eb;
+  }
+  
+  .last-saved-time {
+    color: #9ca3af;
+  }
+}

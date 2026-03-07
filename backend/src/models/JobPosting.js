@@ -25,9 +25,8 @@ const jobPostingSchema = new mongoose.Schema({
   },
   
   salary: { min: Number, max: Number },
-  location: { 
-    type: String, 
-    required: true,
+  location: new mongoose.Schema({
+    type: { type: String, default: '' },  // The location string (e.g., "Cairo, Egypt")
     city: String,
     country: String,
     coordinates: {
@@ -41,7 +40,7 @@ const jobPostingSchema = new mongoose.Schema({
         index: '2dsphere'
       }
     }
-  },
+  }, { _id: false }),
   jobType: { type: String, enum: ['Full-time', 'Part-time', 'Contract', 'Temporary'], default: 'Full-time' },
   
   // حقول إضافية للبحث المتقدم
@@ -59,6 +58,77 @@ const jobPostingSchema = new mongoose.Schema({
   postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   status: { type: String, enum: ['Open', 'Closed'], default: 'Open' },
   applicants: [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobApplication' }],
+  
+  // Bookmark counter
+  bookmarkCount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  
+  // Share counter
+  shareCount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  
+  // View counter
+  viewCount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  
+  // Applicant counter
+  applicantCount: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  
+  // Show applicant count to public (company preference)
+  showApplicantCount: {
+    type: Boolean,
+    default: true
+  },
+  
+  // Urgent job flag (expires within 7 days)
+  isUrgent: {
+    type: Boolean,
+    default: false
+  },
+  
+  // Expiry date for the job posting
+  expiryDate: {
+    type: Date,
+    index: true
+  },
+  
+  // Custom Questions (up to 5 questions)
+  customQuestions: [{
+    id: {
+      type: String,
+      default: () => new mongoose.Types.ObjectId().toString()
+    },
+    questionText: {
+      type: String,
+      required: true,
+      maxlength: 500
+    },
+    questionType: {
+      type: String,
+      enum: ['short_text', 'long_text', 'single_choice', 'multiple_choice', 'yes_no'],
+      required: true
+    },
+    options: [String], // For single_choice and multiple_choice
+    required: {
+      type: Boolean,
+      default: false
+    },
+    order: Number
+  }],
+  
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -95,5 +165,21 @@ jobPostingSchema.index({ 'company.size': 1 });
 
 // Geo index للبحث الجغرافي
 jobPostingSchema.index({ 'location.coordinates': '2dsphere' });
+
+// Middleware to automatically calculate isUrgent before save
+jobPostingSchema.pre('save', function(next) {
+  if (this.expiryDate) {
+    const now = new Date();
+    const expiry = new Date(this.expiryDate);
+    const diffMs = expiry - now;
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    
+    // Mark as urgent if expires within 7 days and not expired yet
+    this.isUrgent = diffDays > 0 && diffDays <= 7;
+  } else {
+    this.isUrgent = false;
+  }
+  next();
+});
 
 module.exports = mongoose.model('JobPosting', jobPostingSchema);

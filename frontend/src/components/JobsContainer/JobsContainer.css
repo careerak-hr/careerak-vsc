@@ -1,0 +1,64 @@
+/* ============================================
+   Jobs Container Styles
+   ============================================ */
+
+.jobs-container {
+  width: 100%;
+  position: relative;
+}
+
+/* Grid Layout */
+.jobs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* List Layout */
+.jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Job Card Wrapper - للـ animations */
+.job-card-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* Tablet: 2 columns */
+@media (max-width: 1023px) and (min-width: 640px) {
+  .jobs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+/* Mobile: 1 column */
+@media (max-width: 639px) {
+  .jobs-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .jobs-list {
+    gap: 12px;
+  }
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .jobs-container,
+  .job-card-wrapper {
+    animation: none !important;
+    transition: none !important;
+  }
+}

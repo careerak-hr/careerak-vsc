@@ -1,0 +1,131 @@
+/**
+ * Smooth Transitions for JobsContainer
+ * 
+ * Requirements:
+ * - FR-LOAD-5: Smooth transition from skeleton to content
+ * - FR-LOAD-7: Apply smooth transitions (300ms fade)
+ * - FR-LOAD-8: Prevent layout shifts (CLS < 0.1)
+ */
+
+/* Fade-in animation for content */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Skeleton pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Shimmer effect for skeleton */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Apply smooth transition to job cards */
+.job-card-enter {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* Stagger animation for multiple cards */
+.job-card-enter:nth-child(1) { animation-delay: 0ms; }
+.job-card-enter:nth-child(2) { animation-delay: 50ms; }
+.job-card-enter:nth-child(3) { animation-delay: 100ms; }
+.job-card-enter:nth-child(4) { animation-delay: 150ms; }
+.job-card-enter:nth-child(5) { animation-delay: 200ms; }
+.job-card-enter:nth-child(6) { animation-delay: 250ms; }
+.job-card-enter:nth-child(7) { animation-delay: 300ms; }
+.job-card-enter:nth-child(8) { animation-delay: 350ms; }
+.job-card-enter:nth-child(9) { animation-delay: 400ms; }
+
+/* Skeleton shimmer effect */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Dark mode shimmer */
+.dark .skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.1) 60%,
+    rgba(255, 255, 255, 0)
+  );
+}
+
+/* Prevent layout shift during transition */
+.jobs-container {
+  min-height: 400px; /* Prevent collapse during loading */
+}
+
+/* Smooth opacity transition */
+.fade-transition {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Loading state */
+.loading-state {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Loaded state */
+.loaded-state {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .job-card-enter,
+  .skeleton-shimmer {
+    animation: none;
+  }
+  
+  .fade-transition {
+    transition: none;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .jobs-container {
+    min-height: 300px;
+  }
+  
+  /* Faster animations on mobile */
+  .job-card-enter {
+    animation-duration: 0.2s;
+  }
+  
+  /* Reduce stagger delay on mobile */
+  .job-card-enter:nth-child(n) {
+    animation-delay: 0ms;
+  }
+}

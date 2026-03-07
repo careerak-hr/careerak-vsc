@@ -1,0 +1,86 @@
+/* View Toggle Component Styles */
+
+.view-toggle {
+  display: inline-flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background-color: var(--bg-secondary, #E3DAD1);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  color: var(--text-secondary, #304B60);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-btn:hover {
+  background-color: rgba(212, 129, 97, 0.1);
+  color: var(--accent, #D48161);
+}
+
+.view-toggle-btn:focus {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+.view-toggle-btn.active {
+  background-color: var(--accent, #D48161);
+  color: white;
+  box-shadow: 0 2px 4px rgba(212, 129, 97, 0.3);
+}
+
+.view-toggle-btn.active:hover {
+  background-color: var(--accent-dark, #c06f51);
+}
+
+/* RTL Support */
+[dir="rtl"] .view-toggle {
+  direction: ltr;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .view-toggle {
+    background-color: rgba(48, 75, 96, 0.2);
+  }
+  
+  .view-toggle-btn {
+    color: #E3DAD1;
+  }
+  
+  .view-toggle-btn:hover {
+    background-color: rgba(212, 129, 97, 0.2);
+  }
+}
+
+/* Mobile Optimization */
+@media (max-width: 639px) {
+  .view-toggle {
+    gap: 0.25rem;
+    padding: 0.125rem;
+  }
+  
+  .view-toggle-btn {
+    padding: 0.375rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .view-toggle-btn {
+    transition: none;
+  }
+}

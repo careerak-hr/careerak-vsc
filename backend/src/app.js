@@ -191,6 +191,9 @@ app.use('/admin/content', contentManagementRoutes);
 app.use('/notifications', notificationRoutes);
 app.use('/chat', chatRoutes);
 app.use('/reviews', require('./routes/reviewRoutes'));
+app.use('/jobs', require('./routes/bookmarkRoutes')); // Job Bookmarks
+app.use('/jobs', require('./routes/similarJobsRoutes')); // Similar Jobs
+app.use('/', require('./routes/salaryEstimateRoutes')); // Salary Estimation
 app.use('/auth', authRoutes);
 app.use('/auth/2fa', require('./routes/twoFactorRoutes'));
 app.use('/oauth', oauthRoutes);
@@ -198,6 +201,7 @@ app.use('/errors', require('./routes/errorLogRoutes'));
 app.use('/security-score', require('./routes/securityScoreRoutes'));
 app.use('/recordings', require('./routes/recordingRoutes'));
 app.use('/devices', require('./routes/deviceRoutes'));
+app.use('/applications', require('./routes/applicationDraftRoutes')); // Application Drafts
 app.use('/recommendations', require('./routes/recommendationRoutes'));
 app.use('/recommendations', require('./routes/dailyRecommendationRoutes')); // Daily recommendations
 app.use('/recommendations/candidates', require('./routes/candidateRankingRoutes'));
@@ -211,6 +215,11 @@ app.use('/appointments', require('./routes/appointmentRoutes')); // Appointments
 app.use('/interviews', require('./routes/videoInterviewRoutes')); // Video Interviews
 app.use('/interview-notes', require('./routes/interviewNoteRoutes')); // Interview Notes & Ratings
 app.use('/search', require('./routes/searchRoutes')); // Advanced Search & Filtering
+app.use('/admin/alert-scheduler', require('./routes/alertSchedulerRoutes')); // Alert Scheduler (Admin)
+app.use('/courses', require('./routes/courseRoutes')); // Educational Courses
+app.use('/wishlist', require('./routes/wishlistRoutes')); // Course Wishlist
+app.use('/companies', require('./routes/companyInfoRoutes')); // Company Information
+app.use('/acceptance-probability', require('./routes/acceptanceProbabilityRoutes')); // Acceptance Probability
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {
@@ -241,6 +250,7 @@ if (process.env.NODE_ENV !== 'test') {
   const dailyRecommendationCron = require('./jobs/dailyRecommendationCron');
   const { startAppointmentReminderCron } = require('./jobs/appointmentReminderCron');
   const { startReminderJobs } = require('./jobs/videoInterviewReminderCron');
+  const alertScheduler = require('./jobs/alertScheduler');
   
   // بدء الجدولة تلقائياً عند تشغيل السيرفر
   setTimeout(() => {
@@ -253,6 +263,9 @@ if (process.env.NODE_ENV !== 'test') {
       
       startReminderJobs();
       console.log('✅ تم بدء جدولة تذكيرات مقابلات الفيديو');
+      
+      alertScheduler.start();
+      console.log('✅ تم بدء جدولة التنبيهات الذكية (يومية وأسبوعية)');
     } catch (error) {
       console.error('❌ خطأ في بدء الجدولة:', error);
     }

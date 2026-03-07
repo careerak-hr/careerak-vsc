@@ -3,6 +3,17 @@ const router = express.Router();
 const searchController = require('../controllers/searchController');
 const savedSearchRoutes = require('./savedSearchRoutes');
 const { authenticate } = require('../middleware/auth');
+const { searchRateLimiter, autocompleteRateLimiter } = require('../middleware/rateLimiter');
+const {
+  sanitizeInput,
+  validateSearchParams,
+  validateFilterParams,
+  validateMapParams,
+  validateAutocompleteParams
+} = require('../middleware/inputValidation');
+
+// تطبيق sanitization على جميع routes
+router.use(sanitizeInput);
 
 /**
  * @route   GET /api/search/autocomplete
@@ -12,13 +23,18 @@ const { authenticate } = require('../middleware/auth');
  * @query   type - نوع البحث (jobs أو courses) - افتراضي: jobs
  * @query   limit - عدد الاقتراحات - افتراضي: 10
  */
-router.get('/autocomplete', (req, res, next) => {
-  // نحاول المصادقة، لكن لا نفرضها
-  if (req.headers.authorization) {
-    return authenticate(req, res, next);
-  }
-  next();
-}, searchController.getAutocomplete);
+router.get('/autocomplete',
+  autocompleteRateLimiter,
+  validateAutocompleteParams,
+  (req, res, next) => {
+    // نحاول المصادقة، لكن لا نفرضها
+    if (req.headers.authorization) {
+      return authenticate(req, res, next);
+    }
+    next();
+  },
+  searchController.getAutocomplete
+);
 
 /**
  * @route   GET /api/search/jobs
@@ -37,13 +53,19 @@ router.get('/autocomplete', (req, res, next) => {
  * @query   companySize - حجم الشركة
  * @query   datePosted - تاريخ النشر (today, week, month)
  */
-router.get('/jobs', (req, res, next) => {
-  // نحاول المصادقة، لكن لا نفرضها
-  if (req.headers.authorization) {
-    return authenticate(req, res, next);
-  }
-  next();
-}, searchController.searchJobs);
+router.get('/jobs',
+  searchRateLimiter,
+  validateSearchParams,
+  validateFilterParams,
+  (req, res, next) => {
+    // نحاول المصادقة، لكن لا نفرضها
+    if (req.headers.authorization) {
+      return authenticate(req, res, next);
+    }
+    next();
+  },
+  searchController.searchJobs
+);
 
 /**
  * @route   GET /api/search/courses
@@ -54,13 +76,18 @@ router.get('/jobs', (req, res, next) => {
  * @query   limit - عدد النتائج - افتراضي: 20
  * @query   sort - الترتيب (relevance أو date) - افتراضي: relevance
  */
-router.get('/courses', (req, res, next) => {
-  // نحاول المصادقة، لكن لا نفرضها
-  if (req.headers.authorization) {
-    return authenticate(req, res, next);
-  }
-  next();
-}, searchController.searchCourses);
+router.get('/courses',
+  searchRateLimiter,
+  validateSearchParams,
+  (req, res, next) => {
+    // نحاول المصادقة، لكن لا نفرضها
+    if (req.headers.authorization) {
+      return authenticate(req, res, next);
+    }
+    next();
+  },
+  searchController.searchCourses
+);
 
 /**
  * @route   GET /api/search/map
@@ -78,7 +105,12 @@ router.get('/courses', (req, res, next) => {
  * @query   companySize - حجم الشركة
  * @query   datePosted - تاريخ النشر (today, week, month)
  */
-router.get('/map', searchController.searchJobsOnMap);
+router.get('/map',
+  searchRateLimiter,
+  validateMapParams,
+  validateFilterParams,
+  searchController.searchJobsOnMap
+);
 
 // ============================================
 // Saved Search Routes (Protected)

@@ -11,6 +11,7 @@ const FilterPanel = ({
   onFilterChange, 
   onClearFilters, 
   resultCount,
+  filterCounts = {}, // ✅ جديد: عدادات الفلاتر
   availableFilters = {},
   type = 'jobs'
 }) => {
@@ -305,7 +306,12 @@ const FilterPanel = ({
                     checked={(localFilters.workType || []).includes(option.value)}
                     onChange={() => handleCheckboxChange('workType', option.value)}
                   />
-                  <span>{option.label}</span>
+                  <span className="filter-option-text">
+                    {option.label}
+                    {filterCounts?.workType?.[option.value] !== undefined && (
+                      <span className="filter-count">({filterCounts.workType[option.value]})</span>
+                    )}
+                  </span>
                 </label>
               ))}
             </div>
@@ -330,7 +336,12 @@ const FilterPanel = ({
                     checked={(localFilters.experienceLevel || []).includes(option.value)}
                     onChange={() => handleCheckboxChange('experienceLevel', option.value)}
                   />
-                  <span>{option.label}</span>
+                  <span className="filter-option-text">
+                    {option.label}
+                    {filterCounts?.experienceLevel?.[option.value] !== undefined && (
+                      <span className="filter-count">({filterCounts.experienceLevel[option.value]})</span>
+                    )}
+                  </span>
                 </label>
               ))}
             </div>
@@ -437,7 +448,12 @@ const FilterPanel = ({
                   checked={localFilters.datePosted === option.value || (!localFilters.datePosted && option.value === 'all')}
                   onChange={() => handleFilterChange('datePosted', option.value)}
                 />
-                <span>{option.label}</span>
+                <span className="filter-option-text">
+                  {option.label}
+                  {filterCounts?.datePosted?.[option.value] !== undefined && (
+                    <span className="filter-count">({filterCounts.datePosted[option.value]})</span>
+                  )}
+                </span>
               </label>
             ))}
           </div>
@@ -460,7 +476,12 @@ const FilterPanel = ({
                     checked={(localFilters.companySize || []).includes(option.value)}
                     onChange={() => handleCheckboxChange('companySize', option.value)}
                   />
-                  <span>{option.label}</span>
+                  <span className="filter-option-text">
+                    {option.label}
+                    {filterCounts?.companySize?.[option.value] !== undefined && (
+                      <span className="filter-count">({filterCounts.companySize[option.value]})</span>
+                    )}
+                  </span>
                 </label>
               ))}
             </div>

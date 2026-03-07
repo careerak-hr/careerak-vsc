@@ -1,0 +1,1751 @@
+
+> hr-management-backend@1.0.0 test
+> jest course --verbose
+
+FAIL tests/models/courseEnrollment.test.js (24.241 s)
+  CourseEnrollment Model - Unit Tests
+    Required Fields Validation
+      ├ù should require course field (882 ms)
+      ├ù should require student field (262 ms)
+      ├ù should create enrollment with required fields (522 ms)
+    Status Enum Validation
+      ├ù should accept valid status values (26 ms)
+      ├ù should reject invalid status values (165 ms)
+      ├ù should default to active status (49 ms)
+    Progress Percentage Validation
+      ├ù should enforce minimum percentage of 0 (69 ms)
+      ├ù should enforce maximum percentage of 100 (69 ms)
+      ├ù should accept valid percentage values (32 ms)
+      ├ù should default percentage to 0 (45 ms)
+    Unique Enrollment Constraint
+      ├ù should prevent duplicate enrollments for same student and course (35 ms)
+      ├ù should allow same student to enroll in different courses (32 ms)
+      ├ù should allow different students to enroll in same course (144 ms)
+    calculateProgress() Method
+      ├ù should return 0 when no lessons completed (89 ms)
+      ├ù should return 0 when totalLessons is 0 (215 ms)
+      ├ù should return 0 when totalLessons is undefined (263 ms)
+      ├ù should calculate correct percentage for partial completion (143 ms)
+      ├ù should return 100 when all lessons completed (61 ms)
+      ├ù should round percentage to nearest integer (101 ms)
+      ├ù should cap percentage at 100 (57 ms)
+    canReview() Method
+      ├ù should return false when progress is less than 50% (189 ms)
+      ├ù should return true when progress is exactly 50% (83 ms)
+      ├ù should return true when progress is greater than 50% (178 ms)
+      ├ù should return true when progress is 100% (422 ms)
+      ├ù should return false when progress is 0% (176 ms)
+    Pre-save Middleware - Progress Calculation
+      ├ù should auto-calculate percentageComplete when completedLessons changes (260 ms)
+      ├ù should auto-complete enrollment when progress reaches 100% (142 ms)
+      ├ù should not change status if already completed (90 ms)
+      ├ù should not auto-complete if status is not active (48 ms)
+    isEnrolled() Static Method
+      ├ù should return true when student is enrolled (260 ms)
+      ├ù should return false when student is not enrolled (116 ms)
+      ├ù should return false for non-existent student (135 ms)
+      ├ù should return false for non-existent course (47 ms)
+    getActiveEnrollments() Static Method
+      ├ù should return only active enrollments (49 ms)
+      ├ù should sort by lastAccessedAt descending (67 ms)
+      ├ù should return empty array when no active enrollments (54 ms)
+    Default Values
+      ├ù should set enrolledAt to current date (64 ms)
+      ├ù should initialize empty completedLessons array (97 ms)
+      ├ù should set certificate issued to false (55 ms)
+      ├ù should set payment currency to USD (140 ms)
+    enrollmentDuration Virtual
+      ├ù should calculate duration in days for active enrollment (94 ms)
+      ├ù should calculate duration using completedAt for completed enrollment (392 ms)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Required Fields Validation ظ║ should require course field
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Required Fields Validation ظ║ should require student field
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Required Fields Validation ظ║ should create enrollment with required fields
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Status Enum Validation ظ║ should accept valid status values
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Status Enum Validation ظ║ should reject invalid status values
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Status Enum Validation ظ║ should default to active status
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Progress Percentage Validation ظ║ should enforce minimum percentage of 0
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Progress Percentage Validation ظ║ should enforce maximum percentage of 100
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Progress Percentage Validation ظ║ should accept valid percentage values
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Progress Percentage Validation ظ║ should default percentage to 0
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Unique Enrollment Constraint ظ║ should prevent duplicate enrollments for same student and course
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Unique Enrollment Constraint ظ║ should allow same student to enroll in different courses
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Unique Enrollment Constraint ظ║ should allow different students to enroll in same course
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should return 0 when no lessons completed
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should return 0 when totalLessons is 0
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should return 0 when totalLessons is undefined
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should calculate correct percentage for partial completion
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should return 100 when all lessons completed
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should round percentage to nearest integer
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ calculateProgress() Method ظ║ should cap percentage at 100
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ canReview() Method ظ║ should return false when progress is less than 50%
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ canReview() Method ظ║ should return true when progress is exactly 50%
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ canReview() Method ظ║ should return true when progress is greater than 50%
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ canReview() Method ظ║ should return true when progress is 100%
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ canReview() Method ظ║ should return false when progress is 0%
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Pre-save Middleware - Progress Calculation ظ║ should auto-calculate percentageComplete when completedLessons changes
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Pre-save Middleware - Progress Calculation ظ║ should auto-complete enrollment when progress reaches 100%
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Pre-save Middleware - Progress Calculation ظ║ should not change status if already completed
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Pre-save Middleware - Progress Calculation ظ║ should not auto-complete if status is not active
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ isEnrolled() Static Method ظ║ should return true when student is enrolled
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ isEnrolled() Static Method ظ║ should return false when student is not enrolled
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ isEnrolled() Static Method ظ║ should return false for non-existent student
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ isEnrolled() Static Method ظ║ should return false for non-existent course
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ getActiveEnrollments() Static Method ظ║ should return only active enrollments
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ getActiveEnrollments() Static Method ظ║ should sort by lastAccessedAt descending
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ getActiveEnrollments() Static Method ظ║ should return empty array when no active enrollments
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Default Values ظ║ should set enrolledAt to current date
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Default Values ظ║ should initialize empty completedLessons array
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Default Values ظ║ should set certificate issued to false
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ Default Values ظ║ should set payment currency to USD
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ enrollmentDuration Virtual ظ║ should calculate duration in days for active enrollment
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+  ظù CourseEnrollment Model - Unit Tests ظ║ enrollmentDuration Virtual ظ║ should calculate duration using completedAt for completed enrollment
+
+    TypeError: User.deleteMany is not a function
+
+      22 |     await CourseEnrollment.deleteMany({});
+      23 |     await EducationalCourse.deleteMany({});
+    > 24 |     await User.deleteMany({});
+         |                ^
+      25 |
+      26 |     // Create test course
+      27 |     testCourse = await EducationalCourse.create({
+
+      at Object.deleteMany (tests/models/courseEnrollment.test.js:24:16)
+
+FAIL tests/models/courseLesson.test.js (24.308 s)
+  CourseLesson Model - Unit Tests
+    Required Fields Validation
+      ظêأ should require course field (894 ms)
+      ظêأ should require title field (372 ms)
+      ظêأ should require order field (593 ms)
+      ظêأ should require content type field (176 ms)
+      ظêأ should create lesson with all required fields (373 ms)
+    Order Field Validation
+      ظêأ should enforce minimum order of 1 (138 ms)
+      ظêأ should reject negative order values (205 ms)
+      ظêأ should accept valid positive order values (1006 ms)
+    Order Uniqueness Within Course
+      ظêأ should prevent duplicate order within same course (700 ms)
+      ├ù should allow same order in different courses (184 ms)
+      ظêأ should allow different orders in same course (499 ms)
+      ظêأ should allow updating lesson without changing order (330 ms)
+      ظêأ should prevent changing order to existing order (129 ms)
+    Content Type Enum Validation
+      ظêأ should accept valid content types (283 ms)
+      ظêأ should reject invalid content types (126 ms)
+    Video Content Validation
+      ظêأ should require videoUrl for video content (120 ms)
+      ظêأ should accept video lesson with videoUrl (422 ms)
+    Text Content Validation
+      ظêأ should require textContent for text content type (29 ms)
+      ظêأ should accept text lesson with textContent (186 ms)
+    Quiz Content Validation
+      ظêأ should require at least one question for quiz content (77 ms)
+      ظêأ should require at least 2 options per question (35 ms)
+      ظêأ should validate correctAnswer is within options range (33 ms)
+      ظêأ should accept valid quiz with multiple questions (77 ms)
+    Duration Validation
+      ظêأ should reject negative duration (24 ms)
+      ظêأ should accept zero duration (35 ms)
+      ظêأ should default duration to 0 (28 ms)
+      ظêأ should accept positive duration values (27 ms)
+    isPreview() Method
+      ظêأ should return true for free lessons (22 ms)
+      ظêأ should return false for paid lessons (30 ms)
+      ظêأ should default to false (23 ms)
+    calculateQuizScore() Method
+      ظêأ should throw error for non-quiz lessons (75 ms)
+      ظêأ should throw error for invalid number of answers (28 ms)
+      ظêأ should calculate 100% score for all correct answers (44 ms)
+      ظêأ should calculate 0% score for all wrong answers (29 ms)
+      ├ù should calculate partial score correctly (147 ms)
+      ظêأ should mark as passed when score equals passing score (27 ms)
+      ظêأ should mark as passed when score exceeds passing score (24 ms)
+    getLessonsByCourse() Static Method
+      ظêأ should return lessons ordered by order field (66 ms)
+      ظêأ should return empty array for course with no lessons (26 ms)
+    getPreviewLessons() Static Method
+      ظêأ should return only free lessons (42 ms)
+      ظêأ should return empty array when no free lessons (35 ms)
+    countLessons() Static Method
+      ظêأ should return correct count of lessons (663 ms)
+      ظêأ should return 0 for course with no lessons (28 ms)
+    Virtuals
+      ظêأ should calculate durationInHours correctly (23 ms)
+      ظêأ should return quizQuestionCount for quiz lessons (25 ms)
+      ظêأ should return 0 quizQuestionCount for non-quiz lessons (26 ms)
+      ظêأ should return resourceCount (25 ms)
+
+  ظù CourseLesson Model - Unit Tests ظ║ Order Uniqueness Within Course ظ║ should allow same order in different courses
+
+    MongoServerError: E11000 duplicate key error collection: careerak_test.educationalcourses index: referrals.token_1 dup key: { referrals.token: null }
+
+      at node_modules/mongodb/src/operations/insert.ts:85:25
+      at node_modules/mongodb/src/operations/command.ts:173:14
+
+  ظù CourseLesson Model - Unit Tests ظ║ calculateQuizScore() Method ظ║ should calculate partial score correctly
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 3
+
+      594 |       const result = quizLesson.calculateQuizScore([1, 0, 0, 1]);
+      595 |
+    > 596 |       expect(result.correctCount).toBe(2);
+          |                                   ^
+      597 |       expect(result.totalQuestions).toBe(4);
+      598 |       expect(result.percentage).toBe(50);
+      599 |       expect(result.passed).toBe(false);
+
+      at Object.toBe (tests/models/courseLesson.test.js:596:35)
+
+  console.warn
+    ظأبي╕ Google OAuth credentials not found in environment variables
+
+    [0m [90m 176 |[39m   console[33m.[39mlog([32m'ظ£à Google OAuth Strategy configured'[39m)[33m;[39m
+     [90m 177 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 178 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Google OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 179 |[39m }
+     [90m 180 |[39m
+     [90m 181 |[39m [90m// ==================== Facebook OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:178:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/courses-e2e.test.js:16:13)
+
+  console.warn
+    ظأبي╕ Facebook OAuth credentials not found in environment variables
+
+    [0m [90m 310 |[39m   console[33m.[39mlog([32m'ظ£à Facebook OAuth Strategy configured'[39m)[33m;[39m
+     [90m 311 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 312 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Facebook OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 313 |[39m }
+     [90m 314 |[39m
+     [90m 315 |[39m [90m// ==================== LinkedIn OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:312:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/courses-e2e.test.js:16:13)
+
+  console.warn
+    ظأبي╕ LinkedIn OAuth credentials not found in environment variables
+
+    [0m [90m 443 |[39m   console[33m.[39mlog([32m'ظ£à LinkedIn OAuth Strategy configured'[39m)[33m;[39m
+     [90m 444 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 445 |[39m   console[33m.[39mwarn([32m'ظأبي╕ LinkedIn OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 446 |[39m }
+     [90m 447 |[39m
+     [90m 448 |[39m module[33m.[39mexports [33m=[39m passport[33m;[39m[0m
+
+      at Object.warn (src/config/passport.js:445:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/courses-e2e.test.js:16:13)
+
+  console.warn
+    ظأبي╕ Google OAuth credentials not found in environment variables
+
+    [0m [90m 176 |[39m   console[33m.[39mlog([32m'ظ£à Google OAuth Strategy configured'[39m)[33m;[39m
+     [90m 177 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 178 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Google OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 179 |[39m }
+     [90m 180 |[39m
+     [90m 181 |[39m [90m// ==================== Facebook OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:178:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-review-controller.unit.test.js:3:13)
+
+  console.warn
+    ظأبي╕ Facebook OAuth credentials not found in environment variables
+
+    [0m [90m 310 |[39m   console[33m.[39mlog([32m'ظ£à Facebook OAuth Strategy configured'[39m)[33m;[39m
+     [90m 311 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 312 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Facebook OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 313 |[39m }
+     [90m 314 |[39m
+     [90m 315 |[39m [90m// ==================== LinkedIn OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:312:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-review-controller.unit.test.js:3:13)
+
+  console.warn
+    ظأبي╕ LinkedIn OAuth credentials not found in environment variables
+
+    [0m [90m 443 |[39m   console[33m.[39mlog([32m'ظ£à LinkedIn OAuth Strategy configured'[39m)[33m;[39m
+     [90m 444 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 445 |[39m   console[33m.[39mwarn([32m'ظأبي╕ LinkedIn OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 446 |[39m }
+     [90m 447 |[39m
+     [90m 448 |[39m module[33m.[39mexports [33m=[39m passport[33m;[39m[0m
+
+      at Object.warn (src/config/passport.js:445:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-review-controller.unit.test.js:3:13)
+
+  console.warn
+    ظأبي╕ Google OAuth credentials not found in environment variables
+
+    [0m [90m 176 |[39m   console[33m.[39mlog([32m'ظ£à Google OAuth Strategy configured'[39m)[33m;[39m
+     [90m 177 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 178 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Google OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 179 |[39m }
+     [90m 180 |[39m
+     [90m 181 |[39m [90m// ==================== Facebook OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:178:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/integration-courses.test.js:3:13)
+
+  console.warn
+    ظأبي╕ Facebook OAuth credentials not found in environment variables
+
+    [0m [90m 310 |[39m   console[33m.[39mlog([32m'ظ£à Facebook OAuth Strategy configured'[39m)[33m;[39m
+     [90m 311 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 312 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Facebook OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 313 |[39m }
+     [90m 314 |[39m
+     [90m 315 |[39m [90m// ==================== LinkedIn OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:312:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/integration-courses.test.js:3:13)
+
+  console.warn
+    ظأبي╕ LinkedIn OAuth credentials not found in environment variables
+
+    [0m [90m 443 |[39m   console[33m.[39mlog([32m'ظ£à LinkedIn OAuth Strategy configured'[39m)[33m;[39m
+     [90m 444 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 445 |[39m   console[33m.[39mwarn([32m'ظأبي╕ LinkedIn OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 446 |[39m }
+     [90m 447 |[39m
+     [90m 448 |[39m module[33m.[39mexports [33m=[39m passport[33m;[39m[0m
+
+      at Object.warn (src/config/passport.js:445:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/integration-courses.test.js:3:13)
+
+  console.log
+    [Redis] REDIS_URL not configured, using node-cache fallback
+
+      at log (src/services/redisCache.js:38:15)
+
+FAIL tests/courses-e2e.test.js
+  ظù Test suite failed to run
+
+    TypeError: shortCacheHeaders is not a function
+
+      18 |
+      19 | // Apply cache headers middleware to all statistics routes (30 seconds TTL)
+    > 20 | router.use(shortCacheHeaders());
+         |            ^
+      21 |
+      22 | /**
+      23 |  * @route   GET /api/admin/statistics/overview
+
+      at Object.shortCacheHeaders (src/routes/statisticsRoutes.js:20:12)
+      at Object.require (src/app.js:35:26)
+      at Object.require (tests/courses-e2e.test.js:16:13)
+
+  console.log
+    [Redis] REDIS_URL not configured, using node-cache fallback
+
+      at log (src/services/redisCache.js:38:15)
+
+FAIL tests/course-review-controller.unit.test.js
+  ظù Test suite failed to run
+
+    TypeError: shortCacheHeaders is not a function
+
+      18 |
+      19 | // Apply cache headers middleware to all statistics routes (30 seconds TTL)
+    > 20 | router.use(shortCacheHeaders());
+         |            ^
+      21 |
+      22 | /**
+      23 |  * @route   GET /api/admin/statistics/overview
+
+      at Object.shortCacheHeaders (src/routes/statisticsRoutes.js:20:12)
+      at Object.require (src/app.js:35:26)
+      at Object.require (tests/course-review-controller.unit.test.js:3:13)
+
+  console.warn
+    ظأبي╕ Google OAuth credentials not found in environment variables
+
+    [0m [90m 176 |[39m   console[33m.[39mlog([32m'ظ£à Google OAuth Strategy configured'[39m)[33m;[39m
+     [90m 177 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 178 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Google OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 179 |[39m }
+     [90m 180 |[39m
+     [90m 181 |[39m [90m// ==================== Facebook OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:178:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-controller.unit.test.js:7:13)
+
+  console.warn
+    ظأبي╕ Facebook OAuth credentials not found in environment variables
+
+    [0m [90m 310 |[39m   console[33m.[39mlog([32m'ظ£à Facebook OAuth Strategy configured'[39m)[33m;[39m
+     [90m 311 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 312 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Facebook OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 313 |[39m }
+     [90m 314 |[39m
+     [90m 315 |[39m [90m// ==================== LinkedIn OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:312:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-controller.unit.test.js:7:13)
+
+  console.warn
+    ظأبي╕ LinkedIn OAuth credentials not found in environment variables
+
+    [0m [90m 443 |[39m   console[33m.[39mlog([32m'ظ£à LinkedIn OAuth Strategy configured'[39m)[33m;[39m
+     [90m 444 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 445 |[39m   console[33m.[39mwarn([32m'ظأبي╕ LinkedIn OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 446 |[39m }
+     [90m 447 |[39m
+     [90m 448 |[39m module[33m.[39mexports [33m=[39m passport[33m;[39m[0m
+
+      at Object.warn (src/config/passport.js:445:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-controller.unit.test.js:7:13)
+
+  console.log
+    [Redis] REDIS_URL not configured, using node-cache fallback
+
+      at log (src/services/redisCache.js:38:15)
+
+FAIL tests/integration-courses.test.js
+  ظù Test suite failed to run
+
+    TypeError: shortCacheHeaders is not a function
+
+      18 |
+      19 | // Apply cache headers middleware to all statistics routes (30 seconds TTL)
+    > 20 | router.use(shortCacheHeaders());
+         |            ^
+      21 |
+      22 | /**
+      23 |  * @route   GET /api/admin/statistics/overview
+
+      at Object.shortCacheHeaders (src/routes/statisticsRoutes.js:20:12)
+      at Object.require (src/app.js:35:26)
+      at Object.require (tests/integration-courses.test.js:3:13)
+
+  console.log
+    [Redis] REDIS_URL not configured, using node-cache fallback
+
+      at log (src/services/redisCache.js:38:15)
+
+FAIL tests/course-controller.unit.test.js
+  ظù Test suite failed to run
+
+    TypeError: shortCacheHeaders is not a function
+
+      18 |
+      19 | // Apply cache headers middleware to all statistics routes (30 seconds TTL)
+    > 20 | router.use(shortCacheHeaders());
+         |            ^
+      21 |
+      22 | /**
+      23 |  * @route   GET /api/admin/statistics/overview
+
+      at Object.shortCacheHeaders (src/routes/statisticsRoutes.js:20:12)
+      at Object.require (src/app.js:35:26)
+      at Object.require (tests/course-controller.unit.test.js:7:13)
+
+  console.warn
+    ظأبي╕ Google OAuth credentials not found in environment variables
+
+    [0m [90m 176 |[39m   console[33m.[39mlog([32m'ظ£à Google OAuth Strategy configured'[39m)[33m;[39m
+     [90m 177 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 178 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Google OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 179 |[39m }
+     [90m 180 |[39m
+     [90m 181 |[39m [90m// ==================== Facebook OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:178:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-endpoints.property.test.js:7:13)
+
+  console.warn
+    ظأبي╕ Facebook OAuth credentials not found in environment variables
+
+    [0m [90m 310 |[39m   console[33m.[39mlog([32m'ظ£à Facebook OAuth Strategy configured'[39m)[33m;[39m
+     [90m 311 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 312 |[39m   console[33m.[39mwarn([32m'ظأبي╕ Facebook OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 313 |[39m }
+     [90m 314 |[39m
+     [90m 315 |[39m [90m// ==================== LinkedIn OAuth Strategy ====================[39m[0m
+
+      at Object.warn (src/config/passport.js:312:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-endpoints.property.test.js:7:13)
+
+  console.warn
+    ظأبي╕ LinkedIn OAuth credentials not found in environment variables
+
+    [0m [90m 443 |[39m   console[33m.[39mlog([32m'ظ£à LinkedIn OAuth Strategy configured'[39m)[33m;[39m
+     [90m 444 |[39m } [36melse[39m {
+    [31m[1m>[22m[39m[90m 445 |[39m   console[33m.[39mwarn([32m'ظأبي╕ LinkedIn OAuth credentials not found in environment variables'[39m)[33m;[39m
+     [90m     |[39m           [31m[1m^[22m[39m
+     [90m 446 |[39m }
+     [90m 447 |[39m
+     [90m 448 |[39m module[33m.[39mexports [33m=[39m passport[33m;[39m[0m
+
+      at Object.warn (src/config/passport.js:445:11)
+      at Object.require (src/app.js:14:18)
+      at Object.require (tests/course-endpoints.property.test.js:7:13)
+
+FAIL tests/course-review.property.test.js (8.856 s)
+  Course Review Property Tests
+    Property 7: Review Authorization
+      ├ù should allow review submission for students with >= 50% progress (275 ms)
+      ├ù should reject review submission for students with < 50% progress (771 ms)
+    Property 8: Rating Recalculation
+      ├ù should correctly calculate average rating from multiple reviews (622 ms)
+      ├ù should update average rating when a review is edited (1437 ms)
+    Property 9: Review Sort Order
+      ├ù should sort reviews by helpfulCount in descending order (217 ms)
+
+  ظù Course Review Property Tests ظ║ Property 7: Review Authorization ظ║ should allow review submission for students with >= 50% progress
+
+    ValidationError: Employee validation failed: userType: Cast to String failed for value "individual" (type string) at path "userType", phone: Path `phone` is required., role: Path `role` is required.
+
+      39 |
+      40 |     // Create test instructor
+    > 41 |     testInstructor = await Individual.create({
+         |                                       ^
+      42 |       firstName: 'Test',
+      43 |       lastName: 'Instructor',
+      44 |       email: 'instructor@test.com',
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at model.$set (node_modules/mongoose/lib/document.js:1472:12)
+      at model.$set (node_modules/mongoose/lib/document.js:1121:16)
+      at model.Document (node_modules/mongoose/lib/document.js:167:12)
+      at model.Model (node_modules/mongoose/lib/model.js:123:12)
+      at new model (node_modules/mongoose/lib/model.js:4755:15)
+      at node_modules/mongoose/lib/model.js:2917:18
+          at Array.map (<anonymous>)
+      at model.create (node_modules/mongoose/lib/model.js:2906:30)
+      at Object.create (tests/course-review.property.test.js:41:39)
+
+  ظù Course Review Property Tests ظ║ Property 7: Review Authorization ظ║ should reject review submission for students with < 50% progress
+
+    ValidationError: Employee validation failed: userType: Cast to String failed for value "individual" (type string) at path "userType", phone: Path `phone` is required., role: Path `role` is required.
+
+      39 |
+      40 |     // Create test instructor
+    > 41 |     testInstructor = await Individual.create({
+         |                                       ^
+      42 |       firstName: 'Test',
+      43 |       lastName: 'Instructor',
+      44 |       email: 'instructor@test.com',
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at model.$set (node_modules/mongoose/lib/document.js:1472:12)
+      at model.$set (node_modules/mongoose/lib/document.js:1121:16)
+      at model.Document (node_modules/mongoose/lib/document.js:167:12)
+      at model.Model (node_modules/mongoose/lib/model.js:123:12)
+      at new model (node_modules/mongoose/lib/model.js:4755:15)
+      at node_modules/mongoose/lib/model.js:2917:18
+          at Array.map (<anonymous>)
+      at model.create (node_modules/mongoose/lib/model.js:2906:30)
+      at Object.create (tests/course-review.property.test.js:41:39)
+
+  ظù Course Review Property Tests ظ║ Property 8: Rating Recalculation ظ║ should correctly calculate average rating from multiple reviews
+
+    ValidationError: Employee validation failed: userType: Cast to String failed for value "individual" (type string) at path "userType", phone: Path `phone` is required., role: Path `role` is required.
+
+      39 |
+      40 |     // Create test instructor
+    > 41 |     testInstructor = await Individual.create({
+         |                                       ^
+      42 |       firstName: 'Test',
+      43 |       lastName: 'Instructor',
+      44 |       email: 'instructor@test.com',
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at model.$set (node_modules/mongoose/lib/document.js:1472:12)
+      at model.$set (node_modules/mongoose/lib/document.js:1121:16)
+      at model.Document (node_modules/mongoose/lib/document.js:167:12)
+      at model.Model (node_modules/mongoose/lib/model.js:123:12)
+      at new model (node_modules/mongoose/lib/model.js:4755:15)
+      at node_modules/mongoose/lib/model.js:2917:18
+          at Array.map (<anonymous>)
+      at model.create (node_modules/mongoose/lib/model.js:2906:30)
+      at Object.create (tests/course-review.property.test.js:41:39)
+
+  ظù Course Review Property Tests ظ║ Property 8: Rating Recalculation ظ║ should update average rating when a review is edited
+
+    ValidationError: Employee validation failed: userType: Cast to String failed for value "individual" (type string) at path "userType", phone: Path `phone` is required., role: Path `role` is required.
+
+      39 |
+      40 |     // Create test instructor
+    > 41 |     testInstructor = await Individual.create({
+         |                                       ^
+      42 |       firstName: 'Test',
+      43 |       lastName: 'Instructor',
+      44 |       email: 'instructor@test.com',
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at model.$set (node_modules/mongoose/lib/document.js:1472:12)
+      at model.$set (node_modules/mongoose/lib/document.js:1121:16)
+      at model.Document (node_modules/mongoose/lib/document.js:167:12)
+      at model.Model (node_modules/mongoose/lib/model.js:123:12)
+      at new model (node_modules/mongoose/lib/model.js:4755:15)
+      at node_modules/mongoose/lib/model.js:2917:18
+          at Array.map (<anonymous>)
+      at model.create (node_modules/mongoose/lib/model.js:2906:30)
+      at Object.create (tests/course-review.property.test.js:41:39)
+
+  ظù Course Review Property Tests ظ║ Property 9: Review Sort Order ظ║ should sort reviews by helpfulCount in descending order
+
+    ValidationError: Employee validation failed: userType: Cast to String failed for value "individual" (type string) at path "userType", phone: Path `phone` is required., role: Path `role` is required.
+
+      39 |
+      40 |     // Create test instructor
+    > 41 |     testInstructor = await Individual.create({
+         |                                       ^
+      42 |       firstName: 'Test',
+      43 |       lastName: 'Instructor',
+      44 |       email: 'instructor@test.com',
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at model.$set (node_modules/mongoose/lib/document.js:1472:12)
+      at model.$set (node_modules/mongoose/lib/document.js:1121:16)
+      at model.Document (node_modules/mongoose/lib/document.js:167:12)
+      at model.Model (node_modules/mongoose/lib/model.js:123:12)
+      at new model (node_modules/mongoose/lib/model.js:4755:15)
+      at node_modules/mongoose/lib/model.js:2917:18
+          at Array.map (<anonymous>)
+      at model.create (node_modules/mongoose/lib/model.js:2906:30)
+      at Object.create (tests/course-review.property.test.js:41:39)
+
+  console.log
+    [Redis] REDIS_URL not configured, using node-cache fallback
+
+      at log (src/services/redisCache.js:38:15)
+
+PASS src/tests/models/educationalCourse.test.js
+  EducationalCourse Model - Enhancement Fields
+    Price Field
+      ظêأ should create course with default free pricing (124 ms)
+      ظêأ should create course with paid pricing (30 ms)
+    Topics, Prerequisites, and Learning Outcomes
+      ظêأ should store topics array (20 ms)
+      ظêأ should store prerequisites array (19 ms)
+      ظêأ should store learning outcomes array (21 ms)
+    Course Metrics
+      ظêأ should initialize with default totalLessons and totalDuration (18 ms)
+      ظêأ should store totalLessons and totalDuration (63 ms)
+    Media Fields
+      ظêأ should store thumbnail and previewVideo URLs (18 ms)
+    Syllabus Field
+      ظêأ should store syllabus with sections and lessons (42 ms)
+    Instructor Info Field
+      ظêأ should store instructor information (22 ms)
+    Stats Field
+      ظêأ should initialize with default stats (18 ms)
+      ظêأ should update stats values (23 ms)
+    Badges Field
+      ظêأ should store badges array (20 ms)
+      ظêأ should only accept valid badge types (14 ms)
+    Settings Field
+      ظêأ should initialize with default settings (14 ms)
+      ظêأ should store custom settings (16 ms)
+    PublishedAt Field
+      ظêأ should store publishedAt date (26 ms)
+    Indexes
+      ظêأ should have index definitions in schema (9 ms)
+    Backward Compatibility
+      ظêأ should work with existing course structure (35 ms)
+
+FAIL tests/course-endpoints.property.test.js
+  ظù Test suite failed to run
+
+    TypeError: shortCacheHeaders is not a function
+
+      18 |
+      19 | // Apply cache headers middleware to all statistics routes (30 seconds TTL)
+    > 20 | router.use(shortCacheHeaders());
+         |            ^
+      21 |
+      22 | /**
+      23 |  * @route   GET /api/admin/statistics/overview
+
+      at Object.shortCacheHeaders (src/routes/statisticsRoutes.js:20:12)
+      at Object.require (src/app.js:35:26)
+      at Object.require (tests/course-endpoints.property.test.js:7:13)
+
+FAIL tests/courseEnrollment.test.js
+  ظù Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     ظت If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     ظت If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     ظت To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     ظت If you need a custom transformation specify a "transform" option in your config.
+     ظت If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    SyntaxError: D:\Careerak\Careerak-vsc\backend\tests\courseEnrollment.test.js: Unexpected token (216:34)
+
+      214 |       });
+      215 |       
+    > 216 |       const progress = enrollment.
+          |                                   ^
+
+      at constructor (node_modules/@babel/parser/src/parse-error.ts:95:45)
+      at Parser.toParseError [as raise] (node_modules/@babel/parser/src/tokenizer/index.ts:1504:19)
+      at Parser.raise [as unexpected] (node_modules/@babel/parser/src/tokenizer/index.ts:1544:16)
+      at Parser.unexpected [as parseIdentifierName] (node_modules/@babel/parser/src/parser/expression.ts:2838:12)
+      at Parser.parseIdentifierName [as parseIdentifier] (node_modules/@babel/parser/src/parser/expression.ts:2807:23)
+      at Parser.parseIdentifier [as parseMember] (node_modules/@babel/parser/src/parser/expression.ts:856:28)
+      at Parser.parseMember [as parseSubscript] (node_modules/@babel/parser/src/parser/expression.ts:813:21)
+      at Parser.parseSubscript [as parseSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:763:19)
+      at Parser.parseSubscripts [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:748:17)
+      at Parser.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at Parser.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at Parser.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at Parser.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at Parser.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+      at Parser.parseMaybeConditional [as parseMaybeAssign] (node_modules/@babel/parser/src/parser/expression.ts:301:21)
+      at parseMaybeAssign (node_modules/@babel/parser/src/parser/expression.ts:257:12)
+      at Parser.callback [as allowInAnd] (node_modules/@babel/parser/src/parser/expression.ts:3189:16)
+      at Parser.allowInAnd [as parseMaybeAssignAllowIn] (node_modules/@babel/parser/src/parser/expression.ts:256:17)
+      at Parser.parseMaybeAssignAllowIn [as parseVar] (node_modules/@babel/parser/src/parser/statement.ts:1587:18)
+      at Parser.parseVar [as parseVarStatement] (node_modules/@babel/parser/src/parser/statement.ts:1251:10)
+      at Parser.parseVarStatement [as parseStatementContent] (node_modules/@babel/parser/src/parser/statement.ts:612:21)
+      at Parser.parseStatementContent [as parseStatementLike] (node_modules/@babel/parser/src/parser/statement.ts:482:17)
+      at Parser.parseStatementLike [as parseStatementListItem] (node_modules/@babel/parser/src/parser/statement.ts:431:17)
+      at Parser.parseStatementListItem [as parseBlockOrModuleBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1444:16)
+      at Parser.parseBlockOrModuleBlockBody [as parseBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+      at Parser.parseBlockBody [as parseBlock] (node_modules/@babel/parser/src/parser/statement.ts:1385:10)
+      at Parser.parseBlock [as parseFunctionBody] (node_modules/@babel/parser/src/parser/expression.ts:2618:24)
+      at Parser.parseFunctionBody [as parseArrowExpression] (node_modules/@babel/parser/src/parser/expression.ts:2559:10)
+      at Parser.parseArrowExpression [as parseParenAndDistinguishExpression] (node_modules/@babel/parser/src/parser/expression.ts:1847:12)
+      at Parser.parseParenAndDistinguishExpression [as parseExprAtom] (node_modules/@babel/parser/src/parser/expression.ts:1170:21)
+      at Parser.parseExprAtom [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:742:23)
+      at Parser.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at Parser.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at Parser.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at Parser.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at Parser.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+      at Parser.parseMaybeConditional [as parseMaybeAssign] (node_modules/@babel/parser/src/parser/expression.ts:301:21)
+      at parseMaybeAssign (node_modules/@babel/parser/src/parser/expression.ts:257:12)
+      at Parser.callback [as allowInAnd] (node_modules/@babel/parser/src/parser/expression.ts:3194:12)
+      at Parser.allowInAnd [as parseMaybeAssignAllowIn] (node_modules/@babel/parser/src/parser/expression.ts:256:17)
+      at Parser.parseMaybeAssignAllowIn [as parseMaybeAssignAllowInOrVoidPattern] (node_modules/@babel/parser/src/parser/expression.ts:3308:17)
+      at Parser.parseMaybeAssignAllowInOrVoidPattern [as parseExprListItem] (node_modules/@babel/parser/src/parser/expression.ts:2790:18)
+      at Parser.parseExprListItem [as parseCallExpressionArguments] (node_modules/@babel/parser/src/parser/expression.ts:1042:14)
+      at Parser.parseCallExpressionArguments [as parseCoverCallAndAsyncArrowHead] (node_modules/@babel/parser/src/parser/expression.ts:922:29)
+      at Parser.parseCoverCallAndAsyncArrowHead [as parseSubscript] (node_modules/@babel/parser/src/parser/expression.ts:804:19)
+      at Parser.parseSubscript [as parseSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:763:19)
+      at Parser.parseSubscripts [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:748:17)
+      at Parser.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at Parser.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at Parser.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at Parser.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at Parser.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+      at Parser.parseMaybeConditional [as parseMaybeAssign] (node_modules/@babel/parser/src/parser/expression.ts:301:21)
+      at Parser.parseMaybeAssign [as parseExpressionBase] (node_modules/@babel/parser/src/parser/expression.ts:226:23)
+      at parseExpressionBase (node_modules/@babel/parser/src/parser/expression.ts:217:39)
+      at Parser.callback [as allowInAnd] (node_modules/@babel/parser/src/parser/expression.ts:3189:16)
+      at Parser.allowInAnd [as parseExpression] (node_modules/@babel/parser/src/parser/expression.ts:217:17)
+      at Parser.parseExpression [as parseStatementContent] (node_modules/@babel/parser/src/parser/statement.ts:688:23)
+      at Parser.parseStatementContent [as parseStatementLike] (node_modules/@babel/parser/src/parser/statement.ts:482:17)
+      at Parser.parseStatementLike [as parseStatementListItem] (node_modules/@babel/parser/src/parser/statement.ts:431:17)
+      at Parser.parseStatementListItem [as parseBlockOrModuleBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1444:16)
+      at Parser.parseBlockOrModuleBlockBody [as parseBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+      at Parser.parseBlockBody [as parseBlock] (node_modules/@babel/parser/src/parser/statement.ts:1385:10)
+      at Parser.parseBlock [as parseFunctionBody] (node_modules/@babel/parser/src/parser/expression.ts:2618:24)
+      at Parser.parseFunctionBody [as parseArrowExpression] (node_modules/@babel/parser/src/parser/expression.ts:2559:10)
+      at Parser.parseArrowExpression [as parseParenAndDistinguishExpression] (node_modules/@babel/parser/src/parser/expression.ts:1847:12)
+      at Parser.parseParenAndDistinguishExpression [as parseExprAtom] (node_modules/@babel/parser/src/parser/expression.ts:1170:21)
+      at Parser.parseExprAtom [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:742:23)
+      at Parser.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at Parser.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at Parser.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at Parser.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at Parser.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+      at Parser.parseMaybeConditional [as parseMaybeAssign] (node_modules/@babel/parser/src/parser/expression.ts:301:21)
+      at parseMaybeAssign (node_modules/@babel/parser/src/parser/expression.ts:257:12)
+      at Parser.callback [as allowInAnd] (node_modules/@babel/parser/src/parser/expression.ts:3194:12)
+      at Parser.allowInAnd [as parseMaybeAssignAllowIn] (node_modules/@babel/parser/src/parser/expression.ts:256:17)
+      at Parser.parseMaybeAssignAllowIn [as parseMaybeAssignAllowInOrVoidPattern] (node_modules/@babel/parser/src/parser/expression.ts:3308:17)
+      at Parser.parseMaybeAssignAllowInOrVoidPattern [as parseExprListItem] (node_modules/@babel/parser/src/parser/expression.ts:2790:18)
+      at Parser.parseExprListItem [as parseCallExpressionArguments] (node_modules/@babel/parser/src/parser/expression.ts:1042:14)
+      at Parser.parseCallExpressionArguments [as parseCoverCallAndAsyncArrowHead] (node_modules/@babel/parser/src/parser/expression.ts:922:29)
+      at Parser.parseCoverCallAndAsyncArrowHead [as parseSubscript] (node_modules/@babel/parser/src/parser/expression.ts:804:19)
+      at Parser.parseSubscript [as parseSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:763:19)
+      at Parser.parseSubscripts [as parseExprSubscripts] (node_modules/@babel/parser/src/parser/expression.ts:748:17)
+      at Parser.parseExprSubscripts [as parseUpdate] (node_modules/@babel/parser/src/parser/expression.ts:721:21)
+      at Parser.parseUpdate [as parseMaybeUnary] (node_modules/@babel/parser/src/parser/expression.ts:683:23)
+      at Parser.parseMaybeUnary [as parseMaybeUnaryOrPrivate] (node_modules/@babel/parser/src/parser/expression.ts:417:14)
+      at Parser.parseMaybeUnaryOrPrivate [as parseExprOps] (node_modules/@babel/parser/src/parser/expression.ts:429:23)
+      at Parser.parseExprOps [as parseMaybeConditional] (node_modules/@babel/parser/src/parser/expression.ts:384:23)
+      at Parser.parseMaybeConditional [as parseMaybeAssign] (node_modules/@babel/parser/src/parser/expression.ts:301:21)
+      at Parser.parseMaybeAssign [as parseExpressionBase] (node_modules/@babel/parser/src/parser/expression.ts:226:23)
+      at parseExpressionBase (node_modules/@babel/parser/src/parser/expression.ts:217:39)
+      at Parser.callback [as allowInAnd] (node_modules/@babel/parser/src/parser/expression.ts:3189:16)
+      at Parser.allowInAnd [as parseExpression] (node_modules/@babel/parser/src/parser/expression.ts:217:17)
+      at Parser.parseExpression [as parseStatementContent] (node_modules/@babel/parser/src/parser/statement.ts:688:23)
+      at Parser.parseStatementContent [as parseStatementLike] (node_modules/@babel/parser/src/parser/statement.ts:482:17)
+      at Parser.parseStatementLike [as parseStatementListItem] (node_modules/@babel/parser/src/parser/statement.ts:431:17)
+      at Parser.parseStatementListItem [as parseBlockOrModuleBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1444:16)
+      at Parser.parseBlockOrModuleBlockBody [as parseBlockBody] (node_modules/@babel/parser/src/parser/statement.ts:1417:10)
+      at Parser.parseBlockBody [as parseBlock] (node_modules/@babel/parser/src/parser/statement.ts:1385:10)
+
+  console.warn
+    Starting the MongoMemoryServer Instance failed, enable debug log for more information. Error:
+     GenericMMSError: Instance failed to start within 10000ms
+        at Timeout.<anonymous> (D:\Careerak\Careerak-vsc\backend\node_modules\mongodb-memory-server-core\src\util\MongoInstance.ts:383:21)
+        at listOnTimeout (node:internal/timers:605:17)
+        at processTimers (node:internal/timers:541:7)
+
+    [0m [90m 26 |[39m     }
+     [90m 27 |[39m     
+    [31m[1m>[22m[39m[90m 28 |[39m     mongoServer [33m=[39m [36mawait[39m [33mMongoMemoryServer[39m[33m.[39mcreate()[33m;[39m
+     [90m    |[39m                   [31m[1m^[22m[39m
+     [90m 29 |[39m     [36mconst[39m mongoUri [33m=[39m mongoServer[33m.[39mgetUri()[33m;[39m
+     [90m 30 |[39m     [36mawait[39m mongoose[33m.[39mconnect(mongoUri)[33m;[39m
+     [90m 31 |[39m   })[33m;[39m[0m
+
+      at node_modules/mongodb-memory-server-core/src/MongoMemoryServer.ts:359:17
+      at MongoMemoryServer.start (node_modules/mongodb-memory-server-core/src/MongoMemoryServer.ts:350:5)
+      at MongoMemoryServer.create (node_modules/mongodb-memory-server-core/src/MongoMemoryServer.ts:317:5)
+      at Object.<anonymous> (tests/courseEnrollmentProgress.property.test.js:28:19)
+
+FAIL tests/courseEnrollmentProgress.property.test.js (19.772 s)
+  ظù Feature: courses-page-enhancements, Property 18: Progress Calculation ظ║ should calculate progress percentage correctly for any enrollment
+
+    Instance failed to start within 10000ms
+
+      at Timeout.<anonymous> (node_modules/mongodb-memory-server-core/src/util/MongoInstance.ts:383:21)
+
+  ظù Feature: courses-page-enhancements, Property 18: Progress Calculation ظ║ should auto-update percentageComplete on save when completedLessons changes
+
+    Instance failed to start within 10000ms
+
+      at Timeout.<anonymous> (node_modules/mongodb-memory-server-core/src/util/MongoInstance.ts:383:21)
+
+  ظù Feature: courses-page-enhancements, Property 18: Progress Calculation ظ║ should handle edge cases correctly
+
+    Instance failed to start within 10000ms
+
+      at Timeout.<anonymous> (node_modules/mongodb-memory-server-core/src/util/MongoInstance.ts:383:21)
+
+  ظù Feature: courses-page-enhancements, Property 18: Progress Calculation ظ║ should return consistent results when called multiple times
+
+    Instance failed to start within 10000ms
+
+      at Timeout.<anonymous> (node_modules/mongodb-memory-server-core/src/util/MongoInstance.ts:383:21)
+
+  ظù Feature: courses-page-enhancements, Property 18: Progress Calculation ظ║ should always return percentage between 0 and 100
+
+    Instance failed to start within 10000ms
+
+      at Timeout.<anonymous> (node_modules/mongodb-memory-server-core/src/util/MongoInstance.ts:383:21)
+
+
+  ظù Test suite failed to run
+
+    TypeError: Cannot read properties of undefined (reading 'stop')
+
+      33 |   afterAll(async () => {
+      34 |     await mongoose.disconnect();
+    > 35 |     await mongoServer.stop();
+         |                       ^
+      36 |   });
+      37 |
+      38 |   beforeEach(async () => {
+
+      at Object.stop (tests/courseEnrollmentProgress.property.test.js:35:23)
+
+FAIL tests/course-sharing.property.test.js (20.886 s)
+  Feature: courses-page-enhancements - Course Sharing Properties
+    Property 27: Shareable URL Uniqueness
+      ├ù should generate unique tokens for each share request (5669 ms)
+      ├ù should ensure tokens are cryptographically unique across different courses (2127 ms)
+    Property 28: Referral Tracking
+      ├ù should track views when shared link is accessed (5337 ms)
+      ├ù should not allow access to expired tokens (306 ms)
+      ├ù should track referrer ID when provided (304 ms)
+    Property 29: Referrer Credit
+      ├ù should credit referrer when enrollment occurs via shared link (193 ms)
+      ├ù should handle enrollment without referral token gracefully (253 ms)
+      ├ù should not credit referrer for invalid tokens (101 ms)
+    Additional Property: Referral Token Expiration
+      ├ù should set expiration date 90 days from creation (864 ms)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 27: Shareable URL Uniqueness ظ║ should generate unique tokens for each share request
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 27: Shareable URL Uniqueness ظ║ should ensure tokens are cryptographically unique across different courses
+
+    Property failed after 1 tests
+    { seed: -1562583313, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [[{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}},{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}}]]
+    Shrunk 59 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    ValidationError: EducationalCourse validation failed: title: Path `title` is required.
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at node_modules/mongoose/lib/document.js:3014:17
+      at node_modules/mongoose/lib/schematype.js:1368:9
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 27: Shareable URL Uniqueness ظ║ should ensure tokens are cryptographically unique across different courses
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 28: Referral Tracking ظ║ should track views when shared link is accessed
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 28: Referral Tracking ظ║ should not allow access to expired tokens
+
+    Property failed after 2 tests
+    { seed: -504371158, path: "1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}}]
+    Shrunk 25 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    ValidationError: EducationalCourse validation failed: title: Path `title` is required.
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at node_modules/mongoose/lib/document.js:3014:17
+      at node_modules/mongoose/lib/schematype.js:1368:9
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 28: Referral Tracking ظ║ should not allow access to expired tokens
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 28: Referral Tracking ظ║ should track referrer ID when provided
+
+    Property failed after 1 tests
+    { seed: 1051878188, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}},{"fullName":"   ","email":"a@a.aa","password":"        ","role":"user"}]
+    Shrunk 48 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    TypeError: User.create is not a function
+
+      265 |           async (courseData, userData) => {
+      266 |             // Setup: Create user and course
+    > 267 |             const user = await User.create(userData);
+          |                                     ^
+      268 |             const token = crypto.randomBytes(16).toString('hex');
+      269 |             
+      270 |             const course = await EducationalCourse.create({
+
+      at create (tests/course-sharing.property.test.js:267:37)
+      at AsyncProperty.predicate (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.js:17:102)
+      at AsyncProperty.run (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.generic.js:46:39)
+      at asyncRunIt (node_modules/fast-check/lib/cjs/check/runner/Runner.js:28:36)
+      at Object.<anonymous> (tests/course-sharing.property.test.js:261:7)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 28: Referral Tracking ظ║ should track referrer ID when provided
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 29: Referrer Credit ظ║ should credit referrer when enrollment occurs via shared link
+
+    Property failed after 1 tests
+    { seed: -1112148315, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}},{"fullName":"   ","email":"a@a.aa","password":"        ","role":"user"},{"fullName":"   ","email":"student_a@a.aa","password":"        ","role":"user"}]
+    Shrunk 68 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    TypeError: User.create is not a function
+
+      313 |
+      314 |             // Setup: Create referrer, student, and course
+    > 315 |             const referrer = await User.create(referrerData);
+          |                                         ^
+      316 |             const student = await User.create(studentData);
+      317 |             
+      318 |             const token = crypto.randomBytes(16).toString('hex');
+
+      at create (tests/course-sharing.property.test.js:315:41)
+      at AsyncProperty.predicate (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.js:17:102)
+      at AsyncProperty.run (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.generic.js:46:39)
+      at asyncRunIt (node_modules/fast-check/lib/cjs/check/runner/Runner.js:28:36)
+      at Object.<anonymous> (tests/course-sharing.property.test.js:303:7)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 29: Referrer Credit ظ║ should credit referrer when enrollment occurs via shared link
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 29: Referrer Credit ظ║ should handle enrollment without referral token gracefully
+
+    Property failed after 1 tests
+    { seed: -420159438, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}},{"fullName":"   ","email":"a@a.aa","password":"        ","role":"user"}]
+    Shrunk 46 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    TypeError: User.create is not a function
+
+      376 |           async (courseData, studentData) => {
+      377 |             // Setup: Create student and course
+    > 378 |             const student = await User.create(studentData);
+          |                                        ^
+      379 |             const course = await EducationalCourse.create({
+      380 |               ...courseData,
+      381 |               instructor: new mongoose.Types.ObjectId(),
+
+      at create (tests/course-sharing.property.test.js:378:40)
+      at AsyncProperty.predicate (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.js:17:102)
+      at AsyncProperty.run (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.generic.js:46:39)
+      at asyncRunIt (node_modules/fast-check/lib/cjs/check/runner/Runner.js:28:36)
+      at Object.<anonymous> (tests/course-sharing.property.test.js:372:7)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 29: Referrer Credit ظ║ should handle enrollment without referral token gracefully
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 29: Referrer Credit ظ║ should not credit referrer for invalid tokens
+
+    Property failed after 1 tests
+    { seed: 426900808, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}},{"fullName":"   ","email":"a@a.aa","password":"        ","role":"user"}]
+    Shrunk 46 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    TypeError: User.create is not a function
+
+      410 |           async (courseData, studentData) => {
+      411 |             // Setup: Create student and course
+    > 412 |             const student = await User.create(studentData);
+          |                                        ^
+      413 |             const course = await EducationalCourse.create({
+      414 |               ...courseData,
+      415 |               instructor: new mongoose.Types.ObjectId(),
+
+      at create (tests/course-sharing.property.test.js:412:40)
+      at AsyncProperty.predicate (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.js:17:102)
+      at AsyncProperty.run (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.generic.js:46:39)
+      at asyncRunIt (node_modules/fast-check/lib/cjs/check/runner/Runner.js:28:36)
+      at Object.<anonymous> (tests/course-sharing.property.test.js:406:7)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Property 29: Referrer Credit ظ║ should not credit referrer for invalid tokens
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Additional Property: Referral Token Expiration ظ║ should set expiration date 90 days from creation
+
+    Property failed after 8 tests
+    { seed: 1863980664, path: "7:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"title":"     ","description":"          ","category":"Programming","level":"Beginner","status":"Published","totalLessons":5,"totalDuration":1,"price":{"amount":0,"currency":"USD","isFree":false},"stats":{"totalEnrollments":0,"activeEnrollments":0,"averageRating":0,"totalReviews":0}}]
+    Shrunk 27 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    ValidationError: EducationalCourse validation failed: title: Path `title` is required.
+
+      at model.Object.<anonymous>.Document.invalidate (node_modules/mongoose/lib/document.js:3221:32)
+      at node_modules/mongoose/lib/document.js:3014:17
+      at node_modules/mongoose/lib/schematype.js:1368:9
+
+  ظù Feature: courses-page-enhancements - Course Sharing Properties ظ║ Additional Property: Referral Token Expiration ظ║ should set expiration date 90 days from creation
+
+    TypeError: User.deleteMany is not a function
+
+      34 |   await EducationalCourse.deleteMany({});
+      35 |   await CourseEnrollment.deleteMany({});
+    > 36 |   await User.deleteMany({});
+         |              ^
+      37 | });
+      38 |
+      39 | // Arbitraries for generating test data
+
+      at Object.deleteMany (tests/course-sharing.property.test.js:36:14)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+Test Suites: 11 failed, 1 passed, 12 total
+Tests:       63 failed, 64 passed, 127 total
+Snapshots:   0 total
+Time:        80.22 s
+Ran all test suites matching /course/i.

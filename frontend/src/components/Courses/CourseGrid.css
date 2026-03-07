@@ -1,0 +1,264 @@
+/* Course Grid Container */
+.course-grid {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Grid View - Responsive Columns */
+.course-grid-grid {
+  /* Mobile: 1 column */
+  grid-template-columns: 1fr;
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .course-grid-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 4 columns */
+@media (min-width: 1024px) {
+  .course-grid-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* List View - Always Single Column */
+.course-grid-list {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* Loading State */
+.course-grid-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.course-grid-loading p {
+  font-size: 1.125rem;
+  color: #304B60;
+  font-family: 'Amiri', 'Cairo', serif;
+}
+
+/* Empty State */
+.course-grid-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 2rem;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #304B60;
+  margin-bottom: 0.75rem;
+  font-family: 'Amiri', 'Cairo', serif;
+}
+
+.empty-message {
+  font-size: 1.125rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  font-family: 'Amiri', 'Cairo', serif;
+}
+
+.empty-suggestion {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 1.5rem;
+  font-family: 'Amiri', 'Cairo', serif;
+}
+
+.clear-filters-button {
+  padding: 0.75rem 1.5rem;
+  background-color: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Amiri', 'Cairo', serif;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.clear-filters-button:hover {
+  background-color: #c06d4f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.clear-filters-button:active {
+  transform: translateY(0);
+}
+
+/* RTL Support */
+[dir="rtl"] .course-grid {
+  direction: rtl;
+}
+
+[dir="rtl"] .empty-title,
+[dir="rtl"] .empty-message,
+[dir="rtl"] .empty-suggestion {
+  text-align: center;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .course-grid-loading p {
+    color: #E3DAD1;
+  }
+
+  .course-grid-empty {
+    background-color: #1a1a1a;
+  }
+
+  .empty-title {
+    color: #E3DAD1;
+  }
+
+  .empty-message {
+    color: #ccc;
+  }
+
+  .empty-suggestion {
+    color: #aaa;
+  }
+}
+
+/* Mobile Optimizations */
+@media (max-width: 639px) {
+  .course-grid {
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+
+  .course-grid-empty {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+  }
+
+  .empty-message {
+    font-size: 1rem;
+  }
+
+  .empty-suggestion {
+    font-size: 0.875rem;
+  }
+
+  .clear-filters-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .course-grid {
+    padding: 1rem;
+  }
+
+  .course-grid-empty {
+    margin: 1.5rem auto;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+  .course-grid-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .course-grid-loading,
+  .course-grid-empty {
+    display: none;
+  }
+
+  .course-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation: none;
+    border-top-color: #D48161;
+  }
+
+  .clear-filters-button:hover {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .empty-title {
+    color: #000;
+  }
+
+  .empty-message,
+  .empty-suggestion {
+    color: #333;
+  }
+
+  .clear-filters-button {
+    border: 2px solid #000;
+  }
+}

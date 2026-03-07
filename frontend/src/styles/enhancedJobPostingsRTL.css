@@ -1,0 +1,454 @@
+/**
+ * Enhanced Job Postings - RTL/LTR Support
+ * دعم كامل للعربية (RTL) والإنجليزية (LTR)
+ */
+
+/* ============================================
+   RTL Base Styles
+   ============================================ */
+
+[dir="rtl"] .enhanced-job-postings {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="ltr"] .enhanced-job-postings {
+  direction: ltr;
+  text-align: left;
+}
+
+/* ============================================
+   View Toggle
+   ============================================ */
+
+[dir="rtl"] .view-toggle {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .view-toggle-btn:first-child {
+  border-radius: 0 8px 8px 0;
+  border-left: none;
+  border-right: 1px solid #e5e7eb;
+}
+
+[dir="rtl"] .view-toggle-btn:last-child {
+  border-radius: 8px 0 0 8px;
+  border-right: none;
+  border-left: 1px solid #e5e7eb;
+}
+
+/* ============================================
+   Job Card
+   ============================================ */
+
+[dir="rtl"] .job-card {
+  text-align: right;
+}
+
+[dir="rtl"] .job-card .job-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .job-card .badges {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+[dir="rtl"] .job-card .job-actions {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .job-card .company-logo {
+  margin-left: 16px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Bookmark Button
+   ============================================ */
+
+[dir="rtl"] .bookmark-btn {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .bookmark-btn i {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Share Modal
+   ============================================ */
+
+[dir="rtl"] .share-modal {
+  text-align: right;
+}
+
+[dir="rtl"] .share-modal .modal-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .share-modal .platform-btn {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .share-modal .platform-btn i {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Salary Indicator
+   ============================================ */
+
+[dir="rtl"] .salary-indicator {
+  text-align: right;
+}
+
+[dir="rtl"] .salary-indicator .indicator-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .salary-indicator .salary-row {
+  flex-direction: row-reverse;
+}
+
+/* ============================================
+   Similar Jobs
+   ============================================ */
+
+[dir="rtl"] .similar-jobs .section-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .similar-jobs .jobs-carousel {
+  direction: rtl;
+}
+
+[dir="rtl"] .similar-jobs .carousel-btn.prev {
+  left: auto;
+  right: 0;
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .similar-jobs .carousel-btn.next {
+  right: auto;
+  left: 0;
+  transform: rotate(180deg);
+}
+
+/* ============================================
+   Filters Panel
+   ============================================ */
+
+[dir="rtl"] .filters-panel {
+  text-align: right;
+}
+
+[dir="rtl"] .filters-panel .filters-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filters-panel select {
+  text-align: right;
+  padding-right: 12px;
+  padding-left: 32px;
+  background-position: left 12px center;
+}
+
+[dir="rtl"] .filters-panel .checkbox-label {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filters-panel .checkbox-label input {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Search Bar
+   ============================================ */
+
+[dir="rtl"] .search-bar {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .search-bar input {
+  text-align: right;
+  padding-right: 16px;
+  padding-left: 48px;
+}
+
+[dir="rtl"] .search-bar .search-icon {
+  left: auto;
+  right: 16px;
+}
+
+[dir="rtl"] .search-bar .clear-btn {
+  right: auto;
+  left: 16px;
+}
+
+/* ============================================
+   Company Card
+   ============================================ */
+
+[dir="rtl"] .company-card {
+  text-align: right;
+}
+
+[dir="rtl"] .company-card .company-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .company-card .company-logo {
+  margin-left: 16px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .company-card .company-stats {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .company-card .stat-item {
+  margin-left: 24px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .company-card .stat-item:last-child {
+  margin-left: 0;
+}
+
+[dir="rtl"] .company-card .stat-item i {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Badges
+   ============================================ */
+
+[dir="rtl"] .badge {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .badge:last-child {
+  margin-left: 0;
+}
+
+[dir="rtl"] .badge i {
+  margin-left: 4px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Tooltips
+   ============================================ */
+
+[dir="rtl"] .tooltip {
+  text-align: right;
+}
+
+[dir="rtl"] .tooltip::before {
+  left: auto;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+/* ============================================
+   Dropdowns
+   ============================================ */
+
+[dir="rtl"] .dropdown-menu {
+  left: auto;
+  right: 0;
+  text-align: right;
+}
+
+[dir="rtl"] .dropdown-item {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dropdown-item i {
+  margin-left: 12px;
+  margin-right: 0;
+}
+
+/* ============================================
+   Pagination
+   ============================================ */
+
+[dir="rtl"] .pagination {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .pagination-btn.prev {
+  transform: rotate(180deg);
+}
+
+[dir="rtl"] .pagination-btn.next {
+  transform: rotate(180deg);
+}
+
+/* ============================================
+   Breadcrumbs
+   ============================================ */
+
+[dir="rtl"] .breadcrumbs {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .breadcrumb-separator {
+  transform: rotate(180deg);
+}
+
+/* ============================================
+   Tabs
+   ============================================ */
+
+[dir="rtl"] .tabs {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .tab {
+  margin-left: 16px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .tab:last-child {
+  margin-left: 0;
+}
+
+/* ============================================
+   Lists
+   ============================================ */
+
+[dir="rtl"] ul,
+[dir="rtl"] ol {
+  padding-right: 24px;
+  padding-left: 0;
+}
+
+[dir="rtl"] li {
+  text-align: right;
+}
+
+/* ============================================
+   Icons
+   ============================================ */
+
+[dir="rtl"] .icon-left {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .icon-right {
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+[dir="rtl"] .slide-in {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+[dir="ltr"] .slide-in {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* ============================================
+   Responsive RTL/LTR
+   ============================================ */
+
+@media (max-width: 768px) {
+  [dir="rtl"] .mobile-menu {
+    left: auto;
+    right: 0;
+  }
+  
+  [dir="rtl"] .mobile-drawer {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+  }
+  
+  [dir="rtl"] .mobile-drawer.open {
+    transform: translateX(0);
+  }
+  
+  [dir="ltr"] .mobile-drawer {
+    right: auto;
+    left: 0;
+    transform: translateX(-100%);
+  }
+  
+  [dir="ltr"] .mobile-drawer.open {
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+  [dir="rtl"] * {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  [dir="ltr"] * {
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+/* ============================================
+   Accessibility
+   ============================================ */
+
+[dir="rtl"] .sr-only {
+  text-align: right;
+}
+
+[dir="ltr"] .sr-only {
+  text-align: left;
+}
+
+/* ============================================
+   Dark Mode RTL/LTR
+   ============================================ */
+
+[dir="rtl"].dark-mode .enhanced-job-postings {
+  direction: rtl;
+}
+
+[dir="ltr"].dark-mode .enhanced-job-postings {
+  direction: ltr;
+}

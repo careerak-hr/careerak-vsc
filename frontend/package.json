@@ -78,11 +78,27 @@
     "lighthouse:ci": "lhci autorun",
     "lighthouse:local": "npm run build && lhci autorun",
     "monitor:pwa": "node scripts/monitor-pwa-install-rate.js",
+    "monitor:pwa:export": "node scripts/monitor-pwa-install-rate.js --export",
+    "monitor:pwa:watch": "node scripts/monitor-pwa-install-rate.js --watch",
+    "monitor:darkmode": "node scripts/monitor-dark-mode-adoption.js",
+    "monitor:darkmode:export": "node scripts/monitor-dark-mode-adoption.js --export",
+    "monitor:darkmode:watch": "node scripts/monitor-dark-mode-adoption.js --watch",
+    "measure:performance": "node scripts/measure-performance.js",
+    "measure:performance:local": "npm run build && npm run preview & sleep 5 && node scripts/measure-performance.js http://localhost:4173"
     "monitor:pwa:watch": "node scripts/monitor-pwa-install-rate.js --watch",
     "monitor:pwa:export": "node scripts/monitor-pwa-install-rate.js --export pwa-install-metrics.json",
     "monitor:darkmode": "node scripts/monitor-dark-mode-adoption.js",
     "monitor:darkmode:watch": "node scripts/monitor-dark-mode-adoption.js --watch",
-    "monitor:darkmode:export": "node scripts/monitor-dark-mode-adoption.js --export"
+    "monitor:darkmode:export": "node scripts/monitor-dark-mode-adoption.js --export",
+    "measure:performance": "node scripts/measure-performance.js",
+    "measure:performance:export": "node scripts/measure-performance.js --export .performance-metrics/report.json",
+    "test:performance": "vitest run apply-page-performance.test.js",
+    "test:enhanced-jobs": "vitest run enhanced-job-postings",
+    "test:enhanced-jobs:view": "vitest run ViewToggle.test.jsx",
+    "test:enhanced-jobs:bookmark": "vitest run BookmarkButton.test.jsx",
+    "test:enhanced-jobs:share": "vitest run ShareButton.test.jsx",
+    "test:enhanced-jobs:coverage": "vitest run enhanced-job-postings --coverage",
+    "test:enhanced-jobs:watch": "vitest enhanced-job-postings"
   },
   "eslintConfig": {
     "extends": [

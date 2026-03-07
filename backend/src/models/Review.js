@@ -8,7 +8,7 @@ const reviewSchema = new mongoose.Schema({
   // نوع التقييم
   reviewType: {
     type: String,
-    enum: ['company_to_employee', 'employee_to_company'],
+    enum: ['company_to_employee', 'employee_to_company', 'course_review'],
     required: true,
     index: true
   },
@@ -22,10 +22,34 @@ const reviewSchema = new mongoose.Schema({
   },
   
   // المُقيَّم (من يتلقى التقييم)
+  // للوظائف: الشركة أو الموظف
+  // للدورات: يكون null (التقييم للدورة نفسها)
   reviewee: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: function() {
+      return this.reviewType !== 'course_review';
+    },
+    index: true
+  },
+  
+  // الدورة (للتقييمات من نوع course_review)
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EducationalCourse',
+    required: function() {
+      return this.reviewType === 'course_review';
+    },
+    index: true
+  },
+  
+  // التسجيل في الدورة (للتقييمات من نوع course_review)
+  enrollment: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'CourseEnrollment',
+    required: function() {
+      return this.reviewType === 'course_review';
+    },
     index: true
   },
   
@@ -71,7 +95,22 @@ const reviewSchema = new mongoose.Schema({
     workEnvironment: { type: Number, min: 1, max: 5 },
     management: { type: Number, min: 1, max: 5 },
     benefits: { type: Number, min: 1, max: 5 },
-    careerGrowth: { type: Number, min: 1, max: 5 }
+    careerGrowth: { type: Number, min: 1, max: 5 },
+    
+    // للدورات
+    contentQuality: { type: Number, min: 1, max: 5 },
+    instructorEffectiveness: { type: Number, min: 1, max: 5 },
+    valueForMoney: { type: Number, min: 1, max: 5 },
+    practicalApplication: { type: Number, min: 1, max: 5 }
+  },
+  
+  // حالة الإكمال (للدورات فقط)
+  completionStatus: {
+    type: String,
+    enum: ['completed', 'in_progress', 'dropped'],
+    required: function() {
+      return this.reviewType === 'course_review';
+    }
   },
   
   // التعليق المكتوب
@@ -191,8 +230,10 @@ const reviewSchema = new mongoose.Schema({
 });
 
 // Indexes للأداء
-reviewSchema.index({ reviewer: 1, reviewee: 1, jobApplication: 1 }, { unique: true });
+reviewSchema.index({ reviewer: 1, reviewee: 1, jobApplication: 1 });
+reviewSchema.index({ reviewer: 1, course: 1, enrollment: 1 });
 reviewSchema.index({ reviewee: 1, status: 1, rating: -1 });
+reviewSchema.index({ course: 1, status: 1, rating: -1 });
 reviewSchema.index({ reviewer: 1, createdAt: -1 });
 reviewSchema.index({ jobPosting: 1, status: 1 });
 reviewSchema.index({ status: 1, createdAt: -1 });
@@ -261,15 +302,22 @@ reviewSchema.methods.addReport = function(userId, reason, description) {
   return this.save();
 };
 
-// Static: حساب متوسط التقييم لمستخدم
-reviewSchema.statics.calculateAverageRating = async function(userId, reviewType) {
+// Static: حساب متوسط التقييم لمستخدم أو دورة
+reviewSchema.statics.calculateAverageRating = async function(targetId, reviewType, targetType = 'user') {
+  const matchQuery = {
+    status: 'approved',
+    reviewType: reviewType
+  };
+  
+  if (targetType === 'user') {
+    matchQuery.reviewee = mongoose.Types.ObjectId(targetId);
+  } else if (targetType === 'course') {
+    matchQuery.course = mongoose.Types.ObjectId(targetId);
+  }
+  
   const result = await this.aggregate([
     {
-      $match: {
-        reviewee: mongoose.Types.ObjectId(userId),
-        reviewType: reviewType,
-        status: 'approved'
-      }
+      $match: matchQuery
     },
     {
       $group: {
@@ -306,13 +354,22 @@ reviewSchema.statics.calculateAverageRating = async function(userId, reviewType)
 };
 
 // Static: التحقق من إمكانية كتابة تقييم
-reviewSchema.statics.canReview = async function(reviewerId, revieweeId, jobApplicationId) {
-  // التحقق من عدم وجود تقييم سابق
-  const existingReview = await this.findOne({
+reviewSchema.statics.canReview = async function(reviewerId, targetId, applicationOrEnrollmentId, reviewType) {
+  const query = {
     reviewer: reviewerId,
-    reviewee: revieweeId,
-    jobApplication: jobApplicationId
-  });
+    reviewType: reviewType
+  };
+  
+  if (reviewType === 'course_review') {
+    query.course = targetId;
+    query.enrollment = applicationOrEnrollmentId;
+  } else {
+    query.reviewee = targetId;
+    query.jobApplication = applicationOrEnrollmentId;
+  }
+  
+  // التحقق من عدم وجود تقييم سابق
+  const existingReview = await this.findOne(query);
   
   return !existingReview;
 };
@@ -330,25 +387,49 @@ reviewSchema.pre('save', function(next) {
   next();
 });
 
-// Middleware: بعد الحفظ - تحديث متوسط التقييم للمستخدم
+// Middleware: بعد الحفظ - تحديث متوسط التقييم للمستخدم أو الدورة
 reviewSchema.post('save', async function(doc) {
   try {
-    const User = mongoose.model('User');
-    const stats = await doc.constructor.calculateAverageRating(
-      doc.reviewee,
-      doc.reviewType
-    );
-    
-    // تحديث ملف المستخدم
-    await User.findByIdAndUpdate(doc.reviewee, {
-      $set: {
-        'reviewStats.averageRating': stats.averageRating,
-        'reviewStats.totalReviews': stats.totalReviews,
-        'reviewStats.ratingDistribution': stats.ratingDistribution
+    if (doc.reviewType === 'course_review') {
+      // تحديث إحصائيات الدورة
+      const EducationalCourse = mongoose.model('EducationalCourse');
+      const stats = await doc.constructor.calculateAverageRating(
+        doc.course,
+        'course_review',
+        'course'
+      );
+      
+      await EducationalCourse.findByIdAndUpdate(doc.course, {
+        $set: {
+          'stats.averageRating': stats.averageRating,
+          'stats.totalReviews': stats.totalReviews
+        }
+      });
+    } else {
+      // تحديث إحصائيات المستخدم
+      const User = mongoose.model('User');
+      const stats = await doc.constructor.calculateAverageRating(
+        doc.reviewee,
+        doc.reviewType,
+        'user'
+      );
+      
+      await User.findByIdAndUpdate(doc.reviewee, {
+        $set: {
+          'reviewStats.averageRating': stats.averageRating,
+          'reviewStats.totalReviews': stats.totalReviews,
+          'reviewStats.ratingDistribution': stats.ratingDistribution
+        }
+      });
+      
+      // إذا كان التقييم للشركة، حدّث CompanyInfo أيضاً
+      if (doc.reviewType === 'employee_to_company') {
+        const companyInfoService = require('../services/companyInfoService');
+        await companyInfoService.updateCompanyRating(doc.reviewee);
       }
-    });
+    }
   } catch (error) {
-    console.error('Error updating user review stats:', error);
+    console.error('Error updating review stats:', error);
   }
 });
 

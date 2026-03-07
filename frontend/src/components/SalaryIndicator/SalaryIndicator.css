@@ -1,0 +1,243 @@
+/* مكون عرض تقدير الراتب */
+.salary-indicator {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 2px solid;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.salary-indicator:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* العنوان */
+.salary-indicator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.salary-indicator-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.salary-indicator-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* محتوى التقدير */
+.salary-indicator-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* صف الراتب */
+.salary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.salary-row-range {
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.salary-row-count {
+  justify-content: center;
+  padding-top: 0.25rem;
+}
+
+.salary-label {
+  font-weight: 500;
+}
+
+.salary-label-small {
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.salary-value {
+  font-weight: 600;
+  color: #1f2937;
+  direction: ltr;
+  text-align: left;
+}
+
+.salary-value-bold {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.salary-range {
+  white-space: nowrap;
+}
+
+/* التقييم النهائي */
+.salary-assessment {
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.salary-assessment-label {
+  font-size: 1rem;
+  font-weight: 700;
+  display: inline-block;
+}
+
+/* Tooltip */
+.salary-indicator-tooltip {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-text {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+/* ألوان الخلفية */
+.bg-red-50 {
+  background-color: #fef2f2;
+}
+
+.bg-yellow-50 {
+  background-color: #fffbeb;
+}
+
+.bg-green-50 {
+  background-color: #f0fdf4;
+}
+
+/* ألوان الحدود */
+.border-red-200 {
+  border-color: #fecaca;
+}
+
+.border-yellow-200 {
+  border-color: #fde68a;
+}
+
+.border-green-200 {
+  border-color: #bbf7d0;
+}
+
+/* ألوان النص */
+.text-red-700 {
+  color: #b91c1c;
+}
+
+.text-yellow-700 {
+  color: #a16207;
+}
+
+.text-green-700 {
+  color: #15803d;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .salary-indicator {
+    padding: 1rem;
+  }
+
+  .salary-indicator-title {
+    font-size: 1rem;
+  }
+
+  .salary-indicator-icon {
+    font-size: 1.25rem;
+  }
+
+  .salary-row {
+    font-size: 0.8125rem;
+  }
+
+  .salary-value-bold {
+    font-size: 0.9375rem;
+  }
+
+  .salary-assessment-label {
+    font-size: 0.9375rem;
+  }
+
+  .tooltip-text {
+    font-size: 0.6875rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .salary-indicator {
+    background-color: rgba(31, 41, 55, 0.5);
+  }
+
+  .salary-indicator-title,
+  .salary-value {
+    color: #f3f4f6;
+  }
+
+  .salary-label,
+  .salary-label-small,
+  .tooltip-text {
+    color: #d1d5db;
+  }
+
+  .salary-indicator-header,
+  .salary-row-range,
+  .salary-assessment,
+  .salary-indicator-tooltip {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .salary-value {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.salary-indicator {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Print Styles */
+@media print {
+  .salary-indicator {
+    border: 1px solid #000;
+    box-shadow: none;
+  }
+
+  .salary-indicator:hover {
+    transform: none;
+  }
+}

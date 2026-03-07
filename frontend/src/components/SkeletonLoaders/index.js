@@ -22,4 +22,6 @@ export { TableSkeleton } from './TableSkeleton';
 
 // Card-specific skeleton loaders
 export { default as JobCardSkeleton } from './JobCardSkeleton';
+export { default as JobCardGridSkeleton } from './JobCardGridSkeleton';
+export { default as JobCardListSkeleton } from './JobCardListSkeleton';
 export { default as CourseCardSkeleton } from './CourseCardSkeleton';

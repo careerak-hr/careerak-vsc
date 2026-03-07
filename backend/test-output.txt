@@ -1,0 +1,1118 @@
+
+> hr-management-backend@1.0.0 test
+> jest saved-search-round-trip.property.test.js
+
+  console.log
+    ≡ا¤ MONGODB_URI = mongodb://localhost:27017/careerak_test
+
+      at log (src/config/database.js:10:11)
+
+  console.log
+    ≡اôة MongoDB: Connecting to Atlas...
+
+      at log (src/config/database.js:29:13)
+
+  console.log
+    ظ£à MongoDB: Connected to localhost/careerak_test
+
+      at log (src/config/database.js:32:15)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "__l",
+      "location": "R~spropert",
+      "salaryMin": 13,
+      "salaryMax": 381181,
+      "workType": [
+        "hybrid"
+      ],
+      "experienceLevel": [],
+      "skills": [
+        "70 ;Wx<M]rmQGV",
+        "R[V}oA0,5f]"
+      ],
+      "skillsLogic": "OR",
+      "datePosted": "today",
+      "companySize": [
+        "small"
+      ]
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "__l",
+      "location": "R~spropert",
+      "salaryMin": 13,
+      "salaryMax": 381181,
+      "workType": [
+        "hybrid"
+      ],
+      "skills": [
+        "70 ;Wx<M]rmQGV",
+        "R[V}oA0,5f]"
+      ],
+      "skillsLogic": "OR",
+      "datePosted": "today",
+      "companySize": [
+        "small"
+      ]
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "query": "z ",
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "location": "&&fx%%A/~0",
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "salaryMin": 3,
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "salaryMax": 431408,
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "workType": [],
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "experienceLevel": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "skillsLogic": "AND",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "datePosted": "week",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {}
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {}
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {}
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {}
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+  console.log
+    Mismatch found:
+
+      at log (tests/saved-search-round-trip.property.test.js:303:25)
+
+  console.log
+    Retrieved: {
+      "workType": [],
+      "experienceLevel": [],
+      "skills": [],
+      "skillsLogic": "OR",
+      "companySize": []
+    }
+
+      at log (tests/saved-search-round-trip.property.test.js:304:25)
+
+  console.log
+    Expected: {}
+
+      at log (tests/saved-search-round-trip.property.test.js:305:25)
+
+FAIL tests/saved-search-round-trip.property.test.js (63.225 s)
+  Advanced Search Filter - Property 9: Saved Search Round-trip
+    ├ù should preserve all search parameters through save and retrieve cycle (27534 ms)
+    ظêأ should preserve updated search parameters through update and retrieve cycle (7440 ms)
+    ├ù should preserve all parameters for multiple saved searches (23542 ms)
+    ظêأ should save and retrieve all filter types correctly (743 ms)
+    ظêأ should save and retrieve search with query only (750 ms)
+
+  ظù Advanced Search Filter - Property 9: Saved Search Round-trip ظ║ should preserve all search parameters through save and retrieve cycle
+
+    Property failed after 4 tests
+    { seed: -1272016496, path: "3:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [{"name":"! !","searchType":"jobs","searchParams":{"query":undefined,"location":undefined,"salaryMin":undefined,"salaryMax":undefined,"workType":undefined,"experienceLevel":undefined,"skills":undefined,"skillsLogic":undefined,"datePosted":undefined,"companySize":undefined},"alertEnabled":false,"alertFrequency":"instant","notificationMethod":"push"}]
+    Shrunk 29 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      177 |             // 5. ╪د┘╪ز╪ص┘é┘é ┘à┘ searchParams ╪ذ╪┤┘â┘ ╪╣┘à┘è┘é (╪ذ╪╣╪» ╪ز┘╪╕┘è┘ undefined)
+      178 |             const cleanedOriginal = cleanData(searchData.searchParams);
+    > 179 |             expect(deepEqual(retrieved.searchParams, cleanedOriginal)).toBe(true);
+          |                                                                        ^
+      180 |             
+      181 |             // 6. ╪د┘╪ز┘╪╕┘è┘
+      182 |             await cleanup(userId);
+
+      at toBe (tests/saved-search-round-trip.property.test.js:179:72)
+      at AsyncProperty.run (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.generic.js:46:28)
+
+  ظù Advanced Search Filter - Property 9: Saved Search Round-trip ظ║ should preserve all parameters for multiple saved searches
+
+    Property failed after 1 tests
+    { seed: 2051839273, path: "0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0", endOnFailure: true }
+    Counterexample: [[{"name":"!  !","searchType":"jobs","searchParams":{"query":undefined,"location":undefined,"salaryMin":undefined,"salaryMax":undefined,"workType":undefined,"experienceLevel":undefined,"skills":undefined,"skillsLogic":undefined,"datePosted":undefined,"companySize":undefined},"alertEnabled":false,"alertFrequency":"instant","notificationMethod":"push"}]]
+    Shrunk 31 time(s)
+
+    Hint: Enable verbose mode in order to have the list of all failing values encountered during the run
+
+      at buildError (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:162:19)
+      at asyncThrowIfFailed (node_modules/fast-check/lib/cjs/check/runner/utils/RunDetailsFormatter.js:176:11)
+
+    Cause:
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      306 |               }
+      307 |               
+    > 308 |               expect(deepEqual(retrieved.searchParams, cleanedOriginal)).toBe(true);
+          |                                                                          ^
+      309 |             }
+      310 |             
+      311 |             // 6. ╪د┘╪ز┘╪╕┘è┘
+
+      at toBe (tests/saved-search-round-trip.property.test.js:308:74)
+      at AsyncProperty.run (node_modules/fast-check/lib/cjs/check/property/AsyncProperty.generic.js:46:28)
+
+Test Suites: 1 failed, 1 total
+Tests:       2 failed, 3 passed, 5 total
+Snapshots:   0 total
+Time:        63.433 s
+Ran all test suites matching /saved-search-round-trip.property.test.js/i.

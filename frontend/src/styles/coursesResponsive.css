@@ -1,0 +1,861 @@
+/**
+ * Courses Page - Responsive Design & Accessibility
+ * 
+ * This file implements:
+ * - Responsive breakpoints (Mobile, Tablet, Desktop)
+ * - RTL support for Arabic
+ * - Project design standards (colors, fonts)
+ * - Accessibility compliance (WCAG 2.1 AA)
+ * 
+ * Breakpoints:
+ * - Mobile: < 640px (single column)
+ * - Tablet: 640px - 1023px (two columns)
+ * - Desktop: >= 1024px (four columns)
+ */
+
+/* ============================================
+   1. CSS Variables - Project Design Standards
+   ============================================ */
+
+:root {
+  /* Colors */
+  --primary-color: #304B60;      /* كحلي */
+  --secondary-color: #E3DAD1;    /* بيج */
+  --accent-color: #D48161;       /* نحاسي */
+  --border-color: #D4816180;     /* نحاسي باهت - 50% شفافية */
+  
+  /* Fonts */
+  --font-arabic: 'Amiri', 'Cairo', serif;
+  --font-english: 'Cormorant Garamond', serif;
+  --font-french: 'EB Garamond', serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  
+  /* Touch Targets (Accessibility) */
+  --min-touch-target: 44px;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+/* ============================================
+   2. Base Styles - Courses Page
+   ============================================ */
+
+.courses-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+  font-family: var(--font-arabic);
+  background-color: var(--secondary-color);
+}
+
+/* English content */
+.courses-page[lang="en"],
+.courses-page [lang="en"] {
+  font-family: var(--font-english);
+}
+
+/* French content */
+.courses-page[lang="fr"],
+.courses-page [lang="fr"] {
+  font-family: var(--font-french);
+}
+
+/* ============================================
+   3. Layout Container
+   ============================================ */
+
+.courses-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  gap: var(--spacing-lg);
+}
+
+/* ============================================
+   4. Filters Sidebar
+   ============================================ */
+
+.courses-filters {
+  width: 280px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 8px;
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+  height: fit-content;
+  position: sticky;
+  top: var(--spacing-lg);
+}
+
+.courses-filters h3 {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+}
+
+/* Filter Group */
+.filter-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.filter-group label {
+  display: block;
+  color: var(--primary-color);
+  font-weight: 500;
+  margin-bottom: var(--spacing-sm);
+  font-size: 1rem;
+}
+
+/* Input Fields - Project Standard */
+.filter-group input,
+.filter-group select,
+.filter-group textarea {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px; /* Prevent iOS zoom */
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
+  min-height: var(--min-touch-target);
+}
+
+.filter-group input:focus,
+.filter-group select:focus,
+.filter-group textarea:focus {
+  outline: none;
+  border-color: var(--border-color); /* Same color - no change on focus */
+}
+
+/* Checkboxes and Radio Buttons */
+.filter-group input[type="checkbox"],
+.filter-group input[type="radio"] {
+  width: auto;
+  min-width: 20px;
+  min-height: 20px;
+  margin-right: var(--spacing-sm);
+  cursor: pointer;
+}
+
+/* Clear Filters Button */
+.clear-filters-btn {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: var(--min-touch-target);
+}
+
+.clear-filters-btn:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+/* ============================================
+   5. Main Content Area
+   ============================================ */
+
+.courses-main {
+  flex: 1;
+  min-width: 0; /* Prevent flex overflow */
+}
+
+/* Sort Bar */
+.courses-sort-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+  flex-wrap: wrap;
+}
+
+.search-input-container {
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  min-height: var(--min-touch-target);
+}
+
+.sort-select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: inherit;
+  min-height: var(--min-touch-target);
+  cursor: pointer;
+}
+
+.view-toggle {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.view-toggle-btn {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-width: var(--min-touch-target);
+  min-height: var(--min-touch-target);
+}
+
+.view-toggle-btn.active {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+/* ============================================
+   6. Course Grid - Desktop (4 columns)
+   ============================================ */
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+/* List View */
+.courses-grid.list-view {
+  grid-template-columns: 1fr;
+}
+
+/* ============================================
+   7. Course Card
+   ============================================ */
+
+.course-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(48, 75, 96, 0.15);
+}
+
+/* Course Card - List View */
+.courses-grid.list-view .course-card {
+  flex-direction: row;
+}
+
+.course-card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.courses-grid.list-view .course-card-image {
+  width: 300px;
+  height: auto;
+}
+
+.course-card-content {
+  padding: var(--spacing-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.course-card-badges {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.course-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.course-badge.most-popular {
+  background-color: #FFD700;
+  color: #000;
+}
+
+.course-badge.new {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.course-badge.recommended {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.course-badge.top-rated {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.course-card-title {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.4;
+}
+
+.course-card-description {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-md);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.course-card-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.course-rating {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: #FFD700;
+}
+
+.course-card-details {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.course-card-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: var(--spacing-md);
+}
+
+.course-card-price.free {
+  color: #4CAF50;
+}
+
+.course-card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.course-card-btn {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: var(--min-touch-target);
+  border: none;
+}
+
+.course-card-btn.primary {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.course-card-btn.primary:hover {
+  background-color: #C06F51;
+}
+
+.course-card-btn.secondary {
+  background-color: transparent;
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+}
+
+.course-card-btn.secondary:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+/* Wishlist Button */
+.wishlist-btn {
+  width: var(--min-touch-target);
+  height: var(--min-touch-target);
+  padding: 0;
+  background-color: transparent;
+  border: 2px solid var(--accent-color);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.wishlist-btn:hover,
+.wishlist-btn.active {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+/* ============================================
+   8. Pagination
+   ============================================ */
+
+.courses-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xl);
+}
+
+.pagination-btn {
+  min-width: var(--min-touch-target);
+  min-height: var(--min-touch-target);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: white;
+  color: var(--primary-color);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-weight: 500;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.pagination-btn.active {
+  background-color: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   9. Empty State
+   ============================================ */
+
+.courses-empty {
+  text-align: center;
+  padding: var(--spacing-2xl);
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+}
+
+.courses-empty h3 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-md);
+}
+
+.courses-empty p {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ============================================
+   10. Loading State
+   ============================================ */
+
+.courses-loading {
+  text-align: center;
+  padding: var(--spacing-2xl);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--secondary-color);
+  border-top-color: var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto var(--spacing-md);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   11. TABLET RESPONSIVE (640px - 1023px)
+   ============================================ */
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .courses-page {
+    padding: var(--spacing-lg);
+  }
+  
+  /* 2 columns on tablet */
+  .courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Filters become collapsible drawer */
+  .courses-filters {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    width: 300px;
+    z-index: 1000;
+    transition: left var(--transition-normal);
+    overflow-y: auto;
+  }
+  
+  .courses-filters.open {
+    left: 0;
+  }
+  
+  /* Filter Toggle Button */
+  .filter-toggle-btn {
+    position: fixed;
+    left: var(--spacing-md);
+    top: var(--spacing-md);
+    z-index: 999;
+    min-width: var(--min-touch-target);
+    min-height: var(--min-touch-target);
+    padding: var(--spacing-sm) var(--spacing-md);
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(48, 75, 96, 0.2);
+  }
+  
+  /* Overlay */
+  .filters-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .filters-overlay.open {
+    display: block;
+  }
+  
+  /* List view on tablet */
+  .courses-grid.list-view .course-card {
+    flex-direction: column;
+  }
+  
+  .courses-grid.list-view .course-card-image {
+    width: 100%;
+    height: 200px;
+  }
+}
+
+/* ============================================
+   12. MOBILE RESPONSIVE (< 640px)
+   ============================================ */
+
+@media (max-width: 639px) {
+  .courses-page {
+    padding: var(--spacing-sm);
+  }
+  
+  /* Single column on mobile */
+  .courses-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  /* Filters as bottom sheet */
+  .courses-filters {
+    position: fixed;
+    bottom: -100%;
+    left: 0;
+    right: 0;
+    height: 80vh;
+    width: 100%;
+    border-radius: 16px 16px 0 0;
+    z-index: 1000;
+    transition: bottom var(--transition-normal);
+    overflow-y: auto;
+  }
+  
+  .courses-filters.open {
+    bottom: 0;
+  }
+  
+  /* Filter Toggle Button */
+  .filter-toggle-btn {
+    position: fixed;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    z-index: 999;
+    min-width: var(--min-touch-target);
+    min-height: var(--min-touch-target);
+    padding: var(--spacing-md);
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+  }
+  
+  /* Overlay */
+  .filters-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .filters-overlay.open {
+    display: block;
+  }
+  
+  /* Sort bar stacks vertically */
+  .courses-sort-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-input-container {
+    width: 100%;
+  }
+  
+  .sort-select {
+    width: 100%;
+  }
+  
+  .view-toggle {
+    justify-content: center;
+  }
+  
+  /* Course card adjustments */
+  .course-card-image {
+    height: 180px;
+  }
+  
+  .course-card-content {
+    padding: var(--spacing-sm);
+  }
+  
+  .course-card-title {
+    font-size: 1.1rem;
+  }
+  
+  .course-card-actions {
+    flex-direction: column;
+  }
+  
+  /* Pagination adjustments */
+  .courses-pagination {
+    flex-wrap: wrap;
+  }
+  
+  .pagination-btn {
+    min-width: 40px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+/* ============================================
+   13. RTL SUPPORT (Arabic)
+   ============================================ */
+
+[dir="rtl"] .courses-page,
+.courses-page[dir="rtl"] {
+  direction: rtl;
+}
+
+/* Reverse flex direction */
+[dir="rtl"] .courses-container {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .courses-sort-bar {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .course-card-stats,
+[dir="rtl"] .course-card-details,
+[dir="rtl"] .course-card-actions {
+  flex-direction: row-reverse;
+}
+
+/* Text alignment */
+[dir="rtl"] .courses-page,
+[dir="rtl"] .course-card-title,
+[dir="rtl"] .course-card-description,
+[dir="rtl"] .filter-group label {
+  text-align: right;
+}
+
+/* Margins and paddings */
+[dir="rtl"] .filter-group input[type="checkbox"],
+[dir="rtl"] .filter-group input[type="radio"] {
+  margin-right: 0;
+  margin-left: var(--spacing-sm);
+}
+
+/* Filters position in RTL */
+@media (min-width: 640px) and (max-width: 1023px) {
+  [dir="rtl"] .courses-filters {
+    left: auto;
+    right: -100%;
+  }
+  
+  [dir="rtl"] .courses-filters.open {
+    left: auto;
+    right: 0;
+  }
+  
+  [dir="rtl"] .filter-toggle-btn {
+    left: auto;
+    right: var(--spacing-md);
+  }
+}
+
+@media (max-width: 639px) {
+  [dir="rtl"] .filter-toggle-btn {
+    right: auto;
+    left: var(--spacing-md);
+  }
+}
+
+/* ============================================
+   14. ACCESSIBILITY
+   ============================================ */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  background-color: var(--accent-color);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-decoration: none;
+  z-index: 10000;
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .course-card {
+    border: 2px solid var(--primary-color);
+  }
+  
+  .course-card-btn {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   15. PRINT STYLES
+   ============================================ */
+
+@media print {
+  .courses-filters,
+  .filter-toggle-btn,
+  .filters-overlay,
+  .courses-sort-bar,
+  .courses-pagination,
+  .wishlist-btn {
+    display: none !important;
+  }
+  
+  .courses-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .course-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

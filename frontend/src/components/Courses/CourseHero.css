@@ -1,0 +1,53 @@
+/* Course Hero Styles */
+
+.course-hero {
+    margin-bottom: 2rem;
+}
+
+.course-media {
+    position: relative;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+}
+
+.video-container video {
+    display: block;
+}
+
+/* Sticky Enrollment Card */
+@media (min-width: 1024px) {
+    .sticky {
+        position: sticky;
+        top: 1rem;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .course-hero h1 {
+        font-size: 1.5rem;
+    }
+    
+    .course-hero .text-3xl {
+        font-size: 1.5rem;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .course-hero {
+    direction: rtl;
+}
+
+/* Accessibility */
+.course-hero button:focus {
+    outline: 2px solid #D48161;
+    outline-offset: 2px;
+}
+
+/* Dark Mode */
+.dark .course-hero {
+    color: var(--text-primary-dark, #f7fafc);
+}

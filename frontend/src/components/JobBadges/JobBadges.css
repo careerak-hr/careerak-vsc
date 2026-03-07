@@ -1,0 +1,112 @@
+/* Job Badges Styles */
+
+.job-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.job-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.job-badge-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.job-badge-text {
+  line-height: 1;
+}
+
+/* New Badge - Green */
+.job-badge-new {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.job-badge-new:hover {
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Urgent Badge - Red/Orange */
+.job-badge-urgent {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+  animation: pulse-urgent 2s ease-in-out infinite;
+}
+
+.job-badge-urgent:hover {
+  box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+  transform: translateY(-1px);
+  animation: none;
+}
+
+/* Pulse animation for urgent badge */
+@keyframes pulse-urgent {
+  0%, 100% {
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .job-badge {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  
+  .job-badge-icon {
+    font-size: 12px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .job-badge-new {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  }
+  
+  .job-badge-urgent {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .job-badges {
+  direction: rtl;
+}
+
+/* Print Styles */
+@media print {
+  .job-badge {
+    border: 1px solid currentColor;
+    box-shadow: none !important;
+  }
+  
+  .job-badge-new {
+    background: white !important;
+    color: #10b981 !important;
+  }
+  
+  .job-badge-urgent {
+    background: white !important;
+    color: #f59e0b !important;
+  }
+}

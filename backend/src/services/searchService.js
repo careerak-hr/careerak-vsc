@@ -1,12 +1,14 @@
 const JobPosting = require('../models/JobPosting');
 const EducationalCourse = require('../models/EducationalCourse');
 const SearchHistory = require('../models/SearchHistory');
-const filterService = require('./filterService');
+const filterService = require('./jobFilterService'); // Updated to use jobFilterService
 const MatchingEngine = require('./matchingEngine');
+const cacheService = require('./cacheService');
 
 class SearchService {
   constructor() {
     this.matchingEngine = new MatchingEngine();
+    this.cacheEnabled = process.env.CACHE_ENABLED !== 'false'; // تفعيل cache افتراضياً
   }
 
   /**
@@ -237,6 +239,18 @@ class SearchService {
       throw new Error(`Invalid filters: ${validation.errors.join(', ')}`);
     }
 
+    // محاولة الحصول على النتائج من cache
+    if (this.cacheEnabled) {
+      const cacheKey = cacheService.generateCacheKey(query, { type, page, limit, sort, filters });
+      const cachedResults = await cacheService.get(cacheKey);
+      
+      if (cachedResults) {
+        console.log(`✅ Cache hit for: ${cacheKey}`);
+        return cachedResults;
+      }
+      console.log(`⚠️  Cache miss for: ${cacheKey}`);
+    }
+
     try {
       const Model = type === 'jobs' ? JobPosting : EducationalCourse;
       const skip = (page - 1) * limit;
@@ -264,13 +278,13 @@ class SearchService {
         sortOption = { 'salary.min': -1 };
       }
 
-      // تنفيذ البحث
+      // تنفيذ البحث مع تحسينات الأداء
       const results = await Model.find(searchQuery)
         .select('title description skills company location salary jobType experienceLevel createdAt')
         .sort(sortOption)
         .skip(skip)
         .limit(limit)
-        .lean();
+        .lean(); // استخدام lean() لتحسين الأداء
 
       // حساب العدد الكلي
       const total = await Model.countDocuments(searchQuery);
@@ -285,7 +299,7 @@ class SearchService {
       // الحصول على الفلاتر المتاحة
       const availableFilters = await filterService.getAvailableFilters(type, filters);
 
-      return {
+      const searchResults = {
         results,
         total,
         page,
@@ -294,6 +308,16 @@ class SearchService {
           applied: filters,
           available: availableFilters,
           counts: filterCounts
+        }
+      };
+
+      // حفظ النتائج في cache
+      if (this.cacheEnabled) {
+        const cacheKey = cacheService.generateCacheKey(query, { type, page, limit, sort, filters });
+        await cacheService.set(cacheKey, searchResults);
+      }
+
+      return searchResults;
         }
       };
     } catch (error) {
@@ -463,23 +487,31 @@ class SearchService {
 
       // تنفيذ البحث
       const jobs = await JobPosting.find(searchQuery)
-        .select('_id title company.name location salary jobType experienceLevel')
+        .select('_id title company location salary jobType experienceLevel')
         .lean();
 
       // تحويل النتائج إلى علامات للخريطة
-      const markers = jobs.map(job => ({
-        id: job._id.toString(),
-        position: {
-          lat: job.location.coordinates.coordinates[1], // latitude
-          lng: job.location.coordinates.coordinates[0]  // longitude
-        },
-        title: job.title,
-        company: job.company?.name || 'شركة غير محددة',
-        location: job.location.city || job.location,
-        salary: job.salary ? `${job.salary.min} - ${job.salary.max}` : 'غير محدد',
-        jobType: job.jobType,
-        experienceLevel: job.experienceLevel
-      }));
+      const markers = jobs.map(job => {
+        // التأكد من وجود coordinates
+        const coords = job.location?.coordinates?.coordinates;
+        if (!coords || coords.length < 2) {
+          return null;
+        }
+
+        return {
+          id: job._id.toString(),
+          position: {
+            lat: coords[1], // latitude
+            lng: coords[0]  // longitude
+          },
+          title: job.title,
+          company: job.company?.name || 'شركة غير محددة',
+          location: job.location?.city || job.location?.type || 'غير محدد',
+          salary: job.salary ? `${job.salary.min} - ${job.salary.max}` : 'غير محدد',
+          jobType: job.jobType,
+          experienceLevel: job.experienceLevel
+        };
+      }).filter(marker => marker !== null); // إزالة null values
 
       return markers;
     } catch (error) {

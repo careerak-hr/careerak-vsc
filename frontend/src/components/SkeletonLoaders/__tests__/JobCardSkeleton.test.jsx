@@ -1,85 +1,193 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import JobCardSkeleton from '../JobCardSkeleton';
+import { describe, it, expect, vi } from 'vitest';
+import JobCardGridSkeleton from '../JobCardGridSkeleton';
+import JobCardListSkeleton from '../JobCardListSkeleton';
+import { AnimationProvider } from '../../../context/AnimationContext';
 
-/**
- * JobCardSkeleton Component Tests
- * 
- * Requirements:
- * - FR-LOAD-1: Display skeleton loaders matching content layout
- * - FR-LOAD-5: Display skeleton cards matching list item layout
- * - FR-LOAD-8: Prevent layout shifts
- */
+// Mock framer-motion
+vi.mock('framer-motion', () => ({
+  motion: {
+    div: ({ children, ...props }) => <div {...props}>{children}</div>,
+  },
+}));
 
-describe('JobCardSkeleton', () => {
-  it('should render a single skeleton by default', () => {
-    const { container } = render(<JobCardSkeleton />);
+const renderWithAnimation = (component) => {
+  return render(
+    <AnimationProvider>
+      {component}
+    </AnimationProvider>
+  );
+};
+
+describe('JobCardGridSkeleton', () => {
+  it('renders single skeleton by default', () => {
+    renderWithAnimation(<JobCardGridSkeleton />);
     
-    // Check for the main container
-    const skeleton = container.querySelector('.job-card-skeleton');
-    expect(skeleton).toBeInTheDocument();
+    const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeletons).toHaveLength(1);
+  });
+
+  it('renders multiple skeletons when count is specified', () => {
+    renderWithAnimation(<JobCardGridSkeleton count={6} />);
+    
+    const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeletons).toHaveLength(6);
+  });
+
+  it('has correct aria-label', () => {
+    renderWithAnimation(<JobCardGridSkeleton />);
+    
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeleton).toHaveAttribute('aria-label', 'جاري تحميل بطاقة الوظيفة');
+  });
+
+  it('has aria-busy attribute', () => {
+    renderWithAnimation(<JobCardGridSkeleton />);
+    
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
     expect(skeleton).toHaveAttribute('aria-busy', 'true');
-    expect(skeleton).toHaveAttribute('aria-label', 'Loading job posting');
   });
 
-  it('should render multiple skeletons when count is specified', () => {
-    const { container } = render(<JobCardSkeleton count={3} />);
+  it('applies custom className', () => {
+    renderWithAnimation(<JobCardGridSkeleton className="custom-class" />);
     
-    // Check for multiple skeleton containers
-    const skeletons = container.querySelectorAll('.job-card-skeleton');
-    expect(skeletons).toHaveLength(3);
-  });
-
-  it('should have correct structure matching job card layout', () => {
-    render(<JobCardSkeleton />);
-    
-    // Check for all skeleton elements
-    expect(screen.getByLabelText('Loading job title')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading company label')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading company name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading location label')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading location')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading salary label')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading salary range')).toBeInTheDocument();
-    expect(screen.getByLabelText('Loading apply button')).toBeInTheDocument();
-  });
-
-  it('should apply custom className', () => {
-    const { container } = render(<JobCardSkeleton className="custom-class" />);
-    
-    const skeleton = container.querySelector('.job-card-skeleton');
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
     expect(skeleton).toHaveClass('custom-class');
   });
 
-  it('should have proper styling classes', () => {
-    const { container } = render(<JobCardSkeleton />);
+  it('has job-card-grid class', () => {
+    renderWithAnimation(<JobCardGridSkeleton />);
     
-    const skeleton = container.querySelector('.job-card-skeleton');
-    expect(skeleton).toHaveClass('bg-white');
-    expect(skeleton).toHaveClass('dark:bg-gray-800');
-    expect(skeleton).toHaveClass('p-6');
-    expect(skeleton).toHaveClass('rounded-lg');
-    expect(skeleton).toHaveClass('shadow-md');
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeleton).toHaveClass('job-card-grid');
   });
 
-  it('should prevent layout shifts with proper spacing', () => {
-    const { container } = render(<JobCardSkeleton />);
+  it('contains all required skeleton elements', () => {
+    renderWithAnimation(<JobCardGridSkeleton />);
     
-    const skeleton = container.querySelector('.job-card-skeleton');
-    expect(skeleton).toHaveClass('space-y-4');
+    // Check for various loading labels
+    expect(screen.getByLabelText('جاري تحميل شعار الشركة')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل عنوان الوظيفة')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل اسم الشركة')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل الوصف')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل الموقع')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل نوع العمل')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل الراتب')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل التاريخ')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل المهارات')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل زر التقديم')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل زر الحفظ')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل زر المشاركة')).toBeInTheDocument();
+  });
+});
+
+describe('JobCardListSkeleton', () => {
+  it('renders single skeleton by default', () => {
+    renderWithAnimation(<JobCardListSkeleton />);
     
-    const jobDetails = container.querySelector('.job-details');
-    expect(jobDetails).toHaveClass('space-y-3');
+    const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeletons).toHaveLength(1);
   });
 
-  it('should support RTL layout', () => {
-    const { container } = render(<JobCardSkeleton />);
+  it('renders multiple skeletons when count is specified', () => {
+    renderWithAnimation(<JobCardListSkeleton count={6} />);
     
-    // Check for RTL support classes
-    const flexContainers = container.querySelectorAll('.space-x-2');
-    flexContainers.forEach(element => {
-      expect(element).toHaveClass('rtl:space-x-reverse');
+    const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeletons).toHaveLength(6);
+  });
+
+  it('has correct aria-label', () => {
+    renderWithAnimation(<JobCardListSkeleton />);
+    
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeleton).toHaveAttribute('aria-label', 'جاري تحميل بطاقة الوظيفة');
+  });
+
+  it('has aria-busy attribute', () => {
+    renderWithAnimation(<JobCardListSkeleton />);
+    
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeleton).toHaveAttribute('aria-busy', 'true');
+  });
+
+  it('applies custom className', () => {
+    renderWithAnimation(<JobCardListSkeleton className="custom-class" />);
+    
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeleton).toHaveClass('custom-class');
+  });
+
+  it('has job-card-list class', () => {
+    renderWithAnimation(<JobCardListSkeleton />);
+    
+    const skeleton = screen.getByLabelText('جاري تحميل بطاقة الوظيفة');
+    expect(skeleton).toHaveClass('job-card-list');
+  });
+
+  it('contains all required skeleton elements including extra details', () => {
+    renderWithAnimation(<JobCardListSkeleton />);
+    
+    // Check for various loading labels
+    expect(screen.getByLabelText('جاري تحميل شعار الشركة')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل عنوان الوظيفة')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل اسم الشركة')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل الوصف')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل الموقع')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل نوع العمل')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل الراتب')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل التاريخ')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل عدد المتقدمين')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل نسبة التطابق')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل المهارات')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل زر التقديم')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل زر الحفظ')).toBeInTheDocument();
+    expect(screen.getByLabelText('جاري تحميل زر المشاركة')).toBeInTheDocument();
+  });
+});
+
+describe('Skeleton Count Consistency (Property 10)', () => {
+  it('Grid: renders exactly the specified count', () => {
+    const counts = [1, 3, 6, 9];
+    
+    counts.forEach(count => {
+      const { unmount } = renderWithAnimation(<JobCardGridSkeleton count={count} />);
+      const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+      expect(skeletons).toHaveLength(count);
+      unmount();
+    });
+  });
+
+  it('List: renders exactly the specified count', () => {
+    const counts = [1, 3, 6, 9];
+    
+    counts.forEach(count => {
+      const { unmount } = renderWithAnimation(<JobCardListSkeleton count={count} />);
+      const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+      expect(skeletons).toHaveLength(count);
+      unmount();
+    });
+  });
+
+  it('Grid: recommended count is 6-9', () => {
+    // Test that 6-9 skeletons render correctly
+    [6, 7, 8, 9].forEach(count => {
+      const { unmount } = renderWithAnimation(<JobCardGridSkeleton count={count} />);
+      const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+      expect(skeletons.length).toBeGreaterThanOrEqual(6);
+      expect(skeletons.length).toBeLessThanOrEqual(9);
+      unmount();
+    });
+  });
+
+  it('List: recommended count is 6-9', () => {
+    // Test that 6-9 skeletons render correctly
+    [6, 7, 8, 9].forEach(count => {
+      const { unmount } = renderWithAnimation(<JobCardListSkeleton count={count} />);
+      const skeletons = screen.getAllByLabelText('جاري تحميل بطاقة الوظيفة');
+      expect(skeletons.length).toBeGreaterThanOrEqual(6);
+      expect(skeletons.length).toBeLessThanOrEqual(9);
+      unmount();
     });
   });
 });

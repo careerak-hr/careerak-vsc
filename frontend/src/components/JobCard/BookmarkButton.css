@@ -1,0 +1,317 @@
+/* ============================================
+   Bookmark Button Styles
+   ============================================ */
+
+.bookmark-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: rgba(48, 75, 96, 0.1);
+  border: none;
+  border-radius: 8px;
+  color: var(--primary-color, #304B60);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.bookmark-button:hover {
+  background-color: rgba(48, 75, 96, 0.15);
+  transform: scale(1.05);
+}
+
+.bookmark-button:active {
+  transform: scale(0.95);
+}
+
+.bookmark-button:focus {
+  outline: 2px solid var(--accent-color, #D48161);
+  outline-offset: 2px;
+}
+
+.bookmark-button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ============================================
+   Variants
+   ============================================ */
+
+/* Icon Only */
+.bookmark-button-icon {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+/* Button with Label */
+.bookmark-button-button {
+  padding: 10px 16px;
+  min-height: 44px;
+}
+
+/* ============================================
+   Sizes
+   ============================================ */
+
+.bookmark-button-small.bookmark-button-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.bookmark-button-small.bookmark-button-button {
+  padding: 8px 12px;
+  min-height: 36px;
+  font-size: 13px;
+}
+
+.bookmark-button-medium.bookmark-button-icon {
+  width: 44px;
+  height: 44px;
+}
+
+.bookmark-button-medium.bookmark-button-button {
+  padding: 10px 16px;
+  min-height: 44px;
+  font-size: 14px;
+}
+
+.bookmark-button-large.bookmark-button-icon {
+  width: 52px;
+  height: 52px;
+}
+
+.bookmark-button-large.bookmark-button-button {
+  padding: 12px 20px;
+  min-height: 52px;
+  font-size: 15px;
+}
+
+/* ============================================
+   States
+   ============================================ */
+
+/* Bookmarked State */
+.bookmark-button.bookmarked {
+  background-color: var(--accent-color, #D48161);
+  color: white;
+}
+
+.bookmark-button.bookmarked:hover {
+  background-color: #c97050;
+  transform: scale(1.05);
+}
+
+/* Loading State */
+.bookmark-button.loading {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.bookmark-button.loading:hover {
+  transform: none;
+}
+
+/* Disabled State */
+.bookmark-button.disabled,
+.bookmark-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.bookmark-button.disabled:hover,
+.bookmark-button:disabled:hover {
+  transform: none;
+  background-color: rgba(48, 75, 96, 0.1);
+}
+
+.bookmark-button.bookmarked.disabled:hover,
+.bookmark-button.bookmarked:disabled:hover {
+  background-color: var(--accent-color, #D48161);
+}
+
+/* ============================================
+   Icon Animation
+   ============================================ */
+
+.bookmark-icon {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+}
+
+/* Animation عند الحفظ */
+.bookmark-button.animating .bookmark-icon {
+  animation: heartBeat 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.3);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.2);
+  }
+  60% {
+    transform: scale(1);
+  }
+}
+
+/* ============================================
+   Ripple Effect
+   ============================================ */
+
+.bookmark-ripple {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--accent-color, #D48161);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bookmark-ripple-1 {
+  animation: ripple 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bookmark-ripple-2 {
+  animation: ripple 0.6s 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bookmark-ripple-3 {
+  animation: ripple 0.6s 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   Label
+   ============================================ */
+
+.bookmark-label {
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 639px) {
+  .bookmark-button-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .bookmark-button-button {
+    padding: 8px 14px;
+    min-height: 40px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   Dark Mode Support
+   ============================================ */
+
+@media (prefers-color-scheme: dark) {
+  .bookmark-button {
+    background-color: rgba(227, 218, 209, 0.1);
+    color: var(--secondary-color, #E3DAD1);
+  }
+
+  .bookmark-button:hover {
+    background-color: rgba(227, 218, 209, 0.15);
+  }
+
+  .bookmark-button.bookmarked {
+    background-color: var(--accent-color, #D48161);
+    color: white;
+  }
+
+  .bookmark-button.bookmarked:hover {
+    background-color: #c97050;
+  }
+}
+
+/* ============================================
+   RTL Support
+   ============================================ */
+
+[dir="rtl"] .bookmark-button {
+  direction: rtl;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .bookmark-button,
+  .bookmark-icon {
+    transition: none;
+    animation: none;
+  }
+
+  .bookmark-button:hover,
+  .bookmark-button:active {
+    transform: none;
+  }
+
+  .bookmark-ripple {
+    display: none;
+  }
+
+  .bookmark-button.animating .bookmark-icon {
+    animation: none;
+  }
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+  .bookmark-button {
+    display: none;
+  }
+}
+
+/* ============================================
+   High Contrast Mode
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  .bookmark-button {
+    border: 2px solid currentColor;
+  }
+
+  .bookmark-button.bookmarked {
+    border-color: white;
+  }
+}

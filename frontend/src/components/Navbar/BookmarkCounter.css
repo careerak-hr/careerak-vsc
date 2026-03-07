@@ -1,0 +1,298 @@
+/* ===================================
+   Bookmark Counter Component Styles
+   =================================== */
+
+/* زر العداد */
+.bookmark-counter-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text-primary, #304B60);
+}
+
+.bookmark-counter-btn:hover {
+  background: rgba(212, 129, 97, 0.1);
+  transform: scale(1.05);
+}
+
+.bookmark-counter-btn:active {
+  transform: scale(0.95);
+}
+
+.bookmark-counter-btn:focus-visible {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+/* Dark Mode */
+.bookmark-counter-btn.dark {
+  color: var(--text-secondary, #E3DAD1);
+}
+
+.bookmark-counter-btn.dark:hover {
+  background: rgba(212, 129, 97, 0.2);
+}
+
+/* Icon Wrapper */
+.bookmark-counter-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* أيقونة القلب */
+.bookmark-counter-icon {
+  transition: all 0.3s ease;
+  color: currentColor;
+}
+
+.bookmark-counter-icon.has-bookmarks {
+  color: var(--accent, #D48161);
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* Badge العداد */
+.bookmark-counter-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #D48161 0%, #c97050 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  animation: badgeAppear 0.3s ease-out;
+}
+
+/* RTL Support */
+[dir="rtl"] .bookmark-counter-badge {
+  right: auto;
+  left: -8px;
+}
+
+/* Badge Loading State */
+.bookmark-counter-badge.loading {
+  background: linear-gradient(135deg, #999 0%, #777 100%);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Badge Hover Effect */
+.bookmark-counter-btn:hover .bookmark-counter-badge {
+  transform: scale(1.1);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================================
+   Animations
+   =================================== */
+
+/* Heartbeat Animation */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  10%, 30% {
+    transform: scale(1.1);
+  }
+  20%, 40% {
+    transform: scale(1);
+  }
+}
+
+/* Badge Appear Animation */
+@keyframes badgeAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Pulse Animation (Loading) */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* ===================================
+   Responsive Design
+   =================================== */
+
+/* Mobile (< 640px) */
+@media (max-width: 639px) {
+  .bookmark-counter-btn {
+    padding: 0.4rem;
+  }
+
+  .bookmark-counter-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .bookmark-counter-badge {
+    min-width: 16px;
+    height: 16px;
+    font-size: 10px;
+    top: -6px;
+    right: -6px;
+  }
+
+  [dir="rtl"] .bookmark-counter-badge {
+    right: auto;
+    left: -6px;
+  }
+}
+
+/* Tablet (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .bookmark-counter-btn {
+    padding: 0.45rem;
+  }
+
+  .bookmark-counter-badge {
+    min-width: 17px;
+    height: 17px;
+    font-size: 10.5px;
+  }
+}
+
+/* ===================================
+   Accessibility
+   =================================== */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .bookmark-counter-badge {
+    border: 2px solid white;
+  }
+
+  .bookmark-counter-btn:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .bookmark-counter-icon,
+  .bookmark-counter-badge,
+  .bookmark-counter-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .bookmark-counter-btn:hover {
+    transform: none;
+  }
+
+  .bookmark-counter-btn:active {
+    transform: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .bookmark-counter-btn {
+    display: none;
+  }
+}
+
+/* ===================================
+   Touch Optimization
+   =================================== */
+
+/* زيادة منطقة اللمس على الأجهزة اللمسية */
+@media (hover: none) and (pointer: coarse) {
+  .bookmark-counter-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.6rem;
+  }
+}
+
+/* ===================================
+   Dark Mode Support
+   =================================== */
+
+/* Dark Mode Colors */
+.dark .bookmark-counter-btn {
+  color: var(--text-secondary, #E3DAD1);
+}
+
+.dark .bookmark-counter-btn:hover {
+  background: rgba(212, 129, 97, 0.15);
+}
+
+.dark .bookmark-counter-icon.has-bookmarks {
+  color: var(--accent, #D48161);
+}
+
+.dark .bookmark-counter-badge {
+  background: linear-gradient(135deg, #D48161 0%, #c97050 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ===================================
+   States
+   =================================== */
+
+/* Disabled State */
+.bookmark-counter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Focus State */
+.bookmark-counter-btn:focus {
+  outline: none;
+}
+
+.bookmark-counter-btn:focus-visible {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+/* ===================================
+   Badge Variants
+   =================================== */
+
+/* Badge بدون محتوى (نقطة صغيرة) */
+.bookmark-counter-badge:empty {
+  min-width: 8px;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+/* Badge بأرقام كبيرة (99+) */
+.bookmark-counter-badge[data-count="99+"] {
+  font-size: 9px;
+  padding: 0 3px;
+}

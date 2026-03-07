@@ -1,3 +1,134 @@
+/* Courses Page Styles */
+.courses-page {
+  @apply min-h-screen bg-[#E3DAD1] dark:bg-gray-900 transition-colors duration-300;
+}
+
+.courses-page .container {
+  @apply max-w-7xl;
+}
+
+/* Course Card Styles */
+.course-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-all duration-300;
+  @apply border-2 border-transparent hover:border-[#D4816180];
+}
+
+.course-card h3 {
+  @apply text-gray-900 dark:text-white;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.course-card .course-details {
+  @apply text-gray-600 dark:text-gray-300;
+}
+
+.course-card button {
+  @apply bg-[#D48161] text-white hover:bg-[#c07050] transition-colors duration-200;
+  @apply min-h-[44px] min-w-[44px]; /* Accessibility: minimum touch target */
+}
+
+/* Grid View */
+.course-listings.grid {
+  @apply grid gap-6;
+}
+
+/* List View */
+.course-listings.flex {
+  @apply flex flex-col;
+}
+
+.course-listings.flex .course-card {
+  @apply flex-row;
+}
+
+/* Responsive Grid Columns */
+@media (min-width: 640px) {
+  .course-listings.grid {
+    @apply grid-cols-2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .course-listings.grid {
+    @apply grid-cols-3;
+  }
+}
+
+@media (min-width: 1280px) {
+  .course-listings.grid {
+    @apply grid-cols-4;
+  }
+}
+
+/* Mobile Responsive */
+@media (max-width: 639px) {
+  .courses-page .container {
+    @apply px-2;
+  }
+  
+  .course-card {
+    @apply text-sm;
+  }
+  
+  .course-card h3 {
+    @apply text-lg;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .courses-page {
+  @apply text-right;
+}
+
+[dir="rtl"] .course-listings.grid {
+  @apply direction-rtl;
+}
+
+/* Loading State */
+.courses-page [aria-busy="true"] {
+  @apply opacity-75;
+}
+
+/* Empty State */
+.courses-page .empty-state {
+  @apply text-center py-12;
+}
+
+/* Pagination */
+.courses-page .pagination {
+  @apply flex justify-center items-center gap-2 mt-8;
+}
+
+.courses-page .pagination button {
+  @apply min-h-[44px] min-w-[44px]; /* Accessibility */
+}
+
+/* Dark Mode Specific */
+.dark .courses-page {
+  @apply bg-gray-900;
+}
+
+.dark .course-card {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark .course-card:hover {
+  @apply border-[#D4816180];
+}
+
+/* Print Styles */
+@media print {
+  .courses-page button,
+  .courses-page .pagination {
+    @apply hidden;
+  }
+  
+  .course-card {
+    @apply break-inside-avoid;
+  }
+}
+
+/* Legacy styles for backward compatibility */
 .courses-page-container {
   @apply min-h-screen bg-secondary transition-opacity duration-1000;
 }
@@ -42,10 +173,6 @@
   @apply grid grid-cols-1 md:grid-cols-3 gap-8;
 }
 
-.course-card {
-  @apply bg-primary/5 rounded-[3.5rem] shadow-xl border border-accent/10 overflow-hidden flex flex-col hover:scale-[1.02] transition-all;
-}
-
 .course-card-header {
   @apply h-48 bg-primary relative flex items-center justify-center;
 }
@@ -85,3 +212,4 @@
 .course-card-enroll-btn {
   @apply w-full bg-primary text-accent py-4 rounded-2xl font-black text-sm shadow-lg active:scale-95 transition-all mt-auto;
 }
+

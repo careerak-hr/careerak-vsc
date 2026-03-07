@@ -28,8 +28,14 @@ const OnboardingCompanies = React.lazy(() => import('../pages/06_OnboardingCompa
 const ProfilePage = React.lazy(() => import('../pages/07_ProfilePage'));
 const ApplyPage = React.lazy(() => import('../pages/08_ApplyPage'));
 const JobPostingsPage = React.lazy(() => import('../pages/09_JobPostingsPage'));
+const JobDetailPage = React.lazy(() => import('../pages/JobDetailPage'));
+const CompanyProfilePage = React.lazy(() => import('../pages/CompanyProfilePage'));
 const PostJobPage = React.lazy(() => import('../pages/10_PostJobPage'));
 const CoursesPage = React.lazy(() => import('../pages/11_CoursesPage'));
+const CourseDetailsPage = React.lazy(() => import('../pages/CourseDetailsPage'));
+const CoursePlayerPage = React.lazy(() => import('../pages/CoursePlayerPage'));
+const WishlistPage = React.lazy(() => import('../pages/WishlistPage'));
+const BookmarkedJobsPage = React.lazy(() => import('../pages/BookmarkedJobsPage'));
 const PostCoursePage = React.lazy(() => import('../pages/12_PostCoursePage'));
 const PolicyPage = React.lazy(() => import('../pages/13_PolicyPage'));
 const SettingsPage = React.lazy(() => import('../pages/14_SettingsPage'));
@@ -344,6 +350,33 @@ function AppRoutes() {
               </SuspenseWrapper>
             </ProtectedRoute>
           } />
+          <Route path="/jobs/:jobId" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <JobDetailPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/company/:companyId" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <CompanyProfilePage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/bookmarked-jobs" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <BookmarkedJobsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
           <Route path="/apply/:jobId" element={
             <ProtectedRoute>
               <SuspenseWrapper>
@@ -369,6 +402,33 @@ function AppRoutes() {
               <SuspenseWrapper>
                 <PageTransition variant="fadeIn">
                   <CoursesPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/courses/:id" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="slideInRight">
+                  <CourseDetailsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/courses/:id/learn" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <CoursePlayerPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/wishlist" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <WishlistPage />
                 </PageTransition>
               </SuspenseWrapper>
             </ProtectedRoute>

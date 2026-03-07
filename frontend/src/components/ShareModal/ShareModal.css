@@ -1,0 +1,399 @@
+/* Share Modal Overlay */
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Share Modal Container */
+.share-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #E3DAD1;
+  border: 4px solid #304B60;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Header */
+.share-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 2px solid #D4816180;
+}
+
+.share-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0;
+}
+
+.share-modal-icon {
+  font-size: 28px;
+  color: #D48161;
+}
+
+.share-modal-close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #304B60;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.share-modal-close:hover {
+  background: #D4816120;
+  color: #D48161;
+}
+
+/* Job Info */
+.share-modal-job-info {
+  padding: 20px 24px;
+  border-bottom: 2px solid #D4816180;
+}
+
+.share-modal-job-title {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 8px 0;
+}
+
+.share-modal-job-company {
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 16px;
+  color: #304B60;
+  opacity: 0.7;
+  margin: 0;
+}
+
+/* Share Options */
+.share-modal-options {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.share-option {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  background: white;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  text-align: right;
+}
+
+.share-option:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.share-option:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.share-option:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.share-option-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.share-option-text {
+  flex: 1;
+  text-align: right;
+}
+
+/* نسخ الرابط */
+.share-option-copy {
+  background: linear-gradient(135deg, #304B60 0%, #3d5f7a 100%);
+  color: white;
+  border-color: #304B60;
+}
+
+.share-option-copy:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3d5f7a 0%, #304B60 100%);
+}
+
+/* WhatsApp */
+.share-option-whatsapp {
+  background: linear-gradient(135deg, #25D366 0%, #1ebe57 100%);
+  color: white;
+  border-color: #25D366;
+}
+
+.share-option-whatsapp:hover {
+  background: linear-gradient(135deg, #1ebe57 0%, #25D366 100%);
+}
+
+/* LinkedIn */
+.share-option-linkedin {
+  background: linear-gradient(135deg, #0077B5 0%, #005f8f 100%);
+  color: white;
+  border-color: #0077B5;
+}
+
+.share-option-linkedin:hover {
+  background: linear-gradient(135deg, #005f8f 0%, #0077B5 100%);
+}
+
+/* Twitter */
+.share-option-twitter {
+  background: linear-gradient(135deg, #1DA1F2 0%, #0d8bd9 100%);
+  color: white;
+  border-color: #1DA1F2;
+}
+
+.share-option-twitter:hover {
+  background: linear-gradient(135deg, #0d8bd9 0%, #1DA1F2 100%);
+}
+
+/* Facebook */
+.share-option-facebook {
+  background: linear-gradient(135deg, #1877F2 0%, #0d5fc7 100%);
+  color: white;
+  border-color: #1877F2;
+}
+
+.share-option-facebook:hover {
+  background: linear-gradient(135deg, #0d5fc7 0%, #1877F2 100%);
+}
+
+/* Native Share Button */
+.share-modal-native {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 20px;
+  margin: 0 24px 24px 24px;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  background: transparent;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #304B60;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-modal-native:hover {
+  background: #D4816120;
+  border-color: #D48161;
+  color: #D48161;
+}
+
+/* Success Message */
+.share-modal-success {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  animation: slideUp 0.3s ease-out;
+  z-index: 1001;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .share-modal {
+    width: 95%;
+    max-width: none;
+    border-radius: 20px;
+  }
+
+  .share-modal-header {
+    padding: 16px 20px;
+  }
+
+  .share-modal-title {
+    font-size: 20px;
+  }
+
+  .share-modal-icon {
+    font-size: 24px;
+  }
+
+  .share-modal-job-info {
+    padding: 16px 20px;
+  }
+
+  .share-modal-job-title {
+    font-size: 18px;
+  }
+
+  .share-modal-job-company {
+    font-size: 14px;
+  }
+
+  .share-modal-options {
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .share-option {
+    padding: 14px 16px;
+    font-size: 16px;
+  }
+
+  .share-option-icon {
+    font-size: 20px;
+  }
+
+  .share-modal-native {
+    margin: 0 20px 20px 20px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .share-modal-success {
+    bottom: 20px;
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .share-modal-title,
+[dir="rtl"] .share-option {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .share-option-text {
+  text-align: right;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .share-modal {
+    background: #1a1a1a;
+    border-color: #D48161;
+  }
+
+  .share-modal-header {
+    border-bottom-color: #D4816140;
+  }
+
+  .share-modal-title,
+  .share-modal-job-title,
+  .share-modal-job-company,
+  .share-modal-native {
+    color: #E3DAD1;
+  }
+
+  .share-modal-job-info {
+    border-bottom-color: #D4816140;
+  }
+
+  .share-option {
+    background: #2a2a2a;
+    border-color: #D4816140;
+  }
+
+  .share-modal-close:hover {
+    background: #D4816130;
+  }
+
+  .share-modal-native:hover {
+    background: #D4816130;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .share-modal-overlay,
+  .share-modal {
+    display: none;
+  }
+}
+
+/* Accessibility */
+.share-option:focus,
+.share-modal-close:focus,
+.share-modal-native:focus {
+  outline: 3px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .share-modal-overlay,
+  .share-modal,
+  .share-modal-success,
+  .share-option {
+    animation: none;
+    transition: none;
+  }
+
+  .share-option:hover:not(:disabled) {
+    transform: none;
+  }
+}

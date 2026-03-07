@@ -191,6 +191,31 @@ const seoMetadata = {
     }
   },
 
+  // Bookmarked Jobs Page
+  bookmarkedJobs: {
+    ar: {
+      title: 'الوظائف المحفوظة - Careerak | وظائفك المفضلة',
+      description: 'راجع جميع الوظائف التي حفظتها في مكان واحد. ابحث وفلتر وظائفك المحفوظة للعودة إليها لاحقاً والتقديم عليها.',
+      keywords: 'وظائف محفوظة, مفضلة, وظائفي, Careerak',
+      image: '/og-images/bookmarked-jobs.jpg',
+      url: '/bookmarked-jobs'
+    },
+    en: {
+      title: 'Bookmarked Jobs - Careerak | Your Saved Jobs',
+      description: 'Review all jobs you\'ve saved in one place. Search and filter your bookmarked jobs to revisit and apply later.',
+      keywords: 'bookmarked jobs, saved jobs, favorites, Careerak',
+      image: '/og-images/bookmarked-jobs.jpg',
+      url: '/bookmarked-jobs'
+    },
+    fr: {
+      title: 'Emplois sauvegardés - Careerak | Vos favoris',
+      description: 'Consultez tous les emplois que vous avez sauvegardés en un seul endroit. Recherchez et filtrez vos emplois favoris pour y revenir plus tard.',
+      keywords: 'emplois sauvegardés, favoris, mes emplois, Careerak',
+      image: '/og-images/bookmarked-jobs.jpg',
+      url: '/bookmarked-jobs'
+    }
+  },
+
   // Post Job Page
   postJob: {
     ar: {

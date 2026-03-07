@@ -89,3 +89,89 @@
 .job-card-apply-btn {
   @apply w-full bg-primary text-accent py-5 rounded-3xl font-black text-lg shadow-lg active:scale-95 transition-all;
 }
+
+/* Results Count */
+.results-count {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .results-count {
+  border-bottom-color: #374151;
+}
+
+.results-count p {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Pagination */
+.pagination-container {
+  margin-top: 32px;
+  padding: 24px 0;
+  border-top: 2px solid #e5e7eb;
+}
+
+.dark .pagination-container {
+  border-top-color: #374151;
+}
+
+.pagination-btn {
+  padding: 12px 24px;
+  background: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #c07050;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.pagination-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.dark .pagination-btn:disabled {
+  background: #4b5563;
+}
+
+.pagination-info {
+  padding: 0 16px;
+}
+
+.pagination-info span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .pagination-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pagination-btn {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .pagination-container {
+  flex-direction: row-reverse;
+}
+
+/* Accessibility */
+.pagination-btn:focus-visible {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}

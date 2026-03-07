@@ -1,0 +1,248 @@
+/* ProgressIndicator Styles */
+
+.progress-indicator {
+  width: 100%;
+  padding: 20px;
+  background-color: var(--secondary, #E3DAD1);
+  border-radius: 12px;
+}
+
+/* Progress bar */
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: rgba(48, 75, 96, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary, #304B60), var(--accent, #D48161));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Steps container */
+.steps-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+/* Step item */
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.step-item.clickable {
+  cursor: pointer;
+}
+
+.step-item.clickable:hover .step-circle {
+  transform: scale(1.1);
+}
+
+.step-item.clickable:focus {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Step circle */
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+/* Step statuses */
+.step-item.completed .step-circle {
+  background-color: #22c55e;
+  color: white;
+  border-color: #22c55e;
+}
+
+.step-item.current .step-circle {
+  background-color: var(--accent, #D48161);
+  color: white;
+  border-color: var(--accent, #D48161);
+  box-shadow: 0 0 0 4px rgba(212, 129, 97, 0.2);
+}
+
+.step-item.remaining .step-circle {
+  background-color: white;
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+/* Step check icon */
+.step-check {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* Step number */
+.step-number {
+  line-height: 1;
+}
+
+/* Step label */
+.step-label {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--primary, #304B60);
+  max-width: 100px;
+  line-height: 1.3;
+}
+
+.step-item.completed .step-label {
+  color: #22c55e;
+}
+
+.step-item.current .step-label {
+  color: var(--accent, #D48161);
+  font-weight: 600;
+}
+
+.step-item.remaining .step-label {
+  color: #6b7280;
+}
+
+/* Step counter */
+.step-counter {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary, #304B60);
+}
+
+/* Responsive design - Tablet */
+@media (max-width: 1023px) {
+  .progress-indicator {
+    padding: 16px;
+  }
+
+  .step-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .step-label {
+    font-size: 12px;
+    max-width: 80px;
+  }
+}
+
+/* Responsive design - Mobile */
+@media (max-width: 639px) {
+  .progress-indicator {
+    padding: 12px;
+  }
+
+  .progress-bar-container {
+    margin-bottom: 16px;
+  }
+
+  .steps-container {
+    margin-bottom: 12px;
+  }
+
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .step-check {
+    font-size: 16px;
+  }
+
+  .step-label {
+    font-size: 11px;
+    max-width: 60px;
+  }
+
+  .step-counter {
+    font-size: 13px;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 374px) {
+  .step-label {
+    display: none;
+  }
+
+  .step-counter {
+    font-size: 12px;
+  }
+}
+
+/* RTL support */
+[dir="rtl"] .progress-indicator {
+  direction: rtl;
+}
+
+[dir="rtl"] .progress-bar-fill {
+  transform-origin: right;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .progress-indicator {
+    background-color: rgba(48, 75, 96, 0.1);
+  }
+
+  .progress-bar-container {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .step-item.remaining .step-circle {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #9ca3af;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .step-label {
+    color: #e5e7eb;
+  }
+
+  .step-item.remaining .step-label {
+    color: #9ca3af;
+  }
+
+  .step-counter {
+    color: #e5e7eb;
+  }
+}
+
+/* Print styles */
+@media print {
+  .progress-indicator {
+    background-color: transparent;
+    border: 1px solid #d1d5db;
+  }
+
+  .step-item.clickable {
+    cursor: default;
+  }
+}

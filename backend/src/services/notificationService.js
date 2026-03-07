@@ -96,6 +96,91 @@ class NotificationService {
       priority: 'medium'
     });
   }
+
+  // إشعار بإغلاق وظيفة محفوظة
+  async notifyJobClosed(userId, jobId, jobTitle) {
+    try {
+      return await this.createNotification({
+        recipient: userId,
+        type: 'job_closed',
+        title: 'تم إغلاق وظيفة محفوظة 📌',
+        message: `الوظيفة "${jobTitle}" التي حفظتها تم إغلاقها. تحقق من الوظائف المشابهة`,
+        relatedData: { jobPosting: jobId },
+        priority: 'medium'
+      });
+    } catch (error) {
+      logger.error('Error notifying job closed:', error);
+      throw error;
+    }
+  }
+
+  // إشعار جميع المستخدمين الذين حفظوا وظيفة عند إغلاقها
+  async notifyBookmarkedUsersJobClosed(jobId) {
+    try {
+      const JobBookmark = require('../models/JobBookmark');
+      const JobPosting = require('../models/JobPosting');
+
+      // جلب الوظيفة
+      const job = await JobPosting.findById(jobId);
+      if (!job) {
+        logger.warn(`Job ${jobId} not found for closed notification`);
+        return { success: false, notified: 0 };
+      }
+
+      // جلب جميع المستخدمين الذين حفظوا هذه الوظيفة وفعّلوا الإشعارات
+      const bookmarks = await JobBookmark.find({
+        jobId,
+        notifyOnChange: true
+      }).select('userId');
+
+      if (!bookmarks.length) {
+        logger.info(`No users with notifications enabled for job ${job.title}`);
+        return { success: true, notified: 0 };
+      }
+
+      logger.info(`Found ${bookmarks.length} users to notify about job closure: ${job.title}`);
+
+      // إرسال إشعارات لجميع المستخدمين
+      const notifications = await Promise.all(
+        bookmarks.map(bookmark =>
+          this.notifyJobClosed(bookmark.userId, jobId, job.title)
+        )
+      );
+
+      // إرسال إشعارات فورية عبر Pusher
+      const pusherService = require('./pusherService');
+      if (pusherService.isEnabled()) {
+        await Promise.all(
+          bookmarks.map(bookmark =>
+            pusherService.sendNotificationToUser(bookmark.userId, {
+              type: 'job_closed',
+              title: 'تم إغلاق وظيفة محفوظة 📌',
+              message: `الوظيفة "${job.title}" التي حفظتها تم إغلاقها`,
+              jobId: job._id,
+              jobTitle: job.title,
+              timestamp: new Date().toISOString()
+            })
+          )
+        );
+        logger.info(`Real-time job closed notifications sent via Pusher to ${bookmarks.length} users`);
+      }
+
+      const successCount = notifications.filter(n => n !== null).length;
+      logger.info(`Successfully sent ${successCount} job closed notifications for: ${job.title}`);
+
+      return {
+        success: true,
+        notified: successCount,
+        jobTitle: job.title,
+        totalBookmarks: bookmarks.length
+      };
+
+    } catch (error) {
+      logger.error('Error notifying bookmarked users about job closure:', error);
+      return { success: false, notified: 0, error: error.message };
+    }
+  }
+
   
   // إشعار للشركة بطلب جديد
   async notifyNewApplication(companyId, applicationId, applicantName, jobTitle) {
@@ -129,6 +214,89 @@ class NotificationService {
       },
       priority: 'urgent'
     });
+  }
+  
+  // ==================== Course Notifications ====================
+  
+  // إشعار بمراجعة جديدة على الدورة (للمدرب)
+  async notifyCourseReview(instructorId, courseId, courseTitle, reviewerName, rating) {
+    try {
+      const stars = '⭐'.repeat(Math.round(rating));
+      
+      return await this.createNotification({
+        recipient: instructorId,
+        type: 'course_review',
+        title: 'مراجعة جديدة على دورتك! 📝',
+        message: `قام ${reviewerName} بتقييم دورة "${courseTitle}" بـ ${stars} (${rating}/5)`,
+        relatedData: { 
+          course: courseId,
+          rating
+        },
+        priority: 'medium'
+      });
+    } catch (error) {
+      logger.error('Error notifying course review:', error);
+      throw error;
+    }
+  }
+  
+  // إشعار باكتمال الدورة (للطالب)
+  async notifyCourseCompletion(studentId, courseId, courseTitle, certificateUrl) {
+    try {
+      return await this.createNotification({
+        recipient: studentId,
+        type: 'course_completion',
+        title: 'تهانينا! أكملت الدورة 🎉',
+        message: `أكملت دورة "${courseTitle}" بنجاح. شهادتك جاهزة للتحميل!`,
+        relatedData: { 
+          course: courseId,
+          certificateUrl
+        },
+        priority: 'high'
+      });
+    } catch (error) {
+      logger.error('Error notifying course completion:', error);
+      throw error;
+    }
+  }
+  
+  // إشعار بالتسجيل في الدورة (للطالب)
+  async notifyCourseEnrollment(studentId, courseId, courseTitle, instructorName) {
+    try {
+      return await this.createNotification({
+        recipient: studentId,
+        type: 'course_enrollment',
+        title: 'تم التسجيل في الدورة بنجاح! 📚',
+        message: `تم تسجيلك في دورة "${courseTitle}" مع المدرب ${instructorName}. ابدأ التعلم الآن!`,
+        relatedData: { 
+          course: courseId
+        },
+        priority: 'medium'
+      });
+    } catch (error) {
+      logger.error('Error notifying course enrollment:', error);
+      throw error;
+    }
+  }
+  
+  // إشعار بدورة مناسبة (للطالب)
+  async notifyCourseMatch(studentId, courseId, courseTitle, matchScore) {
+    try {
+      return await this.createNotification({
+        recipient: studentId,
+        type: 'course_match',
+        title: 'دورة جديدة مناسبة لك! 🎯',
+        message: `دورة "${courseTitle}" تناسب اهتماماتك بنسبة ${matchScore}%`,
+        relatedData: { 
+          course: courseId,
+          matchScore
+        },
+        priority: 'medium'
+      });
+    } catch (error) {
+      logger.error('Error notifying course match:', error);
+      throw error;
+    }
   }
   
   // البحث عن المستخدمين المناسبين لوظيفة جديدة

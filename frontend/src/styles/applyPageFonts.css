@@ -1,0 +1,232 @@
+/* 
+ * Apply Page Font Styles
+ * Language-specific font application for Apply Page
+ * Created: 2026-03-03
+ * Requirements: 10.8, 10.9, 10.10
+ */
+
+/* ========================================
+   Arabic Font Application (Amiri, Cairo)
+   ======================================== */
+
+[lang="ar"] .apply-page-container,
+[lang="ar"] .apply-page-container * {
+  font-family: 'Amiri', 'Cairo', serif !important;
+  font-weight: inherit;
+  font-style: inherit;
+}
+
+/* Specific elements for Arabic */
+[lang="ar"] .apply-header-text-container h2,
+[lang="ar"] .apply-form-label,
+[lang="ar"] .apply-preview-title {
+  font-family: 'Amiri', 'Cairo', serif !important;
+  font-weight: 900;
+}
+
+[lang="ar"] .apply-form-input,
+[lang="ar"] .apply-form-textarea,
+[lang="ar"] .apply-form-select {
+  font-family: 'Amiri', 'Cairo', serif !important;
+  font-weight: 600;
+}
+
+[lang="ar"] .apply-submit-btn,
+[lang="ar"] .apply-cancel-btn {
+  font-family: 'Amiri', 'Cairo', serif !important;
+  font-weight: 900;
+}
+
+/* ========================================
+   English Font Application (Cormorant Garamond)
+   ======================================== */
+
+[lang="en"] .apply-page-container,
+[lang="en"] .apply-page-container * {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: inherit;
+  font-style: inherit;
+}
+
+/* Specific elements for English */
+[lang="en"] .apply-header-text-container h2,
+[lang="en"] .apply-form-label,
+[lang="en"] .apply-preview-title {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 700;
+}
+
+[lang="en"] .apply-form-input,
+[lang="en"] .apply-form-textarea,
+[lang="en"] .apply-form-select {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 600;
+}
+
+[lang="en"] .apply-submit-btn,
+[lang="en"] .apply-cancel-btn {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-weight: 700;
+}
+
+/* ========================================
+   French Font Application (EB Garamond)
+   ======================================== */
+
+[lang="fr"] .apply-page-container,
+[lang="fr"] .apply-page-container * {
+  font-family: 'EB Garamond', serif !important;
+  font-weight: inherit;
+  font-style: inherit;
+}
+
+/* Specific elements for French */
+[lang="fr"] .apply-header-text-container h2,
+[lang="fr"] .apply-form-label,
+[lang="fr"] .apply-preview-title {
+  font-family: 'EB Garamond', serif !important;
+  font-weight: 700;
+}
+
+[lang="fr"] .apply-form-input,
+[lang="fr"] .apply-form-textarea,
+[lang="fr"] .apply-form-select {
+  font-family: 'EB Garamond', serif !important;
+  font-weight: 600;
+}
+
+[lang="fr"] .apply-submit-btn,
+[lang="fr"] .apply-cancel-btn {
+  font-family: 'EB Garamond', serif !important;
+  font-weight: 700;
+}
+
+/* ========================================
+   Font Loading Optimization
+   ======================================== */
+
+/* Preload critical fonts */
+.apply-page-container {
+  font-display: swap;
+}
+
+/* Prevent FOUT (Flash of Unstyled Text) */
+.apply-page-container.fonts-loading {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.apply-page-container.fonts-loaded {
+  opacity: 1;
+}
+
+/* ========================================
+   Fallback Fonts
+   ======================================== */
+
+/* If custom fonts fail to load, use system fonts */
+@supports not (font-family: 'Amiri') {
+  [lang="ar"] .apply-page-container,
+  [lang="ar"] .apply-page-container * {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  }
+}
+
+@supports not (font-family: 'Cormorant Garamond') {
+  [lang="en"] .apply-page-container,
+  [lang="en"] .apply-page-container * {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+  }
+}
+
+@supports not (font-family: 'EB Garamond') {
+  [lang="fr"] .apply-page-container,
+  [lang="fr"] .apply-page-container * {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+  }
+}
+
+/* ========================================
+   Font Size Adjustments for Readability
+   ======================================== */
+
+/* Arabic text tends to be larger, adjust if needed */
+[lang="ar"] .apply-form-input,
+[lang="ar"] .apply-form-textarea,
+[lang="ar"] .apply-form-select {
+  font-size: 16px; /* Prevent iOS zoom */
+  line-height: 1.6;
+}
+
+/* English and French can be slightly smaller */
+[lang="en"] .apply-form-input,
+[lang="en"] .apply-form-textarea,
+[lang="en"] .apply-form-select,
+[lang="fr"] .apply-form-input,
+[lang="fr"] .apply-form-textarea,
+[lang="fr"] .apply-form-select {
+  font-size: 16px; /* Prevent iOS zoom */
+  line-height: 1.5;
+}
+
+/* ========================================
+   Font Weight Adjustments
+   ======================================== */
+
+/* Ensure bold text is readable in all languages */
+[lang="ar"] strong,
+[lang="ar"] b,
+[lang="ar"] .font-bold {
+  font-weight: 900;
+}
+
+[lang="en"] strong,
+[lang="en"] b,
+[lang="en"] .font-bold,
+[lang="fr"] strong,
+[lang="fr"] b,
+[lang="fr"] .font-bold {
+  font-weight: 700;
+}
+
+/* ========================================
+   Letter Spacing Adjustments
+   ======================================== */
+
+/* Arabic doesn't need letter spacing */
+[lang="ar"] .apply-header-text-container h2,
+[lang="ar"] .apply-submit-btn,
+[lang="ar"] .apply-cancel-btn {
+  letter-spacing: normal;
+}
+
+/* English and French benefit from slight letter spacing */
+[lang="en"] .apply-header-text-container h2,
+[lang="en"] .apply-submit-btn,
+[lang="en"] .apply-cancel-btn,
+[lang="fr"] .apply-header-text-container h2,
+[lang="fr"] .apply-submit-btn,
+[lang="fr"] .apply-cancel-btn {
+  letter-spacing: 0.025em;
+}
+
+/* ========================================
+   Text Rendering Optimization
+   ======================================== */
+
+.apply-page-container {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========================================
+   Print Font Styles
+   ======================================== */
+
+@media print {
+  .apply-page-container,
+  .apply-page-container * {
+    font-family: Georgia, 'Times New Roman', Times, serif !important;
+  }
+}

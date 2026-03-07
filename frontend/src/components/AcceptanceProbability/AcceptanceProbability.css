@@ -1,0 +1,298 @@
+/**
+ * Acceptance Probability Styles
+ */
+
+/* العرض المضغوط */
+.acceptance-probability-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.acceptance-probability-compact:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.probability-icon {
+  font-size: 16px;
+}
+
+.probability-label {
+  font-weight: 500;
+}
+
+.probability-value {
+  font-weight: 700;
+  margin-inline-start: auto;
+}
+
+/* العرض الكامل */
+.acceptance-probability-full {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.probability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.probability-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.probability-icon-large {
+  font-size: 32px;
+}
+
+.probability-main {
+  display: flex;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.probability-circle {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+.probability-percentage {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.probability-level {
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.probability-description {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.probability-description p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #4b5563;
+}
+
+/* العوامل المؤثرة */
+.probability-factors {
+  margin-bottom: 20px;
+}
+
+.probability-factors h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.probability-factors ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.probability-factors li {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #4b5563;
+  position: relative;
+  padding-inline-start: 32px;
+}
+
+.probability-factors li::before {
+  content: '✓';
+  position: absolute;
+  inset-inline-start: 12px;
+  color: #10b981;
+  font-weight: 700;
+}
+
+/* التفاصيل */
+.probability-details {
+  margin-bottom: 20px;
+}
+
+.probability-details h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.detail-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #304B60;
+}
+
+/* النصائح */
+.probability-tips {
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.probability-tips h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.probability-tips ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.probability-tips li {
+  padding: 6px 0;
+  padding-inline-start: 24px;
+  font-size: 14px;
+  color: #78350f;
+  position: relative;
+}
+
+.probability-tips li::before {
+  content: '💡';
+  position: absolute;
+  inset-inline-start: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .probability-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .probability-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .probability-percentage {
+    font-size: 28px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .probability-value {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .acceptance-probability-full {
+    background: #1f2937;
+  }
+
+  .probability-header h3 {
+    color: #f3f4f6;
+  }
+
+  .probability-circle {
+    background: #111827;
+  }
+
+  .probability-description p {
+    color: #d1d5db;
+  }
+
+  .probability-factors h4,
+  .probability-details h4 {
+    color: #f3f4f6;
+  }
+
+  .probability-factors li {
+    background: #374151;
+    color: #d1d5db;
+  }
+
+  .detail-item {
+    background: #374151;
+    border-color: #4b5563;
+  }
+
+  .detail-label {
+    color: #9ca3af;
+  }
+
+  .detail-value {
+    color: #f3f4f6;
+  }
+
+  .probability-tips {
+    background: #422006;
+    border-color: #92400e;
+  }
+
+  .probability-tips h4 {
+    color: #fbbf24;
+  }
+
+  .probability-tips li {
+    color: #fde68a;
+  }
+}

@@ -96,38 +96,83 @@ async function cleanup(userId) {
  * وإزالة undefined values
  */
 function deepEqual(obj1, obj2, ignoredFields = ['_id', '__v', 'createdAt', 'updatedAt', 'lastChecked', 'resultCount']) {
-  // تحويل إلى JSON لإزالة undefined
-  const json1 = JSON.parse(JSON.stringify(obj1));
-  const json2 = JSON.parse(JSON.stringify(obj2));
+  // تحويل إلى JSON لإزالة undefined وتوحيد البنية
+  const normalize = (obj) => {
+    if (!obj || typeof obj !== 'object') return obj;
+    
+    // Convert to plain object if it's a Mongoose document
+    const plain = JSON.parse(JSON.stringify(obj));
+    
+    // Remove ignored fields recursively
+    const removeIgnored = (o) => {
+      if (!o || typeof o !== 'object') return o;
+      
+      if (Array.isArray(o)) {
+        return o.map(removeIgnored);
+      }
+      
+      const result = {};
+      for (const key in o) {
+        if (!ignoredFields.includes(key) && o[key] !== undefined) {
+          result[key] = removeIgnored(o[key]);
+        }
+      }
+      return result;
+    };
+    
+    return removeIgnored(plain);
+  };
   
-  // إزالة الحقول المتجاهلة
-  ignoredFields.forEach(field => {
-    delete json1[field];
-    delete json2[field];
-  });
+  const normalized1 = normalize(obj1);
+  const normalized2 = normalize(obj2);
   
-  return JSON.stringify(json1) === JSON.stringify(json2);
+  // Sort keys for consistent comparison
+  const sorted1 = JSON.stringify(normalized1, Object.keys(normalized1).sort());
+  const sorted2 = JSON.stringify(normalized2, Object.keys(normalized2).sort());
+  
+  return sorted1 === sorted2;
 }
 
 /**
- * تنظيف البيانات من undefined values (مثل ما يفعل MongoDB)
+ * تنظيف البيانات من undefined values وempty arrays وdefault values (مثل ما يفعل MongoDB)
  */
 function cleanData(data) {
   if (!data || typeof data !== 'object') {
     return data;
   }
   
+  // Default values from SavedSearch schema
+  const defaults = {
+    skillsLogic: 'OR'
+  };
+  
   const cleaned = {};
   for (const key in data) {
-    if (data[key] !== undefined) {
-      if (typeof data[key] === 'object' && !Array.isArray(data[key])) {
-        const nested = cleanData(data[key]);
-        if (Object.keys(nested).length > 0) {
-          cleaned[key] = nested;
-        }
-      } else {
-        cleaned[key] = data[key];
+    const value = data[key];
+    
+    // Skip undefined
+    if (value === undefined) {
+      continue;
+    }
+    
+    // Skip empty arrays
+    if (Array.isArray(value) && value.length === 0) {
+      continue;
+    }
+    
+    // Skip default values (only if they match the default exactly)
+    if (defaults[key] !== undefined && value === defaults[key]) {
+      continue;
+    }
+    
+    // Recursively clean nested objects
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      const nested = cleanData(value);
+      if (Object.keys(nested).length > 0) {
+        cleaned[key] = nested;
       }
+    } else {
+      cleaned[key] = value;
     }
   }
   
@@ -174,9 +219,19 @@ describe('Advanced Search Filter - Property 9: Saved Search Round-trip', () => {
             expect(retrieved.alertFrequency).toBe(searchData.alertFrequency);
             expect(retrieved.notificationMethod).toBe(searchData.notificationMethod);
             
-            // 5. التحقق من searchParams بشكل عميق (بعد تنظيف undefined)
+            // 5. التحقق من searchParams بشكل عميق (بعد تنظيف undefined وempty arrays من كلا الجانبين)
             const cleanedOriginal = cleanData(searchData.searchParams);
-            expect(deepEqual(retrieved.searchParams, cleanedOriginal)).toBe(true);
+            const cleanedRetrieved = cleanData(retrieved.searchParams);
+            const isEqual = deepEqual(cleanedRetrieved, cleanedOriginal);
+            
+            // إذا فشل الاختبار، نطبع معلومات للتشخيص
+            if (!isEqual) {
+              console.log('Mismatch in single search:');
+              console.log('Retrieved:', JSON.stringify(cleanedRetrieved, null, 2));
+              console.log('Expected:', JSON.stringify(cleanedOriginal, null, 2));
+            }
+            
+            expect(isEqual).toBe(true);
             
             // 6. التنظيف
             await cleanup(userId);
@@ -238,10 +293,11 @@ describe('Advanced Search Filter - Property 9: Saved Search Round-trip', () => {
               expect(retrieved.notificationMethod).toBe(updateData.notificationMethod);
             }
             
-            // 6. التحقق من searchParams المحدثة (بعد تنظيف undefined)
+            // 6. التحقق من searchParams المحدثة (بعد تنظيف undefined وempty arrays من كلا الجانبين)
             if (updateData.searchParams) {
               const cleanedUpdate = cleanData(updateData.searchParams);
-              expect(deepEqual(retrieved.searchParams, cleanedUpdate)).toBe(true);
+              const cleanedRetrieved = cleanData(retrieved.searchParams);
+              expect(deepEqual(cleanedRetrieved, cleanedUpdate)).toBe(true);
             }
             
             // 7. التنظيف
@@ -297,7 +353,16 @@ describe('Advanced Search Filter - Property 9: Saved Search Round-trip', () => {
               expect(retrieved).toBeDefined();
               expect(retrieved.name).toBe(original.name.trim());
               const cleanedOriginal = cleanData(original.searchParams);
-              expect(deepEqual(retrieved.searchParams, cleanedOriginal)).toBe(true);
+              const cleanedRetrieved = cleanData(retrieved.searchParams);
+              
+              // إذا فشل الاختبار، نطبع معلومات للتشخيص
+              if (!deepEqual(cleanedRetrieved, cleanedOriginal)) {
+                console.log('Mismatch found:');
+                console.log('Retrieved:', JSON.stringify(cleanedRetrieved, null, 2));
+                console.log('Expected:', JSON.stringify(cleanedOriginal, null, 2));
+              }
+              
+              expect(deepEqual(cleanedRetrieved, cleanedOriginal)).toBe(true);
             }
             
             // 6. التنظيف

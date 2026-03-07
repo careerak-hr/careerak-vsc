@@ -1,0 +1,7 @@
+# Performance metrics reports
+*.json
+*.csv
+*.html
+
+# Keep directory structure
+!.gitignore

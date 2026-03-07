@@ -1,0 +1,390 @@
+/* Multi-Step Form Container */
+.multi-step-form {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Progress Indicator */
+.progress-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.progress-indicator::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #E3DAD1;
+  z-index: 0;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #E3DAD1;
+  color: #304B60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .step-number {
+  background: #D48161;
+  color: white;
+  transform: scale(1.1);
+}
+
+.progress-step.completed .step-number {
+  background: #304B60;
+  color: white;
+}
+
+.step-title {
+  font-size: 0.875rem;
+  color: #666;
+  text-align: center;
+  max-width: 120px;
+}
+
+.progress-step.active .step-title {
+  color: #D48161;
+  font-weight: 600;
+}
+
+.progress-step.completed .step-title {
+  color: #304B60;
+}
+
+/* Step Content */
+.step-content {
+  background: white;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  min-height: 400px;
+}
+
+.step-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  color: #666;
+  font-size: 1.125rem;
+}
+
+/* Navigation Buttons */
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-left,
+.nav-center,
+.nav-right {
+  flex: 1;
+}
+
+.nav-left {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.nav-center {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-primary,
+.btn-secondary,
+.btn-outline {
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  min-width: 120px;
+}
+
+.btn-primary {
+  background: #D48161;
+  color: white;
+  border-color: #D48161;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #c06f52;
+  border-color: #c06f52;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(212, 129, 97, 0.3);
+}
+
+.btn-secondary {
+  background: #304B60;
+  color: white;
+  border-color: #304B60;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #243a4d;
+  border-color: #243a4d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(48, 75, 96, 0.3);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #D48161;
+  border-color: #D48161;
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #D48161;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(212, 129, 97, 0.3);
+}
+
+.btn-primary:disabled,
+.btn-secondary:disabled,
+.btn-outline:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Error Summary */
+.error-summary {
+  background: #fee;
+  border: 2px solid #fcc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #c00;
+}
+
+.error-summary p {
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.error-summary ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.error-summary li {
+  margin: 0.25rem 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .multi-step-form {
+    padding: 1rem;
+  }
+
+  .progress-indicator {
+    margin-bottom: 2rem;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.875rem;
+  }
+
+  .step-title {
+    font-size: 0.75rem;
+    max-width: 80px;
+  }
+
+  .step-content {
+    padding: 1.5rem;
+    min-height: 300px;
+  }
+
+  .step-navigation {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    width: 100%;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    justify-content: stretch;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-indicator::before {
+    display: none;
+  }
+
+  .progress-step {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
+
+  .step-number {
+    margin-bottom: 0;
+  }
+
+  .step-title {
+    text-align: left;
+    max-width: none;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .progress-indicator::before {
+  left: 0;
+  right: 0;
+}
+
+[dir="rtl"] .error-summary ul {
+  padding-right: 1.5rem;
+  padding-left: 0;
+}
+
+[dir="rtl"] .step-title {
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  [dir="rtl"] .step-title {
+    text-align: right;
+  }
+}
+
+/* Keyboard Shortcuts Help Button */
+.shortcuts-help-button {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #D48161;
+  color: white;
+  border: 2px solid #D48161;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.4);
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.shortcuts-help-button:hover {
+  background: #c06f52;
+  border-color: #c06f52;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(212, 129, 97, 0.5);
+}
+
+.shortcuts-help-button:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 4px;
+}
+
+.shortcuts-help-button:active {
+  transform: scale(0.95);
+}
+
+/* RTL Support for Shortcuts Button */
+[dir="rtl"] .shortcuts-help-button {
+  right: auto;
+  left: 2rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .shortcuts-help-button {
+    bottom: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+  }
+
+  [dir="rtl"] .shortcuts-help-button {
+    right: auto;
+    left: 1rem;
+  }
+}
+
+/* Focus Visible Enhancement */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.btn-outline:focus-visible {
+  outline: 3px solid #D48161;
+  outline-offset: 3px;
+}
+
+/* Keyboard Navigation Hints */
+.btn-primary[title],
+.btn-secondary[title],
+.btn-outline[title] {
+  position: relative;
+}
+
+/* Skip to Content Link */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #304B60;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  z-index: 100;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}

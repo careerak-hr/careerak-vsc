@@ -1,0 +1,169 @@
+/* Share Button Base */
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  background: white;
+  font-family: 'Amiri', 'Cairo', serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.share-button:hover {
+  background: #D4816120;
+  border-color: #D48161;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.2);
+}
+
+.share-button:active {
+  transform: translateY(0);
+}
+
+.share-button:focus {
+  outline: 3px solid #D48161;
+  outline-offset: 2px;
+}
+
+.share-button-icon {
+  flex-shrink: 0;
+}
+
+.share-button-text {
+  flex-shrink: 0;
+}
+
+/* Sizes */
+.share-button-small {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.share-button-small .share-button-icon {
+  font-size: 14px;
+}
+
+.share-button-medium {
+  padding: 10px 16px;
+  font-size: 16px;
+}
+
+.share-button-medium .share-button-icon {
+  font-size: 16px;
+}
+
+.share-button-large {
+  padding: 14px 20px;
+  font-size: 18px;
+}
+
+.share-button-large .share-button-icon {
+  font-size: 18px;
+}
+
+/* Variants */
+.share-button-default {
+  color: #304B60;
+}
+
+.share-button-primary {
+  background: #D48161;
+  color: white;
+  border-color: #D48161;
+}
+
+.share-button-primary:hover {
+  background: #c06f51;
+  border-color: #c06f51;
+}
+
+.share-button-outline {
+  background: transparent;
+  color: #D48161;
+  border-color: #D48161;
+}
+
+.share-button-outline:hover {
+  background: #D4816120;
+}
+
+.share-button-icon-only {
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.share-button-icon-only.share-button-small {
+  padding: 8px;
+}
+
+.share-button-icon-only.share-button-large {
+  padding: 12px;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .share-button-medium {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .share-button-medium .share-button-icon {
+    font-size: 14px;
+  }
+
+  .share-button-large {
+    padding: 10px 16px;
+    font-size: 16px;
+  }
+
+  .share-button-large .share-button-icon {
+    font-size: 16px;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .share-button-default {
+    background: #2a2a2a;
+    color: #E3DAD1;
+    border-color: #D4816140;
+  }
+
+  .share-button-default:hover {
+    background: #D4816130;
+    border-color: #D48161;
+  }
+
+  .share-button-outline {
+    background: transparent;
+    color: #D48161;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .share-button {
+    transition: none;
+  }
+
+  .share-button:hover {
+    transform: none;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .share-button {
+  flex-direction: row-reverse;
+}
+
+/* Print Styles */
+@media print {
+  .share-button {
+    display: none;
+  }
+}

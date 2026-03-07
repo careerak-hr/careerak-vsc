@@ -36,6 +36,9 @@ router.post('/stop', authenticate, recordingController.stopRecording);
 // رفع تسجيل
 router.post('/upload', authenticate, upload.single('recording'), recordingController.uploadRecording);
 
+// الحصول على التسجيلات التي ستنتهي قريباً (يجب أن يكون قبل /:recordingId)
+router.get('/expiring-soon', authenticate, recordingController.getExpiringSoonRecordings);
+
 // الحصول على معلومات تسجيل
 router.get('/:recordingId', authenticate, recordingController.getRecording);
 
@@ -44,8 +47,5 @@ router.get('/:recordingId/download', authenticate, recordingController.downloadR
 
 // حذف تسجيل
 router.delete('/:recordingId', authenticate, recordingController.deleteRecording);
-
-// الحصول على التسجيلات التي ستنتهي قريباً
-router.get('/expiring-soon', authenticate, recordingController.getExpiringSoonRecordings);
 
 module.exports = router;

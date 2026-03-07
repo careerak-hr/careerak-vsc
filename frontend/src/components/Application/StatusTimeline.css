@@ -1,0 +1,381 @@
+/**
+ * StatusTimeline Styles
+ * 
+ * Responsive design for mobile, tablet, and desktop
+ * RTL support for Arabic
+ * Color palette: Primary #304B60, Secondary #E3DAD1, Accent #D48161
+ */
+
+.status-timeline {
+  width: 100%;
+  padding: 24px;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+  position: relative;
+}
+
+/* Real-time Update Notification */
+.status-update-notification {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #D48161;
+  color: #FFFFFF;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+  max-width: 90%;
+  font-family: inherit;
+}
+
+.notification-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.notification-message {
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.notification-close {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.notification-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.notification-close:focus {
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.status-timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Status Stage */
+.status-stage {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  min-height: 80px;
+}
+
+/* Stage Indicator Wrapper */
+.stage-indicator-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Stage Indicator (Circle) */
+.stage-indicator {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid;
+  background-color: #FFFFFF;
+  transition: all 0.3s ease;
+  z-index: 2;
+  position: relative;
+}
+
+.status-stage-current .stage-indicator {
+  box-shadow: 0 0 0 4px rgba(212, 129, 97, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.status-stage-completed .stage-indicator {
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.2);
+}
+
+.status-stage-pending .stage-indicator {
+  opacity: 0.5;
+}
+
+/* Stage Icon */
+.stage-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+/* Stage Connector Line */
+.stage-connector {
+  width: 4px;
+  flex: 1;
+  min-height: 32px;
+  background-color: #E3DAD1;
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.stage-connector-completed {
+  background-color: #304B60;
+}
+
+/* Stage Content */
+.stage-content {
+  flex: 1;
+  padding-top: 8px;
+  padding-bottom: 24px;
+}
+
+.stage-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 4px;
+  font-family: inherit;
+}
+
+.status-stage-pending .stage-label {
+  color: #6B7280;
+  opacity: 0.7;
+}
+
+.stage-timestamp {
+  font-size: 14px;
+  color: #6B7280;
+  margin-bottom: 4px;
+  font-family: inherit;
+}
+
+.stage-note {
+  font-size: 14px;
+  color: #304B60;
+  background-color: #F3F4F6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+  border-left: 3px solid #D48161;
+  font-family: inherit;
+}
+
+/* RTL Support */
+[dir="rtl"] .stage-note {
+  border-left: none;
+  border-right: 3px solid #D48161;
+}
+
+/* Pulse Animation for Current Status */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(212, 129, 97, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(212, 129, 97, 0.1);
+  }
+}
+
+/* Responsive Design - Mobile (<640px) */
+@media (max-width: 639px) {
+  .status-timeline {
+    padding: 16px;
+  }
+
+  .status-update-notification {
+    top: -12px;
+    padding: 10px 16px;
+    max-width: 95%;
+  }
+
+  .notification-message {
+    font-size: 13px;
+  }
+
+  .notification-icon {
+    font-size: 18px;
+  }
+
+  .status-stage {
+    gap: 12px;
+    min-height: 70px;
+  }
+
+  .stage-indicator {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stage-icon {
+    font-size: 20px;
+  }
+
+  .stage-connector {
+    width: 3px;
+    min-height: 24px;
+  }
+
+  .stage-content {
+    padding-bottom: 16px;
+  }
+
+  .stage-label {
+    font-size: 14px;
+  }
+
+  .stage-timestamp {
+    font-size: 12px;
+  }
+
+  .stage-note {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+/* Responsive Design - Tablet (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .status-timeline {
+    padding: 20px;
+  }
+
+  .status-stage {
+    gap: 14px;
+  }
+
+  .stage-indicator {
+    width: 44px;
+    height: 44px;
+  }
+
+  .stage-icon {
+    font-size: 22px;
+  }
+}
+
+/* Responsive Design - Desktop (>=1024px) */
+@media (min-width: 1024px) {
+  .status-timeline {
+    padding: 28px;
+  }
+
+  /* Optional: Horizontal layout for desktop */
+  .status-timeline-horizontal .status-timeline-container {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .status-timeline-horizontal .status-stage {
+    flex-direction: column;
+    flex: 1;
+    min-height: auto;
+  }
+
+  .status-timeline-horizontal .stage-indicator-wrapper {
+    flex-direction: row;
+    width: 100%;
+  }
+
+  .status-timeline-horizontal .stage-connector {
+    width: auto;
+    height: 4px;
+    flex: 1;
+    min-height: auto;
+  }
+
+  .status-timeline-horizontal .stage-content {
+    padding-top: 16px;
+    padding-bottom: 0;
+    text-align: center;
+  }
+}
+
+/* Touch Targets - Ensure minimum 44x44px for mobile */
+@media (max-width: 639px) {
+  .stage-indicator {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  .status-timeline {
+    background-color: #1F2937;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .stage-label {
+    color: #E3DAD1;
+  }
+
+  .status-stage-pending .stage-label {
+    color: #9CA3AF;
+  }
+
+  .stage-timestamp {
+    color: #9CA3AF;
+  }
+
+  .stage-note {
+    background-color: #374151;
+    color: #E3DAD1;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .stage-indicator,
+  .stage-connector {
+    transition: none;
+  }
+
+  .status-stage-current .stage-indicator {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .status-timeline {
+    box-shadow: none;
+    border: 1px solid #E3DAD1;
+  }
+
+  .status-stage-current .stage-indicator {
+    animation: none;
+    box-shadow: none;
+  }
+}

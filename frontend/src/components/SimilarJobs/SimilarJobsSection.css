@@ -1,0 +1,345 @@
+/**
+ * Similar Jobs Section Styles
+ * تنسيقات قسم الوظائف المشابهة
+ */
+
+.similar-jobs-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  background-color: var(--bg-secondary, #f9fafb);
+  border-radius: 12px;
+}
+
+.similar-jobs-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Loading & Error States */
+.similar-jobs-loading,
+.similar-jobs-error,
+.similar-jobs-empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary, #6b7280);
+  font-size: 1rem;
+}
+
+.similar-jobs-error {
+  color: var(--error, #ef4444);
+}
+
+/* Carousel Container */
+.similar-jobs-carousel {
+  position: relative;
+  overflow: hidden;
+  padding: 0 3rem;
+}
+
+.similar-jobs-container {
+  overflow: hidden;
+  width: 100%;
+}
+
+.similar-jobs-track {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  gap: 1rem;
+}
+
+/* Job Card */
+.similar-job-card {
+  min-width: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.similar-job-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Similarity Badge */
+.similarity-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+[dir="rtl"] .similarity-badge {
+  right: auto;
+  left: 1rem;
+}
+
+/* Job Content */
+.similar-job-content {
+  margin-top: 0.5rem;
+}
+
+.similar-job-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary, #1f2937);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.similar-job-company {
+  font-size: 1rem;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 0.5rem;
+}
+
+.similar-job-location,
+.similar-job-salary {
+  font-size: 0.875rem;
+  color: var(--text-secondary, #6b7280);
+  margin-bottom: 0.5rem;
+}
+
+/* Skills */
+.similar-job-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+
+.skill-tag {
+  padding: 0.25rem 0.75rem;
+  background-color: var(--accent-light, #e3dad1);
+  color: var(--accent-dark, #304b60);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* View Job Button */
+.view-job-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary, #304b60);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.view-job-button:hover {
+  background-color: var(--primary-dark, #1e3a4f);
+}
+
+.view-job-button:active {
+  transform: scale(0.98);
+}
+
+/* Carousel Navigation Buttons */
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border: 2px solid var(--border, #e5e7eb);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: var(--text-primary, #1f2937);
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-button:hover {
+  background-color: var(--primary, #304b60);
+  color: white;
+  border-color: var(--primary, #304b60);
+}
+
+.carousel-button-prev {
+  left: 0;
+}
+
+.carousel-button-next {
+  right: 0;
+}
+
+[dir="rtl"] .carousel-button-prev {
+  left: auto;
+  right: 0;
+}
+
+[dir="rtl"] .carousel-button-next {
+  right: auto;
+  left: 0;
+}
+
+/* Carousel Dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--border, #e5e7eb);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.carousel-dot:hover {
+  background-color: var(--primary-light, #5a7a94);
+}
+
+.carousel-dot.active {
+  background-color: var(--primary, #304b60);
+  width: 24px;
+  border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .similar-jobs-track {
+    gap: 1.5rem;
+  }
+
+  .similar-job-card {
+    min-width: calc(50% - 0.75rem);
+  }
+}
+
+@media (min-width: 1024px) {
+  .similar-job-card {
+    min-width: calc(33.333% - 1rem);
+  }
+}
+
+/* Mobile Optimization */
+@media (max-width: 639px) {
+  .similar-jobs-section {
+    padding: 1rem;
+  }
+
+  .similar-jobs-carousel {
+    padding: 0 2rem;
+  }
+
+  .carousel-button {
+    width: 32px;
+    height: 32px;
+    font-size: 1.25rem;
+  }
+
+  .similar-job-title {
+    font-size: 1.125rem;
+  }
+
+  .view-job-button {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .similar-jobs-section {
+    background-color: var(--bg-secondary-dark, #1f2937);
+  }
+
+  .similar-jobs-title {
+    color: var(--text-primary-dark, #f9fafb);
+  }
+
+  .similar-job-card {
+    background: var(--bg-card-dark, #374151);
+  }
+
+  .similar-job-title {
+    color: var(--text-primary-dark, #f9fafb);
+  }
+
+  .similar-job-company,
+  .similar-job-location,
+  .similar-job-salary {
+    color: var(--text-secondary-dark, #d1d5db);
+  }
+
+  .carousel-button {
+    background-color: var(--bg-card-dark, #374151);
+    border-color: var(--border-dark, #4b5563);
+    color: var(--text-primary-dark, #f9fafb);
+  }
+
+  .carousel-dot {
+    background-color: var(--border-dark, #4b5563);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .similar-jobs-section {
+    page-break-inside: avoid;
+  }
+
+  .carousel-button,
+  .carousel-dots {
+    display: none;
+  }
+
+  .similar-jobs-track {
+    flex-wrap: wrap;
+  }
+
+  .similar-job-card {
+    min-width: 100%;
+    page-break-inside: avoid;
+  }
+}
+
+/* Accessibility */
+.carousel-button:focus,
+.carousel-dot:focus,
+.view-job-button:focus {
+  outline: 2px solid var(--primary, #304b60);
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .similar-jobs-track,
+  .similar-job-card,
+  .carousel-button,
+  .carousel-dot,
+  .view-job-button {
+    transition: none;
+  }
+
+  .similar-job-card:hover {
+    transform: none;
+  }
+}

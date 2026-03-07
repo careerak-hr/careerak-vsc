@@ -1,0 +1,136 @@
+/* ApplicantCounter Component Styles */
+
+.applicant-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.applicant-counter.inline {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* حالات العداد حسب العدد */
+.applicant-counter.zero {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.applicant-counter.low {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.applicant-counter.medium {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.applicant-counter.high {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* الأيقونة */
+.counter-icon {
+  flex-shrink: 0;
+}
+
+.counter-text {
+  white-space: nowrap;
+}
+
+/* حالة التحميل */
+.applicant-counter.loading {
+  background-color: #f3f4f6;
+  padding: 0.5rem 0.75rem;
+}
+
+.skeleton-counter {
+  width: 100px;
+  height: 20px;
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 25%,
+    #f3f4f6 50%,
+    #e5e7eb 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.25rem;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .applicant-counter.zero {
+    background-color: #374151;
+    color: #9ca3af;
+  }
+
+  .applicant-counter.low {
+    background-color: #78350f;
+    color: #fef3c7;
+  }
+
+  .applicant-counter.medium {
+    background-color: #1e3a8a;
+    color: #dbeafe;
+  }
+
+  .applicant-counter.high {
+    background-color: #064e3b;
+    color: #d1fae5;
+  }
+
+  .applicant-counter.loading {
+    background-color: #374151;
+  }
+
+  .skeleton-counter {
+    background: linear-gradient(
+      90deg,
+      #4b5563 25%,
+      #374151 50%,
+      #4b5563 75%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .applicant-counter {
+    font-size: 0.75rem;
+    padding: 0.375rem 0.625rem;
+  }
+
+  .applicant-counter.inline {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .counter-icon {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .applicant-counter {
+  flex-direction: row-reverse;
+}

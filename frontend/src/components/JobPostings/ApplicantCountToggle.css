@@ -1,0 +1,170 @@
+/* ApplicantCountToggle Component Styles */
+
+.applicant-count-toggle {
+  padding: 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.toggle-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: #111827;
+  cursor: pointer;
+}
+
+.toggle-label svg {
+  flex-shrink: 0;
+}
+
+/* Toggle Button */
+.toggle-button {
+  position: relative;
+  width: 48px;
+  height: 24px;
+  background-color: #d1d5db;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  padding: 0;
+}
+
+.toggle-button:hover {
+  background-color: #9ca3af;
+}
+
+.toggle-button.active {
+  background-color: #10b981;
+}
+
+.toggle-button.active:hover {
+  background-color: #059669;
+}
+
+.toggle-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button.active .toggle-slider {
+  transform: translateX(24px);
+}
+
+/* Description */
+.toggle-description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Error Message */
+.toggle-error {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 0.375rem;
+  color: #991b1b;
+  font-size: 0.875rem;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .applicant-count-toggle {
+    background-color: #1f2937;
+    border-color: #374151;
+  }
+
+  .toggle-label {
+    color: #f9fafb;
+  }
+
+  .toggle-button {
+    background-color: #4b5563;
+  }
+
+  .toggle-button:hover {
+    background-color: #6b7280;
+  }
+
+  .toggle-button.active {
+    background-color: #10b981;
+  }
+
+  .toggle-button.active:hover {
+    background-color: #059669;
+  }
+
+  .toggle-description {
+    color: #9ca3af;
+  }
+
+  .toggle-error {
+    background-color: #7f1d1d;
+    border-color: #991b1b;
+    color: #fecaca;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .applicant-count-toggle {
+    padding: 0.75rem;
+  }
+
+  .toggle-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .toggle-label {
+    font-size: 0.875rem;
+  }
+
+  .toggle-description {
+    font-size: 0.8125rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .toggle-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .toggle-label {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .toggle-slider {
+  left: auto;
+  right: 2px;
+}
+
+[dir="rtl"] .toggle-button.active .toggle-slider {
+  transform: translateX(-24px);
+}

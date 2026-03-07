@@ -1,4 +1,5 @@
 const SavedSearch = require('../models/SavedSearch');
+const SearchAlert = require('../models/SearchAlert');
 const JobPosting = require('../models/JobPosting');
 const notificationService = require('./notificationService');
 const logger = require('../utils/logger');
@@ -161,28 +162,34 @@ class AlertService {
    */
   async processNewJob(jobPosting) {
     try {
-      // جلب جميع عمليات البحث المحفوظة مع التنبيهات المفعلة
-      const savedSearches = await SavedSearch.find({
-        alertEnabled: true,
-        searchType: 'jobs',
-        alertFrequency: 'instant' // فقط التنبيهات الفورية
-      }).lean();
+      // جلب جميع التنبيهات النشطة الفورية
+      const activeAlerts = await SearchAlert.find({
+        isActive: true,
+        frequency: 'instant'
+      }).populate('savedSearchId').lean();
 
-      logger.info(`Processing new job ${jobPosting._id} against ${savedSearches.length} saved searches`);
+      logger.info(`Processing new job ${jobPosting._id} against ${activeAlerts.length} active alerts`);
 
-      // فحص كل عملية بحث
-      for (const savedSearch of savedSearches) {
+      // فحص كل تنبيه
+      for (const alert of activeAlerts) {
+        const savedSearch = alert.savedSearchId;
+        
+        // التحقق من أن savedSearch موجود ومفعل
+        if (!savedSearch || !savedSearch.alertEnabled) {
+          continue;
+        }
+        
         const matches = await this.checkJobMatchesSavedSearch(jobPosting, savedSearch);
         
         if (matches) {
           // التحقق من عدم وجود تنبيه سابق لنفس الوظيفة
-          const isDuplicate = await this.isDuplicateAlert(savedSearch.userId, jobPosting._id);
+          const isDuplicate = await this.isDuplicateAlert(alert.userId, jobPosting._id);
           
           if (!isDuplicate) {
             // إرسال تنبيه فوري
-            await this.sendAlert(savedSearch.userId, savedSearch, [jobPosting]);
+            await this.sendAlert(alert.userId, savedSearch, [jobPosting]);
           } else {
-            logger.info(`Skipping duplicate alert for user ${savedSearch.userId} and job ${jobPosting._id}`);
+            logger.info(`Skipping duplicate alert for user ${alert.userId} and job ${jobPosting._id}`);
           }
         }
       }

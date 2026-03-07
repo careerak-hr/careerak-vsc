@@ -1,0 +1,265 @@
+/* Course Sort Bar Styles */
+
+.course-sort-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.dark .course-sort-bar {
+  background-color: #1f2937;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Search Container */
+.search-container {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+[dir="rtl"] .search-icon {
+  left: auto;
+  right: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 3rem;
+  border: 2px solid #D4816180;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: white;
+  color: #304B60;
+  transition: border-color 0.3s;
+  min-height: 44px;
+}
+
+[dir="rtl"] .search-input {
+  padding: 0.75rem 3rem 0.75rem 1rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+.dark .search-input {
+  background-color: #374151;
+  color: #E3DAD1;
+  border-color: #D4816180;
+}
+
+.dark .search-input::placeholder {
+  color: #6b7280;
+}
+
+/* Sort Container */
+.sort-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+  white-space: nowrap;
+}
+
+.dark .sort-label {
+  color: #E3DAD1;
+}
+
+.sort-select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #D4816180;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background-color: white;
+  color: #304B60;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  min-height: 44px;
+  min-width: 150px;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+.dark .sort-select {
+  background-color: #374151;
+  color: #E3DAD1;
+  border-color: #D4816180;
+}
+
+/* View Toggle */
+.view-toggle {
+  display: flex;
+  gap: 0.5rem;
+  border: 2px solid #D4816180;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  background-color: #f9fafb;
+}
+
+.dark .view-toggle {
+  background-color: #374151;
+  border-color: #D4816180;
+}
+
+.view-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: #6b7280;
+  font-size: 0.875rem;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.view-btn:hover {
+  background-color: #e5e7eb;
+  color: #304B60;
+}
+
+.view-btn.active {
+  background-color: #D48161;
+  color: white;
+}
+
+.dark .view-btn:hover {
+  background-color: #4b5563;
+  color: #E3DAD1;
+}
+
+.dark .view-btn.active {
+  background-color: #D48161;
+  color: white;
+}
+
+.view-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.view-text {
+  white-space: nowrap;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .course-sort-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-container {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .sort-container {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .sort-select {
+    flex: 1;
+    min-width: auto;
+  }
+
+  .view-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .view-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .view-text {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .sort-label {
+    font-size: 0.75rem;
+  }
+
+  .sort-select {
+    font-size: 0.875rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .course-sort-bar {
+  direction: rtl;
+}
+
+[dir="rtl"] .sort-container {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .view-toggle {
+  flex-direction: row-reverse;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .search-input,
+  .sort-select,
+  .view-btn {
+    transition: none;
+  }
+}
+
+/* Focus Visible */
+.search-input:focus-visible,
+.sort-select:focus-visible,
+.view-btn:focus-visible {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Touch Target Sizes */
+@media (max-width: 768px) {
+  .search-input,
+  .sort-select,
+  .view-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

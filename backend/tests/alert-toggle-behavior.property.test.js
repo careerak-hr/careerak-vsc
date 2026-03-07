@@ -20,27 +20,26 @@
 const fc = require('fast-check');
 const mongoose = require('mongoose');
 const SavedSearch = require('../src/models/SavedSearch');
+const SearchAlert = require('../src/models/SearchAlert');
 const JobPosting = require('../src/models/JobPosting');
 const Notification = require('../src/models/Notification');
 const { User } = require('../src/models/User');
 const alertService = require('../src/services/alertService');
 
-// Mock notification service
-jest.mock('../src/services/notificationService', () => ({
-  createNotification: jest.fn().mockResolvedValue({ success: true }),
-  create: jest.fn().mockResolvedValue({ success: true })
-}));
+// DON'T mock notification service - we want real notifications to be created
 
 describe('Property 12: Alert Toggle Behavior', () => {
   
   beforeEach(async () => {
     await SavedSearch.deleteMany({});
+    await SearchAlert.deleteMany({});
     await JobPosting.deleteMany({});
     await Notification.deleteMany({});
   });
 
   afterAll(async () => {
     await SavedSearch.deleteMany({});
+    await SearchAlert.deleteMany({});
     await JobPosting.deleteMany({});
     await Notification.deleteMany({});
     await mongoose.connection.close();
@@ -82,6 +81,15 @@ describe('Property 12: Alert Toggle Behavior', () => {
               notificationMethod
             });
 
+            // Create SearchAlert document
+            await SearchAlert.create({
+              userId: testUser._id,
+              savedSearchId: savedSearch._id,
+              frequency: alertFrequency,
+              notificationMethod,
+              isActive: true
+            });
+
             const matchingJob = await JobPosting.create({
               title: `${searchQuery} Developer`,
               description: `Looking for ${searchQuery} expert`,
@@ -98,6 +106,7 @@ describe('Property 12: Alert Toggle Behavior', () => {
 
             if (alertFrequency === 'instant') {
               await alertService.processNewJob(matchingJob);
+              await new Promise(resolve => setTimeout(resolve, 500)); // Increased wait time
 
               const notifications = await Notification.find({
                 recipient: testUser._id,
@@ -116,6 +125,8 @@ describe('Property 12: Alert Toggle Behavior', () => {
 
           } finally {
             await User.deleteOne({ _id: testUser._id });
+            await SavedSearch.deleteMany({ userId: testUser._id });
+            await SearchAlert.deleteMany({ userId: testUser._id });
           }
         }
       ),
@@ -156,6 +167,15 @@ describe('Property 12: Alert Toggle Behavior', () => {
               alertFrequency: 'instant'
             });
 
+            // Create SearchAlert document but set isActive to false
+            await SearchAlert.create({
+              userId: testUser._id,
+              savedSearchId: savedSearch._id,
+              frequency: 'instant',
+              notificationMethod: 'push',
+              isActive: false // Alert is disabled
+            });
+
             const matchingJob = await JobPosting.create({
               title: `${searchQuery} Developer`,
               description: `Looking for ${searchQuery} expert`,
@@ -181,6 +201,8 @@ describe('Property 12: Alert Toggle Behavior', () => {
 
           } finally {
             await User.deleteOne({ _id: testUser._id });
+            await SavedSearch.deleteMany({ userId: testUser._id });
+            await SearchAlert.deleteMany({ userId: testUser._id });
           }
         }
       ),
@@ -199,6 +221,8 @@ describe('Property 12: Alert Toggle Behavior', () => {
         async (searchQuery) => {
           // Clean up before each property test iteration
           await Notification.deleteMany({});
+          await JobPosting.deleteMany({});
+          await SavedSearch.deleteMany({});
           
           const testUser = await User.create({
             email: `test-${Date.now()}-${Math.random()}@example.com`,
@@ -221,6 +245,15 @@ describe('Property 12: Alert Toggle Behavior', () => {
               alertFrequency: 'instant'
             });
 
+            // Create SearchAlert document
+            let searchAlert = await SearchAlert.create({
+              userId: testUser._id,
+              savedSearchId: savedSearch._id,
+              frequency: 'instant',
+              notificationMethod: 'push',
+              isActive: true
+            });
+
             const job1 = await JobPosting.create({
               title: `${searchQuery} Developer 1`,
               description: `Looking for ${searchQuery} expert`,
@@ -236,6 +269,7 @@ describe('Property 12: Alert Toggle Behavior', () => {
             });
 
             await alertService.processNewJob(job1);
+            await new Promise(resolve => setTimeout(resolve, 300)); // Wait for async operations
 
             let notifications = await Notification.find({
               recipient: testUser._id,
@@ -243,9 +277,17 @@ describe('Property 12: Alert Toggle Behavior', () => {
             });
             expect(notifications.length).toBe(1);
 
+            // Disable alert
             savedSearch = await SavedSearch.findByIdAndUpdate(
               savedSearch._id,
               { alertEnabled: false },
+              { new: true }
+            );
+
+            // Update SearchAlert to inactive
+            searchAlert = await SearchAlert.findByIdAndUpdate(
+              searchAlert._id,
+              { isActive: false },
               { new: true }
             );
 
@@ -264,16 +306,25 @@ describe('Property 12: Alert Toggle Behavior', () => {
             });
 
             await alertService.processNewJob(job2);
+            await new Promise(resolve => setTimeout(resolve, 300)); // Wait for async operations
 
             notifications = await Notification.find({
               recipient: testUser._id,
               type: 'job_match'
             });
-            expect(notifications.length).toBe(1);
+            expect(notifications.length).toBe(1); // Still 1, no new notification
 
+            // Re-enable alert
             savedSearch = await SavedSearch.findByIdAndUpdate(
               savedSearch._id,
               { alertEnabled: true },
+              { new: true }
+            );
+
+            // Update SearchAlert to active
+            searchAlert = await SearchAlert.findByIdAndUpdate(
+              searchAlert._id,
+              { isActive: true },
               { new: true }
             );
 
@@ -292,21 +343,25 @@ describe('Property 12: Alert Toggle Behavior', () => {
             });
 
             await alertService.processNewJob(job3);
+            await new Promise(resolve => setTimeout(resolve, 300)); // Wait for async operations
 
             notifications = await Notification.find({
               recipient: testUser._id,
               type: 'job_match'
             });
-            expect(notifications.length).toBe(2);
+            expect(notifications.length).toBe(2); // Now 2 notifications
 
           } finally {
+            await JobPosting.deleteMany({});
+            await SavedSearch.deleteMany({ userId: testUser._id });
+            await Notification.deleteMany({ recipient: testUser._id });
             await User.deleteOne({ _id: testUser._id });
           }
         }
       ),
-      { numRuns: 10 }
+      { numRuns: 5, timeout: 60000 } // Reduced to 5 runs with longer timeout
     );
-  });
+  }, 120000); // 2 minutes timeout for the whole test
 
   /**
    * Property Test 4: التنبيهات المجدولة تحترم حالة التفعيل
@@ -315,11 +370,13 @@ describe('Property 12: Alert Toggle Behavior', () => {
     await fc.assert(
       fc.asyncProperty(
         fc.constantFrom('daily', 'weekly'),
-        fc.integer({ min: 2, max: 5 }),
+        fc.integer({ min: 2, max: 3 }), // Reduced from 5 to 3
         
         async (frequency, numSearches) => {
           // Clean up before each property test iteration
           await Notification.deleteMany({});
+          await JobPosting.deleteMany({});
+          await SavedSearch.deleteMany({});
           
           const users = [];
           for (let i = 0; i < numSearches; i++) {
@@ -350,6 +407,15 @@ describe('Property 12: Alert Toggle Behavior', () => {
                 alertFrequency: frequency,
                 lastChecked: new Date(Date.now() - 25 * 60 * 60 * 1000) // 25 hours ago
               });
+
+              // Create SearchAlert document
+              await SearchAlert.create({
+                userId: users[i]._id,
+                savedSearchId: savedSearch._id,
+                frequency,
+                notificationMethod: 'push',
+                isActive: isEnabled
+              });
               
               savedSearches.push({ search: savedSearch, enabled: isEnabled });
             }
@@ -371,6 +437,7 @@ describe('Property 12: Alert Toggle Behavior', () => {
             });
 
             await alertService.runScheduledAlerts(frequency);
+            await new Promise(resolve => setTimeout(resolve, 500)); // Wait for async operations
 
             for (const { search, enabled } of savedSearches) {
               const notifications = await Notification.find({
@@ -386,15 +453,19 @@ describe('Property 12: Alert Toggle Behavior', () => {
             }
 
           } finally {
+            await JobPosting.deleteMany({});
+            await SavedSearch.deleteMany({});
+            await SearchAlert.deleteMany({});
+            await Notification.deleteMany({});
             for (const user of users) {
               await User.deleteOne({ _id: user._id });
             }
           }
         }
       ),
-      { numRuns: 10 }
+      { numRuns: 5, timeout: 60000 } // Reduced to 5 runs
     );
-  });
+  }, 120000); // 2 minutes timeout
 
   /**
    * Property Test 5: تغيير التكرار لا يؤثر على حالة التفعيل

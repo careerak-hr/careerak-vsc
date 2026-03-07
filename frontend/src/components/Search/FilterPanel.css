@@ -172,6 +172,27 @@
   accent-color: #D48161;
 }
 
+/* Filter Option Text with Count */
+.filter-option-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 8px;
+}
+
+.filter-count {
+  font-size: 0.85rem;
+  color: #D48161;
+  font-weight: 600;
+  margin-inline-start: auto;
+  padding: 2px 8px;
+  background: rgba(212, 129, 97, 0.1);
+  border-radius: 12px;
+  min-width: 35px;
+  text-align: center;
+}
+
 /* Radio Group */
 .radio-group {
   display: flex;

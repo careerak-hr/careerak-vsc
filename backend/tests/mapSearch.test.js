@@ -1,16 +1,32 @@
 const searchService = require('../src/services/searchService');
 const JobPosting = require('../src/models/JobPosting');
+const { User } = require('../src/models/User');
 const mongoose = require('mongoose');
 
 describe('Map Search - Geographic Queries', () => {
+  let testUser;
+
   beforeAll(async () => {
     // الاتصال بقاعدة البيانات
     if (mongoose.connection.readyState === 0) {
       await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/careerak-test');
     }
+
+    // إنشاء مستخدم اختباري
+    testUser = await User.create({
+      name: 'Test User',
+      email: `test-${Date.now()}@example.com`,
+      password: 'password123',
+      phone: '+201234567890',
+      role: 'HR'
+    });
   });
 
   afterAll(async () => {
+    // حذف المستخدم الاختباري
+    if (testUser) {
+      await User.findByIdAndDelete(testUser._id);
+    }
     await mongoose.connection.close();
   });
 
@@ -22,47 +38,64 @@ describe('Map Search - Geographic Queries', () => {
   describe('Box Search (Rectangle)', () => {
     it('should search jobs within a rectangular boundary', async () => {
       // إنشاء وظائف اختبارية
-      await JobPosting.create([
+      const jobs = await JobPosting.create([
         {
           title: 'Job in Cairo',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company A' },
           location: {
+            type: 'Cairo, Egypt',
             city: 'Cairo',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [31.2357, 30.0444] // Cairo
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         },
         {
           title: 'Job in Giza',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company B' },
           location: {
+            type: 'Giza, Egypt',
             city: 'Giza',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [31.2118, 30.0131] // Giza
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         },
         {
           title: 'Job in Dubai',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company C' },
           location: {
+            type: 'Dubai, UAE',
             city: 'Dubai',
+            country: 'UAE',
             coordinates: {
               type: 'Point',
               coordinates: [55.2708, 25.2048] // Dubai
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         }
       ]);
+
+      // التحقق من أن الوظائف تم إنشاؤها بشكل صحيح
+      expect(jobs).toHaveLength(3);
+      expect(jobs[0].location.coordinates).toBeDefined();
+      expect(jobs[0].location.coordinates.coordinates).toHaveLength(2);
 
       // البحث في مستطيل يشمل القاهرة والجيزة فقط
       const bounds = {
@@ -88,14 +121,18 @@ describe('Map Search - Geographic Queries', () => {
       await JobPosting.create({
         title: 'Job in Cairo',
         description: 'Test job',
+        requirements: 'Test requirements',
         company: { name: 'Company A' },
         location: {
+          type: 'Cairo, Egypt',
           city: 'Cairo',
+          country: 'Egypt',
           coordinates: {
             type: 'Point',
             coordinates: [31.2357, 30.0444]
           }
         },
+        postedBy: testUser._id,
         status: 'Open'
       });
 
@@ -120,40 +157,52 @@ describe('Map Search - Geographic Queries', () => {
         {
           title: 'Job in Cairo',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company A' },
           location: {
+            type: 'Cairo, Egypt',
             city: 'Cairo',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [31.2357, 30.0444] // Cairo
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         },
         {
           title: 'Job in Giza',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company B' },
           location: {
+            type: 'Giza, Egypt',
             city: 'Giza',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [31.2118, 30.0131] // Giza (very close to Cairo)
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         },
         {
           title: 'Job in Alexandria',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company C' },
           location: {
+            type: 'Alexandria, Egypt',
             city: 'Alexandria',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [29.9187, 31.2001] // Alexandria (far from Cairo)
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         }
       ]);
@@ -180,14 +229,18 @@ describe('Map Search - Geographic Queries', () => {
       await JobPosting.create({
         title: 'Job in Cairo',
         description: 'Test job',
+        requirements: 'Test requirements',
         company: { name: 'Company A' },
         location: {
+          type: 'Cairo, Egypt',
           city: 'Cairo',
+          country: 'Egypt',
           coordinates: {
             type: 'Point',
             coordinates: [31.2357, 30.0444]
           }
         },
+        postedBy: testUser._id,
         status: 'Open'
       });
 
@@ -208,27 +261,35 @@ describe('Map Search - Geographic Queries', () => {
         {
           title: 'Job very close',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company A' },
           location: {
+            type: 'Cairo Center, Egypt',
             city: 'Cairo Center',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [31.2357, 30.0444] // Exact center
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         },
         {
           title: 'Job far away',
           description: 'Test job',
+          requirements: 'Test requirements',
           company: { name: 'Company B' },
           location: {
+            type: 'Cairo Outskirts, Egypt',
             city: 'Cairo Outskirts',
+            country: 'Egypt',
             coordinates: {
               type: 'Point',
               coordinates: [31.3, 30.1] // ~10km away
             }
           },
+          postedBy: testUser._id,
           status: 'Open'
         }
       ]);
@@ -251,9 +312,12 @@ describe('Map Search - Geographic Queries', () => {
       await JobPosting.create({
         title: 'Test Job',
         description: 'Test description',
+        requirements: 'Test requirements',
         company: { name: 'Test Company' },
         location: {
+          type: 'Cairo, Egypt',
           city: 'Cairo',
+          country: 'Egypt',
           coordinates: {
             type: 'Point',
             coordinates: [31.2357, 30.0444]
@@ -261,7 +325,8 @@ describe('Map Search - Geographic Queries', () => {
         },
         salary: { min: 5000, max: 8000 },
         jobType: 'Full-time',
-        experienceLevel: 'Mid-level',
+        experienceLevel: 'Mid',
+        postedBy: testUser._id,
         status: 'Open'
       });
 

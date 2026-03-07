@@ -1,0 +1,251 @@
+/* Progress Tracker Styles */
+
+.progress-tracker {
+  background: linear-gradient(135deg, #304B60 0%, #3d5f7a 100%);
+  color: white;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.progress-tracker-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Progress Header */
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progress-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.progress-percentage {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #D48161;
+}
+
+/* Progress Bar */
+.progress-bar-container {
+  width: 100%;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D48161 0%, #e89a7a 100%);
+  border-radius: 20px;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 1rem;
+  position: relative;
+}
+
+.progress-bar-label {
+  font-weight: bold;
+  font-size: 0.95rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Progress Stats */
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Progress Actions */
+.progress-actions {
+  margin-top: 1.5rem;
+}
+
+.continue-button {
+  padding: 1rem 2.5rem;
+  background-color: #D48161;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.continue-button:hover {
+  background-color: #c06f50;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Completion Section */
+.completion-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.completion-message {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.completion-icon {
+  font-size: 3rem;
+}
+
+.completion-message h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.5rem;
+}
+
+.completion-message p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+.certificate-button {
+  padding: 1rem 2rem;
+  background-color: white;
+  color: #304B60;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  align-self: flex-start;
+}
+
+.certificate-button:hover {
+  background-color: #E3DAD1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.certificate-icon {
+  font-size: 1.5rem;
+}
+
+/* Visual Progress Indicator */
+.progress-visual {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.progress-dot.completed {
+  background-color: #D48161;
+  box-shadow: 0 0 8px rgba(212, 129, 97, 0.5);
+}
+
+.progress-dot:hover {
+  transform: scale(1.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .progress-tracker {
+    padding: 1.5rem 1rem;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .progress-percentage {
+    font-size: 1.5rem;
+  }
+
+  .progress-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .progress-bar-container {
+    height: 32px;
+  }
+
+  .continue-button,
+  .certificate-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .completion-message {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .completion-icon {
+    font-size: 2.5rem;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .progress-bar-fill {
+  justify-content: flex-start;
+  padding-right: 0;
+  padding-left: 1rem;
+}
+
+[dir="rtl"] .completion-message {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .certificate-button {
+  flex-direction: row-reverse;
+}

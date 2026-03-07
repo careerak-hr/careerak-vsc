@@ -1,0 +1,271 @@
+/**
+ * KeyboardShortcutsHelp Styles
+ * 
+ * Styles for the keyboard shortcuts help modal.
+ */
+
+.keyboard-shortcuts-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 1rem;
+}
+
+.keyboard-shortcuts-modal {
+  background-color: #E3DAD1;
+  border: 4px solid #304B60;
+  border-radius: 1.5rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.shortcuts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 2px solid #D4816180;
+}
+
+.shortcuts-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #304B60;
+  transition: all 0.2s;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-button:hover {
+  background-color: rgba(48, 75, 96, 0.1);
+}
+
+.close-button:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+.shortcuts-content {
+  padding: 1.5rem;
+}
+
+.shortcuts-section {
+  margin-bottom: 2rem;
+}
+
+.shortcuts-section:last-child {
+  margin-bottom: 0;
+}
+
+.shortcuts-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.shortcuts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 0.5rem;
+  border: 1px solid #D4816180;
+}
+
+.shortcut-key {
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.shortcut-key kbd {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+  background-color: #fff;
+  border: 2px solid #304B60;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 0 0 #304B60;
+  white-space: nowrap;
+}
+
+.shortcut-description {
+  flex: 1;
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #304B60;
+  text-align: right;
+}
+
+.shortcuts-footer {
+  padding: 1rem 1.5rem;
+  border-top: 2px solid #D4816180;
+  background-color: rgba(48, 75, 96, 0.05);
+}
+
+.shortcuts-hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #304B60;
+  text-align: center;
+}
+
+.shortcuts-hint kbd {
+  display: inline-block;
+  padding: 0.125rem 0.375rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+  background-color: #fff;
+  border: 1px solid #304B60;
+  border-radius: 0.25rem;
+  margin: 0 0.25rem;
+}
+
+/* RTL Support */
+[dir="rtl"] .shortcut-description {
+  text-align: left;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .keyboard-shortcuts-modal {
+    background-color: #1a1a1a;
+    border-color: #E3DAD1;
+  }
+
+  .shortcuts-header h2,
+  .shortcuts-section h3,
+  .shortcut-description,
+  .shortcuts-hint,
+  .close-button {
+    color: #E3DAD1;
+  }
+
+  .shortcut-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #D4816180;
+  }
+
+  .shortcut-key kbd {
+    color: #E3DAD1;
+    background-color: #2a2a2a;
+    border-color: #E3DAD1;
+    box-shadow: 0 2px 0 0 #E3DAD1;
+  }
+
+  .shortcuts-hint kbd {
+    color: #E3DAD1;
+    background-color: #2a2a2a;
+    border-color: #E3DAD1;
+  }
+
+  .shortcuts-footer {
+    background-color: rgba(227, 218, 209, 0.05);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .keyboard-shortcuts-modal {
+    max-height: 95vh;
+    border-radius: 1rem;
+  }
+
+  .shortcuts-header {
+    padding: 1rem;
+  }
+
+  .shortcuts-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .shortcuts-content {
+    padding: 1rem;
+  }
+
+  .shortcuts-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .shortcuts-section h3 {
+    font-size: 1rem;
+  }
+
+  .shortcut-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .shortcut-description {
+    text-align: left;
+  }
+
+  [dir="rtl"] .shortcut-description {
+    text-align: right;
+  }
+}
+
+/* Focus Indicators */
+.shortcut-item:focus-within {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.keyboard-shortcuts-modal {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .keyboard-shortcuts-modal {
+    animation: none;
+  }
+}

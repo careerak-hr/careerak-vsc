@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import { useFocusTrap } from './Accessibility/FocusTrap';
 import InteractiveElement from './InteractiveElement';
+import BookmarkCounter from './Navbar/BookmarkCounter';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -61,6 +62,9 @@ const Navbar = () => {
 
                 {/* Actions */}
                 <div className="navbar-actions-container">
+                    {/* Bookmark Counter */}
+                    <BookmarkCounter />
+
                     {/* Dark Mode Toggle */}
                     <InteractiveElement
                         as="button"

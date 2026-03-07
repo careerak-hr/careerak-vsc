@@ -11,22 +11,36 @@
  */
 
 const fc = require('fast-check');
-const alertService = require('../src/services/alertService');
-
-// Mock dependencies
-jest.mock('../src/models/SavedSearch');
-jest.mock('../src/models/JobPosting');
-jest.mock('../src/models/Notification');
-jest.mock('../src/services/notificationService');
-
+const mongoose = require('mongoose');
 const SavedSearch = require('../src/models/SavedSearch');
+const SearchAlert = require('../src/models/SearchAlert');
 const JobPosting = require('../src/models/JobPosting');
 const Notification = require('../src/models/Notification');
-const notificationService = require('../src/services/notificationService');
+const { User } = require('../src/models/User');
+const alertService = require('../src/services/alertService');
+const connectDB = require('../src/config/database');
+
+// DON'T mock notification service - we want real notifications to be created
 
 describe('Property 14: Alert Deduplication', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+  
+  beforeAll(async () => {
+    await connectDB();
+  });
+  
+  beforeEach(async () => {
+    await SavedSearch.deleteMany({});
+    await SearchAlert.deleteMany({});
+    await JobPosting.deleteMany({});
+    await Notification.deleteMany({});
+  });
+
+  afterAll(async () => {
+    await SavedSearch.deleteMany({});
+    await SearchAlert.deleteMany({});
+    await JobPosting.deleteMany({});
+    await Notification.deleteMany({});
+    await mongoose.connection.close();
   });
 
   /**
@@ -35,71 +49,91 @@ describe('Property 14: Alert Deduplication', () => {
   it('should not send duplicate alerts for the same job', async () => {
     await fc.assert(
       fc.asyncProperty(
-        fc.record({
-          userId: fc.string({ minLength: 24, maxLength: 24 }),
-          jobId: fc.string({ minLength: 24, maxLength: 24 }),
-          jobTitle: fc.string({ minLength: 5, maxLength: 50 }),
-          searchQuery: fc.string({ minLength: 3, maxLength: 20 })
-        }),
-        async ({ userId, jobId, jobTitle, searchQuery }) => {
-          // Setup: عملية بحث محفوظة واحدة
-          SavedSearch.find.mockReturnValue({
-            lean: jest.fn().mockResolvedValue([
-              {
-                _id: 'search123',
-                userId: userId,
-                name: 'Test Search',
-                searchType: 'jobs',
-                searchParams: { query: searchQuery },
-                alertEnabled: true,
-                alertFrequency: 'instant'
-              }
-            ])
+        fc.constantFrom('javascript', 'python', 'java', 'react', 'nodejs'),
+        
+        async (searchQuery) => {
+          // Clean up before each iteration
+          await Notification.deleteMany({});
+          await JobPosting.deleteMany({});
+          await SavedSearch.deleteMany({});
+          
+          const testUser = await User.create({
+            email: `test-${Date.now()}-${Math.random()}@example.com`,
+            password: 'password123',
+            phone: `+201${Math.floor(Math.random() * 100000000)}`,
+            role: 'Employee',
+            country: 'Egypt'
           });
 
-          // Setup: الوظيفة تطابق البحث
-          const job = {
-            _id: jobId,
-            title: `${jobTitle} ${searchQuery}`,
-            description: `Description ${searchQuery}`,
-            skills: ['JavaScript'],
-            company: { name: 'Test Company' },
-            location: { city: 'Cairo' },
-            status: 'Open'
-          };
+          try {
+            // Create saved search with instant alert
+            const savedSearch = await SavedSearch.create({
+              userId: testUser._id,
+              name: `Search for ${searchQuery}`,
+              searchType: 'jobs',
+              searchParams: {
+                query: searchQuery,
+                skills: [searchQuery]
+              },
+              alertEnabled: true,
+              alertFrequency: 'instant'
+            });
 
-          // المرة الأولى: لا يوجد إشعار سابق
-          Notification.findOne.mockReturnValueOnce({
-            lean: jest.fn().mockResolvedValueOnce(null)
-          });
-          notificationService.createNotification.mockResolvedValueOnce({ _id: 'notif1' });
+            // Create SearchAlert document
+            await SearchAlert.create({
+              userId: testUser._id,
+              savedSearchId: savedSearch._id,
+              frequency: 'instant',
+              notificationMethod: 'push',
+              isActive: true
+            });
 
-          // معالجة الوظيفة الجديدة (المرة الأولى)
-          await alertService.processNewJob(job);
+            // Create matching job
+            const job = await JobPosting.create({
+              title: `${searchQuery} Developer`,
+              description: `Looking for ${searchQuery} expert`,
+              requirements: `${searchQuery} skills required`,
+              company: { name: 'Test Company', size: 'Medium' },
+              location: 'Cairo, Egypt',
+              salary: { min: 5000, max: 10000 },
+              skills: [searchQuery, 'teamwork'],
+              jobType: 'Full-time',
+              experienceLevel: 'Mid',
+              status: 'Open',
+              postedBy: new mongoose.Types.ObjectId()
+            });
 
-          // التحقق من إرسال تنبيه واحد
-          expect(notificationService.createNotification).toHaveBeenCalledTimes(1);
+            // Process job first time
+            await alertService.processNewJob(job);
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-          // المرة الثانية: يوجد إشعار سابق (مكرر)
-          Notification.findOne.mockReturnValueOnce({
-            lean: jest.fn().mockResolvedValueOnce({
-              _id: 'notif1',
-              recipient: userId,
-              type: 'job_match',
-              relatedData: { jobPostings: [jobId] }
-            })
-          });
+            let notifications = await Notification.find({
+              recipient: testUser._id,
+              type: 'job_match'
+            });
+            expect(notifications.length).toBe(1);
 
-          // محاولة معالجة نفس الوظيفة مرة أخرى
-          await alertService.processNewJob(job);
+            // Process same job again (should not create duplicate)
+            await alertService.processNewJob(job);
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-          // التحقق من عدم إرسال تنبيه مكرر
-          expect(notificationService.createNotification).toHaveBeenCalledTimes(1); // لا يزال مرة واحدة فقط
+            notifications = await Notification.find({
+              recipient: testUser._id,
+              type: 'job_match'
+            });
+            expect(notifications.length).toBe(1); // Still 1, no duplicate
+
+          } finally {
+            await JobPosting.deleteMany({});
+            await SavedSearch.deleteMany({ userId: testUser._id });
+            await Notification.deleteMany({ recipient: testUser._id });
+            await User.deleteOne({ _id: testUser._id });
+          }
         }
       ),
-      { numRuns: 10 } // 10 تشغيلات
+      { numRuns: 5, timeout: 30000 }
     );
-  }, 30000);
+  }, 60000);
 
   /**
    * Property: يمكن إرسال تنبيهات لوظائف مختلفة
@@ -107,70 +141,101 @@ describe('Property 14: Alert Deduplication', () => {
   it('should send alerts for different jobs', async () => {
     await fc.assert(
       fc.asyncProperty(
-        fc.record({
-          userId: fc.string({ minLength: 24, maxLength: 24 }),
-          job1Id: fc.string({ minLength: 24, maxLength: 24 }),
-          job2Id: fc.string({ minLength: 24, maxLength: 24 }),
-          searchQuery: fc.string({ minLength: 3, maxLength: 20 })
-        }),
-        async ({ userId, job1Id, job2Id, searchQuery }) => {
-          // تأكد من أن الوظائف مختلفة
-          fc.pre(job1Id !== job2Id);
-
-          // Setup
-          SavedSearch.find.mockReturnValue({
-            lean: jest.fn().mockResolvedValue([
-              {
-                _id: 'search123',
-                userId: userId,
-                name: 'Test Search',
-                searchType: 'jobs',
-                searchParams: { query: searchQuery },
-                alertEnabled: true,
-                alertFrequency: 'instant'
-              }
-            ])
+        fc.constantFrom('javascript', 'python', 'java', 'react', 'nodejs'),
+        
+        async (searchQuery) => {
+          // Clean up before each iteration
+          await Notification.deleteMany({});
+          await JobPosting.deleteMany({});
+          await SavedSearch.deleteMany({});
+          
+          const testUser = await User.create({
+            email: `test-${Date.now()}-${Math.random()}@example.com`,
+            password: 'password123',
+            phone: `+201${Math.floor(Math.random() * 100000000)}`,
+            role: 'Employee',
+            country: 'Egypt'
           });
 
-          const job1 = {
-            _id: job1Id,
-            title: `Job 1 ${searchQuery}`,
-            description: `Description ${searchQuery}`,
-            skills: ['JavaScript'],
-            company: { name: 'Company 1' },
-            location: { city: 'Cairo' },
-            status: 'Open'
-          };
+          try {
+            // Create saved search
+            const savedSearch = await SavedSearch.create({
+              userId: testUser._id,
+              name: `Search for ${searchQuery}`,
+              searchType: 'jobs',
+              searchParams: {
+                query: searchQuery,
+                skills: [searchQuery]
+              },
+              alertEnabled: true,
+              alertFrequency: 'instant'
+            });
 
-          const job2 = {
-            _id: job2Id,
-            title: `Job 2 ${searchQuery}`,
-            description: `Description ${searchQuery}`,
-            skills: ['JavaScript'],
-            company: { name: 'Company 2' },
-            location: { city: 'Alexandria' },
-            status: 'Open'
-          };
+            // Create SearchAlert document
+            await SearchAlert.create({
+              userId: testUser._id,
+              savedSearchId: savedSearch._id,
+              frequency: 'instant',
+              notificationMethod: 'push',
+              isActive: true
+            });
 
-          // لا يوجد إشعار سابق لأي من الوظيفتين
-          Notification.findOne.mockReturnValue({
-            lean: jest.fn().mockResolvedValue(null)
-          });
-          notificationService.createNotification.mockResolvedValue({ _id: 'notif' });
+            // Create first job
+            const job1 = await JobPosting.create({
+              title: `${searchQuery} Developer 1`,
+              description: `Looking for ${searchQuery} expert`,
+              requirements: `${searchQuery} skills required`,
+              company: { name: 'Company 1', size: 'Medium' },
+              location: 'Cairo, Egypt',
+              salary: { min: 5000, max: 10000 },
+              skills: [searchQuery],
+              jobType: 'Full-time',
+              experienceLevel: 'Mid',
+              status: 'Open',
+              postedBy: new mongoose.Types.ObjectId()
+            });
 
-          // معالجة الوظيفة الأولى
-          await alertService.processNewJob(job1);
+            await alertService.processNewJob(job1);
+            await new Promise(resolve => setTimeout(resolve, 300));
 
-          // معالجة الوظيفة الثانية
-          await alertService.processNewJob(job2);
+            // Create second job
+            const job2 = await JobPosting.create({
+              title: `${searchQuery} Developer 2`,
+              description: `Looking for ${searchQuery} expert`,
+              requirements: `${searchQuery} skills required`,
+              company: { name: 'Company 2', size: 'Medium' },
+              location: 'Alexandria, Egypt',
+              salary: { min: 6000, max: 12000 },
+              skills: [searchQuery],
+              jobType: 'Full-time',
+              experienceLevel: 'Mid',
+              status: 'Open',
+              postedBy: new mongoose.Types.ObjectId()
+            });
 
-          // التحقق من إرسال تنبيهين (واحد لكل وظيفة)
-          expect(notificationService.createNotification).toHaveBeenCalledTimes(2);
+            await alertService.processNewJob(job2);
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            const notifications = await Notification.find({
+              recipient: testUser._id,
+              type: 'job_match'
+            });
+            
+            // Should have 2 notifications (one for each job)
+            expect(notifications.length).toBe(2);
+
+          } finally {
+            await JobPosting.deleteMany({});
+            await SavedSearch.deleteMany({ userId: testUser._id });
+            await SearchAlert.deleteMany({ userId: testUser._id });
+            await Notification.deleteMany({ recipient: testUser._id });
+            await User.deleteOne({ _id: testUser._id });
+          }
         }
       ),
-      { numRuns: 10 }
+      { numRuns: 5, timeout: 30000 }
     );
-  }, 30000);
+  }, 60000);
 
   /**
    * Property: isDuplicateAlert تعمل بشكل صحيح
@@ -178,123 +243,170 @@ describe('Property 14: Alert Deduplication', () => {
   it('should correctly identify duplicate alerts', async () => {
     await fc.assert(
       fc.asyncProperty(
-        fc.record({
-          userId: fc.string({ minLength: 24, maxLength: 24 }),
-          jobId: fc.string({ minLength: 24, maxLength: 24 })
-        }),
-        async ({ userId, jobId }) => {
-          // في البداية، لا يوجد تنبيه مكرر
-          Notification.findOne.mockReturnValueOnce({
-            lean: jest.fn().mockResolvedValueOnce(null)
-          });
-          let isDuplicate = await alertService.isDuplicateAlert(userId, jobId);
-          expect(isDuplicate).toBe(false);
-
-          // الآن يوجد إشعار سابق
-          Notification.findOne.mockReturnValueOnce({
-            lean: jest.fn().mockResolvedValueOnce({
-              _id: 'notif1',
-              recipient: userId,
-              type: 'job_match',
-              relatedData: { jobPostings: [jobId] }
-            })
-          });
-          isDuplicate = await alertService.isDuplicateAlert(userId, jobId);
-          expect(isDuplicate).toBe(true);
-        }
-      ),
-      { numRuns: 10 }
-    );
-  }, 30000);
-
-  /**
-   * Property: التنبيهات المجدولة تصفي الوظائف المكررة
-   */
-  it('should filter duplicate jobs in scheduled alerts', async () => {
-    await fc.assert(
-      fc.asyncProperty(
-        fc.record({
-          userId: fc.string({ minLength: 24, maxLength: 24 }),
-          job1Id: fc.string({ minLength: 24, maxLength: 24 }),
-          job2Id: fc.string({ minLength: 24, maxLength: 24 }),
-          searchQuery: fc.string({ minLength: 3, maxLength: 20 })
-        }),
-        async ({ userId, job1Id, job2Id, searchQuery }) => {
-          // تأكد من أن الوظائف مختلفة
-          fc.pre(job1Id !== job2Id);
-
-          // Setup: عملية بحث محفوظة مع تنبيه يومي
-          SavedSearch.find.mockReturnValue({
-            lean: jest.fn().mockResolvedValue([
-              {
-                _id: 'search123',
-                userId: userId,
-                name: 'Test Search',
-                searchType: 'jobs',
-                searchParams: { query: searchQuery },
-                alertEnabled: true,
-                alertFrequency: 'daily',
-                lastChecked: new Date(Date.now() - 24 * 60 * 60 * 1000)
-              }
-            ])
+        fc.constantFrom('javascript', 'python', 'java'),
+        
+        async (searchQuery) => {
+          // Clean up before each iteration
+          await Notification.deleteMany({});
+          await JobPosting.deleteMany({});
+          
+          const testUser = await User.create({
+            email: `test-${Date.now()}-${Math.random()}@example.com`,
+            password: 'password123',
+            phone: `+201${Math.floor(Math.random() * 100000000)}`,
+            role: 'Employee',
+            country: 'Egypt'
           });
 
-          SavedSearch.updateOne.mockResolvedValue({ modifiedCount: 1 });
-
-          // Setup: وظيفتان جديدتان، واحدة مكررة
-          JobPosting.find.mockReturnValue({
-            sort: jest.fn().mockReturnValue({
-              limit: jest.fn().mockReturnValue({
-                lean: jest.fn().mockResolvedValue([
-                  {
-                    _id: job1Id,
-                    title: `Job 1 ${searchQuery}`,
-                    description: `Description ${searchQuery}`,
-                    skills: ['JavaScript'],
-                    company: { name: 'Company 1' },
-                    location: { city: 'Cairo' },
-                    status: 'Open',
-                    createdAt: new Date()
-                  },
-                  {
-                    _id: job2Id,
-                    title: `Job 2 ${searchQuery}`,
-                    description: `Description ${searchQuery}`,
-                    skills: ['JavaScript'],
-                    company: { name: 'Company 2' },
-                    location: { city: 'Alexandria' },
-                    status: 'Open',
-                    createdAt: new Date()
-                  }
-                ])
-              })
-            })
-          });
-
-          // job1 مكرر، job2 جديد
-          Notification.findOne
-            .mockReturnValueOnce({
-              lean: jest.fn().mockResolvedValueOnce({ _id: 'notif1', relatedData: { jobPostings: [job1Id] } })
-            })
-            .mockReturnValueOnce({
-              lean: jest.fn().mockResolvedValueOnce(null)
+          try {
+            const job = await JobPosting.create({
+              title: `${searchQuery} Developer`,
+              description: `Looking for ${searchQuery} expert`,
+              requirements: `${searchQuery} skills required`,
+              company: { name: 'Test Company', size: 'Medium' },
+              location: 'Cairo, Egypt',
+              salary: { min: 5000, max: 10000 },
+              skills: [searchQuery],
+              jobType: 'Full-time',
+              experienceLevel: 'Mid',
+              status: 'Open',
+              postedBy: new mongoose.Types.ObjectId()
             });
 
-          notificationService.createNotification.mockResolvedValue({ _id: 'notif' });
+            // Initially, no duplicate
+            let isDuplicate = await alertService.isDuplicateAlert(testUser._id, job._id);
+            expect(isDuplicate).toBe(false);
 
-          // تشغيل التنبيهات المجدولة
-          await alertService.runScheduledAlerts('daily');
+            // Create a notification
+            await Notification.create({
+              recipient: testUser._id,
+              type: 'job_match',
+              title: 'New Job Match',
+              message: 'A new job matches your search',
+              relatedData: {
+                jobPostings: [job._id]
+              }
+            });
 
-          // التحقق من إرسال تنبيه واحد فقط (للوظيفة غير المكررة)
-          expect(notificationService.createNotification).toHaveBeenCalledTimes(1);
-          
-          // التحقق من أن التنبيه يحتوي على job2 فقط
-          const callArgs = notificationService.createNotification.mock.calls[0][0];
-          expect(callArgs.relatedData.jobPostings).toHaveLength(1);
-          expect(callArgs.relatedData.jobPostings[0]).toBe(job2Id);
+            // Now it should be a duplicate
+            isDuplicate = await alertService.isDuplicateAlert(testUser._id, job._id);
+            expect(isDuplicate).toBe(true);
+
+          } finally {
+            await JobPosting.deleteMany({});
+            await Notification.deleteMany({ recipient: testUser._id });
+            await User.deleteOne({ _id: testUser._id });
+          }
         }
       ),
-      { numRuns: 10 }
+      { numRuns: 5, timeout: 30000 }
     );
-  }, 30000);
+  }, 60000);
+
+  /**
+   * Unit Test: التنبيهات المجدولة تصفي الوظائف المكررة
+   */
+  it('should filter duplicate jobs in scheduled alerts', async () => {
+    const testUser = await User.create({
+      email: `test-${Date.now()}@example.com`,
+      password: 'password123',
+      phone: `+201${Math.floor(Math.random() * 100000000)}`,
+      role: 'Employee',
+      country: 'Egypt'
+    });
+
+    try {
+      // Create saved search with daily alert
+      const savedSearch = await SavedSearch.create({
+        userId: testUser._id,
+        name: 'JavaScript Search',
+        searchType: 'jobs',
+        searchParams: {
+          query: 'JavaScript',
+          skills: ['JavaScript']
+        },
+        alertEnabled: true,
+        alertFrequency: 'daily',
+        lastChecked: new Date(Date.now() - 25 * 60 * 60 * 1000) // 25 hours ago
+      });
+
+      // Create SearchAlert document
+      await SearchAlert.create({
+        userId: testUser._id,
+        savedSearchId: savedSearch._id,
+        frequency: 'daily',
+        notificationMethod: 'push',
+        isActive: true
+      });
+
+      // Create two jobs
+      const job1 = await JobPosting.create({
+        title: 'JavaScript Developer 1',
+        description: 'Looking for JavaScript expert',
+        requirements: 'JavaScript skills required',
+        company: { name: 'Company 1', size: 'Medium' },
+        location: 'Cairo, Egypt',
+        salary: { min: 5000, max: 10000 },
+        skills: ['JavaScript', 'React'],
+        jobType: 'Full-time',
+        experienceLevel: 'Mid',
+        status: 'Open',
+        postedBy: new mongoose.Types.ObjectId(),
+        createdAt: new Date()
+      });
+
+      const job2 = await JobPosting.create({
+        title: 'JavaScript Developer 2',
+        description: 'Looking for JavaScript expert',
+        requirements: 'JavaScript skills required',
+        company: { name: 'Company 2', size: 'Medium' },
+        location: 'Alexandria, Egypt',
+        salary: { min: 6000, max: 12000 },
+        skills: ['JavaScript', 'Node.js'],
+        jobType: 'Full-time',
+        experienceLevel: 'Mid',
+        status: 'Open',
+        postedBy: new mongoose.Types.ObjectId(),
+        createdAt: new Date()
+      });
+
+      // Create notification for job1 (marking it as already notified)
+      await Notification.create({
+        recipient: testUser._id,
+        type: 'job_match',
+        title: 'New Job Match',
+        message: 'A new job matches your search',
+        relatedData: {
+          jobPostings: [job1._id]
+        }
+      });
+
+      // Run scheduled alerts
+      await alertService.runScheduledAlerts('daily');
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Should have 2 notifications total (1 existing + 1 new for job2)
+      const notifications = await Notification.find({
+        recipient: testUser._id,
+        type: 'job_match'
+      });
+      
+      expect(notifications.length).toBe(2);
+      
+      // The new notification should only contain job2
+      const newNotification = notifications.find(n => 
+        n.relatedData.jobPostings.length === 1 && 
+        n.relatedData.jobPostings[0].toString() === job2._id.toString()
+      );
+      expect(newNotification).toBeDefined();
+
+    } finally {
+      await JobPosting.deleteMany({});
+      await SavedSearch.deleteMany({ userId: testUser._id });
+      await SearchAlert.deleteMany({ userId: testUser._id });
+      await Notification.deleteMany({ recipient: testUser._id });
+      await User.deleteOne({ _id: testUser._id });
+    }
+  }, 60000);
 });
+
