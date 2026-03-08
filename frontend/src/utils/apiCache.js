@@ -18,7 +18,8 @@ class APICache {
     this.revalidationPromises = new Map();
     this.defaultMaxAge = 5 * 60 * 1000; // 5 minutes default
     this.cleanupInterval = 10 * 60 * 1000; // Cleanup every 10 minutes
-    
+    this.cleanupTimer = null;
+
     // Start periodic cleanup
     this.startCleanup();
   }
@@ -99,11 +100,14 @@ class APICache {
    */
   cleanup() {
     const now = Date.now();
-    const maxAge = this.defaultMaxAge * 2; // Keep entries for 2x maxAge
-    
+
     for (const [key, entry] of this.cache.entries()) {
+      // Use the entry's own maxAge if available, otherwise default
+      const maxAge = (entry.config && entry.config.maxAge) || this.defaultMaxAge;
       const age = now - entry.timestamp;
-      if (age > maxAge) {
+
+      // Keep entries for 2x their maxAge to allow stale-while-revalidate
+      if (age > maxAge * 2) {
         this.cache.delete(key);
         this.revalidationPromises.delete(key);
       }
@@ -180,7 +184,7 @@ export async function staleWhileRevalidate(fetchFn, config = {}) {
   if (forceRefresh) {
     apiCache.delete(key);
     const response = await fetchFn();
-    apiCache.set(key, response, config);
+    apiCache.set(key, response, { ...config, maxAge });
     return response;
   }
 
@@ -190,7 +194,7 @@ export async function staleWhileRevalidate(fetchFn, config = {}) {
   // If no cache, fetch fresh
   if (!cachedEntry) {
     const response = await fetchFn();
-    apiCache.set(key, response, config);
+    apiCache.set(key, response, { ...config, maxAge });
     return response;
   }
 
@@ -208,7 +212,7 @@ export async function staleWhileRevalidate(fetchFn, config = {}) {
       // Start background revalidation
       revalidationPromise = fetchFn()
         .then(response => {
-          apiCache.set(key, response, config);
+          apiCache.set(key, response, { ...config, maxAge });
           return response;
         })
         .catch(error => {
@@ -226,7 +230,7 @@ export async function staleWhileRevalidate(fetchFn, config = {}) {
 
   // Fallback: fetch fresh
   const response = await fetchFn();
-  apiCache.set(key, response, config);
+  apiCache.set(key, response, { ...config, maxAge });
   return response;
 }
 

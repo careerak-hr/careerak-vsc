@@ -29,12 +29,12 @@ const versionPlugin = () => ({
 // Implements: FR-SEO-8, Task 6.4.1, Task 10.2.3
 const sitemapPlugin = () => ({
   name: 'sitemap-plugin',
-  closeBundle() {
+  async closeBundle() {
     try {
       console.log('🗺️  Generating sitemap...');
       
-      // Import and execute sitemap generation
-      const { generateSitemapXML, routes, BASE_URL } = require('./scripts/generate-sitemap.js');
+      // Dynamic import for ES modules
+      const { generateSitemapXML, routes, BASE_URL } = await import('./scripts/generate-sitemap.js');
       
       // Generate sitemap XML
       const sitemapXML = generateSitemapXML();

@@ -1,54 +1,25 @@
 const mongoose = require('mongoose');
 
 const jobBookmarkSchema = new mongoose.Schema({
-  userId: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
     index: true
   },
-  jobId: {
+  job: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'JobPosting',
     required: true,
     index: true
   },
-  bookmarkedAt: {
-    type: Date,
-    default: Date.now,
-    index: true
-  },
-  notifyOnChange: {
-    type: Boolean,
-    default: true
-  },
-  notes: {
-    type: String,
-    maxlength: 500
-  },
-  tags: [{
-    type: String,
-    maxlength: 50
-  }],
-  updatedAt: {
+  createdAt: {
     type: Date,
     default: Date.now
   }
-}, {
-  timestamps: true
 });
 
-// Compound index لضمان bookmark واحد فقط لكل مستخدم ووظيفة
-jobBookmarkSchema.index({ userId: 1, jobId: 1 }, { unique: true });
-
-// Index للبحث السريع
-jobBookmarkSchema.index({ userId: 1, bookmarkedAt: -1 });
-jobBookmarkSchema.index({ jobId: 1 });
-
-// تحديث updatedAt تلقائياً
-jobBookmarkSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
+// Ensure a user can bookmark a job only once
+jobBookmarkSchema.index({ user: 1, job: 1 }, { unique: true });
 
 module.exports = mongoose.model('JobBookmark', jobBookmarkSchema);

@@ -6,24 +6,24 @@
 
 ## Tasks
 
-- [ ] 1. إعداد البنية التحتية والنماذج
+- [x] 1. إعداد البنية التحتية والنماذج
   - إنشاء نماذج MongoDB: UserSettings, ActiveSession, LoginHistory, DataExportRequest, AccountDeletionRequest, EmailChangeRequest, PhoneChangeRequest
   - إضافة indexes محسّنة لكل نموذج
   - إعداد TTL indexes للبيانات المؤقتة
   - _Requirements: 15.1, 15.2_
 
-- [ ] 2. تطوير خدمات الإعدادات الأساسية
-  - [ ] 2.1 تطوير SettingsService
+- [~] 2. تطوير خدمات الإعدادات الأساسية
+  - [~] 2.1 تطوير SettingsService
     - تنفيذ updateProfile: التحقق من الصحة، حفظ التغييرات
     - تنفيذ updatePrivacySettings: حفظ إعدادات الخصوصية
     - تنفيذ updateNotificationPreferences: حفظ تفضيلات الإشعارات
     - _Requirements: 2.1, 2.2, 6.7, 7.6_
   
-  - [ ]* 2.2 كتابة property test لـ SettingsService
+  - [~] 2.2 كتابة property test لـ SettingsService
     - **Property 1: Settings Round-Trip Consistency**
     - **Validates: Requirements 2.2, 4.3, 6.7, 7.6**
   
-  - [ ]* 2.3 كتابة property test للتحقق من المدخلات
+  - [~] 2.3 كتابة property test للتحقق من المدخلات
     - **Property 2: Input Validation Rejection**
     - **Validates: Requirements 2.1, 2.3, 2.5, 5.2**
 
@@ -35,11 +35,11 @@
     - تنفيذ verifyAndUpdate: التحقق من OTPs وكلمة المرور، تحديث البريد
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
   
-  - [ ]* 3.2 كتابة property test لتفرد البريد
+  - [ ] 3.2 كتابة property test لتفرد البريد
     - **Property 3: Unique Identifier Enforcement**
     - **Validates: Requirements 3.1, 4.1**
   
-  - [ ]* 3.3 كتابة property test لتدفق تغيير البريد
+  - [ ] 3.3 كتابة property test لتدفق تغيير البريد
     - **Property 4: Email Change Verification Flow**
     - **Validates: Requirements 3.2, 3.3, 3.4, 3.5**
 
@@ -50,7 +50,7 @@
     - تنفيذ verifyAndUpdate: التحقق من OTP، تحديث الرقم
     - _Requirements: 4.1, 4.2, 4.3_
   
-  - [ ]* 4.2 كتابة property test للتحقق من OTP
+  - [ ] 4.2 كتابة property test للتحقق من OTP
     - **Property 5: OTP Verification Requirement**
     - **Validates: Requirements 4.2, 4.3, 8.2**
 
@@ -66,11 +66,11 @@
     - تنفيذ invalidateOtherSessions: إنهاء جميع الجلسات الأخرى
     - _Requirements: 5.1, 5.2, 5.3, 5.4_
   
-  - [ ]* 6.2 كتابة property test لإنهاء الجلسات
+  - [ ] 6.2 كتابة property test لإنهاء الجلسات
     - **Property 6: Password Change Session Invalidation**
     - **Validates: Requirements 5.4**
   
-  - [ ]* 6.3 كتابة unit tests لتغيير كلمة المرور
+  - [ ] 6.3 كتابة unit tests لتغيير كلمة المرور
     - اختبار رفض كلمة مرور ضعيفة
     - اختبار رفض كلمة مرور حالية خاطئة
     - اختبار تغيير ناجح
@@ -86,16 +86,16 @@
     - تنفيذ regenerateBackupCodes: إعادة إنشاء أكواد احتياطية
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
   
-  - [ ]* 7.2 كتابة property test لتطبيق 2FA
+  - [ ] 7.2 كتابة property test لتطبيق 2FA
     - **Property 8: 2FA Enforcement**
     - **Validates: Requirements 8.4**
   
-  - [ ]* 7.3 كتابة property test لأكواد الاحتياط
+  - [ ] 7.3 كتابة property test لأكواد الاحتياط
     - **Property 9: 2FA Backup Codes Generation**
     - **Property 11: Backup Code Acceptance**
     - **Validates: Requirements 8.3, 8.6**
   
-  - [ ]* 7.4 كتابة property test لحماية تعطيل 2FA
+  - [ ] 7.4 كتابة property test لحماية تعطيل 2FA
     - **Property 10: 2FA Disable Protection**
     - **Validates: Requirements 8.5**
 
@@ -109,16 +109,16 @@
     - تنفيذ cleanupExpiredSessions: تنظيف الجلسات المنتهية (cron job)
     - _Requirements: 9.1, 9.3, 9.4, 9.6, 10.1, 10.2_
   
-  - [ ]* 8.2 كتابة property test لإنهاء الجلسات
+  - [ ] 8.2 كتابة property test لإنهاء الجلسات
     - **Property 12: Session Termination**
     - **Property 13: Bulk Session Termination**
     - **Validates: Requirements 9.3, 9.4**
   
-  - [ ]* 8.3 كتابة property test لانتهاء صلاحية الجلسات
+  - [ ] 8.3 كتابة property test لانتهاء صلاحية الجلسات
     - **Property 14: Session Auto-Expiration**
     - **Validates: Requirements 9.6**
   
-  - [ ]* 8.4 كتابة property test لتسجيل محاولات الدخول
+  - [ ] 8.4 كتابة property test لتسجيل محاولات الدخول
     - **Property 15: Login Attempt Logging**
     - **Property 16: Login History Retention**
     - **Validates: Requirements 10.1, 10.2**
@@ -138,15 +138,15 @@
     - تنفيذ cleanupExpiredExports: تنظيف الملفات المنتهية (cron job)
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5, 11.6, 11.7_
   
-  - [ ]* 10.2 كتابة property test لاكتمال البيانات
+  - [ ] 10.2 كتابة property test لاكتمال البيانات
     - **Property 18: Data Export Completeness**
     - **Validates: Requirements 11.6**
   
-  - [ ]* 10.3 كتابة property test لانتهاء صلاحية الرابط
+  - [ ] 10.3 كتابة property test لانتهاء صلاحية الرابط
     - **Property 19: Data Export Link Expiration**
     - **Validates: Requirements 11.5**
   
-  - [ ]* 10.4 كتابة property test للحد الزمني
+  - [ ] 10.4 كتابة property test للحد الزمني
     - **Property 20: Data Export Time Limit**
     - **Validates: Requirements 11.7**
 
@@ -161,15 +161,15 @@
     - تنفيذ anonymizeRetainedData: إخفاء هوية البيانات المحفوظة
     - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5, 12.6, 12.7, 12.8, 12.9, 12.10_
   
-  - [ ]* 11.2 كتابة property test لفترة السماح
+  - [ ] 11.2 كتابة property test لفترة السماح
     - **Property 21: Account Deletion Grace Period**
     - **Validates: Requirements 12.5, 12.6**
   
-  - [ ]* 11.3 كتابة property test للتذكيرات
+  - [ ] 11.3 كتابة property test للتذكيرات
     - **Property 22: Account Deletion Reminder**
     - **Validates: Requirements 12.7**
   
-  - [ ]* 11.4 كتابة property test للحذف الكامل
+  - [ ] 11.4 كتابة property test للحذف الكامل
     - **Property 23: Complete Data Deletion**
     - **Property 24: Legal Data Anonymization**
     - **Validates: Requirements 12.8, 12.9**
@@ -181,11 +181,11 @@
     - إضافة دالة sendQueuedNotifications: إرسال الإشعارات المؤجلة (cron job)
     - _Requirements: 7.5, 15.1_
   
-  - [ ]* 12.2 كتابة property test لساعات الهدوء
+  - [ ] 12.2 كتابة property test لساعات الهدوء
     - **Property 17: Quiet Hours Notification Queuing**
     - **Validates: Requirements 7.5**
   
-  - [ ]* 12.3 كتابة property test للإشعارات الأمنية
+  - [ ] 12.3 كتابة property test للإشعارات الأمنية
     - **Property 7: Security Action Notification**
     - **Validates: Requirements 3.6, 4.4, 5.5, 9.5, 11.4, 12.10**
 
@@ -225,7 +225,7 @@
     - تنفيذ GET /api/settings/account/deletion-status
     - _Requirements: 11.1-11.7, 12.1-12.10_
   
-  - [ ]* 14.4 كتابة integration tests للـ API
+  - [ ] 14.4 كتابة integration tests للـ API
     - اختبار تدفق تغيير البريد الكامل
     - اختبار تدفق تفعيل 2FA
     - اختبار تدفق حذف الحساب
@@ -260,7 +260,7 @@
     - تنفيذ unlockAccount (بعد 30 دقيقة أو بواسطة admin)
     - _Requirements: 14.6_
   
-  - [ ]* 15.6 كتابة property tests للأمان
+  - [ ] 15.6 كتابة property tests للأمان
     - **Property 28: CSRF Protection**
     - **Property 29: Rate Limiting Enforcement**
     - **Property 30: Dual Input Validation**
@@ -280,7 +280,7 @@
     - تنفيذ RTL/LTR support
     - _Requirements: 1.1, 1.2, 1.4, 1.5_
   
-  - [ ]* 17.2 كتابة unit tests لـ SettingsPage
+  - [ ] 17.2 كتابة unit tests لـ SettingsPage
     - اختبار عرض 5 تبويبات
     - اختبار التنقل بين التبويبات
     - اختبار حفظ آخر tab
@@ -296,7 +296,7 @@
     - تنفيذ PasswordChangeModal
     - _Requirements: 2.1-2.5, 3.1-3.6, 4.1-4.4, 5.1-5.5_
   
-  - [ ]* 18.2 كتابة unit tests لـ AccountTab
+  - [ ] 18.2 كتابة unit tests لـ AccountTab
     - اختبار تحديث الملف الشخصي
     - اختبار رفض صورة كبيرة
     - اختبار تدفق تغيير البريد
@@ -313,7 +313,7 @@
     - تنفيذ خيار فهرسة محركات البحث
     - _Requirements: 6.1-6.7_
   
-  - [ ]* 19.2 كتابة unit tests لـ PrivacyTab
+  - [ ] 19.2 كتابة unit tests لـ PrivacyTab
     - اختبار تحديث إعدادات الخصوصية
     - اختبار حفظ التغييرات
     - _Requirements: 6.7_
@@ -326,7 +326,7 @@
     - تنفيذ خيارات تكرار الإشعارات
     - _Requirements: 7.1-7.6_
   
-  - [ ]* 20.2 كتابة unit tests لـ NotificationsTab
+  - [ ] 20.2 كتابة unit tests لـ NotificationsTab
     - اختبار تحديث تفضيلات الإشعارات
     - اختبار إعداد ساعات الهدوء
     - _Requirements: 7.6_
@@ -341,7 +341,7 @@
     - تنفيذ LoginHistoryList (عرض السجل، filtering)
     - _Requirements: 8.1-8.6, 9.1-9.6, 10.1-10.5_
   
-  - [ ]* 21.2 كتابة unit tests لـ SecurityTab
+  - [ ] 21.2 كتابة unit tests لـ SecurityTab
     - اختبار تفعيل 2FA
     - اختبار تعطيل 2FA
     - اختبار عرض الجلسات النشطة
@@ -358,7 +358,7 @@
     - تنفيذ PendingDeletionCard (عرض فترة السماح، إلغاء)
     - _Requirements: 11.1-11.7, 12.1-12.10_
   
-  - [ ]* 22.2 كتابة unit tests لـ DataTab
+  - [ ] 22.2 كتابة unit tests لـ DataTab
     - اختبار طلب تصدير بيانات
     - اختبار عرض حالة التصدير
     - اختبار طلب حذف حساب
@@ -386,7 +386,7 @@
     - إضافة تأكيدات للإجراءات الحساسة
     - _Requirements: 13.6_
   
-  - [ ]* 24.4 كتابة property tests لـ UX features
+  - [ ] 24.4 كتابة property tests لـ UX features
     - **Property 25: Auto-Save Timing**
     - **Property 26: Undo Stack Management**
     - **Property 27: Sensitive Action Confirmation**
@@ -415,7 +415,7 @@
     - _Requirements: 7.5, 9.6, 11.5, 12.7, 12.8_
 
 - [ ] 27. Integration Testing الشامل
-  - [ ]* 27.1 كتابة integration tests للتدفقات الكاملة
+  - [ ] 27.1 كتابة integration tests للتدفقات الكاملة
     - اختبار تدفق تغيير البريد الكامل (من البداية للنهاية)
     - اختبار تدفق تفعيل 2FA الكامل
     - اختبار تدفق حذف الحساب الكامل (مع فترة السماح)
@@ -423,7 +423,7 @@
     - _Requirements: جميع المتطلبات_
 
 - [ ] 28. Security Testing
-  - [ ]* 28.1 كتابة security tests
+  - [ ] 28.1 كتابة security tests
     - اختبار CSRF protection
     - اختبار rate limiting
     - اختبار XSS prevention
@@ -433,7 +433,7 @@
     - _Requirements: 14.1-14.6_
 
 - [ ] 29. Performance Testing
-  - [ ]* 29.1 كتابة performance tests
+  - [ ] 29.1 كتابة performance tests
     - اختبار response time (< 200ms GET, < 500ms POST)
     - اختبار concurrent users (1000 users)
     - اختبار database query optimization

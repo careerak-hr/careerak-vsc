@@ -3,36 +3,30 @@ import { Grid, List } from 'lucide-react';
 import './ViewToggle.css';
 
 /**
- * مكون زر التبديل بين عرض Grid و List
- * @param {Object} props
- * @param {string} props.view - نوع العرض الحالي ('grid' أو 'list')
- * @param {function} props.onToggle - دالة التبديل
- * @param {string} props.className - CSS classes إضافية
+ * Component to toggle between grid and list views
+ * Requirements: 1.1, 1.2
  */
-function ViewToggle({ view, onToggle, className = '' }) {
+const ViewToggle = ({ view, onToggle }) => {
   return (
-    <div className={`view-toggle ${className}`}>
+    <div className="view-toggle-container">
       <button
-        type="button"
         className={`view-toggle-btn ${view === 'grid' ? 'active' : ''}`}
-        onClick={() => view !== 'grid' && onToggle()}
-        aria-label="عرض شبكي"
-        title="عرض شبكي"
+        onClick={() => onToggle('grid')}
+        title="Grid View"
+        aria-label="Switch to Grid View"
       >
         <Grid size={20} />
       </button>
-      
       <button
-        type="button"
         className={`view-toggle-btn ${view === 'list' ? 'active' : ''}`}
-        onClick={() => view !== 'list' && onToggle()}
-        aria-label="عرض قائمة"
-        title="عرض قائمة"
+        onClick={() => onToggle('list')}
+        title="List View"
+        aria-label="Switch to List View"
       >
         <List size={20} />
       </button>
     </div>
   );
-}
+};
 
 export default ViewToggle;

@@ -5,7 +5,7 @@ import './GroupVideoCall.css';
  * مكون المقابلات الجماعية
  * يدعم حتى 10 مشاركين مع عرض شبكي وعرض المتحدث
  * 
- * Requirements: 7.1, 7.2, 7.3
+ * Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
  */
 const GroupVideoCall = ({
   roomId,
@@ -27,7 +27,7 @@ const GroupVideoCall = ({
   useEffect(() => {
     initializeCall();
     return () => cleanup();
-  }, []);
+  }, [roomId, userId]);
 
   /**
    * تهيئة المكالمة
@@ -53,11 +53,13 @@ const GroupVideoCall = ({
         localVideoRef.current.srcObject = stream;
       }
 
-      // الاتصال بـ Socket.IO
+      // الاتصال بـ signaling server
       connectToSignalingServer(stream);
     } catch (error) {
       console.error('Error initializing call:', error);
-      alert('فشل الوصول إلى الكاميرا/الميكروفون');
+      if (typeof window !== 'undefined' && window.alert) {
+        alert('فشل الوصول إلى الكاميرا/الميكروفون');
+      }
     }
   };
 
@@ -65,7 +67,12 @@ const GroupVideoCall = ({
    * الاتصال بـ signaling server
    */
   const connectToSignalingServer = (stream) => {
-    // في بيئة الإنتاج، استخدم Pusher أو Socket.IO
+    // Check if io is available (global or imported)
+    if (typeof io === 'undefined') {
+      console.error('Socket.io client not found');
+      return;
+    }
+
     const socket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:5000');
     socketRef.current = socket;
 
@@ -97,11 +104,13 @@ const GroupVideoCall = ({
    */
   const handleRoomJoined = async (data, stream) => {
     console.log('Joined room:', data);
-    setParticipants(data.participants);
+    if (data.participants) {
+      setParticipants(data.participants);
 
-    // إنشاء peer connections مع المشاركين الموجودين
-    for (const participant of data.participants) {
-      await createPeerConnection(participant.socketId, stream, true);
+      // إنشاء peer connections مع المشاركين الموجودين
+      for (const participant of data.participants) {
+        await createPeerConnection(participant.socketId, stream, true);
+      }
     }
   };
 
@@ -110,7 +119,11 @@ const GroupVideoCall = ({
    */
   const handleUserJoined = async (data, stream) => {
     console.log('User joined:', data);
-    setParticipants(prev => [...prev, data]);
+    setParticipants(prev => {
+      // Avoid duplicate entries
+      if (prev.find(p => p.socketId === data.socketId)) return prev;
+      return [...prev, data];
+    });
 
     // إنشاء peer connection مع المستخدم الجديد
     await createPeerConnection(data.socketId, stream, false);
@@ -139,7 +152,9 @@ const GroupVideoCall = ({
    * معالجة الغرفة الممتلئة
    */
   const handleRoomFull = (data) => {
-    alert(`الغرفة ممتلئة (${data.currentCount}/${data.maxParticipants})`);
+    if (typeof window !== 'undefined' && window.alert) {
+      alert(`الغرفة ممتلئة (${data.currentCount}/${data.maxParticipants})`);
+    }
     onLeave();
   };
 
@@ -147,6 +162,8 @@ const GroupVideoCall = ({
    * إنشاء peer connection
    */
   const createPeerConnection = async (socketId, stream, shouldCreateOffer) => {
+    if (!stream) return null;
+
     const pc = new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
@@ -171,7 +188,7 @@ const GroupVideoCall = ({
 
     // معالجة ICE candidates
     pc.onicecandidate = (event) => {
-      if (event.candidate) {
+      if (event.candidate && socketRef.current) {
         socketRef.current.emit('ice-candidate', {
           roomId,
           targetSocketId: socketId,
@@ -184,13 +201,19 @@ const GroupVideoCall = ({
 
     // إنشاء offer إذا كنا المبادر
     if (shouldCreateOffer) {
-      const offer = await pc.createOffer();
-      await pc.setLocalDescription(offer);
-      socketRef.current.emit('offer', {
-        roomId,
-        targetSocketId: socketId,
-        offer
-      });
+      try {
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        if (socketRef.current) {
+          socketRef.current.emit('offer', {
+            roomId,
+            targetSocketId: socketId,
+            offer
+          });
+        }
+      } catch (err) {
+        console.error('Error creating offer:', err);
+      }
     }
 
     return pc;
@@ -203,15 +226,23 @@ const GroupVideoCall = ({
     const pc = peerConnections.get(data.fromSocketId) || 
                 await createPeerConnection(data.fromSocketId, stream, false);
 
-    await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
-    const answer = await pc.createAnswer();
-    await pc.setLocalDescription(answer);
+    if (!pc) return;
 
-    socketRef.current.emit('answer', {
-      roomId,
-      targetSocketId: data.fromSocketId,
-      answer
-    });
+    try {
+      await pc.setRemoteDescription(new RTCSessionDescription(data.offer));
+      const answer = await pc.createAnswer();
+      await pc.setLocalDescription(answer);
+
+      if (socketRef.current) {
+        socketRef.current.emit('answer', {
+          roomId,
+          targetSocketId: data.fromSocketId,
+          answer
+        });
+      }
+    } catch (err) {
+      console.error('Error handling offer:', err);
+    }
   };
 
   /**
@@ -220,7 +251,11 @@ const GroupVideoCall = ({
   const handleAnswer = async (data) => {
     const pc = peerConnections.get(data.fromSocketId);
     if (pc) {
-      await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+      try {
+        await pc.setRemoteDescription(new RTCSessionDescription(data.answer));
+      } catch (err) {
+        console.error('Error handling answer:', err);
+      }
     }
   };
 
@@ -230,7 +265,11 @@ const GroupVideoCall = ({
   const handleICECandidate = async (data) => {
     const pc = peerConnections.get(data.fromSocketId);
     if (pc) {
-      await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+      try {
+        await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+      } catch (err) {
+        console.error('Error adding ICE candidate:', err);
+      }
     }
   };
 
@@ -262,7 +301,9 @@ const GroupVideoCall = ({
    * معالجة كتم الجميع
    */
   const handleAllMuted = (data) => {
-    alert(`تم كتم الجميع بواسطة ${data.byUserName}`);
+    if (typeof window !== 'undefined' && window.alert) {
+      alert(`تم كتم الجميع بواسطة ${data.byUserName}`);
+    }
     if (localStream) {
       localStream.getAudioTracks().forEach(track => {
         track.enabled = false;
@@ -274,7 +315,9 @@ const GroupVideoCall = ({
    * معالجة الإزالة من الغرفة
    */
   const handleRemovedFromRoom = (data) => {
-    alert(`تمت إزالتك من المقابلة بواسطة ${data.byUserName}`);
+    if (typeof window !== 'undefined' && window.alert) {
+      alert(`تمت إزالتك من المقابلة بواسطة ${data.byUserName}`);
+    }
     cleanup();
     onLeave();
   };
@@ -290,7 +333,7 @@ const GroupVideoCall = ({
    * كتم الجميع (للمضيف فقط)
    */
   const muteAll = () => {
-    if (!isHost) return;
+    if (!isHost || !socketRef.current) return;
     socketRef.current.emit('mute-all', { roomId, hostId: userId });
   };
 
@@ -298,7 +341,7 @@ const GroupVideoCall = ({
    * إزالة مشارك (للمضيف فقط)
    */
   const removeParticipant = (socketId) => {
-    if (!isHost) return;
+    if (!isHost || !socketRef.current) return;
     if (window.confirm('هل أنت متأكد من إزالة هذا المشارك؟')) {
       socketRef.current.emit('remove-participant', {
         roomId,
@@ -323,7 +366,9 @@ const GroupVideoCall = ({
       localStream.getTracks().forEach(track => track.stop());
     }
 
-    peerConnections.forEach(pc => pc.close());
+    if (peerConnections) {
+      peerConnections.forEach(pc => pc.close());
+    }
     
     if (socketRef.current) {
       socketRef.current.emit('leave-room', { roomId });
@@ -352,11 +397,9 @@ const GroupVideoCall = ({
         </button>
         
         {isHost && (
-          <>
-            <button onClick={muteAll} className="control-btn host-btn">
-              🔇 كتم الجميع
-            </button>
-          </>
+          <button onClick={muteAll} className="control-btn host-btn">
+            🔇 كتم الجميع
+          </button>
         )}
 
         <button onClick={() => { cleanup(); onLeave(); }} className="control-btn leave-btn">
@@ -446,12 +489,12 @@ const ParticipantVideo = ({ participant, isHost, onRemove, small = false }) => {
   }, [participant.stream]);
 
   return (
-    <div className={`video-container ${small ? 'small' : ''}`}>
+    <div className={`video-container ${small ? 'small' : ''}`} data-testid={`participant-${participant.socketId}`}>
       <video ref={videoRef} autoPlay playsInline />
       <div className="video-label">
         {participant.userName}
-        {!participant.audioEnabled && ' 🔇'}
-        {!participant.videoEnabled && ' 📹'}
+        {participant.audioEnabled === false && ' 🔇'}
+        {participant.videoEnabled === false && ' 📹'}
       </div>
       {isHost && (
         <button onClick={onRemove} className="remove-btn" title="إزالة المشارك">

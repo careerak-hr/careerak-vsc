@@ -2,7 +2,12 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import ContentManagementPage from '../ContentManagementPage';
-import { AppContext } from '../../../context/AppContext';
+import { useApp } from '../../../context/AppContext';
+
+// Mock the context hook
+vi.mock('../../../context/AppContext', () => ({
+  useApp: vi.fn()
+}));
 
 // Mock fetch
 global.fetch = vi.fn();
@@ -16,44 +21,36 @@ const mockLocalStorage = {
 };
 global.localStorage = mockLocalStorage;
 
-// Mock context
-const mockContextValue = {
-  language: 'en',
-  fontFamily: 'Arial, sans-serif'
-};
-
-const renderWithContext = (component) => {
-  return render(
-    <AppContext.Provider value={mockContextValue}>
-      {component}
-    </AppContext.Provider>
-  );
-};
-
 describe('ContentManagementPage', () => {
+  const mockContextValue = {
+    language: 'en',
+    fontFamily: 'Arial, sans-serif'
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     global.fetch.mockClear();
+    useApp.mockReturnValue(mockContextValue);
   });
 
   describe('Component Rendering', () => {
-    it('should render the page title', () => {
+    it('should render the page title', async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
       expect(screen.getByText('Content Management')).toBeInTheDocument();
     });
 
-    it('should render all three tabs', () => {
+    it('should render all three tabs', async () => {
       global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
       expect(screen.getByText('Pending Jobs')).toBeInTheDocument();
       expect(screen.getByText('Pending Courses')).toBeInTheDocument();
       expect(screen.getByText('Flagged Content')).toBeInTheDocument();
@@ -62,7 +59,7 @@ describe('ContentManagementPage', () => {
     it('should show loading state initially', () => {
       global.fetch.mockImplementationOnce(() => new Promise(() => {}));
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
 
@@ -72,7 +69,7 @@ describe('ContentManagementPage', () => {
         json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.getByText('No content found')).toBeInTheDocument();
@@ -92,7 +89,7 @@ describe('ContentManagementPage', () => {
           json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
         });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       const coursesTab = screen.getByText('Pending Courses');
       fireEvent.click(coursesTab);
@@ -116,7 +113,7 @@ describe('ContentManagementPage', () => {
           json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
         });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       const flaggedTab = screen.getByText('Flagged Content');
       fireEvent.click(flaggedTab);
@@ -143,7 +140,7 @@ describe('ContentManagementPage', () => {
           json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
         });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -183,7 +180,7 @@ describe('ContentManagementPage', () => {
         })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.getByText('Software Engineer')).toBeInTheDocument();
@@ -217,7 +214,7 @@ describe('ContentManagementPage', () => {
           })
         });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       const coursesTab = screen.getByText('Pending Courses');
       fireEvent.click(coursesTab);
@@ -253,7 +250,7 @@ describe('ContentManagementPage', () => {
           })
         });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       const flaggedTab = screen.getByText('Flagged Content');
       fireEvent.click(flaggedTab);
@@ -275,7 +272,7 @@ describe('ContentManagementPage', () => {
         })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.getByText(/Page 1 \/ 2/)).toBeInTheDocument();
@@ -299,7 +296,7 @@ describe('ContentManagementPage', () => {
           })
         });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.getByText(/Page 1 \/ 2/)).toBeInTheDocument();
@@ -325,7 +322,7 @@ describe('ContentManagementPage', () => {
         })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         const prevButton = screen.getByText('←');
@@ -338,7 +335,7 @@ describe('ContentManagementPage', () => {
     it('should handle fetch errors gracefully', async () => {
       global.fetch.mockRejectedValueOnce(new Error('Network error'));
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -351,7 +348,7 @@ describe('ContentManagementPage', () => {
         status: 500
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -366,7 +363,7 @@ describe('ContentManagementPage', () => {
         json: async () => ({ data: [], pagination: { total: 0, totalPages: 0 } })
       });
 
-      renderWithContext(<ContentManagementPage />);
+      render(<ContentManagementPage />);
 
       await waitFor(() => {
         expect(global.fetch).toHaveBeenCalledWith(

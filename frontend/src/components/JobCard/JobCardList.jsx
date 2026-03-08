@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { MapPin, Briefcase, DollarSign, Clock, Users, TrendingUp } from 'lucide-react';
 import BookmarkButton from './BookmarkButton';
 import ShareButton from '../JobShare/ShareButton';
@@ -46,11 +47,19 @@ const JobCardList = ({
   };
 
   return (
-    <div 
+    <motion.div
       className="job-card-list"
       onClick={handleCardClick}
       role="article"
       aria-label={`وظيفة ${job.title} في ${job.company?.name}`}
+      whileHover={{
+        x: 5,
+        transition: { duration: 0.2 }
+      }}
+      whileTap={{ scale: 0.99 }}
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, scale: 0.95 }}
     >
       {/* Right Section - Logo */}
       <div className="job-card-list-logo">
@@ -149,16 +158,18 @@ const JobCardList = ({
 
       {/* Left Section - Actions */}
       <div className="job-card-list-actions">
-        <button
+        <motion.button
           className="btn-apply btn-apply-list"
           onClick={(e) => {
             e.stopPropagation();
             onClick?.(job);
           }}
           aria-label={`التقديم على وظيفة ${job.title}`}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
         >
           تقديم
-        </button>
+        </motion.button>
 
         <div className="job-card-actions-row">
           <BookmarkButton
@@ -177,7 +188,7 @@ const JobCardList = ({
           />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

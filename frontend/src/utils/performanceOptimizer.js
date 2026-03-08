@@ -9,17 +9,20 @@ class PerformanceOptimizer {
     this.preloadQueue = [];
     this.lazyLoadObserver = null;
     this.performanceMetrics = {};
-    
-    this.initializeOptimizations();
+    this.initialized = false;
   }
 
   initializeOptimizations() {
+    if (this.initialized) return;
+
     this.setupServiceWorker();
     this.setupImageOptimization();
     this.setupLazyLoading();
     this.setupResourcePreloading();
     this.setupMemoryManagement();
     this.setupNetworkOptimization();
+
+    this.initialized = true;
   }
 
   /**
@@ -28,17 +31,20 @@ class PerformanceOptimizer {
   async setupServiceWorker() {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        // Use the correct path: /service-worker.js instead of /sw.js
+        const registration = await navigator.serviceWorker.register('/service-worker.js');
         console.log('✅ Service Worker registered successfully');
         
         // تحديث تلقائي للـ Service Worker
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              this.showUpdateNotification();
-            }
-          });
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                this.showUpdateNotification();
+              }
+            });
+          }
         });
       } catch (error) {
         console.error('❌ Service Worker registration failed:', error);
@@ -124,6 +130,19 @@ class PerformanceOptimizer {
     }
   }
 
+  loadDynamicContent(element) {
+    // Basic implementation for dynamic content
+    console.log('Loading dynamic content for:', element);
+  }
+
+  setupImageCompression() {
+    // Placeholder for image compression logic
+  }
+
+  setupProgressiveImageLoading() {
+    // Placeholder for progressive loading logic
+  }
+
   /**
    * تحميل مسبق للموارد المهمة
    */
@@ -139,7 +158,7 @@ class PerformanceOptimizer {
   }
 
   preloadCriticalPages() {
-    const criticalPages = ['/profile', '/jobs', '/courses'];
+    const criticalPages = ['/profile', '/job-postings', '/courses'];
     
     criticalPages.forEach(page => {
       const link = document.createElement('link');
@@ -164,6 +183,10 @@ class PerformanceOptimizer {
       link.href = font;
       document.head.appendChild(link);
     });
+  }
+
+  preloadAPIData() {
+    // Placeholder for API preloading
   }
 
   /**
@@ -203,11 +226,15 @@ class PerformanceOptimizer {
       window.gc();
     }
 
-    console.log('🧹 Memory cleanup completed');
+    console.log('Sweep: Memory cleanup completed');
+  }
+
+  cleanupUnusedElements() {
+    // Implementation for cleaning up detached DOM nodes or other resources
   }
 
   monitorMemoryUsage() {
-    if ('memory' in performance) {
+    if (window.performance && performance.memory) {
       setInterval(() => {
         const memInfo = performance.memory;
         const usagePercent = (memInfo.usedJSHeapSize / memInfo.jsHeapSizeLimit) * 100;
@@ -276,6 +303,30 @@ class PerformanceOptimizer {
         });
       }
     }
+  }
+
+  groupSimilarRequests(requests) {
+    // Basic implementation: group by URL
+    const groups = new Map();
+    requests.forEach(req => {
+      const group = groups.get(req.url) || [];
+      group.push(req);
+      groups.set(req.url, group);
+    });
+    return Array.from(groups.values());
+  }
+
+  async executeBatchRequest(group) {
+    // Placeholder for actual batch request execution
+    return group.map(() => ({ success: true }));
+  }
+
+  setupSmartRetry() {
+    // Placeholder for smart retry logic
+  }
+
+  setupDataCompression() {
+    // Placeholder for data compression logic
   }
 
   /**
@@ -364,8 +415,7 @@ class PerformanceOptimizer {
   handleScroll() {
     // تحديث العناصر المرئية فقط
     const viewportHeight = window.innerHeight;
-    const scrollTop = window.pageYOffset;
-    
+
     document.querySelectorAll('[data-scroll-optimize]').forEach(element => {
       const rect = element.getBoundingClientRect();
       const isVisible = rect.top < viewportHeight && rect.bottom > 0;
@@ -378,6 +428,14 @@ class PerformanceOptimizer {
         this.deactivateElement(element);
       }
     });
+  }
+
+  activateElement(element) {
+    console.log('Activating element:', element);
+  }
+
+  deactivateElement(element) {
+    console.log('Deactivating element:', element);
   }
 
   /**
@@ -408,13 +466,14 @@ class PerformanceOptimizer {
     const navigation = performance.getEntriesByType('navigation')[0];
     const resources = performance.getEntriesByType('resource');
     
+    if (!navigation) return { error: 'Navigation timing not available' };
+
     return {
       pageLoad: {
         domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
         loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
         firstPaint: this.getFirstPaint(),
-        firstContentfulPaint: this.getFirstContentfulPaint(),
-        largestContentfulPaint: this.getLargestContentfulPaint()
+        firstContentfulPaint: this.getFirstContentfulPaint()
       },
       
       resources: {
@@ -429,46 +488,9 @@ class PerformanceOptimizer {
       
       optimizations: {
         cacheHitRate: this.calculateCacheHitRate(),
-        compressionRatio: this.calculateCompressionRatio(),
         lazyLoadedElements: document.querySelectorAll('[data-lazy].loaded').length
-      },
-      
-      recommendations: this.generateOptimizationRecommendations()
+      }
     };
-  }
-
-  /**
-   * توصيات التحسين التلقائية
-   */
-  generateOptimizationRecommendations() {
-    const recommendations = [];
-    const report = this.generatePerformanceReport();
-    
-    if (report.pageLoad.loadComplete > 3000) {
-      recommendations.push({
-        type: 'performance',
-        message: 'وقت التحميل طويل - يُنصح بتحسين الصور وتقليل حجم الملفات',
-        priority: 'high'
-      });
-    }
-    
-    if (report.memory > 70) {
-      recommendations.push({
-        type: 'memory',
-        message: 'استخدام ذاكرة عالي - يُنصح بتنظيف البيانات غير المستخدمة',
-        priority: 'medium'
-      });
-    }
-    
-    if (report.optimizations.cacheHitRate < 0.8) {
-      recommendations.push({
-        type: 'caching',
-        message: 'معدل إصابة الكاش منخفض - يُنصح بتحسين استراتيجية التخزين المؤقت',
-        priority: 'medium'
-      });
-    }
-    
-    return recommendations;
   }
 
   // Helper methods
@@ -484,26 +506,10 @@ class PerformanceOptimizer {
     return fcp ? fcp.startTime : null;
   }
 
-  getLargestContentfulPaint() {
-    return new Promise((resolve) => {
-      new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        const lastEntry = entries[entries.length - 1];
-        resolve(lastEntry.startTime);
-      }).observe({ entryTypes: ['largest-contentful-paint'] });
-    });
-  }
-
   calculateCacheHitRate() {
     const totalRequests = this.performanceMetrics.totalRequests || 1;
     const cacheHits = this.performanceMetrics.cacheHits || 0;
     return cacheHits / totalRequests;
-  }
-
-  calculateCompressionRatio() {
-    const originalSize = this.performanceMetrics.originalSize || 1;
-    const compressedSize = this.performanceMetrics.compressedSize || originalSize;
-    return compressedSize / originalSize;
   }
 
   showUpdateNotification() {
