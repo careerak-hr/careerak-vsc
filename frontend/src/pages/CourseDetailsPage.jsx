@@ -3,16 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import { useAnimation } from '../context/AnimationContext';
-import { fadeInVariants } from '../utils/animationVariants';
+import { pageVariants } from '../utils/animationVariants'; // fadeInVariants not found
 import './CourseDetailsPage.css';
 import { SEOHead, StructuredData } from '../components/SEO';
 import { Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
-import CourseHero from '../components/Courses/CourseHero';
-import CourseOverview from '../components/Courses/CourseOverview';
-import CourseCurriculum from '../components/Courses/CourseCurriculum';
-import InstructorInfo from '../components/Courses/InstructorInfo';
-import CourseReviews from '../components/Courses/CourseReviews';
+// import CourseHero from '../components/Courses/CourseHero'; // Component not found
+// import CourseOverview from '../components/Courses/CourseOverview'; // Component not found
+// import CourseCurriculum from '../components/Courses/CourseCurriculum'; // Component not found
+// import InstructorInfo from '../components/Courses/InstructorInfo'; // Component not found
+// import CourseReviews from '../components/Courses/CourseReviews'; // Component not found
 
 const CourseDetailsPage = () => {
     const { courseId } = useParams();
@@ -130,7 +130,7 @@ const CourseDetailsPage = () => {
     } : null;
     
     // Get animation variants
-    const containerVariants = shouldAnimate ? fadeInVariants : { initial: {}, animate: {} };
+    const containerVariants = shouldAnimate ? pageVariants : { initial: {}, animate: {} };
     
     // Loading state
     if (loading) {
@@ -288,10 +288,14 @@ const CourseDetailsPage = () => {
                         {activeTab === 'curriculum' && (
                             <ComponentErrorBoundary componentName="CourseCurriculum">
                                 <div role="tabpanel" id="curriculum-panel" aria-labelledby="curriculum-tab">
-                                    <CourseCurriculum 
+                                    {/* <CourseCurriculum 
                                         course={course} 
                                         enrollment={enrollment}
-                                    />
+                                    /> */}
+                                    <div className="p-8 text-center text-gray-500">
+                                        <p>المنهج الدراسي قريباً</p>
+                                        <p className="text-sm mt-2">Course curriculum coming soon</p>
+                                    </div>
                                 </div>
                             </ComponentErrorBoundary>
                         )}

@@ -1,0 +1,21 @@
+/* About Section Styles */
+
+.about-section {
+  padding: 2rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-section h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #304B60;
+  margin-bottom: 1rem;
+}
+
+.about-section p {
+  color: #6B7280;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}

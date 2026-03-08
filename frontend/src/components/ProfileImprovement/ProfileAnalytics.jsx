@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line
-} from 'recharts';
+// Recharts not installed - using placeholder
+// import {
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   ResponsiveContainer,
+//   LineChart,
+//   Line
+// } from 'recharts';
 import { Users, Building2, TrendingUp, Calendar, ArrowUpRight } from 'lucide-react';
 import './ProfileImprovement.css';
 
@@ -99,7 +100,11 @@ const ProfileAnalytics = () => {
         <h4 className="text-sm font-bold text-gray-400 mb-4 flex items-center gap-2">
           <Calendar size={16} /> توزيع المشاهدات اليومي
         </h4>
-        <ResponsiveContainer width="100%" height="100%">
+        {/* Recharts not installed - placeholder */}
+        <div className="w-full h-full flex items-center justify-center bg-gray-50 rounded-lg">
+          <p className="text-gray-400">الرسم البياني قريباً / Chart coming soon</p>
+        </div>
+        {/* <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data.viewsByDay}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
             <XAxis
@@ -120,7 +125,7 @@ const ProfileAnalytics = () => {
               activeDot={{ r: 6, shadow: '0 0 10px rgba(212,129,97,0.5)' }}
             />
           </LineChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer> */}
       </div>
 
       {/* Last Companies List */}

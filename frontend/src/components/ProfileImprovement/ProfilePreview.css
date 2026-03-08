@@ -1,0 +1,60 @@
+/* Profile Preview Styles */
+
+.profile-preview {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-preview-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-preview-avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-preview-info h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.25rem;
+}
+
+.profile-preview-info p {
+  color: #6B7280;
+  font-size: 0.875rem;
+}
+
+.profile-preview-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.profile-preview-stat {
+  text-align: center;
+  padding: 1rem;
+  background: #F9FAFB;
+  border-radius: 0.5rem;
+}
+
+.profile-preview-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #D48161;
+}
+
+.profile-preview-stat-label {
+  font-size: 0.75rem;
+  color: #6B7280;
+  margin-top: 0.25rem;
+}

@@ -478,8 +478,8 @@ export const cleanupMemory = () => {
 export const loadHeavyLibrary = async (libraryName) => {
   const libraries = {
     'chart': () => import('chart.js'),
-    'pdf': () => import('pdfjs-dist'),
-    'video': () => import('video.js'),
+    // 'pdf': () => import('pdfjs-dist'), // غير مثبت حالياً
+    // 'video': () => import('video.js'), // غير مثبت حالياً
     // أضف المكتبات الأخرى هنا
   };
 
@@ -493,6 +493,7 @@ export const loadHeavyLibrary = async (libraryName) => {
     }
   }
 
+  console.warn(`Library '${libraryName}' is not configured for lazy loading`);
   return null;
 };
 

@@ -29,34 +29,36 @@
 
 /* Grid View */
 .course-listings.grid {
-  @apply grid gap-6;
+  display: grid;
+  gap: 1.5rem; /* 24px = gap-6 */
 }
 
 /* List View */
 .course-listings.flex {
-  @apply flex flex-col;
+  display: flex;
+  flex-direction: column;
 }
 
 .course-listings.flex .course-card {
-  @apply flex-row;
+  flex-direction: row;
 }
 
 /* Responsive Grid Columns */
 @media (min-width: 640px) {
   .course-listings.grid {
-    @apply grid-cols-2;
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* grid-cols-2 */
   }
 }
 
 @media (min-width: 1024px) {
   .course-listings.grid {
-    @apply grid-cols-3;
+    grid-template-columns: repeat(3, minmax(0, 1fr)); /* grid-cols-3 */
   }
 }
 
 @media (min-width: 1280px) {
   .course-listings.grid {
-    @apply grid-cols-4;
+    grid-template-columns: repeat(4, minmax(0, 1fr)); /* grid-cols-4 */
   }
 }
 
@@ -80,8 +82,9 @@
   @apply text-right;
 }
 
+/* RTL Grid Direction - handled by [dir="rtl"] attribute */
 [dir="rtl"] .course-listings.grid {
-  @apply direction-rtl;
+  /* Grid direction is automatically handled by CSS Grid in RTL */
 }
 
 /* Loading State */

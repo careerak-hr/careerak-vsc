@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   ProfileSkeleton,
-  JobListSkeleton,
-  CourseListSkeleton,
-  FormSkeleton,
-  DashboardSkeleton,
-  TableSkeleton
+  // JobListSkeleton, // Not exported
+  // CourseListSkeleton, // Not exported
+  // FormSkeleton, // Not exported
+  // DashboardSkeleton, // Not exported
+  // TableSkeleton // Not exported
 } from './SkeletonLoaders';
 import { RouteSuspenseFallback } from './Loading';
 
@@ -41,15 +41,20 @@ export const SuspenseWrapper = ({ children, skeleton, skeletonProps = {} }) => {
       case 'profile':
         return <ProfileSkeleton {...skeletonProps} />;
       case 'jobList':
-        return <JobListSkeleton {...skeletonProps} />;
+        // return <JobListSkeleton {...skeletonProps} />; // Not available
+        return <RouteSuspenseFallback />;
       case 'courseList':
-        return <CourseListSkeleton {...skeletonProps} />;
+        // return <CourseListSkeleton {...skeletonProps} />; // Not available
+        return <RouteSuspenseFallback />;
       case 'form':
-        return <FormSkeleton {...skeletonProps} />;
+        // return <FormSkeleton {...skeletonProps} />; // Not available
+        return <RouteSuspenseFallback />;
       case 'dashboard':
-        return <DashboardSkeleton {...skeletonProps} />;
+        // return <DashboardSkeleton {...skeletonProps} />; // Not available
+        return <RouteSuspenseFallback />;
       case 'table':
-        return <TableSkeleton {...skeletonProps} />;
+        // return <TableSkeleton {...skeletonProps} />; // Not available
+        return <RouteSuspenseFallback />;
       case 'route':
         return <RouteSuspenseFallback />;
       default:

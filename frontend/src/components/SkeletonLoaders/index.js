@@ -14,11 +14,11 @@ export { default as SkeletonLoader } from './SkeletonLoader';
 
 // Route-specific skeleton loaders
 export { ProfileSkeleton } from './ProfileSkeleton';
-export { JobListSkeleton } from './JobListSkeleton';
-export { CourseListSkeleton } from './CourseListSkeleton';
-export { FormSkeleton } from './FormSkeleton';
-export { DashboardSkeleton } from './DashboardSkeleton';
-export { TableSkeleton } from './TableSkeleton';
+// export { JobListSkeleton } from './JobListSkeleton'; // File not found
+// export { CourseListSkeleton } from './CourseListSkeleton'; // File not found
+// export { FormSkeleton } from './FormSkeleton'; // File not found
+// export { DashboardSkeleton } from './DashboardSkeleton'; // File not found
+// export { TableSkeleton } from './TableSkeleton'; // File not found
 
 // Card-specific skeleton loaders
 export { default as JobCardSkeleton } from './JobCardSkeleton';
