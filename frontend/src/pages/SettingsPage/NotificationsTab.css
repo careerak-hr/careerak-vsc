@@ -1,0 +1,328 @@
+.notifications-tab {
+  @apply w-full max-w-4xl mx-auto;
+}
+
+.notifications-title {
+  @apply text-2xl font-black text-primary mb-6 transition-colors duration-300;
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+/* Message */
+.notification-message {
+  @apply px-4 py-3 rounded-2xl mb-6 font-bold text-sm transition-all duration-300;
+}
+
+.notification-message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 2px solid #4CAF50;
+}
+
+.notification-message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 2px solid #f44336;
+}
+
+/* Section */
+.notifications-section {
+  @apply mb-8 p-6 bg-primary/5 rounded-[2.5rem] border border-accent/10 transition-all duration-300;
+}
+
+.section-title {
+  @apply text-lg font-black text-primary mb-4 transition-colors duration-300;
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+  border-bottom: 2px solid #D4816180;
+  padding-bottom: 8px;
+}
+
+.section-description {
+  @apply text-sm text-primary/60 mb-4 font-bold transition-colors duration-300;
+}
+
+/* Notification Type Card */
+.notification-type-card {
+  @apply mb-4 p-4 bg-white dark:bg-secondary/50 rounded-2xl border-2 border-accent/20 transition-all duration-300;
+}
+
+.notification-type-header {
+  @apply flex items-center justify-between mb-3;
+}
+
+.notification-type-info {
+  @apply flex items-center gap-3;
+}
+
+.notification-icon {
+  @apply text-2xl;
+}
+
+.notification-label {
+  @apply text-base font-black text-primary transition-colors duration-300;
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  @apply relative inline-block w-14 h-7 cursor-pointer;
+}
+
+.toggle-switch input {
+  @apply opacity-0 w-0 h-0;
+}
+
+.toggle-slider {
+  @apply absolute cursor-pointer top-0 left-0 right-0 bottom-0 bg-gray-300 rounded-full transition-all duration-300;
+}
+
+.toggle-slider:before {
+  @apply absolute content-[''] h-5 w-5 left-1 bottom-1 bg-white rounded-full transition-all duration-300;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  @apply bg-accent;
+}
+
+.toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(28px);
+}
+
+.toggle-switch input:focus + .toggle-slider {
+  @apply ring-2 ring-primary ring-offset-2;
+}
+
+/* Notification Methods */
+.notification-methods {
+  @apply mt-3 pt-3 border-t-2 border-accent/10;
+}
+
+.methods-label {
+  @apply text-sm font-bold text-primary/70 mb-2 block transition-colors duration-300;
+}
+
+.method-toggles {
+  @apply flex flex-wrap gap-4;
+}
+
+.method-checkbox {
+  @apply flex items-center gap-2 cursor-pointer;
+}
+
+.method-checkbox input[type="checkbox"] {
+  @apply w-5 h-5 rounded border-2 border-accent/50 text-accent focus:ring-2 focus:ring-accent cursor-pointer transition-all duration-300;
+}
+
+.method-checkbox span {
+  @apply text-sm font-bold text-primary transition-colors duration-300;
+}
+
+/* Quiet Hours */
+.quiet-hours-card {
+  @apply p-4 bg-white dark:bg-secondary/50 rounded-2xl border-2 border-accent/20 transition-all duration-300;
+}
+
+.quiet-hours-toggle {
+  @apply mb-4;
+}
+
+.quiet-hours-times {
+  @apply flex gap-4 flex-wrap;
+}
+
+.time-input-group {
+  @apply flex-1 min-w-[200px];
+}
+
+.time-input-group label {
+  @apply block text-sm font-bold text-primary mb-2 transition-colors duration-300;
+}
+
+.time-input {
+  @apply w-full px-4 py-3 rounded-2xl border-2 border-accent/50 bg-white dark:bg-secondary/30 text-primary font-bold text-base transition-all duration-300;
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.time-input:focus {
+  @apply outline-none ring-2 ring-accent border-accent/50;
+}
+
+/* Frequency Options */
+.frequency-options {
+  @apply flex flex-col gap-3;
+}
+
+.frequency-option {
+  @apply flex items-center gap-3 p-4 bg-white dark:bg-secondary/50 rounded-2xl border-2 border-accent/20 cursor-pointer transition-all duration-300;
+}
+
+.frequency-option:hover {
+  @apply border-accent/50 shadow-md;
+}
+
+.frequency-option input[type="radio"] {
+  @apply w-5 h-5 text-accent border-2 border-accent/50 focus:ring-2 focus:ring-accent cursor-pointer;
+}
+
+.frequency-option input[type="radio"]:checked {
+  @apply bg-accent border-accent;
+}
+
+.frequency-label {
+  @apply flex items-center gap-3 flex-1;
+}
+
+.frequency-icon {
+  @apply text-xl;
+}
+
+.frequency-label span:last-child {
+  @apply text-base font-bold text-primary transition-colors duration-300;
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+/* Actions */
+.notifications-actions {
+  @apply flex justify-end mt-6;
+}
+
+.save-button {
+  @apply px-8 py-4 rounded-2xl font-black text-base bg-accent text-white transition-all duration-300;
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.save-button:hover:not(:disabled) {
+  @apply scale-105 shadow-lg;
+}
+
+.save-button:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.save-button:focus {
+  @apply outline-none ring-2 ring-accent ring-offset-2;
+}
+
+/* Dark Mode */
+.dark .notifications-tab {
+  @apply text-primary;
+}
+
+.dark .notification-type-card,
+.dark .quiet-hours-card,
+.dark .frequency-option {
+  @apply bg-secondary/30 border-accent/30;
+}
+
+.dark .time-input {
+  @apply bg-secondary/50 border-accent/30;
+}
+
+/* RTL Support */
+[dir="rtl"] .toggle-switch input:checked + .toggle-slider:before {
+  transform: translateX(-28px);
+}
+
+[dir="rtl"] .notification-type-info,
+[dir="rtl"] .frequency-label {
+  @apply flex-row-reverse;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .notifications-tab {
+    @apply px-4;
+  }
+
+  .notifications-title {
+    @apply text-xl;
+  }
+
+  .notifications-section {
+    @apply p-4 rounded-2xl;
+  }
+
+  .section-title {
+    @apply text-base;
+  }
+
+  .notification-type-card,
+  .quiet-hours-card,
+  .frequency-option {
+    @apply p-3 rounded-xl;
+  }
+
+  .notification-icon {
+    @apply text-xl;
+  }
+
+  .notification-label,
+  .frequency-label span:last-child {
+    @apply text-sm;
+  }
+
+  .toggle-switch {
+    @apply w-12 h-6;
+  }
+
+  .toggle-slider:before {
+    @apply h-4 w-4;
+  }
+
+  .toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+  }
+
+  [dir="rtl"] .toggle-switch input:checked + .toggle-slider:before {
+    transform: translateX(-24px);
+  }
+
+  .method-toggles {
+    @apply gap-3;
+  }
+
+  .method-checkbox span {
+    @apply text-xs;
+  }
+
+  .quiet-hours-times {
+    @apply flex-col gap-3;
+  }
+
+  .time-input-group {
+    @apply min-w-full;
+  }
+
+  .time-input {
+    @apply py-2 text-sm;
+  }
+
+  .frequency-icon {
+    @apply text-lg;
+  }
+
+  .save-button {
+    @apply px-6 py-3 text-sm w-full;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .notifications-tab *,
+  .toggle-slider,
+  .toggle-slider:before {
+    @apply transition-none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .notifications-actions {
+    @apply hidden;
+  }
+
+  .toggle-switch,
+  .method-checkbox input,
+  .frequency-option input {
+    @apply print:hidden;
+  }
+}

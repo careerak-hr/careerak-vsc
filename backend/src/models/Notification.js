@@ -18,6 +18,8 @@ const notificationSchema = new mongoose.Schema({
       'new_application',     // طلب توظيف جديد (للشركات)
       'job_closed',          // تم إغلاق الوظيفة
       'course_match',        // دورة مناسبة لك
+      'certificate_issued',  // تم إصدار شهادة جديدة
+      'badge_earned',        // تم الحصول على badge جديد
       'new_device_login',    // تسجيل دخول من جهاز جديد
       'interview_reminder_24h', // تذكير قبل 24 ساعة من المقابلة
       'interview_reminder_15m', // تذكير قبل 15 دقيقة من المقابلة
@@ -42,6 +44,8 @@ const notificationSchema = new mongoose.Schema({
     jobPosting: { type: mongoose.Schema.Types.ObjectId, ref: 'JobPosting' },
     jobApplication: { type: mongoose.Schema.Types.ObjectId, ref: 'JobApplication' },
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'TrainingCourse' },
+    certificate: { type: mongoose.Schema.Types.ObjectId, ref: 'Certificate' },
+    badge: { type: mongoose.Schema.Types.ObjectId, ref: 'Badge' },
     appointment: { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
     videoInterview: { type: mongoose.Schema.Types.ObjectId, ref: 'VideoInterview' },
     savedSearchId: { type: mongoose.Schema.Types.ObjectId, ref: 'SavedSearch' },

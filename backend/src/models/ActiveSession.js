@@ -8,11 +8,11 @@ const activeSessionSchema = new mongoose.Schema({
     index: true
   },
   token: {
-    type: String,
+    type: String, // JWT token hash
     required: true,
     unique: true,
     index: true
-  }, // JWT token hash
+  },
   
   // Device Information
   device: {
@@ -21,16 +21,31 @@ const activeSessionSchema = new mongoose.Schema({
       enum: ['desktop', 'mobile', 'tablet'],
       required: true
     },
-    os: { type: String, required: true },
-    browser: { type: String, required: true },
-    fingerprint: { type: String, required: true }
+    os: {
+      type: String,
+      required: true
+    },
+    browser: {
+      type: String,
+      required: true
+    },
+    fingerprint: {
+      type: String
+    }
   },
   
   // Location Information
   location: {
-    ipAddress: { type: String, required: true },
-    country: String,
-    city: String,
+    ipAddress: {
+      type: String,
+      required: true
+    },
+    country: {
+      type: String
+    },
+    city: {
+      type: String
+    },
     coordinates: {
       lat: Number,
       lng: Number
@@ -38,8 +53,16 @@ const activeSessionSchema = new mongoose.Schema({
   },
   
   // Timestamps
-  loginTime: { type: Date, required: true, default: Date.now },
-  lastActivity: { type: Date, required: true, default: Date.now },
+  loginTime: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
+  lastActivity: {
+    type: Date,
+    required: true,
+    default: Date.now
+  },
   expiresAt: {
     type: Date,
     required: true,
@@ -47,45 +70,32 @@ const activeSessionSchema = new mongoose.Schema({
   },
   
   // Flags
-  isTrusted: { type: Boolean, default: false }
-}, {
-  timestamps: true
+  isTrusted: {
+    type: Boolean,
+    default: false
+  },
+  
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-// Compound Indexes
+// Compound indexes for efficient queries
 activeSessionSchema.index({ userId: 1, expiresAt: 1 });
+activeSessionSchema.index({ userId: 1, lastActivity: -1 });
 
-// TTL Index - automatically delete expired sessions
+// TTL index - automatically delete expired sessions
 activeSessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-// Methods
-activeSessionSchema.methods.updateActivity = function() {
-  this.lastActivity = new Date();
-  return this.save();
-};
+// Update timestamp on save
+activeSessionSchema.pre('save', function(next) {
+  this.updatedAt = new Date();
+  next();
+});
 
-activeSessionSchema.methods.isExpired = function() {
-  return new Date() > this.expiresAt;
-};
-
-// Statics
-activeSessionSchema.statics.findByUserId = function(userId) {
-  return this.find({ userId, expiresAt: { $gt: new Date() } })
-    .sort({ loginTime: -1 });
-};
-
-activeSessionSchema.statics.findByToken = function(tokenHash) {
-  return this.findOne({ token: tokenHash, expiresAt: { $gt: new Date() } });
-};
-
-activeSessionSchema.statics.invalidateUserSessions = async function(userId, exceptSessionId = null) {
-  const query = { userId };
-  if (exceptSessionId) {
-    query._id = { $ne: exceptSessionId };
-  }
-  return this.deleteMany(query);
-};
-
-const ActiveSession = mongoose.model('ActiveSession', activeSessionSchema);
-
-module.exports = ActiveSession;
+module.exports = mongoose.model('ActiveSession', activeSessionSchema);

@@ -1,0 +1,201 @@
+/* SecurityTab.css */
+
+.security-tab {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.security-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #304B60;
+    margin-bottom: 2rem;
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.security-message {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.security-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.security-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Security Section */
+.security-section {
+    background: white;
+    border: 2px solid #D4816180;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.section-info {
+    flex: 1;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #304B60;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-icon {
+    font-size: 1.5rem;
+}
+
+.section-description {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.section-status {
+    display: flex;
+    align-items: center;
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.status-badge.enabled {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.disabled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.section-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background-color: #304B60;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #243a4a;
+}
+
+.btn-secondary {
+    background-color: #E3DAD1;
+    color: #304B60;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #d4cbc2;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #304B60;
+    border: 2px solid #D4816180;
+}
+
+.btn-outline:hover:not(:disabled) {
+    background-color: #f8f9fa;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .security-tab {
+        padding: 1rem;
+    }
+
+    .security-title {
+        font-size: 1.5rem;
+    }
+
+    .security-section {
+        padding: 1.5rem;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .section-actions {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .section-title {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .section-actions {
+    flex-direction: row-reverse;
+}

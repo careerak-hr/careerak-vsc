@@ -38,6 +38,7 @@ const WishlistPage = React.lazy(() => import('../pages/WishlistPage'));
 const BookmarkedJobsPage = React.lazy(() => import('../pages/BookmarkedJobsPage'));
 const PostCoursePage = React.lazy(() => import('../pages/12_PostCoursePage'));
 const PolicyPage = React.lazy(() => import('../pages/13_PolicyPage'));
+const CertificateVerificationPage = React.lazy(() => import('../pages/CertificateVerificationPage'));
 const SettingsPage = React.lazy(() => import('../pages/14_SettingsPage'));
 const OnboardingIlliterate = React.lazy(() => import('../pages/15_OnboardingIlliterate'));
 const OnboardingVisual = React.lazy(() => import('../pages/16_OnboardingVisual'));
@@ -157,6 +158,15 @@ function AppRoutes() {
             <SuspenseWrapper>
               <PageTransition variant="fadeIn">
                 <OAuthCallback />
+              </PageTransition>
+            </SuspenseWrapper>
+          } />
+          
+          {/* Certificate Verification Route - Public */}
+          <Route path="/verify/:certificateId?" element={
+            <SuspenseWrapper>
+              <PageTransition variant="fadeIn">
+                <CertificateVerificationPage />
               </PageTransition>
             </SuspenseWrapper>
           } />

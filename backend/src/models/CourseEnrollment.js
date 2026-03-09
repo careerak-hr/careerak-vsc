@@ -145,15 +145,21 @@ courseEnrollmentSchema.pre('save', async function(next) {
     try {
       // Fetch the course to get total lessons
       const Course = mongoose.model('EducationalCourse');
-      const course = await Course.findById(this.course).select('totalLessons');
+      const course = await Course.findById(this.course).select('totalLessons settings');
       
       if (course && course.totalLessons) {
+        const oldPercentage = this.progress.percentageComplete;
         this.progress.percentageComplete = this.calculateProgress(course.totalLessons);
         
         // Auto-complete if 100%
         if (this.progress.percentageComplete === 100 && this.status === 'active') {
           this.status = 'completed';
           this.completedAt = new Date();
+          
+          // Mark that certificate should be issued
+          // The actual issuance will happen in post-save middleware
+          this._shouldIssueCertificate = true;
+          this._courseSettings = course.settings;
         }
       }
     } catch (error) {
@@ -163,6 +169,38 @@ courseEnrollmentSchema.pre('save', async function(next) {
   }
   
   next();
+});
+
+/**
+ * Post-save middleware to issue certificate automatically
+ * This runs after the enrollment is saved to avoid blocking the save operation
+ */
+courseEnrollmentSchema.post('save', async function(doc) {
+  // Check if certificate should be issued
+  if (doc._shouldIssueCertificate && !doc.certificateIssued.issued) {
+    try {
+      // Check if certificates are enabled for this course
+      const certificateEnabled = doc._courseSettings && doc._courseSettings.certificateEnabled !== false;
+      
+      if (certificateEnabled) {
+        // Import certificateService here to avoid circular dependency
+        const certificateService = require('../services/certificateService');
+        
+        // Issue certificate asynchronously (don't wait for it)
+        setImmediate(async () => {
+          try {
+            await certificateService.issueCertificate(doc.student, doc.course);
+            console.log(`✅ Certificate issued automatically for user ${doc.student} on course ${doc.course}`);
+          } catch (error) {
+            console.error('❌ Error issuing certificate automatically:', error.message);
+          }
+        });
+      }
+    } catch (error) {
+      // Log error but don't throw (post-save should not fail)
+      console.error('Error in post-save certificate issuance:', error);
+    }
+  }
 });
 
 /**

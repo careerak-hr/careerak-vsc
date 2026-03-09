@@ -1,123 +1,105 @@
-import { useEffect, useRef, useCallback } from 'react';
-import { useApplicationForm } from '../context/ApplicationContext';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 /**
- * Custom hook for auto-saving application draft
- * Implements debounced save with 3 second delay
+ * Custom hook for auto-saving data after a period of inactivity
  * 
- * Requirements: 2.1, 2.6, 11.2
+ * @param {Function} saveFunction - Function to call when saving (should return a Promise)
+ * @param {number} delay - Delay in milliseconds before auto-save (default: 2000ms)
+ * @returns {Object} - { isSaving, lastSaved, error, triggerSave }
  */
-export function useAutoSave(saveDraftFn, options = {}) {
-  const {
-    delay = 3000, // 3 seconds default
-    enabled = true,
-  } = options;
+const useAutoSave = (saveFunction, delay = 2000) => {
+  const [isSaving, setIsSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState(null);
+  const [error, setError] = useState(null);
+  const timeoutRef = useRef(null);
+  const saveFunctionRef = useRef(saveFunction);
 
-  const {
-    formData,
-    currentStep,
-    draftId,
-    setSaving,
-    setDraftId,
-    setLastSaved,
-  } = useApplicationForm();
+  // Update saveFunction ref when it changes
+  useEffect(() => {
+    saveFunctionRef.current = saveFunction;
+  }, [saveFunction]);
 
-  const saveTimeoutRef = useRef(null);
-  const previousDataRef = useRef(null);
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
-  // Check if data has changed
-  const hasDataChanged = useCallback(() => {
-    if (!previousDataRef.current) return true;
-    return JSON.stringify(formData) !== JSON.stringify(previousDataRef.current);
-  }, [formData]);
+  /**
+   * Trigger auto-save after delay
+   */
+  const triggerSave = useCallback((data) => {
+    // Clear existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
 
-  // Cancel scheduled save
-  const cancelScheduledSave = useCallback(() => {
-    if (saveTimeoutRef.current) {
-      clearTimeout(saveTimeoutRef.current);
-      saveTimeoutRef.current = null;
+    // Set new timeout
+    timeoutRef.current = setTimeout(async () => {
+      try {
+        setIsSaving(true);
+        setError(null);
+
+        // Call save function
+        await saveFunctionRef.current(data);
+
+        // Update last saved timestamp
+        setLastSaved(new Date());
+        setIsSaving(false);
+      } catch (err) {
+        console.error('Auto-save error:', err);
+        setError(err.message || 'فشل الحفظ التلقائي');
+        setIsSaving(false);
+      }
+    }, delay);
+  }, [delay]);
+
+  /**
+   * Cancel pending auto-save
+   */
+  const cancelAutoSave = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
     }
   }, []);
 
-  // Force immediate save
-  const forceSave = useCallback(async () => {
-    if (!enabled || !saveDraftFn) return;
-
-    cancelScheduledSave();
+  /**
+   * Force immediate save (bypass delay)
+   */
+  const forceSave = useCallback(async (data) => {
+    // Cancel pending auto-save
+    cancelAutoSave();
 
     try {
-      setSaving(true);
-      
-      const result = await saveDraftFn({
-        draftId,
-        currentStep,
-        formData,
-      });
+      setIsSaving(true);
+      setError(null);
 
-      if (result && result.draftId) {
-        setDraftId(result.draftId);
-        setLastSaved(new Date());
-        previousDataRef.current = JSON.parse(JSON.stringify(formData));
-      }
+      // Call save function immediately
+      await saveFunctionRef.current(data);
 
-      return result;
-    } catch (error) {
-      console.error('Auto-save failed:', error);
-      throw error;
-    } finally {
-      setSaving(false);
+      // Update last saved timestamp
+      setLastSaved(new Date());
+      setIsSaving(false);
+    } catch (err) {
+      console.error('Force save error:', err);
+      setError(err.message || 'فشل الحفظ');
+      setIsSaving(false);
+      throw err;
     }
-  }, [
-    enabled,
-    saveDraftFn,
-    draftId,
-    currentStep,
-    formData,
-    setSaving,
-    setDraftId,
-    setLastSaved,
-    cancelScheduledSave,
-  ]);
-
-  // Schedule auto-save
-  const scheduleSave = useCallback(() => {
-    if (!enabled || !saveDraftFn || !hasDataChanged()) return;
-
-    cancelScheduledSave();
-
-    saveTimeoutRef.current = setTimeout(async () => {
-      try {
-        await forceSave();
-      } catch (error) {
-        // Error already logged in forceSave
-        // Could trigger local storage fallback here
-      }
-    }, delay);
-  }, [enabled, saveDraftFn, hasDataChanged, cancelScheduledSave, forceSave, delay]);
-
-  // Auto-save effect
-  useEffect(() => {
-    if (!enabled) return;
-
-    scheduleSave();
-
-    return () => {
-      cancelScheduledSave();
-    };
-  }, [formData, currentStep, enabled, scheduleSave, cancelScheduledSave]);
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      cancelScheduledSave();
-    };
-  }, [cancelScheduledSave]);
+  }, [cancelAutoSave]);
 
   return {
-    forceSave,
-    cancelScheduledSave,
-    isScheduled: !!saveTimeoutRef.current,
+    isSaving,
+    lastSaved,
+    error,
+    triggerSave,
+    cancelAutoSave,
+    forceSave
   };
-}
+};
 
 export default useAutoSave;

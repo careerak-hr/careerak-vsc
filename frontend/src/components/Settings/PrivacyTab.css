@@ -1,0 +1,282 @@
+/* Privacy Tab Styles */
+.privacy-tab {
+    padding: 24px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.privacy-tab-title {
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #304B60;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* Dark mode */
+.dark .privacy-tab-title {
+    color: #E3DAD1;
+}
+
+/* Warning message */
+.privacy-warning {
+    background-color: #fff3cd;
+    border: 2px solid #D4816180;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    color: #856404;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dark .privacy-warning {
+    background-color: rgba(212, 129, 97, 0.1);
+    border-color: #D4816180;
+    color: #D48161;
+}
+
+/* Message display */
+.privacy-message {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.privacy-message-success {
+    background-color: #d4edda;
+    border: 2px solid #c3e6cb;
+    color: #155724;
+}
+
+.privacy-message-error {
+    background-color: #f8d7da;
+    border: 2px solid #f5c6cb;
+    color: #721c24;
+}
+
+.dark .privacy-message-success {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #28a745;
+}
+
+.dark .privacy-message-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-color: rgba(220, 53, 69, 0.3);
+    color: #dc3545;
+}
+
+/* Privacy sections */
+.privacy-section {
+    background-color: #E3DAD1;
+    border: 2px solid #D4816180;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.dark .privacy-section {
+    background-color: rgba(227, 218, 209, 0.05);
+    border-color: #D4816180;
+}
+
+.privacy-section-title {
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #304B60;
+    margin-bottom: 16px;
+}
+
+.dark .privacy-section-title {
+    color: #E3DAD1;
+}
+
+/* Radio group */
+.privacy-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.privacy-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.privacy-radio-label:hover {
+    background-color: rgba(212, 129, 97, 0.1);
+}
+
+.privacy-radio-label input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #D48161;
+}
+
+.privacy-radio-label span {
+    font-size: 16px;
+    color: #304B60;
+}
+
+.dark .privacy-radio-label span {
+    color: #E3DAD1;
+}
+
+/* Checkbox group */
+.privacy-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.privacy-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.privacy-checkbox-label:hover {
+    background-color: rgba(212, 129, 97, 0.1);
+}
+
+.privacy-checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #D48161;
+}
+
+.privacy-checkbox-label span {
+    font-size: 16px;
+    color: #304B60;
+}
+
+.dark .privacy-checkbox-label span {
+    color: #E3DAD1;
+}
+
+/* Actions */
+.privacy-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.privacy-save-button {
+    background-color: #D48161;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 200px;
+}
+
+.privacy-save-button:hover:not(:disabled) {
+    background-color: #c06d4f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+.privacy-save-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.privacy-save-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.dark .privacy-save-button:disabled {
+    background-color: rgba(204, 204, 204, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 639px) {
+    .privacy-tab {
+        padding: 16px;
+    }
+
+    .privacy-tab-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .privacy-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .privacy-section-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .privacy-radio-label,
+    .privacy-checkbox-label {
+        padding: 10px;
+    }
+
+    .privacy-radio-label span,
+    .privacy-checkbox-label span {
+        font-size: 14px;
+    }
+
+    .privacy-save-button {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .privacy-radio-label,
+[dir="rtl"] .privacy-checkbox-label {
+    flex-direction: row-reverse;
+}
+
+[dir="rtl"] .privacy-warning,
+[dir="rtl"] .privacy-message {
+    flex-direction: row-reverse;
+}
+
+/* Accessibility */
+.privacy-radio-label:focus-within,
+.privacy-checkbox-label:focus-within {
+    outline: 2px solid #D48161;
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .privacy-actions {
+        display: none;
+    }
+
+    .privacy-warning,
+    .privacy-message {
+        border: 1px solid #000;
+    }
+}

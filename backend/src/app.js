@@ -217,9 +217,13 @@ app.use('/interview-notes', require('./routes/interviewNoteRoutes')); // Intervi
 app.use('/search', require('./routes/searchRoutes')); // Advanced Search & Filtering
 app.use('/admin/alert-scheduler', require('./routes/alertSchedulerRoutes')); // Alert Scheduler (Admin)
 app.use('/courses', require('./routes/courseRoutes')); // Educational Courses
+app.use('/certificates', require('./routes/certificateRoutes')); // Certificates & Achievements
+app.use('/verify', require('./routes/verificationRoutes')); // Certificate Verification (Public)
 app.use('/wishlist', require('./routes/wishlistRoutes')); // Course Wishlist
 app.use('/companies', require('./routes/companyInfoRoutes')); // Company Information
 app.use('/acceptance-probability', require('./routes/acceptanceProbabilityRoutes')); // Acceptance Probability
+app.use('/settings', require('./routes/settingsRoutes')); // Settings Page Enhancements
+app.use('/api/cron', require('./routes/cronRoutes')); // Cron Jobs Management (Admin)
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {

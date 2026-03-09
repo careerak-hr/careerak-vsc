@@ -1,0 +1,233 @@
+/* Settings Page Enhanced Styles */
+
+.settings-page-container {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background-color: var(--bg-primary, #E3DAD1);
+}
+
+.settings-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--text-primary, #304B60);
+}
+
+.settings-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: var(--text-primary, #304B60);
+  text-align: center;
+}
+
+/* Tab Navigation */
+.settings-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #D4816180;
+}
+
+.settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: transparent;
+  border: 2px solid #D4816180;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary, #304B60);
+  white-space: nowrap;
+  min-height: 44px; /* Touch target */
+}
+
+.settings-tab:hover {
+  background-color: #D4816120;
+  transform: translateY(-2px);
+}
+
+.settings-tab:focus {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+.settings-tab-active {
+  background-color: #D4816140;
+  border-bottom-color: transparent;
+  font-weight: bold;
+}
+
+.settings-tab-icon {
+  font-size: 1.25rem;
+}
+
+.settings-tab-label {
+  font-family: inherit;
+}
+
+/* Tab Content */
+.settings-tab-content {
+  background-color: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  padding: 2rem;
+  min-height: 400px;
+  transition: all 0.3s ease;
+}
+
+/* Unsaved Changes Indicator */
+.settings-unsaved-indicator {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: #ff9800;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .settings-tabs-nav {
+  direction: rtl;
+}
+
+[dir="rtl"] .settings-tab {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .settings-unsaved-indicator {
+  right: auto;
+  left: 2rem;
+}
+
+/* Dark Mode */
+.dark .settings-page-container {
+  background-color: var(--dark-bg-primary, #1a1a1a);
+}
+
+.dark .settings-content {
+  color: var(--dark-text-primary, #E3DAD1);
+}
+
+.dark .settings-title {
+  color: var(--dark-text-primary, #E3DAD1);
+}
+
+.dark .settings-tab {
+  color: var(--dark-text-primary, #E3DAD1);
+  border-color: #D4816180;
+}
+
+.dark .settings-tab:hover {
+  background-color: #D4816130;
+}
+
+.dark .settings-tab-active {
+  background-color: #D4816150;
+}
+
+.dark .settings-tab-content {
+  background-color: var(--dark-bg-secondary, #2a2a2a);
+  border-color: #D4816180;
+  color: var(--dark-text-primary, #E3DAD1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settings-page-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .settings-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .settings-tabs-nav {
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .settings-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .settings-tab-icon {
+    font-size: 1rem;
+  }
+
+  .settings-tab-label {
+    display: none; /* Show only icons on mobile */
+  }
+
+  .settings-tab-content {
+    padding: 1rem;
+    min-height: 300px;
+  }
+
+  .settings-unsaved-indicator {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  [dir="rtl"] .settings-unsaved-indicator {
+    right: auto;
+    left: 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1023px) {
+  .settings-tab {
+    padding: 0.625rem 1.25rem;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .settings-tab,
+  .settings-tab-content,
+  .settings-unsaved-indicator {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .settings-tabs-nav {
+    display: none;
+  }
+
+  .settings-unsaved-indicator {
+    display: none;
+  }
+
+  .settings-tab-content {
+    border: none;
+    box-shadow: none;
+  }
+}

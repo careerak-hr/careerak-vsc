@@ -1,0 +1,134 @@
+.undo-button-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: slideInFromBottom 0.3s ease;
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.undo-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background-color: #304B60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.undo-button:hover:not(:disabled) {
+  background-color: #243a4d;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.undo-button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.undo-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.undo-button .icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.undo-button .text {
+  white-space: nowrap;
+}
+
+.undo-button .timer {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.undo-button-container .description {
+  font-size: 13px;
+  color: #666;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* RTL support */
+[dir="rtl"] .undo-button {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .undo-button .icon {
+  transform: scaleX(-1);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .undo-button {
+    background-color: #7BA3C0;
+  }
+
+  .undo-button:hover:not(:disabled) {
+    background-color: #6a92ad;
+  }
+
+  .undo-button-container .description {
+    color: #aaa;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .undo-button {
+    font-size: 13px;
+    padding: 8px 14px;
+  }
+
+  .undo-button .icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .undo-button-container .description {
+    display: none;
+  }
+}
+
+/* Accessibility */
+.undo-button:focus-visible {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Animation for timer countdown */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.undo-button .timer {
+  animation: pulse 1s ease-in-out infinite;
+}

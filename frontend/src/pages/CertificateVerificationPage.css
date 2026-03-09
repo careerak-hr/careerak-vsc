@@ -1,0 +1,543 @@
+/* Certificate Verification Page Styles */
+/* تنسيقات صفحة التحقق من الشهادات */
+
+.verification-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #304B60 0%, #1a2a35 100%);
+  padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verification-container {
+  max-width: 900px;
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+/* Header */
+.verification-header {
+  background: linear-gradient(135deg, #304B60 0%, #1a2a35 100%);
+  color: #FFFFFF;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.logo-section {
+  margin-bottom: 1.5rem;
+}
+
+.verification-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid #E3DAD1;
+  object-fit: cover;
+}
+
+.verification-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #E3DAD1;
+}
+
+.verification-subtitle {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #E3DAD1;
+  opacity: 0.9;
+}
+
+/* Form */
+.verification-form {
+  padding: 2.5rem 2rem;
+  background: #FFFFFF;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 2px solid #D4816180;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-family: 'Courier New', monospace;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #D48161;
+  box-shadow: 0 0 0 3px rgba(212, 129, 97, 0.1);
+}
+
+.form-input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.verify-button {
+  width: 100%;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #D48161 0%, #b86a4d 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 129, 97, 0.3);
+}
+
+.verify-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 129, 97, 0.4);
+}
+
+.verify-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.verify-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.qr-hint {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+
+/* Error Message */
+.error-message {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  background: #fff5f5;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.error-message h3 {
+  color: #e53e3e;
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-message p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.retry-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: #e53e3e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #c53030;
+  transform: translateY(-2px);
+}
+
+/* Verification Result */
+.verification-result {
+  padding: 2rem;
+}
+
+/* Status Banner */
+.status-banner {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  border-radius: 15px;
+  margin-bottom: 2rem;
+}
+
+.status-banner-valid {
+  background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+  color: #FFFFFF;
+}
+
+.status-banner-invalid {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: #FFFFFF;
+}
+
+.status-icon-large {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.status-banner h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+}
+
+.status-banner p {
+  font-size: 1.1rem;
+  margin: 0;
+  opacity: 0.95;
+}
+
+/* Certificate Details */
+.certificate-details {
+  background: #f7fafc;
+  border-radius: 15px;
+  padding: 2rem;
+}
+
+.details-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.detail-card {
+  background: #FFFFFF;
+  border: 2px solid #E3DAD1;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.detail-card:hover {
+  border-color: #D48161;
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.1);
+  transform: translateY(-2px);
+}
+
+.detail-card-full {
+  grid-column: 1 / -1;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.detail-value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #304B60;
+  word-break: break-word;
+}
+
+.detail-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+/* Holder Info */
+.holder-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.holder-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #E3DAD1;
+}
+
+.holder-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #304B60;
+}
+
+.holder-email {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Certificate ID */
+.certificate-id {
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  background: #f7fafc;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px dashed #D48161;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.status-valid {
+  background: #c6f6d5;
+  color: #22543d;
+}
+
+.status-invalid {
+  background: #fed7d7;
+  color: #742a2a;
+}
+
+.status-revoked {
+  background: #feebc8;
+  color: #7c2d12;
+}
+
+.status-expired {
+  background: #e2e8f0;
+  color: #2d3748;
+}
+
+.status-unknown {
+  background: #e2e8f0;
+  color: #4a5568;
+}
+
+/* Revocation Info */
+.revocation-info {
+  background: #fff5f5;
+  border-color: #feb2b2;
+}
+
+/* Actions */
+.verification-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+.action-button {
+  padding: 0.875rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-button-primary {
+  background: linear-gradient(135deg, #D48161 0%, #b86a4d 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 15px rgba(212, 129, 97, 0.3);
+}
+
+.action-button-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 129, 97, 0.4);
+}
+
+.action-button-secondary {
+  background: #FFFFFF;
+  color: #304B60;
+  border: 2px solid #304B60;
+}
+
+.action-button-secondary:hover {
+  background: #304B60;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+.action-button-tertiary {
+  background: #E3DAD1;
+  color: #304B60;
+}
+
+.action-button-tertiary:hover {
+  background: #d4cbc2;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .verification-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .verification-header {
+    padding: 2rem 1.5rem;
+  }
+
+  .verification-title {
+    font-size: 2rem;
+  }
+
+  .verification-subtitle {
+    font-size: 1rem;
+  }
+
+  .verification-form,
+  .verification-result {
+    padding: 1.5rem 1rem;
+  }
+
+  .certificate-details {
+    padding: 1.5rem 1rem;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .verification-actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .status-banner h2 {
+    font-size: 1.5rem;
+  }
+
+  .status-banner p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .verification-logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .verification-title {
+    font-size: 1.75rem;
+  }
+
+  .details-title {
+    font-size: 1.5rem;
+  }
+
+  .holder-info {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .holder-info {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .action-button {
+  flex-direction: row-reverse;
+}
+
+/* Print Styles */
+@media print {
+  .verification-page {
+    background: #FFFFFF;
+    padding: 0;
+  }
+
+  .verification-form,
+  .verification-actions {
+    display: none;
+  }
+
+  .verification-container {
+    box-shadow: none;
+  }
+
+  .detail-card {
+    break-inside: avoid;
+  }
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  .verification-page {
+    background: linear-gradient(135deg, #1a2a35 0%, #0f1a24 100%);
+  }
+
+  .verification-container {
+    background: #1a202c;
+  }
+
+  .verification-form,
+  .certificate-details {
+    background: #2d3748;
+  }
+
+  .detail-card {
+    background: #1a202c;
+    border-color: #4a5568;
+  }
+
+  .form-input {
+    background: #1a202c;
+    color: #e2e8f0;
+    border-color: #4a5568;
+  }
+
+  .detail-value,
+  .holder-name {
+    color: #e2e8f0;
+  }
+
+  .detail-label,
+  .detail-meta,
+  .holder-email {
+    color: #a0aec0;
+  }
+}

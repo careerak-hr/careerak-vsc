@@ -361,3 +361,336 @@ describe('Security Property Tests', () => {
     }, 60000);
   });
 });
+
+  // ============================================
+  // Property 28: CSRF Protection
+  // ============================================
+  
+  describe('Property 28: CSRF Protection', () => {
+    const { generateCSRFToken, validateCSRFToken } = require('../src/middleware/csrfProtection');
+    
+    test('valid CSRF token should always be accepted', async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.string({ minLength: 10, maxLength: 50 }), // sessionId
+          async (sessionId) => {
+            // Generate token
+            const token = generateCSRFToken(sessionId);
+            
+            // Validate immediately
+            const isValid = validateCSRFToken(sessionId, token);
+            
+            // Property: Valid token should always be accepted
+            expect(isValid).toBe(true);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+    
+    test('invalid CSRF token should always be rejected', async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.string({ minLength: 10, maxLength: 50 }), // sessionId
+          fc.string({ minLength: 10, maxLength: 100 }), // fake token
+          async (sessionId, fakeToken) => {
+            // Generate real token
+            const realToken = generateCSRFToken(sessionId);
+            
+            // Assume fake token is different from real token
+            fc.pre(fakeToken !== realToken);
+            
+            // Validate fake token
+            const isValid = validateCSRFToken(sessionId, fakeToken);
+            
+            // Property: Invalid token should always be rejected
+            expect(isValid).toBe(false);
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+  
+  // ============================================
+  // Property 29: Rate Limiting Enforcement
+  // ============================================
+  
+  describe('Property 29: Rate Limiting Enforcement', () => {
+    const { createRateLimiter } = require('../src/middleware/rateLimiter');
+    
+    test('rate limiter should block after max requests', async () => {
+      const limiter = createRateLimiter({
+        windowMs: 60000,
+        max: 5
+      });
+      
+      const mockReq = {
+        user: { id: 'test-user-' + Date.now() },
+        ip: '127.0.0.1'
+      };
+      
+      let blockedCount = 0;
+      let allowedCount = 0;
+      
+      // Make 10 requests
+      for (let i = 0; i < 10; i++) {
+        const mockRes = {
+          setHeader: jest.fn(),
+          status: jest.fn().mockReturnThis(),
+          json: jest.fn()
+        };
+        
+        const mockNext = jest.fn();
+        
+        limiter(mockReq, mockRes, mockNext);
+        
+        if (mockRes.status.mock.calls.length > 0) {
+          blockedCount++;
+        } else {
+          allowedCount++;
+        }
+      }
+      
+      // Property: Should allow first 5, block next 5
+      expect(allowedCount).toBe(5);
+      expect(blockedCount).toBe(5);
+    });
+  });
+  
+  // ============================================
+  // Property 30: Dual Input Validation
+  // ============================================
+  
+  describe('Property 30: Dual Input Validation', () => {
+    const { sanitizeString, sanitizeObject } = require('../src/middleware/validation');
+    
+    test('sanitization should remove all HTML tags', async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.string({ minLength: 1, maxLength: 100 }),
+          async (input) => {
+            const withHTML = `<script>${input}</script><div>${input}</div>`;
+            const sanitized = sanitizeString(withHTML);
+            
+            // Property: No HTML tags should remain
+            expect(sanitized).not.toContain('<');
+            expect(sanitized).not.toContain('>');
+            expect(sanitized).not.toContain('script');
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+    
+    test('sanitization should preserve safe text', async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.string({ minLength: 1, maxLength: 100 }).filter(s => !s.includes('<') && !s.includes('>')),
+          async (safeText) => {
+            const sanitized = sanitizeString(safeText);
+            
+            // Property: Safe text should be preserved (trimmed)
+            expect(sanitized).toBe(safeText.trim());
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+    
+    test('object sanitization should work recursively', async () => {
+      await fc.assert(
+        fc.asyncProperty(
+          fc.record({
+            name: fc.string(),
+            nested: fc.record({
+              value: fc.string()
+            })
+          }),
+          async (obj) => {
+            const withHTML = {
+              name: `<script>${obj.name}</script>`,
+              nested: {
+                value: `<div>${obj.nested.value}</div>`
+              }
+            };
+            
+            const sanitized = sanitizeObject(withHTML);
+            
+            // Property: All nested strings should be sanitized
+            expect(sanitized.name).not.toContain('<');
+            expect(sanitized.nested.value).not.toContain('<');
+          }
+        ),
+        { numRuns: 100 }
+      );
+    });
+  });
+  
+  // ============================================
+  // Property 31: XSS Prevention
+  // ============================================
+  
+  describe('Property 31: XSS Prevention', () => {
+    const { sanitizeString } = require('../src/middleware/validation');
+    
+    test('common XSS patterns should be neutralized', async () => {
+      const xssPatterns = [
+        '<script>alert("XSS")</script>',
+        '<img src=x onerror=alert("XSS")>',
+        '<svg onload=alert("XSS")>',
+        'javascript:alert("XSS")',
+        '<iframe src="javascript:alert(\'XSS\')">',
+        '<body onload=alert("XSS")>',
+        '<input onfocus=alert("XSS") autofocus>',
+        '<select onfocus=alert("XSS") autofocus>',
+        '<textarea onfocus=alert("XSS") autofocus>',
+        '<marquee onstart=alert("XSS")>'
+      ];
+      
+      for (const pattern of xssPatterns) {
+        const sanitized = sanitizeString(pattern);
+        
+        // Property: XSS patterns should be neutralized
+        expect(sanitized).not.toContain('script');
+        expect(sanitized).not.toContain('onerror');
+        expect(sanitized).not.toContain('onload');
+        expect(sanitized).not.toContain('onfocus');
+        expect(sanitized).not.toContain('javascript:');
+      }
+    });
+  });
+  
+  // ============================================
+  // Property 32: Security Action Logging
+  // ============================================
+  
+  describe('Property 32: Security Action Logging', () => {
+    const { logSecurityAction } = require('../src/services/securityLogger');
+    
+    test('all security actions should be logged', async () => {
+      const actions = [
+        'password_change',
+        'email_change',
+        'phone_change',
+        '2fa_enabled',
+        '2fa_disabled',
+        'session_terminated',
+        'account_locked'
+      ];
+      
+      for (const action of actions) {
+        const mockReq = {
+          ip: '127.0.0.1',
+          headers: { 'user-agent': 'test-agent' }
+        };
+        
+        const log = await logSecurityAction({
+          userId: 'test-user-123',
+          action,
+          details: { test: true },
+          req: mockReq,
+          success: true
+        });
+        
+        // Property: Log should be created
+        expect(log).toBeDefined();
+        if (log) {
+          expect(log.action).toBe(action);
+        }
+      }
+    });
+    
+    test('failed actions should be logged with error message', async () => {
+      const mockReq = {
+        ip: '127.0.0.1',
+        headers: { 'user-agent': 'test-agent' }
+      };
+      
+      const log = await logSecurityAction({
+        userId: 'test-user-123',
+        action: 'password_change',
+        details: {},
+        req: mockReq,
+        success: false,
+        errorMessage: 'Invalid current password'
+      });
+      
+      // Property: Failed action should be logged with error
+      expect(log).toBeDefined();
+      if (log) {
+        expect(log.success).toBe(false);
+        expect(log.errorMessage).toBe('Invalid current password');
+      }
+    });
+  });
+  
+  // ============================================
+  // Property 33: Suspicious Activity Account Lock
+  // ============================================
+  
+  describe('Property 33: Suspicious Activity Account Lock', () => {
+    const { lockAccount, isAccountLocked, unlockAccount } = require('../src/services/accountLockService');
+    
+    test('account should be locked after suspicious activity', async () => {
+      const userId = 'suspicious-user-' + Date.now();
+      const mockReq = {
+        ip: '127.0.0.1',
+        headers: { 'user-agent': 'test-agent' }
+      };
+      
+      // Lock account
+      const lockInfo = await lockAccount(userId, 'Test suspicious activity', mockReq);
+      
+      // Property: Account should be locked
+      expect(lockInfo.locked).toBe(true);
+      expect(lockInfo.reason).toBe('Test suspicious activity');
+      
+      // Verify lock status
+      const status = isAccountLocked(userId);
+      expect(status.locked).toBe(true);
+      
+      // Cleanup
+      await unlockAccount(userId, mockReq, true);
+    });
+    
+    test('locked account should be unlocked after duration', async () => {
+      const userId = 'temp-lock-user-' + Date.now();
+      const mockReq = {
+        ip: '127.0.0.1',
+        headers: { 'user-agent': 'test-agent' }
+      };
+      
+      // Lock for 1 second
+      await lockAccount(userId, 'Test lock', mockReq, 1000);
+      
+      // Should be locked immediately
+      expect(isAccountLocked(userId).locked).toBe(true);
+      
+      // Wait for expiration
+      await new Promise(resolve => setTimeout(resolve, 1100));
+      
+      // Property: Should be unlocked after duration
+      expect(isAccountLocked(userId).locked).toBe(false);
+    });
+    
+    test('admin should be able to unlock account', async () => {
+      const userId = 'admin-unlock-user-' + Date.now();
+      const mockReq = {
+        ip: '127.0.0.1',
+        headers: { 'user-agent': 'test-agent' }
+      };
+      
+      // Lock account
+      await lockAccount(userId, 'Test lock', mockReq);
+      expect(isAccountLocked(userId).locked).toBe(true);
+      
+      // Admin unlock
+      const result = await unlockAccount(userId, mockReq, true);
+      
+      // Property: Admin should be able to unlock
+      expect(result.success).toBe(true);
+      expect(isAccountLocked(userId).locked).toBe(false);
+    });
+  });
+

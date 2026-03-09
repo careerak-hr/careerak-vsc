@@ -1,0 +1,201 @@
+/* AccountDeletionSection.css */
+
+.account-deletion-section {
+    background: white;
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.deletion-warning-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem;
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.warning-icon {
+    font-size: 2rem;
+}
+
+.warning-text {
+    font-weight: 600;
+    color: #856404;
+    font-size: 1rem;
+}
+
+.deletion-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.deletion-description {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.consequences-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.consequence-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #dc3545;
+}
+
+[dir="rtl"] .consequence-item {
+    border-left: none;
+    border-right: 3px solid #dc3545;
+}
+
+.consequence-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.consequence-text {
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.grace-period-info {
+    padding: 1.5rem;
+    background-color: #d1ecf1;
+    border: 2px solid #17a2b8;
+    border-radius: 8px;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.info-icon {
+    font-size: 1.5rem;
+}
+
+.info-title {
+    font-weight: 600;
+    color: #0c5460;
+    font-size: 1.1rem;
+}
+
+.info-description {
+    color: #0c5460;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.deletion-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.think-carefully {
+    color: #666;
+    font-size: 0.95rem;
+    font-style: italic;
+    text-align: center;
+}
+
+.delete-account-button {
+    padding: 1rem 2rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.delete-account-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .account-deletion-section {
+        padding: 1.5rem;
+    }
+
+    .deletion-warning-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .consequence-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .grace-period-info {
+        padding: 1rem;
+    }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    .account-deletion-section {
+        background: #1a1a1a;
+        border-color: #dc3545;
+    }
+
+    .deletion-warning-banner {
+        background-color: #3a3a1a;
+        border-color: #ffc107;
+    }
+
+    .warning-text {
+        color: #ffc107;
+    }
+
+    .deletion-description,
+    .think-carefully {
+        color: #aaa;
+    }
+
+    .consequence-item {
+        background-color: #2a2a2a;
+    }
+
+    .consequence-text {
+        color: #E3DAD1;
+    }
+
+    .grace-period-info {
+        background-color: #1a2a2a;
+        border-color: #17a2b8;
+    }
+
+    .info-title,
+    .info-description {
+        color: #17a2b8;
+    }
+}

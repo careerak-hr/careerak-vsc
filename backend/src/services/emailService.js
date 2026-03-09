@@ -788,6 +788,168 @@ ${process.env.FRONTEND_URL || 'http://localhost:3000'}
   return sendEmail({ to, subject, html, text });
 };
 
+/**
+ * إرسال بريد إلكتروني عند إصدار شهادة جديدة
+ */
+const sendCertificateIssuedEmail = async (user, certificate, course) => {
+  const certificateUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/certificates/${certificate.certificateId}`;
+  const verificationUrl = certificate.verificationUrl;
+  const pdfUrl = certificate.pdfUrl || certificateUrl;
+
+  const subject = `تهانينا! شهادتك جاهزة - ${course.title} | Careerak`;
+  
+  const html = `
+    <!DOCTYPE html>
+    <html dir="rtl" lang="ar">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #304B60 0%, #D48161 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header h1 { margin: 0; font-size: 32px; }
+        .header .icon { font-size: 64px; margin-bottom: 10px; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .certificate-box { background: white; border: 3px solid #D48161; padding: 25px; border-radius: 10px; margin: 20px 0; text-align: center; }
+        .certificate-title { color: #304B60; font-size: 24px; font-weight: bold; margin: 15px 0; }
+        .certificate-info { color: #666; font-size: 16px; margin: 10px 0; }
+        .button { display: inline-block; background: #D48161; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; margin: 10px 5px; font-size: 16px; font-weight: bold; }
+        .button:hover { background: #c06f51; }
+        .button-secondary { background: #304B60; }
+        .button-secondary:hover { background: #243a4d; }
+        .features { background: #e8f4f8; border-right: 4px solid #304B60; padding: 20px; margin: 20px 0; }
+        .features ul { margin: 10px 0; padding-right: 20px; }
+        .features li { margin: 8px 0; }
+        .share-section { background: #fff3e0; border: 2px solid #ff9800; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
+        .footer { text-align: center; color: #666; margin-top: 20px; font-size: 12px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <div class="icon">🎉</div>
+          <h1>تهانينا!</h1>
+          <p style="font-size: 18px; margin: 10px 0 0 0;">شهادتك جاهزة للتحميل</p>
+        </div>
+        <div class="content">
+          <p style="font-size: 18px;">مرحباً <strong>${user.firstName} ${user.lastName}</strong>،</p>
+          
+          <p>نهنئك على إكمال دورة <strong>"${course.title}"</strong> بنجاح! 🎓</p>
+          
+          <div class="certificate-box">
+            <div style="font-size: 48px; margin-bottom: 15px;">📜</div>
+            <div class="certificate-title">${course.title}</div>
+            <div class="certificate-info">
+              <p><strong>رقم الشهادة:</strong> ${certificate.certificateId}</p>
+              <p><strong>تاريخ الإصدار:</strong> ${new Date(certificate.issueDate).toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}</p>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${pdfUrl}" class="button">📥 تحميل الشهادة (PDF)</a>
+            <a href="${certificateUrl}" class="button button-secondary">👁️ عرض الشهادة</a>
+          </div>
+          
+          <div class="features">
+            <h3 style="color: #304B60; margin-top: 0;">✨ ميزات شهادتك:</h3>
+            <ul>
+              <li>✅ <strong>شهادة رسمية معتمدة</strong> من Careerak</li>
+              <li>🔐 <strong>رقم فريد</strong> للتحقق من الصحة</li>
+              <li>📱 <strong>QR Code</strong> للمشاركة والتحقق السريع</li>
+              <li>🌐 <strong>رابط تحقق عام</strong> يمكن مشاركته مع أي جهة</li>
+              <li>💼 <strong>قابلة للمشاركة</strong> على LinkedIn وجميع المنصات</li>
+            </ul>
+          </div>
+          
+          <div class="share-section">
+            <h3 style="color: #ff9800; margin-top: 0;">📢 شارك إنجازك!</h3>
+            <p>أضف شهادتك إلى ملفك الشخصي على LinkedIn وشاركها مع شبكتك المهنية</p>
+            <a href="${certificateUrl}" class="button" style="background: #0077b5;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="width: 20px; vertical-align: middle; margin-left: 5px;">
+              مشاركة على LinkedIn
+            </a>
+          </div>
+          
+          <div style="background: white; border: 2px solid #10b981; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #10b981; margin-top: 0;">🔍 التحقق من الشهادة</h3>
+            <p>يمكن لأي شخص التحقق من صحة شهادتك باستخدام:</p>
+            <ul style="margin: 10px 0; padding-right: 20px;">
+              <li><strong>رقم الشهادة:</strong> ${certificate.certificateId}</li>
+              <li><strong>رابط التحقق:</strong> <a href="${verificationUrl}" style="color: #10b981;">${verificationUrl}</a></li>
+              <li><strong>QR Code:</strong> موجود على الشهادة</li>
+            </ul>
+          </div>
+          
+          <p style="font-size: 16px; color: #555; margin-top: 30px;">
+            نتمنى لك التوفيق في مسيرتك المهنية! 🚀
+          </p>
+          
+          <p style="font-size: 14px; color: #777;">
+            إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.
+          </p>
+        </div>
+        <div class="footer">
+          <p>© 2026 Careerak. جميع الحقوق محفوظة.</p>
+          <p>careerak.hr@gmail.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const text = `
+مرحباً ${user.firstName} ${user.lastName}،
+
+🎉 تهانينا! شهادتك جاهزة للتحميل
+
+نهنئك على إكمال دورة "${course.title}" بنجاح! 🎓
+
+📜 معلومات الشهادة:
+- رقم الشهادة: ${certificate.certificateId}
+- تاريخ الإصدار: ${new Date(certificate.issueDate).toLocaleDateString('ar-EG')}
+
+📥 تحميل الشهادة:
+${pdfUrl}
+
+👁️ عرض الشهادة:
+${certificateUrl}
+
+✨ ميزات شهادتك:
+✅ شهادة رسمية معتمدة من Careerak
+🔐 رقم فريد للتحقق من الصحة
+📱 QR Code للمشاركة والتحقق السريع
+🌐 رابط تحقق عام يمكن مشاركته مع أي جهة
+💼 قابلة للمشاركة على LinkedIn وجميع المنصات
+
+🔍 التحقق من الشهادة:
+يمكن لأي شخص التحقق من صحة شهادتك باستخدام:
+- رقم الشهادة: ${certificate.certificateId}
+- رابط التحقق: ${verificationUrl}
+- QR Code: موجود على الشهادة
+
+📢 شارك إنجازك!
+أضف شهادتك إلى ملفك الشخصي على LinkedIn وشاركها مع شبكتك المهنية.
+
+نتمنى لك التوفيق في مسيرتك المهنية! 🚀
+
+إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.
+
+© 2026 Careerak
+careerak.hr@gmail.com
+  `;
+
+  return await sendEmail({
+    to: user.email,
+    subject,
+    html,
+    text
+  });
+};
+
 module.exports = {
   sendEmail,
   sendVerificationEmail,
@@ -795,5 +957,6 @@ module.exports = {
   sendPasswordChangedEmail,
   sendVideoInterviewInvitation,
   sendVideoInterviewReminder,
-  sendInterviewRescheduledEmail
+  sendInterviewRescheduledEmail,
+  sendCertificateIssuedEmail
 };

@@ -1,0 +1,61 @@
+{
+  "exportDate": "2026-03-08T18:01:54.652Z",
+  "userId": "69adb9916739623c3948b598",
+  "profile": {
+    "reviewStats": {
+      "ratingDistribution": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    "passwordStrength": {
+      "score": 0,
+      "label": "none"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "backupCodes": [],
+      "twoFactorSetupPending": false
+    },
+    "registrationProgress": {
+      "step": 1,
+      "completed": false
+    },
+    "preferences": {
+      "notifications": {
+        "enabled": true,
+        "email": true,
+        "push": true
+      },
+      "accessibility": {
+        "reducedMotion": false,
+        "highContrast": false,
+        "fontSize": "medium"
+      },
+      "tracking": {
+        "enabled": true
+      },
+      "theme": "system",
+      "language": "ar"
+    },
+    "_id": "69adb9916739623c3948b598",
+    "email": "t''$4&_a/.hv_{x}dxp.wr=xs$s'.-uu%.=f%^@yhz5dhh22nmo.fe",
+    "role": "HR",
+    "phone": "+",
+    "country": "UAE",
+    "privacyAccepted": true,
+    "isVerified": false,
+    "isSpecialNeeds": false,
+    "specialNeedsType": "none",
+    "emailVerified": false,
+    "accountDisabled": false,
+    "oauthAccounts": [],
+    "createdAt": "2026-03-08T18:01:53.724Z",
+    "updatedAt": "2026-03-08T18:01:53.724Z"
+  }
+}

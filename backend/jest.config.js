@@ -10,5 +10,8 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html'],
   setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
   testTimeout: 30000, // Increased for property-based tests
-  verbose: true
+  verbose: true,
+  transformIgnorePatterns: [
+    'node_modules/(?!(uuid)/)'
+  ]
 };

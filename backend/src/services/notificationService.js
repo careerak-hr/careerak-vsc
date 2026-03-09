@@ -218,6 +218,47 @@ class NotificationService {
   
   // ==================== Course Notifications ====================
   
+  // إشعار بإصدار شهادة جديدة
+  async notifyCertificateIssued(userId, certificateId, courseName, certificateUrl) {
+    try {
+      return await this.createNotification({
+        recipient: userId,
+        type: 'certificate_issued',
+        title: 'تهانينا! شهادتك جاهزة 🎉',
+        message: `تم إصدار شهادتك لدورة "${courseName}" بنجاح. يمكنك تحميلها الآن!`,
+        relatedData: { 
+          certificate: certificateId,
+          certificateUrl
+        },
+        priority: 'high'
+      });
+    } catch (error) {
+      logger.error('Error notifying certificate issued:', error);
+      throw error;
+    }
+  }
+  
+  // إشعار بالحصول على badge جديد
+  async notifyBadgeEarned(userId, badgeId, badgeName, badgeDescription) {
+    try {
+      return await this.createNotification({
+        recipient: userId,
+        type: 'badge_earned',
+        title: `إنجاز جديد! حصلت على ${badgeName} 🏆`,
+        message: badgeDescription || `تهانينا! لقد حصلت على إنجاز "${badgeName}"`,
+        relatedData: { 
+          badge: badgeId
+        },
+        priority: 'medium'
+      });
+    } catch (error) {
+      logger.error('Error notifying badge earned:', error);
+      throw error;
+    }
+  }
+  
+  // ==================== Course Notifications ====================
+  
   // إشعار بمراجعة جديدة على الدورة (للمدرب)
   async notifyCourseReview(instructorId, courseId, courseTitle, reviewerName, rating) {
     try {
@@ -850,6 +891,250 @@ class NotificationService {
     );
     await preferences.save();
     return preferences;
+  }
+  
+  // ==================== Settings Notifications ====================
+  
+  /**
+   * إرسال إشعار أمني للمستخدم
+   * @param {String} userId - معرف المستخدم
+   * @param {String} action - نوع الإجراء الأمني (email_change, phone_change, password_change, session_terminated, 2fa_enabled, 2fa_disabled, account_deletion)
+   * @param {Object} details - تفاصيل الإجراء
+   * @returns {Promise<Notification>}
+   */
+  async sendSecurityNotification(userId, action, details = {}) {
+    try {
+      let title, message, priority = 'urgent';
+      
+      switch (action) {
+        case 'email_change':
+          title = 'تم تغيير البريد الإلكتروني 📧';
+          message = `تم تغيير بريدك الإلكتروني من ${details.oldEmail} إلى ${details.newEmail}. إذا لم تقم بهذا التغيير، يرجى التواصل معنا فوراً.`;
+          break;
+          
+        case 'phone_change':
+          title = 'تم تغيير رقم الهاتف 📱';
+          message = `تم تغيير رقم هاتفك إلى ${details.newPhone}. إذا لم تقم بهذا التغيير، يرجى التواصل معنا فوراً.`;
+          break;
+          
+        case 'password_change':
+          title = 'تم تغيير كلمة المرور 🔐';
+          message = 'تم تغيير كلمة مرور حسابك بنجاح. إذا لم تقم بهذا التغيير، يرجى تغيير كلمة المرور فوراً والتواصل معنا.';
+          break;
+          
+        case 'session_terminated':
+          title = 'تم إنهاء جلسة 🚪';
+          message = details.allSessions 
+            ? 'تم إنهاء جميع الجلسات الأخرى بنجاح.'
+            : `تم إنهاء جلسة من ${details.device || 'جهاز غير معروف'}.`;
+          priority = 'high';
+          break;
+          
+        case '2fa_enabled':
+          title = 'تم تفعيل المصادقة الثنائية ✅';
+          message = 'تم تفعيل المصادقة الثنائية (2FA) لحسابك. حسابك الآن أكثر أماناً.';
+          priority = 'high';
+          break;
+          
+        case '2fa_disabled':
+          title = 'تم تعطيل المصادقة الثنائية ⚠️';
+          message = 'تم تعطيل المصادقة الثنائية (2FA) لحسابك. ننصح بإعادة تفعيلها لحماية أفضل.';
+          priority = 'urgent';
+          break;
+          
+        case 'account_deletion':
+          title = 'طلب حذف الحساب 🗑️';
+          message = details.scheduled 
+            ? `تم جدولة حذف حسابك في ${details.deletionDate}. يمكنك إلغاء الحذف خلال فترة السماح.`
+            : 'تم استلام طلب حذف حسابك. سيتم معالجته قريباً.';
+          break;
+          
+        default:
+          title = 'إشعار أمني 🔒';
+          message = details.message || 'تم تنفيذ إجراء أمني على حسابك.';
+      }
+      
+      const notification = await this.createNotification({
+        recipient: userId,
+        type: 'security',
+        title,
+        message,
+        relatedData: {
+          action,
+          ...details,
+          timestamp: new Date()
+        },
+        priority
+      });
+      
+      // إرسال إشعار فوري عبر Pusher
+      const pusherService = require('./pusherService');
+      if (pusherService.isEnabled()) {
+        await pusherService.sendNotificationToUser(userId, {
+          type: 'security',
+          action,
+          title,
+          message,
+          timestamp: new Date().toISOString()
+        });
+        logger.info(`Real-time security notification sent to user ${userId} for action: ${action}`);
+      }
+      
+      logger.info(`Security notification sent to user ${userId} for action: ${action}`);
+      return notification;
+      
+    } catch (error) {
+      logger.error('Error sending security notification:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * تأجيل إشعار خلال ساعات الهدوء
+   * @param {String} userId - معرف المستخدم
+   * @param {Object} notificationData - بيانات الإشعار
+   * @returns {Promise<Object>}
+   */
+  async queueNotificationDuringQuietHours(userId, notificationData) {
+    try {
+      const preferences = await this.getUserPreferences(userId);
+      
+      // التحقق من تفعيل ساعات الهدوء
+      if (!preferences.quietHours?.enabled) {
+        logger.info(`Quiet hours not enabled for user ${userId}, sending notification immediately`);
+        return await this.createNotification(notificationData);
+      }
+      
+      // التحقق من الوقت الحالي
+      if (!this.isQuietHours(preferences)) {
+        logger.info(`Not in quiet hours for user ${userId}, sending notification immediately`);
+        return await this.createNotification(notificationData);
+      }
+      
+      // حساب وقت نهاية ساعات الهدوء
+      const now = new Date();
+      const endTime = this.calculateQuietHoursEnd(preferences.quietHours);
+      
+      // إضافة الإشعار لقائمة الانتظار
+      const QueuedNotification = require('../models/QueuedNotification');
+      const queuedNotification = await QueuedNotification.create({
+        recipient: userId,
+        type: notificationData.type,
+        title: notificationData.title,
+        message: notificationData.message,
+        relatedData: notificationData.relatedData || {},
+        priority: notificationData.priority || 'medium',
+        queuedAt: now,
+        scheduledFor: endTime,
+        reason: 'quiet_hours'
+      });
+      
+      logger.info(`Notification queued for user ${userId} until ${endTime} (quiet hours)`);
+      
+      return {
+        queued: true,
+        notificationId: queuedNotification._id,
+        scheduledFor: endTime,
+        reason: 'quiet_hours'
+      };
+      
+    } catch (error) {
+      logger.error('Error queuing notification during quiet hours:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * حساب وقت نهاية ساعات الهدوء
+   * @param {Object} quietHours - إعدادات ساعات الهدوء
+   * @returns {Date}
+   */
+  calculateQuietHoursEnd(quietHours) {
+    const now = new Date();
+    const [endHour, endMinute] = quietHours.end.split(':').map(Number);
+    
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMinute, 0, 0);
+    
+    // إذا كان وقت النهاية قد مضى اليوم، اجعله غداً
+    if (endTime <= now) {
+      endTime.setDate(endTime.getDate() + 1);
+    }
+    
+    return endTime;
+  }
+  
+  /**
+   * إرسال الإشعارات المؤجلة (cron job)
+   * يتم تشغيله كل ساعة للتحقق من الإشعارات المجدولة
+   * @returns {Promise<Object>}
+   */
+  async sendQueuedNotifications() {
+    try {
+      const QueuedNotification = require('../models/QueuedNotification');
+      const now = new Date();
+      
+      // جلب الإشعارات المجدولة التي حان وقت إرسالها
+      const queuedNotifications = await QueuedNotification.find({
+        scheduledFor: { $lte: now }
+      }).sort({ scheduledFor: 1 });
+      
+      if (queuedNotifications.length === 0) {
+        logger.info('No queued notifications to send');
+        return { sent: 0, failed: 0 };
+      }
+      
+      logger.info(`Found ${queuedNotifications.length} queued notifications to send`);
+      
+      let sent = 0;
+      let failed = 0;
+      
+      // إرسال كل إشعار
+      for (const queuedNotif of queuedNotifications) {
+        try {
+          // إنشاء الإشعار
+          await this.createNotification({
+            recipient: queuedNotif.recipient,
+            type: queuedNotif.type,
+            title: queuedNotif.title,
+            message: queuedNotif.message,
+            relatedData: queuedNotif.relatedData,
+            priority: queuedNotif.priority
+          });
+          
+          // حذف الإشعار من قائمة الانتظار
+          await QueuedNotification.findByIdAndDelete(queuedNotif._id);
+          
+          sent++;
+          logger.info(`Sent queued notification ${queuedNotif._id} to user ${queuedNotif.recipient}`);
+          
+        } catch (error) {
+          failed++;
+          logger.error(`Failed to send queued notification ${queuedNotif._id}:`, error);
+          
+          // تحديث عدد المحاولات
+          queuedNotif.retryCount = (queuedNotif.retryCount || 0) + 1;
+          
+          // إذا فشل 3 مرات، احذفه
+          if (queuedNotif.retryCount >= 3) {
+            await QueuedNotification.findByIdAndDelete(queuedNotif._id);
+            logger.warn(`Deleted queued notification ${queuedNotif._id} after 3 failed attempts`);
+          } else {
+            // جدوله للمحاولة مرة أخرى بعد ساعة
+            queuedNotif.scheduledFor = new Date(now.getTime() + 60 * 60 * 1000);
+            await queuedNotif.save();
+          }
+        }
+      }
+      
+      logger.info(`Queued notifications processing complete: ${sent} sent, ${failed} failed`);
+      
+      return { sent, failed, total: queuedNotifications.length };
+      
+    } catch (error) {
+      logger.error('Error sending queued notifications:', error);
+      throw error;
+    }
   }
 }
 

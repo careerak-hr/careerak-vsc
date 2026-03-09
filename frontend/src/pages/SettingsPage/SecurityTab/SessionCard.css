@@ -1,0 +1,150 @@
+/* SessionCard.css */
+
+.session-card {
+    background: white;
+    border: 2px solid #D4816180;
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.session-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.session-card.current-session {
+    border-color: #304B60;
+    background-color: #f8f9fa;
+}
+
+.current-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #304B60;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+[dir="rtl"] .current-badge {
+    right: auto;
+    left: 1rem;
+}
+
+.session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.device-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    flex: 1;
+}
+
+.device-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.device-details {
+    flex: 1;
+}
+
+.device-name {
+    font-weight: 600;
+    color: #304B60;
+    margin-bottom: 0.25rem;
+}
+
+.browser-name {
+    color: #666;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.browser-icon {
+    font-size: 1rem;
+}
+
+.logout-button {
+    padding: 0.5rem 1rem;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+}
+
+.session-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.detail-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.detail-value {
+    color: #304B60;
+}
+
+.ip-address {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .session-card {
+        padding: 1rem;
+    }
+
+    .current-badge {
+        position: static;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .session-header {
+        flex-direction: column;
+    }
+
+    .logout-button {
+        width: 100%;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+}

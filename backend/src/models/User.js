@@ -56,10 +56,14 @@ const userSchema = new mongoose.Schema({
   emailVerified: { type: Boolean, default: false },
   emailVerificationToken: String,
   emailVerificationExpires: Date,
-  // المصادقة الثنائية
-  twoFactorEnabled: { type: Boolean, default: false },
-  twoFactorSecret: String,
-  backupCodes: [String], // رموز احتياطية مشفرة
+  // المصادقة الثنائية (2FA) - محدّث للـ Settings Page
+  security: {
+    twoFactorEnabled: { type: Boolean, default: false },
+    twoFactorSecret: String,
+    backupCodes: [String], // رموز احتياطية مشفرة
+    twoFactorEnabledAt: Date,
+    twoFactorSetupPending: { type: Boolean, default: false }
+  },
   // تقدم التسجيل
   registrationProgress: {
     step: { type: Number, min: 1, max: 4, default: 1 },

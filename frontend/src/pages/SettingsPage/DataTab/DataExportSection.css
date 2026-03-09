@@ -1,0 +1,232 @@
+/* DataExportSection.css */
+
+.data-export-section {
+    background: white;
+    border: 2px solid #D4816180;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    color: #304B60;
+    margin-bottom: 0.5rem;
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.section-description {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.export-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #304B60;
+    font-size: 1rem;
+}
+
+.data-type-checkbox {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    border: 2px solid #D4816180;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.data-type-checkbox:hover {
+    background-color: #f8f9fa;
+    border-color: #D48161;
+}
+
+.data-type-checkbox input[type="checkbox"] {
+    margin-right: 0.75rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+[dir="rtl"] .data-type-checkbox input[type="checkbox"] {
+    margin-right: 0;
+    margin-left: 0.75rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.checkbox-icon {
+    font-size: 1.25rem;
+}
+
+.checkbox-text {
+    font-size: 1rem;
+    color: #333;
+}
+
+.data-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.format-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.format-option {
+    flex: 1;
+    min-width: 150px;
+}
+
+.format-option input[type="radio"] {
+    display: none;
+}
+
+.format-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border: 2px solid #D4816180;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.format-option input[type="radio"]:checked + .format-label {
+    background-color: #304B60;
+    border-color: #304B60;
+    color: white;
+}
+
+.format-label:hover {
+    border-color: #D48161;
+}
+
+.format-icon {
+    font-size: 2rem;
+}
+
+.format-text {
+    font-weight: 600;
+}
+
+.export-button {
+    padding: 1rem 2rem;
+    background-color: #304B60;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.export-button:hover:not(:disabled) {
+    background-color: #243a4d;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.export-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.export-note {
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .data-export-section {
+        padding: 1.5rem;
+    }
+
+    .data-types-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .format-options {
+        flex-direction: column;
+    }
+
+    .format-option {
+        min-width: 100%;
+    }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+    .data-export-section {
+        background: #1a1a1a;
+        border-color: #D48161;
+    }
+
+    .section-title {
+        color: #E3DAD1;
+    }
+
+    .section-description,
+    .export-note {
+        color: #aaa;
+    }
+
+    .data-type-checkbox {
+        border-color: #D48161;
+        background-color: #2a2a2a;
+    }
+
+    .data-type-checkbox:hover {
+        background-color: #333;
+    }
+
+    .checkbox-text {
+        color: #E3DAD1;
+    }
+
+    .format-label {
+        border-color: #D48161;
+        background-color: #2a2a2a;
+        color: #E3DAD1;
+    }
+
+    .format-option input[type="radio"]:checked + .format-label {
+        background-color: #E3DAD1;
+        border-color: #E3DAD1;
+        color: #304B60;
+    }
+}

@@ -1,300 +1,431 @@
-/**
- * Certificate Service for Course Completion
- * Handles PDF certificate generation and Cloudinary upload
- */
-
-const PDFDocument = require('pdfkit');
+const Certificate = require('../models/Certificate');
+const { User } = require('../models/User');
+const EducationalCourse = require('../models/EducationalCourse');
+const QRCode = require('qrcode');
+const crypto = require('crypto');
+const PDFGenerator = require('./pdfGenerator');
 const cloudinary = require('../config/cloudinary');
 
 class CertificateService {
-  constructor(CourseEnrollment, EducationalCourse, User) {
-    this.CourseEnrollment = CourseEnrollment;
-    this.EducationalCourse = EducationalCourse;
-    this.User = User;
+  constructor() {
+    this.pdfGenerator = new PDFGenerator();
   }
 
-  /**
-   * Generate certificate for completed course
-   * @param {Object} enrollment - Course enrollment
-   * @returns {Object} Certificate details { certificateUrl, certificateId }
-   */
-  async generateCertificate(enrollment) {
+  async issueCertificate(userId, courseId, options = {}) {
     try {
-      // Populate enrollment with course and student details
-      const populatedEnrollment = await this.CourseEnrollment.findById(enrollment._id)
-        .populate('course')
-        .populate('student');
-
-      if (!populatedEnrollment) {
-        throw new Error('Enrollment not found');
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error('User not found');
       }
 
-      const course = populatedEnrollment.course;
-      const student = populatedEnrollment.student;
+      const course = await EducationalCourse.findById(courseId);
+      if (!course) {
+        throw new Error('Course not found');
+      }
 
-      // Generate unique certificate ID
-      const certificateId = this.generateCertificateId(enrollment);
+      const existingCertificate = await Certificate.hasCertificate(userId, courseId);
+      if (existingCertificate) {
+        throw new Error('Certificate already exists for this user and course');
+      }
 
-      // Prepare certificate data
-      const certificateData = {
-        studentName: student.fullName || `${student.firstName} ${student.lastName}`,
+      const certificateId = crypto.randomUUID();
+      const verificationUrl = `${process.env.FRONTEND_URL || 'https://careerak.com'}/verify/${certificateId}`;
+      const qrCodeData = await this.generateQRCode(verificationUrl);
+
+      const certificate = new Certificate({
+        certificateId,
+        userId,
+        courseId,
         courseName: course.title,
-        instructorName: course.instructor?.fullName || 'Careerak Team',
-        completionDate: enrollment.completedAt || new Date(),
-        certificateId: certificateId,
-        duration: course.totalDuration,
-        issueDate: new Date()
-      };
+        issueDate: options.issueDate || new Date(),
+        expiryDate: options.expiryDate || null,
+        qrCode: qrCodeData,
+        verificationUrl,
+        template: options.templateId || null
+      });
 
-      // Generate PDF
-      const pdfBuffer = await this.createPDF(certificateData);
+      await certificate.save();
 
-      // Upload to Cloudinary
-      const uploadResult = await this.uploadToCloudinary(pdfBuffer, certificateId);
+      // إرسال إشعار فوري للمستخدم
+      try {
+        const notificationService = require('./notificationService');
+        const certificateUrl = `${process.env.FRONTEND_URL || 'https://careerak.com'}/certificates/${certificate.certificateId}`;
+        
+        await notificationService.notifyCertificateIssued(
+          userId,
+          certificate._id,
+          course.title,
+          certificateUrl
+        );
+        
+        console.log(`✅ Notification sent for certificate ${certificate.certificateId}`);
+      } catch (notifError) {
+        console.error('Error sending certificate notification:', notifError);
+        // لا نفشل العملية إذا فشل الإشعار
+      }
+
+      // إرسال بريد إلكتروني
+      try {
+        const emailService = require('./emailService');
+        
+        await emailService.sendCertificateIssuedEmail(user, certificate, course);
+        
+        console.log(`✅ Email sent for certificate ${certificate.certificateId}`);
+      } catch (emailError) {
+        console.error('Error sending certificate email:', emailError);
+        // لا نفشل العملية إذا فشل البريد الإلكتروني
+      }
 
       return {
-        certificateUrl: uploadResult.secure_url,
-        certificateId: certificateId
+        success: true,
+        certificate: {
+          certificateId: certificate.certificateId,
+          userName: `${user.firstName} ${user.lastName}`,
+          courseName: course.title,
+          issueDate: certificate.issueDate,
+          verificationUrl: certificate.verificationUrl,
+          qrCode: certificate.qrCode,
+          status: certificate.status
+        }
       };
     } catch (error) {
-      throw new Error(`Failed to generate certificate: ${error.message}`);
+      console.error('Error issuing certificate:', error);
+      throw error;
     }
   }
 
-  /**
-   * Generate unique certificate ID
-   * @param {Object} enrollment - Course enrollment
-   * @returns {String} Certificate ID
-   */
-  generateCertificateId(enrollment) {
-    const timestamp = Date.now();
-    const courseId = enrollment.course.toString().slice(-6);
-    const studentId = enrollment.student.toString().slice(-6);
-    
-    return `CERT-${courseId}-${studentId}-${timestamp}`;
+
+  async generateQRCode(data) {
+    try {
+      const qrCodeDataUrl = await QRCode.toDataURL(data, {
+        errorCorrectionLevel: 'H',
+        type: 'image/png',
+        quality: 1,
+        margin: 1,
+        width: 300,
+        color: {
+          dark: '#304B60',
+          light: '#FFFFFF'
+        }
+      });
+
+      return qrCodeDataUrl;
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+      throw new Error('Failed to generate QR code');
+    }
   }
 
-  /**
-   * Create PDF certificate
-   * @param {Object} data - Certificate data
-   * @returns {Promise<Buffer>} PDF buffer
-   */
-  async createPDF(data) {
-    return new Promise((resolve, reject) => {
-      try {
-        const doc = new PDFDocument({
-          size: 'A4',
-          layout: 'landscape',
-          margins: { top: 50, bottom: 50, left: 50, right: 50 }
-        });
-
-        const chunks = [];
-        doc.on('data', chunk => chunks.push(chunk));
-        doc.on('end', () => resolve(Buffer.concat(chunks)));
-        doc.on('error', reject);
-
-        // Certificate design
-        const pageWidth = doc.page.width;
-        const pageHeight = doc.page.height;
-
-        // Border
-        doc.rect(30, 30, pageWidth - 60, pageHeight - 60)
-           .lineWidth(3)
-           .stroke('#304B60');
-
-        doc.rect(40, 40, pageWidth - 80, pageHeight - 80)
-           .lineWidth(1)
-           .stroke('#D48161');
-
-        // Header
-        doc.fontSize(40)
-           .font('Helvetica-Bold')
-           .fillColor('#304B60')
-           .text('Certificate of Completion', 0, 100, { align: 'center' });
-
-        // Decorative line
-        doc.moveTo(pageWidth / 2 - 150, 160)
-           .lineTo(pageWidth / 2 + 150, 160)
-           .lineWidth(2)
-           .stroke('#D48161');
-
-        // Body text
-        doc.fontSize(16)
-           .font('Helvetica')
-           .fillColor('#000000')
-           .text('This is to certify that', 0, 200, { align: 'center' });
-
-        // Student name
-        doc.fontSize(32)
-           .font('Helvetica-Bold')
-           .fillColor('#304B60')
-           .text(data.studentName, 0, 240, { align: 'center' });
-
-        // Course completion text
-        doc.fontSize(16)
-           .font('Helvetica')
-           .fillColor('#000000')
-           .text('has successfully completed the course', 0, 300, { align: 'center' });
-
-        // Course name
-        doc.fontSize(24)
-           .font('Helvetica-Bold')
-           .fillColor('#D48161')
-           .text(data.courseName, 0, 340, { align: 'center', width: pageWidth });
-
-        // Duration
-        if (data.duration) {
-          doc.fontSize(14)
-             .font('Helvetica')
-             .fillColor('#666666')
-             .text(`Duration: ${data.duration} hours`, 0, 390, { align: 'center' });
-        }
-
-        // Footer section
-        const footerY = pageHeight - 150;
-
-        // Completion date
-        doc.fontSize(12)
-           .font('Helvetica')
-           .fillColor('#000000')
-           .text(`Completion Date: ${this.formatDate(data.completionDate)}`, 100, footerY);
-
-        // Instructor signature
-        doc.fontSize(12)
-           .text(`Instructor: ${data.instructorName}`, pageWidth - 300, footerY);
-
-        // Certificate ID
-        doc.fontSize(10)
-           .fillColor('#666666')
-           .text(`Certificate ID: ${data.certificateId}`, 0, footerY + 40, { align: 'center' });
-
-        // Careerak branding
-        doc.fontSize(14)
-           .font('Helvetica-Bold')
-           .fillColor('#304B60')
-           .text('Careerak', 0, footerY + 70, { align: 'center' });
-
-        doc.fontSize(10)
-           .font('Helvetica')
-           .fillColor('#666666')
-           .text('Professional Learning Platform', 0, footerY + 90, { align: 'center' });
-
-        doc.end();
-      } catch (error) {
-        reject(error);
+  async getCertificateById(certificateId) {
+    try {
+      const certificate = await Certificate.getByCertificateId(certificateId);
+      
+      if (!certificate) {
+        throw new Error('Certificate not found');
       }
-    });
-  }
 
-  /**
-   * Upload PDF to Cloudinary
-   * @param {Buffer} pdfBuffer - PDF buffer
-   * @param {String} certificateId - Certificate ID
-   * @returns {Promise<Object>} Cloudinary upload result
-   */
-  async uploadToCloudinary(pdfBuffer, certificateId) {
-    return new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: 'careerak/certificates',
-          resource_type: 'raw',
-          public_id: certificateId,
-          format: 'pdf',
-          tags: ['certificate', 'course-completion']
-        },
-        (error, result) => {
-          if (error) {
-            reject(new Error(`Cloudinary upload failed: ${error.message}`));
-          } else {
-            resolve(result);
-          }
+      return {
+        success: true,
+        certificate: {
+          certificateId: certificate.certificateId,
+          userName: `${certificate.userId.firstName} ${certificate.userId.lastName}`,
+          userEmail: certificate.userId.email,
+          userImage: certificate.userId.profileImage,
+          courseName: certificate.courseName,
+          courseCategory: certificate.courseId?.category,
+          courseLevel: certificate.courseId?.level,
+          issueDate: certificate.issueDate,
+          expiryDate: certificate.expiryDate,
+          status: certificate.status,
+          verificationUrl: certificate.verificationUrl,
+          qrCode: certificate.qrCode,
+          pdfUrl: certificate.pdfUrl,
+          isValid: certificate.isValid(),
+          linkedInShared: certificate.linkedInShared
         }
-      );
-
-      uploadStream.end(pdfBuffer);
-    });
+      };
+    } catch (error) {
+      console.error('Error getting certificate:', error);
+      throw error;
+    }
   }
 
-  /**
-   * Format date for certificate
-   * @param {Date} date - Date to format
-   * @returns {String} Formatted date
-   */
-  formatDate(date) {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(date).toLocaleDateString('en-US', options);
+  async getUserCertificates(userId, filters = {}) {
+    try {
+      const options = {
+        status: filters.status || undefined
+      };
+
+      let certificates = await Certificate.getUserCertificates(userId, options);
+
+      if (filters.skip) {
+        certificates = certificates.slice(filters.skip);
+      }
+      if (filters.limit) {
+        certificates = certificates.slice(0, filters.limit);
+      }
+
+      return {
+        success: true,
+        count: certificates.length,
+        certificates: certificates.map(cert => ({
+          certificateId: cert.certificateId,
+          courseName: cert.courseName,
+          courseTitle: cert.courseId?.title,
+          courseThumbnail: cert.courseId?.thumbnail,
+          courseCategory: cert.courseId?.category,
+          issueDate: cert.issueDate,
+          status: cert.status,
+          verificationUrl: cert.verificationUrl,
+          pdfUrl: cert.pdfUrl,
+          isValid: cert.isValid()
+        }))
+      };
+    } catch (error) {
+      console.error('Error getting user certificates:', error);
+      throw error;
+    }
   }
 
-  /**
-   * Verify certificate authenticity
-   * @param {String} certificateId - Certificate ID
-   * @returns {Object} Certificate verification result
-   */
   async verifyCertificate(certificateId) {
     try {
-      const enrollment = await this.CourseEnrollment.findOne({
-        'certificateIssued.certificateId': certificateId,
-        'certificateIssued.issued': true
-      })
-      .populate('course')
-      .populate('student');
+      const certificate = await Certificate.getByCertificateId(certificateId);
 
-      if (!enrollment) {
+      if (!certificate) {
         return {
+          success: false,
           valid: false,
-          message: 'Certificate not found'
+          message: 'Certificate not found',
+          messageAr: 'الشهادة غير موجودة'
         };
       }
 
+      const isValid = certificate.isValid();
+
       return {
-        valid: true,
-        message: 'Certificate is valid',
-        details: {
-          studentName: enrollment.student.fullName,
-          courseName: enrollment.course.title,
-          completionDate: enrollment.completedAt,
-          issuedAt: enrollment.certificateIssued.issuedAt
+        success: true,
+        valid: isValid,
+        message: isValid ? 'Certificate is valid' : 'Certificate is not valid',
+        messageAr: isValid ? 'الشهادة صالحة' : 'الشهادة غير صالحة',
+        certificate: {
+          certificateId: certificate.certificateId,
+          userName: `${certificate.userId.firstName} ${certificate.userId.lastName}`,
+          courseName: certificate.courseName,
+          issueDate: certificate.issueDate,
+          expiryDate: certificate.expiryDate,
+          status: certificate.status,
+          revocationReason: certificate.revocation?.reason || null
         }
       };
     } catch (error) {
-      throw new Error(`Failed to verify certificate: ${error.message}`);
+      console.error('Error verifying certificate:', error);
+      throw error;
+    }
+  }
+
+  async revokeCertificate(certificateId, revokedBy, reason) {
+    try {
+      const certificate = await Certificate.findOne({ certificateId });
+
+      if (!certificate) {
+        throw new Error('Certificate not found');
+      }
+
+      if (certificate.status === 'revoked') {
+        throw new Error('Certificate is already revoked');
+      }
+
+      certificate.revoke(revokedBy, reason);
+      await certificate.save();
+
+      return {
+        success: true,
+        message: 'Certificate revoked successfully',
+        messageAr: 'تم إلغاء الشهادة بنجاح',
+        certificate: {
+          certificateId: certificate.certificateId,
+          status: certificate.status,
+          revokedAt: certificate.revocation.revokedAt,
+          reason: certificate.revocation.reason
+        }
+      };
+    } catch (error) {
+      console.error('Error revoking certificate:', error);
+      throw error;
+    }
+  }
+
+  async reissueCertificate(originalCertificateId, reissuedBy, reason) {
+    try {
+      const originalCertificate = await Certificate.findOne({ certificateId: originalCertificateId });
+
+      if (!originalCertificate) {
+        throw new Error('Original certificate not found');
+      }
+
+      originalCertificate.revoke(reissuedBy, 'Reissued');
+      await originalCertificate.save();
+
+      const newCertificateId = crypto.randomUUID();
+      const verificationUrl = `${process.env.FRONTEND_URL || 'https://careerak.com'}/verify/${newCertificateId}`;
+      const qrCodeData = await this.generateQRCode(verificationUrl);
+
+      const newCertificate = new Certificate({
+        certificateId: newCertificateId,
+        userId: originalCertificate.userId,
+        courseId: originalCertificate.courseId,
+        courseName: originalCertificate.courseName,
+        issueDate: new Date(),
+        qrCode: qrCodeData,
+        verificationUrl,
+        template: originalCertificate.template,
+        reissue: {
+          isReissued: true,
+          originalCertificateId: originalCertificateId,
+          reissuedAt: new Date(),
+          reissuedBy: reissuedBy,
+          reason: reason || 'No reason provided'
+        }
+      });
+
+      await newCertificate.save();
+
+      return {
+        success: true,
+        message: 'Certificate reissued successfully',
+        messageAr: 'تم إعادة إصدار الشهادة بنجاح',
+        certificate: {
+          certificateId: newCertificate.certificateId,
+          originalCertificateId: originalCertificateId,
+          verificationUrl: newCertificate.verificationUrl,
+          qrCode: newCertificate.qrCode
+        }
+      };
+    } catch (error) {
+      console.error('Error reissuing certificate:', error);
+      throw error;
+    }
+  }
+
+  async markAsSharedOnLinkedIn(certificateId) {
+    try {
+      const certificate = await Certificate.findOne({ certificateId });
+
+      if (!certificate) {
+        throw new Error('Certificate not found');
+      }
+
+      certificate.markAsShared();
+      await certificate.save();
+
+      return {
+        success: true,
+        message: 'Certificate marked as shared on LinkedIn',
+        messageAr: 'تم تحديد الشهادة كمشاركة على LinkedIn'
+      };
+    } catch (error) {
+      console.error('Error marking certificate as shared:', error);
+      throw error;
+    }
+  }
+
+  async getCertificateStats(userId = null) {
+    try {
+      const counts = await Certificate.countByStatus(userId);
+
+      return {
+        success: true,
+        stats: counts
+      };
+    } catch (error) {
+      console.error('Error getting certificate stats:', error);
+      throw error;
     }
   }
 
   /**
-   * Regenerate certificate (if needed)
-   * @param {String} enrollmentId - Enrollment ID
-   * @returns {Object} New certificate details
+   * توليد PDF للشهادة
+   * @param {string} certificateId - معرف الشهادة
+   * @returns {Promise<Buffer>} - PDF buffer
    */
-  async regenerateCertificate(enrollmentId) {
+  async generatePDF(certificateId) {
     try {
-      const enrollment = await this.CourseEnrollment.findById(enrollmentId);
-      if (!enrollment) {
-        throw new Error('Enrollment not found');
+      const certificate = await Certificate.getByCertificateId(certificateId);
+      
+      if (!certificate) {
+        throw new Error('Certificate not found');
       }
 
-      if (enrollment.status !== 'completed') {
-        throw new Error('Course not completed');
-      }
+      const user = certificate.userId;
+      const course = certificate.courseId;
 
-      // Generate new certificate
-      const certificate = await this.generateCertificate(enrollment);
-
-      // Update enrollment
-      enrollment.certificateIssued = {
-        issued: true,
-        issuedAt: new Date(),
-        certificateUrl: certificate.certificateUrl,
-        certificateId: certificate.certificateId
+      // تحضير بيانات الشهادة
+      const certificateData = {
+        certificateId: certificate.certificateId,
+        userName: `${user.firstName} ${user.lastName}`,
+        courseName: certificate.courseName || course?.title,
+        issueDate: certificate.issueDate,
+        qrCodeData: certificate.verificationUrl,
+        verificationUrl: certificate.verificationUrl,
+        instructorName: course?.instructor?.name || 'Careerak Team',
+        instructorSignature: course?.instructor?.signature || null
       };
 
-      await enrollment.save();
+      // توليد PDF
+      const pdfBuffer = await this.pdfGenerator.generateCertificate(certificateData);
 
-      return certificate;
+      return pdfBuffer;
     } catch (error) {
-      throw new Error(`Failed to regenerate certificate: ${error.message}`);
+      console.error('Error generating PDF:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * توليد وحفظ PDF في Cloudinary
+   * @param {string} certificateId - معرف الشهادة
+   * @returns {Promise<string>} - رابط PDF في Cloudinary
+   */
+  async generateAndUploadPDF(certificateId) {
+    try {
+      // توليد PDF
+      const pdfBuffer = await this.generatePDF(certificateId);
+
+      // رفع إلى Cloudinary
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'careerak/certificates',
+            resource_type: 'raw',
+            format: 'pdf',
+            public_id: `certificate-${certificateId}`,
+            tags: ['certificate', 'pdf']
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+
+        uploadStream.end(pdfBuffer);
+      });
+
+      // تحديث الشهادة بـ PDF URL
+      const certificate = await Certificate.findOne({ certificateId });
+      certificate.pdfUrl = uploadResult.secure_url;
+      await certificate.save();
+
+      return {
+        success: true,
+        pdfUrl: uploadResult.secure_url,
+        message: 'PDF generated and uploaded successfully',
+        messageAr: 'تم توليد ورفع PDF بنجاح'
+      };
+    } catch (error) {
+      console.error('Error generating and uploading PDF:', error);
+      throw error;
     }
   }
 }
 
-module.exports = CertificateService;
+module.exports = new CertificateService();

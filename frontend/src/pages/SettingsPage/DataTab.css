@@ -1,0 +1,104 @@
+/* DataTab.css */
+
+.data-tab {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.data-tab.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    gap: 1rem;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #E3DAD1;
+    border-top-color: #304B60;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.data-tab-header {
+    margin-bottom: 2rem;
+}
+
+.data-tab-title {
+    font-size: 2rem;
+    color: #304B60;
+    margin-bottom: 0.5rem;
+    font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+.data-tab-subtitle {
+    font-size: 1rem;
+    color: #666;
+}
+
+.data-message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.data-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.data-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.export-requests-section {
+    display: grid;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .data-tab {
+        padding: 1rem;
+    }
+
+    .data-tab-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* RTL Support */
+[dir="rtl"] .data-tab {
+    direction: rtl;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .data-tab-title {
+        color: #E3DAD1;
+    }
+
+    .data-tab-subtitle {
+        color: #aaa;
+    }
+
+    .loading-spinner {
+        border-color: #555;
+        border-top-color: #E3DAD1;
+    }
+}

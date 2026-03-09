@@ -47,6 +47,7 @@ const phoneChangeRequestSchema = new mongoose.Schema({
   },
   expiresAt: {
     type: Date,
+    default: () => new Date(Date.now() + 10 * 60 * 1000), // 10 minutes from now
     required: true,
     index: true
   },

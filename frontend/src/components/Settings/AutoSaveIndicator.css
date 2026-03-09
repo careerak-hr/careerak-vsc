@@ -1,0 +1,99 @@
+.auto-save-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auto-save-indicator .icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.auto-save-indicator .message {
+  white-space: nowrap;
+}
+
+/* Saving state */
+.auto-save-indicator.saving {
+  background-color: rgba(48, 75, 96, 0.1);
+  color: #304B60;
+}
+
+.auto-save-indicator.saving .spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success state */
+.auto-save-indicator.success {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4CAF50;
+}
+
+/* Error state */
+.auto-save-indicator.error {
+  background-color: rgba(244, 67, 54, 0.1);
+  color: #F44336;
+}
+
+/* RTL support */
+[dir="rtl"] .auto-save-indicator {
+  flex-direction: row-reverse;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .auto-save-indicator.saving {
+    background-color: rgba(48, 75, 96, 0.2);
+    color: #7BA3C0;
+  }
+
+  .auto-save-indicator.success {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #81C784;
+  }
+
+  .auto-save-indicator.error {
+    background-color: rgba(244, 67, 54, 0.2);
+    color: #E57373;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .auto-save-indicator {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .auto-save-indicator .icon {
+    width: 16px;
+    height: 16px;
+  }
+}

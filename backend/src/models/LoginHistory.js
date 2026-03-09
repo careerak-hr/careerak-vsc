@@ -11,11 +11,14 @@ const loginHistorySchema = new mongoose.Schema({
   // Attempt Information
   timestamp: {
     type: Date,
-    required: true,
     default: Date.now,
+    required: true,
     index: true
   },
-  success: { type: Boolean, required: true },
+  success: {
+    type: Boolean,
+    required: true
+  },
   failureReason: String,
   
   // Device Information
@@ -27,7 +30,10 @@ const loginHistorySchema = new mongoose.Schema({
   
   // Location Information
   location: {
-    ipAddress: { type: String, required: true },
+    ipAddress: {
+      type: String,
+      required: true
+    },
     country: String,
     city: String
   }
@@ -35,45 +41,12 @@ const loginHistorySchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Compound Indexes
+// Indexes
 loginHistorySchema.index({ userId: 1, timestamp: -1 });
+loginHistorySchema.index({ timestamp: 1 }); // For TTL
 
-// TTL Index - automatically delete entries older than 90 days
-loginHistorySchema.index({ timestamp: 1 }, { expireAfterSeconds: 90 * 24 * 60 * 60 });
-
-// Statics
-loginHistorySchema.statics.logAttempt = function(data) {
-  return this.create({
-    userId: data.userId,
-    timestamp: new Date(),
-    success: data.success,
-    failureReason: data.failureReason,
-    device: {
-      type: data.deviceType,
-      os: data.os,
-      browser: data.browser
-    },
-    location: {
-      ipAddress: data.ipAddress,
-      country: data.country,
-      city: data.city
-    }
-  });
-};
-
-loginHistorySchema.statics.getUserHistory = function(userId, limit = 50) {
-  return this.find({ userId })
-    .sort({ timestamp: -1 })
-    .limit(limit);
-};
-
-loginHistorySchema.statics.getFailedAttempts = function(userId, since) {
-  return this.find({
-    userId,
-    success: false,
-    timestamp: { $gte: since }
-  }).countDocuments();
-};
+// TTL index - automatically delete entries older than 90 days
+loginHistorySchema.index({ timestamp: 1 }, { expireAfterSeconds: 7776000 }); // 90 days
 
 const LoginHistory = mongoose.model('LoginHistory', loginHistorySchema);
 

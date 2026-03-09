@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+/**
+ * Queued Notification Model
+ * Stores notifications that are queued for later delivery
+ * (e.g., during quiet hours or for batch sending)
+ */
 const queuedNotificationSchema = new mongoose.Schema({
   recipient: {
     type: mongoose.Schema.Types.ObjectId,
@@ -13,15 +18,16 @@ const queuedNotificationSchema = new mongoose.Schema({
     required: true,
     enum: [
       'job_match',
-      'course_match',
       'application_accepted',
       'application_rejected',
       'application_reviewed',
       'new_application',
       'job_closed',
-      'system'
-    ],
-    index: true
+      'course_match',
+      'system',
+      'security',
+      'batch_notification'
+    ]
   },
   
   title: {
@@ -49,15 +55,37 @@ const queuedNotificationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
     index: true
+  },
+  
+  scheduledFor: {
+    type: Date,
+    required: true,
+    index: true
+  },
+  
+  reason: {
+    type: String,
+    enum: ['quiet_hours', 'batch_sending', 'frequency_limit', 'other'],
+    default: 'other'
+  },
+  
+  retryCount: {
+    type: Number,
+    default: 0
+  },
+  
+  lastRetryAt: {
+    type: Date
   }
 }, {
   timestamps: true
 });
 
-// Index مركب للبحث السريع
-queuedNotificationSchema.index({ recipient: 1, type: 1, queuedAt: 1 });
+// Indexes
+queuedNotificationSchema.index({ recipient: 1, scheduledFor: 1 });
+queuedNotificationSchema.index({ scheduledFor: 1, type: 1 });
 
-// حذف تلقائي للإشعارات المؤجلة القديمة (أكثر من 30 يوم)
-queuedNotificationSchema.index({ queuedAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
+// TTL index - automatically delete queued notifications after 7 days
+queuedNotificationSchema.index({ queuedAt: 1 }, { expireAfterSeconds: 7 * 24 * 60 * 60 });
 
 module.exports = mongoose.model('QueuedNotification', queuedNotificationSchema);

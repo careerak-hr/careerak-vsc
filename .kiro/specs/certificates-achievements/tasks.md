@@ -10,14 +10,14 @@
 
 ## المهام
 
-- [ ] 1. إعداد النماذج والبنية الأساسية
+- [x] 1. إعداد النماذج والبنية الأساسية
   - إنشاء Certificate, Badge, UserBadge, CertificateTemplate models
   - إضافة indexes للبحث السريع
   - إعداد ملفات الخدمات الأساسية
   - _Requirements: جميع المتطلبات التقنية_
 
 - [ ] 2. تنفيذ إصدار الشهادات التلقائي
-  - [ ] 2.1 إنشاء CertificateService
+  - [x] 2.1 إنشاء CertificateService
     - توليد رقم فريد (UUID)
     - إنشاء شهادة عند إكمال دورة
     - حفظ في قاعدة البيانات
@@ -31,8 +31,8 @@
     - **Property 2: Unique Certificate ID**
     - **Validates: Requirements 1.4**
 
-- [ ] 3. تنفيذ توليد PDF والتصميم
-  - [ ] 3.1 إنشاء PDF Generator
+- [x] 3. تنفيذ توليد PDF والتصميم
+  - [x] 3.1 إنشاء PDF Generator
     - استخدام puppeteer أو PDFKit
     - تصميم احترافي مع الألوان الرسمية
     - جودة 300 DPI
@@ -43,13 +43,13 @@
     - **Validates: Requirements 1.4**
 
 - [ ] 4. تنفيذ QR Code والتحقق
-  - [ ] 4.1 إنشاء QR Code Generator
+  - [x] 4.1 إنشاء QR Code Generator
     - توليد QR Code لكل شهادة
     - تضمين رابط التحقق
     - إضافة QR Code للـ PDF
     - _Requirements: 2.1, 2.2_
   
-  - [ ] 4.2 إنشاء Verification Service
+  - [x] 4.2 إنشاء Verification Service
     - صفحة التحقق العامة
     - API للتحقق البرمجي
     - عرض تفاصيل الشهادة

@@ -7,6 +7,9 @@ import { encrypt } from '../utils/encryption';
 // --- Centralized App Context ---
 const AppContext = createContext();
 
+// Export AppContext for testing purposes
+export { AppContext };
+
 const SECRET_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'careerak_secure_key_2024';
 
 export const AppProvider = ({ children }) => {

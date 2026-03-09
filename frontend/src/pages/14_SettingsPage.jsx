@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import notificationManager from '../services/notificationManager';
-import './14_SettingsPage.css';
+import './14_SettingsPage_Styled.css';
 import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
 
@@ -86,32 +86,45 @@ const SettingsPage = () => {
     return (
         <>
             <SEOHead {...seo} />
-            <main id="main-content" tabIndex="-1" className="settings-page-container dark:bg-primary transition-colors duration-300">
-            <div className="settings-content dark:text-primary transition-colors duration-300">
-                <h1 className="settings-title dark:text-primary transition-colors duration-300">Settings</h1>
+            <main 
+                id="main-content" 
+                tabIndex="-1" 
+                className="settings-page-container"
+                dir={language === 'ar' ? 'rtl' : 'ltr'}
+            >
+            <div className="settings-content">
+                <h1 className="settings-title">
+                    {language === 'ar' ? 'الإعدادات' : language === 'fr' ? 'Paramètres' : 'Settings'}
+                </h1>
                 
                 {/* Language Settings */}
-                <fieldset className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
-                    <legend className="settings-section-title dark:text-primary transition-colors duration-300">Language</legend>
-                    <p className="settings-section-text dark:text-secondary transition-colors duration-300">Current Language: {language}</p>
+                <fieldset className="settings-section">
+                    <legend className="settings-section-title">
+                        {language === 'ar' ? 'اللغة' : language === 'fr' ? 'Langue' : 'Language'}
+                    </legend>
+                    <p className="settings-section-text">
+                        {language === 'ar' ? `اللغة الحالية: ${language === 'ar' ? 'العربية' : language === 'en' ? 'الإنجليزية' : 'الفرنسية'}` : 
+                         language === 'fr' ? `Langue actuelle: ${language === 'ar' ? 'Arabe' : language === 'en' ? 'Anglais' : 'Français'}` :
+                         `Current Language: ${language === 'ar' ? 'Arabic' : language === 'en' ? 'English' : 'French'}`}
+                    </p>
                     <div className="settings-buttons" role="group" aria-labelledby="language-legend">
                         <button 
                             onClick={() => handleLanguageChange('ar')}
-                            className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+                            className="settings-btn"
                             aria-pressed={language === 'ar'}
                         >
                             العربية
                         </button>
                         <button 
                             onClick={() => handleLanguageChange('en')}
-                            className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+                            className="settings-btn"
                             aria-pressed={language === 'en'}
                         >
                             English
                         </button>
                         <button 
                             onClick={() => handleLanguageChange('fr')}
-                            className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
+                            className="settings-btn"
                             aria-pressed={language === 'fr'}
                         >
                             Français
@@ -120,77 +133,69 @@ const SettingsPage = () => {
                 </fieldset>
 
                 {/* Dark Mode Settings */}
-                <fieldset className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
-                    <legend className="settings-section-title dark:text-primary transition-colors duration-300">Theme</legend>
-                    <p className="settings-section-text dark:text-secondary transition-colors duration-300">
-                        Current Mode: {isDark ? 'Dark' : 'Light'} ({themeMode})
+                <fieldset className="settings-section">
+                    <legend className="settings-section-title">
+                        {language === 'ar' ? 'المظهر' : language === 'fr' ? 'Thème' : 'Theme'}
+                    </legend>
+                    <p className="settings-section-text">
+                        {language === 'ar' ? `الوضع الحالي: ${isDark ? 'داكن' : 'فاتح'} (${themeMode === 'system' ? 'النظام' : themeMode === 'dark' ? 'داكن' : 'فاتح'})` :
+                         language === 'fr' ? `Mode actuel: ${isDark ? 'Sombre' : 'Clair'} (${themeMode})` :
+                         `Current Mode: ${isDark ? 'Dark' : 'Light'} (${themeMode})`}
                     </p>
                     <div className="settings-buttons" role="group" aria-labelledby="theme-legend">
                         <button 
                             onClick={() => setTheme('light')}
-                            className={`settings-btn dark:bg-accent dark:text-inverse transition-all duration-300 ${themeMode === 'light' ? 'settings-btn-active' : ''}`}
-                            aria-label="Light theme"
+                            className={`settings-btn ${themeMode === 'light' ? 'settings-btn-active' : ''}`}
+                            aria-label={language === 'ar' ? 'المظهر الفاتح' : language === 'fr' ? 'Thème clair' : 'Light theme'}
                             aria-pressed={themeMode === 'light'}
                         >
-                            ☀️ Light
+                            ☀️ {language === 'ar' ? 'فاتح' : language === 'fr' ? 'Clair' : 'Light'}
                         </button>
                         <button 
                             onClick={() => setTheme('dark')}
-                            className={`settings-btn dark:bg-accent dark:text-inverse transition-all duration-300 ${themeMode === 'dark' ? 'settings-btn-active' : ''}`}
-                            aria-label="Dark theme"
+                            className={`settings-btn ${themeMode === 'dark' ? 'settings-btn-active' : ''}`}
+                            aria-label={language === 'ar' ? 'المظهر الداكن' : language === 'fr' ? 'Thème sombre' : 'Dark theme'}
                             aria-pressed={themeMode === 'dark'}
                         >
-                            🌙 Dark
+                            🌙 {language === 'ar' ? 'داكن' : language === 'fr' ? 'Sombre' : 'Dark'}
                         </button>
                         <button 
                             onClick={() => setTheme('system')}
-                            className={`settings-btn dark:bg-accent dark:text-inverse transition-all duration-300 ${themeMode === 'system' ? 'settings-btn-active' : ''}`}
-                            aria-label="System theme"
+                            className={`settings-btn ${themeMode === 'system' ? 'settings-btn-active' : ''}`}
+                            aria-label={language === 'ar' ? 'مظهر النظام' : language === 'fr' ? 'Thème système' : 'System theme'}
                             aria-pressed={themeMode === 'system'}
                         >
-                            💻 System
+                            💻 {language === 'ar' ? 'النظام' : language === 'fr' ? 'Système' : 'System'}
                         </button>
                     </div>
                     <button 
                         onClick={toggleTheme}
-                        className="settings-btn-toggle dark:bg-accent dark:text-inverse transition-all duration-300"
-                        aria-label="Toggle between light and dark theme"
+                        className="settings-btn-toggle"
+                        aria-label={language === 'ar' ? 'تبديل بين الفاتح والداكن' : language === 'fr' ? 'Basculer entre clair et sombre' : 'Toggle between light and dark theme'}
                     >
-                        Toggle Theme
+                        {language === 'ar' ? 'تبديل المظهر' : language === 'fr' ? 'Basculer le thème' : 'Toggle Theme'}
                     </button>
                 </fieldset>
 
                 {/* Notification Settings */}
-                <fieldset className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
-                    <legend className="settings-section-title dark:text-primary transition-colors duration-300">
-                        🔔 Notifications
+                <fieldset className="settings-section">
+                    <legend className="settings-section-title">
+                        🔔 {language === 'ar' ? 'الإشعارات' : language === 'fr' ? 'Notifications' : 'Notifications'}
                     </legend>
                     
                     {/* Browser Support Check */}
                     {!('Notification' in window) ? (
-                        <div className="settings-warning" style={{ 
-                            padding: '12px', 
-                            backgroundColor: '#fff3cd', 
-                            border: '1px solid #ffc107',
-                            borderRadius: '8px',
-                            marginBottom: '16px'
-                        }}>
-                            ⚠️ Your browser doesn't support notifications. Please use a modern browser like Chrome, Firefox, or Edge.
+                        <div className="settings-warning">
+                            ⚠️ {language === 'ar' ? 'متصفحك لا يدعم الإشعارات. يرجى استخدام متصفح حديث مثل Chrome أو Firefox أو Edge.' :
+                                language === 'fr' ? "Votre navigateur ne prend pas en charge les notifications. Veuillez utiliser un navigateur moderne comme Chrome, Firefox ou Edge." :
+                                "Your browser doesn't support notifications. Please use a modern browser like Chrome, Firefox, or Edge."}
                         </div>
                     ) : (
                         <>
                             {/* Permission Status */}
-                            <div className="settings-status-row" style={{ 
-                                display: 'flex', 
-                                justifyContent: 'space-between', 
-                                alignItems: 'center',
-                                marginBottom: '16px',
-                                padding: '12px',
-                                backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-                                borderRadius: '8px'
-                            }}>
-                                <span className="settings-section-text dark:text-secondary transition-colors duration-300">
-                                    Permission Status:
+                            <div className="settings-status-row">
+                                <span className="settings-section-text">
+                                    {language === 'ar' ? 'حالة الإذن:' : language === 'fr' ? 'Statut de permission:' : 'Permission Status:'}
                                 </span>
                                 <span style={{ 
                                     color: permissionStatus.color,
@@ -219,29 +224,33 @@ const SettingsPage = () => {
                                 {notificationPermission !== 'granted' ? (
                                     <button 
                                         onClick={handleRequestNotificationPermission}
-                                        className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
-                                        aria-label="Request notification permission"
+                                        className="settings-btn"
+                                        aria-label={language === 'ar' ? 'طلب إذن الإشعارات' : language === 'fr' ? 'Demander la permission de notification' : 'Request notification permission'}
                                     >
-                                        🔔 Enable Notifications
+                                        🔔 {language === 'ar' ? 'تفعيل الإشعارات' : language === 'fr' ? 'Activer les notifications' : 'Enable Notifications'}
                                     </button>
                                 ) : (
                                     <>
                                         <button 
                                             onClick={handleToggleNotifications}
-                                            className={`settings-btn dark:bg-accent dark:text-inverse transition-all duration-300 ${notificationsEnabled ? 'settings-btn-active' : ''}`}
-                                            aria-label={notificationsEnabled ? 'Disable notifications' : 'Enable notifications'}
+                                            className={`settings-btn ${notificationsEnabled ? 'settings-btn-active' : ''}`}
+                                            aria-label={notificationsEnabled ? 
+                                                (language === 'ar' ? 'تعطيل الإشعارات' : language === 'fr' ? 'Désactiver les notifications' : 'Disable notifications') :
+                                                (language === 'ar' ? 'تفعيل الإشعارات' : language === 'fr' ? 'Activer les notifications' : 'Enable notifications')}
                                             aria-pressed={notificationsEnabled}
                                         >
-                                            {notificationsEnabled ? '🔔 Notifications On' : '🔕 Notifications Off'}
+                                            {notificationsEnabled ? 
+                                                `🔔 ${language === 'ar' ? 'الإشعارات مفعلة' : language === 'fr' ? 'Notifications activées' : 'Notifications On'}` : 
+                                                `🔕 ${language === 'ar' ? 'الإشعارات معطلة' : language === 'fr' ? 'Notifications désactivées' : 'Notifications Off'}`}
                                         </button>
                                         
                                         {notificationsEnabled && (
                                             <button 
                                                 onClick={() => notificationManager.testNotification('individual')}
-                                                className="settings-btn dark:bg-accent dark:text-inverse transition-all duration-300"
-                                                aria-label="Test notification"
+                                                className="settings-btn"
+                                                aria-label={language === 'ar' ? 'اختبار الإشعار' : language === 'fr' ? 'Tester la notification' : 'Test notification'}
                                             >
-                                                🧪 Test Notification
+                                                🧪 {language === 'ar' ? 'اختبار الإشعار' : language === 'fr' ? 'Tester' : 'Test Notification'}
                                             </button>
                                         )}
                                     </>
@@ -250,27 +259,37 @@ const SettingsPage = () => {
 
                             {/* Info Section */}
                             <div style={{ 
-                                marginTop: '16px',
-                                padding: '12px',
-                                backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-                                borderRadius: '8px'
+                                marginTop: '1rem',
+                                padding: '0.875rem',
+                                backgroundColor: isDark ? 'rgba(227, 218, 209, 0.05)' : 'rgba(48, 75, 96, 0.05)',
+                                borderRadius: '0.75rem',
+                                border: '1px solid #D4816180'
                             }}>
-                                <h3 className="settings-section-text dark:text-secondary transition-colors duration-300" style={{ 
-                                    marginBottom: '8px',
+                                <h3 className="settings-section-text" style={{ 
+                                    marginBottom: '0.5rem',
                                     fontWeight: 'bold'
                                 }}>
-                                    ℹ️ About Notifications
+                                    ℹ️ {language === 'ar' ? 'حول الإشعارات' : language === 'fr' ? 'À propos des notifications' : 'About Notifications'}
                                 </h3>
-                                <ul className="settings-section-text dark:text-secondary transition-colors duration-300" style={{ 
-                                    paddingLeft: '20px',
+                                <ul className="settings-section-text" style={{ 
+                                    paddingLeft: language === 'ar' ? '0' : '1.25rem',
+                                    paddingRight: language === 'ar' ? '1.25rem' : '0',
                                     margin: 0,
-                                    fontSize: '14px',
+                                    fontSize: '0.875rem',
                                     lineHeight: '1.6'
                                 }}>
-                                    <li>Receive real-time updates about job matches and applications</li>
-                                    <li>Get notified about new messages and opportunities</li>
-                                    <li>Works even when the app is closed (PWA feature)</li>
-                                    <li>You can disable notifications anytime from this page</li>
+                                    <li>{language === 'ar' ? 'استقبل تحديثات فورية عن الوظائف المناسبة والطلبات' : 
+                                         language === 'fr' ? 'Recevez des mises à jour en temps réel sur les offres d\'emploi et les candidatures' :
+                                         'Receive real-time updates about job matches and applications'}</li>
+                                    <li>{language === 'ar' ? 'احصل على إشعارات بالرسائل والفرص الجديدة' :
+                                         language === 'fr' ? 'Soyez informé des nouveaux messages et opportunités' :
+                                         'Get notified about new messages and opportunities'}</li>
+                                    <li>{language === 'ar' ? 'يعمل حتى عند إغلاق التطبيق (ميزة PWA)' :
+                                         language === 'fr' ? 'Fonctionne même lorsque l\'application est fermée (fonctionnalité PWA)' :
+                                         'Works even when the app is closed (PWA feature)'}</li>
+                                    <li>{language === 'ar' ? 'يمكنك تعطيل الإشعارات في أي وقت من هذه الصفحة' :
+                                         language === 'fr' ? 'Vous pouvez désactiver les notifications à tout moment depuis cette page' :
+                                         'You can disable notifications anytime from this page'}</li>
                                 </ul>
                             </div>
                         </>
@@ -278,13 +297,13 @@ const SettingsPage = () => {
                 </fieldset>
 
                 {/* Logout */}
-                <div className="settings-section dark:bg-secondary dark:border-secondary transition-all duration-300">
+                <div className="settings-section">
                     <button 
                         onClick={handleLogout}
-                        className="settings-btn-logout dark:bg-error dark:text-inverse transition-all duration-300"
-                        aria-label="Logout from your account"
+                        className="settings-btn-logout"
+                        aria-label={language === 'ar' ? 'تسجيل الخروج من حسابك' : language === 'fr' ? 'Se déconnecter de votre compte' : 'Logout from your account'}
                     >
-                        Logout
+                        {language === 'ar' ? 'تسجيل الخروج' : language === 'fr' ? 'Se déconnecter' : 'Logout'}
                     </button>
                 </div>
             </div>

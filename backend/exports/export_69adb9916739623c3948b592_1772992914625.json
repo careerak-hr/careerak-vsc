@@ -1,0 +1,61 @@
+{
+  "exportDate": "2026-03-08T18:01:54.607Z",
+  "userId": "69adb9906739623c3948b58a",
+  "profile": {
+    "reviewStats": {
+      "ratingDistribution": {
+        "1": 0,
+        "2": 0,
+        "3": 0,
+        "4": 0,
+        "5": 0
+      },
+      "averageRating": 0,
+      "totalReviews": 0
+    },
+    "passwordStrength": {
+      "score": 0,
+      "label": "none"
+    },
+    "security": {
+      "twoFactorEnabled": false,
+      "backupCodes": [],
+      "twoFactorSetupPending": false
+    },
+    "registrationProgress": {
+      "step": 1,
+      "completed": false
+    },
+    "preferences": {
+      "notifications": {
+        "enabled": true,
+        "email": true,
+        "push": true
+      },
+      "accessibility": {
+        "reducedMotion": false,
+        "highContrast": false,
+        "fontSize": "medium"
+      },
+      "tracking": {
+        "enabled": true
+      },
+      "theme": "system",
+      "language": "ar"
+    },
+    "_id": "69adb9906739623c3948b58a",
+    "email": "vf./`m7v.0`.~le@dh8a.zk",
+    "role": "Admin",
+    "phone": "+36",
+    "country": "Egypt",
+    "privacyAccepted": true,
+    "isVerified": false,
+    "isSpecialNeeds": false,
+    "specialNeedsType": "none",
+    "emailVerified": false,
+    "accountDisabled": false,
+    "oauthAccounts": [],
+    "createdAt": "2026-03-08T18:01:52.490Z",
+    "updatedAt": "2026-03-08T18:01:52.490Z"
+  }
+}
