@@ -1,0 +1,260 @@
+/* ========== Certificate Status Component Styles ========== */
+
+.certificate-status {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid;
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.certificate-status:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ========== Status Colors ========== */
+
+.certificate-status-green {
+  border-color: #10B981;
+  background: linear-gradient(135deg, #ECFDF5 0%, #FFFFFF 100%);
+}
+
+.certificate-status-red {
+  border-color: #EF4444;
+  background: linear-gradient(135deg, #FEF2F2 0%, #FFFFFF 100%);
+}
+
+.certificate-status-orange {
+  border-color: #F59E0B;
+  background: linear-gradient(135deg, #FFFBEB 0%, #FFFFFF 100%);
+}
+
+/* ========== Status Badge ========== */
+
+.certificate-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.certificate-status-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.certificate-status-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.certificate-status-label-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.certificate-status-label-ar {
+  font-family: 'Amiri', serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #304B60;
+  opacity: 0.8;
+}
+
+/* ========== Status Description ========== */
+
+.certificate-status-description {
+  margin-bottom: 1rem;
+}
+
+.certificate-status-description-en,
+.certificate-status-description-ar {
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: #304B60;
+}
+
+.certificate-status-description-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.certificate-status-description-ar {
+  font-family: 'Amiri', serif;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* ========== Expiry Date ========== */
+
+.certificate-status-expiry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(48, 75, 96, 0.05);
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.certificate-status-expiry-label {
+  font-family: 'Amiri', serif;
+  font-size: 0.9rem;
+  color: #304B60;
+  font-weight: 600;
+}
+
+.certificate-status-expiry-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  color: #D48161;
+  font-weight: 600;
+}
+
+/* ========== Revocation Reason ========== */
+
+.certificate-status-revocation-reason {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(239, 68, 68, 0.05);
+  border-radius: 8px;
+  margin-top: 1rem;
+  border-left: 4px solid #EF4444;
+}
+
+.certificate-status-revocation-label {
+  font-family: 'Amiri', serif;
+  font-size: 0.9rem;
+  color: #EF4444;
+  font-weight: 600;
+}
+
+.certificate-status-revocation-text {
+  font-family: 'Amiri', serif;
+  font-size: 0.95rem;
+  color: #304B60;
+  line-height: 1.6;
+}
+
+/* ========== Responsive Design ========== */
+
+@media (max-width: 640px) {
+  .certificate-status {
+    padding: 1rem;
+  }
+
+  .certificate-status-icon {
+    font-size: 1.5rem;
+  }
+
+  .certificate-status-label-en {
+    font-size: 1.125rem;
+  }
+
+  .certificate-status-label-ar {
+    font-size: 1rem;
+  }
+
+  .certificate-status-description-en {
+    font-size: 0.95rem;
+  }
+
+  .certificate-status-description-ar {
+    font-size: 0.9rem;
+  }
+
+  .certificate-status-expiry,
+  .certificate-status-revocation-reason {
+    padding: 0.5rem;
+  }
+}
+
+/* ========== Dark Mode Support ========== */
+
+@media (prefers-color-scheme: dark) {
+  .certificate-status {
+    background: #1F2937;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .certificate-status:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .certificate-status-green {
+    background: linear-gradient(135deg, #064E3B 0%, #1F2937 100%);
+  }
+
+  .certificate-status-red {
+    background: linear-gradient(135deg, #7F1D1D 0%, #1F2937 100%);
+  }
+
+  .certificate-status-orange {
+    background: linear-gradient(135deg, #78350F 0%, #1F2937 100%);
+  }
+
+  .certificate-status-label-en,
+  .certificate-status-label-ar,
+  .certificate-status-description-en,
+  .certificate-status-description-ar,
+  .certificate-status-expiry-label,
+  .certificate-status-revocation-text {
+    color: #E3DAD1;
+  }
+
+  .certificate-status-expiry {
+    background: rgba(227, 218, 209, 0.1);
+  }
+
+  .certificate-status-revocation-reason {
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
+
+/* ========== RTL Support ========== */
+
+[dir="rtl"] .certificate-status-badge {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .certificate-status-expiry {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .certificate-status-revocation-reason {
+  border-left: none;
+  border-right: 4px solid #EF4444;
+}
+
+/* ========== Print Styles ========== */
+
+@media print {
+  .certificate-status {
+    border: 2px solid #304B60;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .certificate-status-green {
+    background: #FFFFFF;
+    border-color: #10B981;
+  }
+
+  .certificate-status-red {
+    background: #FFFFFF;
+    border-color: #EF4444;
+  }
+
+  .certificate-status-orange {
+    background: #FFFFFF;
+    border-color: #F59E0B;
+  }
+}

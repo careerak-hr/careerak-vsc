@@ -90,7 +90,7 @@
     - **Validates: Requirements 5.2, 5.5**
 
 - [ ] 7. تكامل LinkedIn
-  - [ ] 7.1 إنشاء LinkedIn Service
+  - [x] 7.1 إنشاء LinkedIn Service
     - OAuth 2.0 authentication
     - مشاركة الشهادة
     - إضافة لقسم Certifications

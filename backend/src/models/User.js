@@ -47,6 +47,12 @@ const userSchema = new mongoose.Schema({
     email: String,
     connectedAt: { type: Date, default: Date.now }
   }],
+  // LinkedIn Profile Integration
+  linkedInProfile: {
+    accessToken: String,
+    expiresAt: Date,
+    connectedAt: Date
+  },
   // قوة كلمة المرور
   passwordStrength: {
     score: { type: Number, min: 0, max: 4, default: 0 },
