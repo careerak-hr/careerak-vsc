@@ -1,7 +1,7 @@
-const SettingsService = require('../services/settingsService');
-const EmailChangeService = require('../services/emailChangeService');
-const PhoneChangeService = require('../services/phoneChangeService');
-const PasswordChangeService = require('../services/passwordChangeService');
+const settingsService = require('../services/settingsService');
+const emailChangeService = require('../services/emailChangeService');
+const phoneChangeService = require('../services/phoneChangeService');
+const passwordChangeService = require('../services/passwordChangeService');
 const logger = require('../utils/logger');
 
 /**
@@ -10,10 +10,10 @@ const logger = require('../utils/logger');
  */
 class SettingsController {
   constructor() {
-    this.settingsService = new SettingsService();
-    this.emailChangeService = new EmailChangeService();
-    this.phoneChangeService = new PhoneChangeService();
-    this.passwordChangeService = new PasswordChangeService();
+    this.settingsService = settingsService;
+    this.emailChangeService = emailChangeService;
+    this.phoneChangeService = phoneChangeService;
+    this.passwordChangeService = passwordChangeService;
   }
 
   /**

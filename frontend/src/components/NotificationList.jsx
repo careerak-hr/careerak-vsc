@@ -31,6 +31,12 @@ const NotificationList = ({ notifications = [], onNotificationClick, language = 
       course_match: '📚',
       new_message: '💬',
       system: '🔔',
+      // Appointment notifications
+      appointment_confirmed: '📅',
+      appointment_reminder: '⏰',
+      interview_reminder_24h: '📅',
+      interview_reminder_15m: '⏰',
+      interview_rescheduled: '🔄',
     };
     return icons[type] || '🔔';
   };

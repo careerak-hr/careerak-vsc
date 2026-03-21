@@ -1,0 +1,125 @@
+.referral-share-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.referral-share-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #304B60;
+  margin: 0;
+}
+
+.referral-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Base button */
+.referral-share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.referral-share-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.referral-share-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.referral-share-btn:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.referral-share-btn:focus-visible {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* WhatsApp */
+.referral-share-btn--whatsapp {
+  background: #25D366;
+  color: #fff;
+}
+
+.referral-share-btn--whatsapp:not(:disabled):hover {
+  background: #1ebe5d;
+}
+
+/* Email */
+.referral-share-btn--email {
+  background: #304B60;
+  color: #fff;
+}
+
+.referral-share-btn--email:not(:disabled):hover {
+  background: #243a4d;
+}
+
+/* Copy */
+.referral-share-btn--copy {
+  background: #D48161;
+  color: #fff;
+}
+
+.referral-share-btn--copy:not(:disabled):hover {
+  background: #c06f51;
+}
+
+.referral-share-btn--copied {
+  background: #28a745;
+}
+
+.referral-share-btn--copied:not(:disabled):hover {
+  background: #218838;
+}
+
+/* Icon */
+.referral-share-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* RTL: icon order stays natural with flex-direction */
+[dir="rtl"] .referral-share-btn {
+  flex-direction: row-reverse;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .referral-share-actions {
+    flex-direction: column;
+  }
+
+  .referral-share-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .referral-share-btn {
+    transition: none;
+  }
+
+  .referral-share-btn:not(:disabled):hover {
+    transform: none;
+  }
+}

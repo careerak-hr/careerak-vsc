@@ -275,6 +275,38 @@ class LinkedInController {
       });
     }
   }
+  /**
+   * معاينة المنشور قبل النشر على LinkedIn
+   * POST /api/linkedin/preview-post
+   */
+  async previewPost(req, res) {
+    try {
+      const { certificateId } = req.body;
+      const userId = req.user._id;
+
+      if (!certificateId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Certificate ID is required',
+          messageAr: 'معرف الشهادة مطلوب'
+        });
+      }
+
+      // توليد المعاينة
+      const preview = await linkedInService.generatePostPreview(certificateId, userId);
+
+      res.json(preview);
+    } catch (error) {
+      console.error('Error generating LinkedIn post preview:', error);
+      res.status(500).json({
+        success: false,
+        message: 'Failed to generate post preview',
+        messageAr: 'فشل في توليد معاينة المنشور',
+        error: error.message
+      });
+    }
+  }
+
 }
 
 module.exports = new LinkedInController();

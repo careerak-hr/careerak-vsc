@@ -225,8 +225,7 @@ const educationalCourseSchema = new mongoose.Schema({
   referrals: [{
     token: {
       type: String,
-      required: true,
-      unique: true
+      required: true
     },
     referrerId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -288,7 +287,7 @@ educationalCourseSchema.index({
 });
 
 // Index for referral token lookup
-educationalCourseSchema.index({ 'referrals.token': 1 });
-educationalCourseSchema.index({ 'referrals.expiresAt': 1 });
+educationalCourseSchema.index({ 'referrals.token': 1 }, { sparse: true, unique: false });
+educationalCourseSchema.index({ 'referrals.expiresAt': 1 }, { sparse: true });
 
 module.exports = mongoose.model('EducationalCourse', educationalCourseSchema);

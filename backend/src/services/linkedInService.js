@@ -241,6 +241,131 @@ class LinkedInService {
            `You can verify this certificate here: ${certificate.verificationUrl}\n\n` +
            `#Careerak #ProfessionalDevelopment #Learning #Certificate`;
   }
+  /**
+   * توليد معاينة للمنشور قبل النشر
+   * @param {string} certificateId - معرف الشهادة
+   * @param {string} userId - معرف المستخدم
+   * @returns {Promise<Object>} بيانات المعاينة
+   */
+  async generatePostPreview(certificateId, userId) {
+    try {
+      // جلب الشهادة
+      const certificate = await Certificate.findById(certificateId)
+        .populate('userId', 'firstName lastName profilePicture')
+        .populate('courseId', 'title thumbnail');
+
+      if (!certificate) {
+        throw new Error('Certificate not found');
+      }
+
+      // التحقق من أن الشهادة تخص المستخدم
+      if (certificate.userId._id.toString() !== userId.toString()) {
+        throw new Error('Unauthorized: Certificate does not belong to this user');
+      }
+
+      // توليد نص المنشور
+      const postText = this._generatePostText(certificate);
+
+      // توليد بيانات المعاينة
+      const preview = {
+        success: true,
+        preview: {
+          // نص المنشور
+          text: postText,
+
+          // بيانات الشهادة
+          certificate: {
+            id: certificate.certificateId,
+            courseName: certificate.courseName,
+            issueDate: certificate.issueDate,
+            verificationUrl: certificate.verificationUrl,
+            qrCode: certificate.qrCode
+          },
+
+          // بيانات المستخدم
+          user: {
+            name: `${certificate.userId.firstName} ${certificate.userId.lastName}`,
+            profilePicture: certificate.userId.profilePicture
+          },
+
+          // بيانات الدورة (إن وجدت)
+          course: certificate.courseId ? {
+            title: certificate.courseId.title,
+            thumbnail: certificate.courseId.thumbnail
+          } : null,
+
+          // معلومات إضافية
+          metadata: {
+            characterCount: postText.length,
+            hasVerificationUrl: !!certificate.verificationUrl,
+            hasQRCode: !!certificate.qrCode,
+            estimatedReach: this._estimateReach(postText)
+          }
+        }
+      };
+
+      return preview;
+    } catch (error) {
+      console.error('Error generating post preview:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * تقدير مدى الوصول المتوقع للمنشور
+   * @param {string} text - نص المنشور
+   * @returns {Object} تقدير مدى الوصول
+   */
+  _estimateReach(text) {
+    // حساب عدد الهاشتاجات
+    const hashtags = (text.match(/#\w+/g) || []).length;
+
+    // حساب عدد الروابط
+    const links = (text.match(/https?:\/\/[^\s]+/g) || []).length;
+
+    // تقدير بسيط بناءً على المحتوى
+    let estimatedReach = 'medium';
+    if (hashtags >= 3 && links >= 1) {
+      estimatedReach = 'high';
+    } else if (hashtags < 2 && links === 0) {
+      estimatedReach = 'low';
+    }
+
+    return {
+      level: estimatedReach,
+      hashtags: hashtags,
+      links: links,
+      tips: this._getReachTips(hashtags, links)
+    };
+  }
+
+  /**
+   * الحصول على نصائح لتحسين مدى الوصول
+   * @param {number} hashtags - عدد الهاشتاجات
+   * @param {number} links - عدد الروابط
+   * @returns {Array<string>} نصائح
+   */
+  _getReachTips(hashtags, links) {
+    const tips = [];
+
+    if (hashtags < 3) {
+      tips.push('Add more relevant hashtags (3-5 recommended)');
+      tips.push('أضف المزيد من الهاشتاجات ذات الصلة (3-5 موصى بها)');
+    }
+
+    if (links === 0) {
+      tips.push('Include verification link for credibility');
+      tips.push('أضف رابط التحقق لزيادة المصداقية');
+    }
+
+    if (hashtags > 5) {
+      tips.push('Too many hashtags may reduce engagement');
+      tips.push('الكثير من الهاشتاجات قد يقلل التفاعل');
+    }
+
+    return tips;
+  }
+
 
   /**
    * التحقق من صلاحية access token

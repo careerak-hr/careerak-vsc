@@ -46,10 +46,25 @@ const notificationPreferenceSchema = new mongoose.Schema({
       push: { type: Boolean, default: true },
       email: { type: Boolean, default: false }
     },
+    badge_earned: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: false }
+    },
+    certificate_issued: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: true }
+    },
     system: {
       enabled: { type: Boolean, default: true },
       push: { type: Boolean, default: true },
       email: { type: Boolean, default: false }
+    },
+    appointment_confirmed: {
+      enabled: { type: Boolean, default: true },
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: true }
     }
   },
   

@@ -442,10 +442,6 @@ class SocketService {
   
   // === نهاية معالجات WebRTC ===
   
-  // إرسال حالة "غير متصل" للمستخدمين الآخرين
-    this.broadcastUserStatus(userId, 'offline', new Date());
-  }
-  
   // إرسال حالة المستخدم
   broadcastUserStatus(userId, status, lastSeen = null) {
     if (!this.io) return;

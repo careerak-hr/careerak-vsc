@@ -152,12 +152,37 @@ class CertificateService {
 
   async getUserCertificates(userId, filters = {}) {
     try {
-      const options = {
-        status: filters.status || undefined
-      };
+      const query = { userId };
 
-      let certificates = await Certificate.getUserCertificates(userId, options);
+      // Filter by status
+      if (filters.status) {
+        query.status = filters.status;
+      }
 
+      // Filter by year
+      if (filters.year) {
+        const startOfYear = new Date(filters.year, 0, 1);
+        const endOfYear = new Date(filters.year, 11, 31, 23, 59, 59, 999);
+        query.issueDate = {
+          $gte: startOfYear,
+          $lte: endOfYear
+        };
+      }
+
+      let certificates = await Certificate.find(query)
+        .populate('courseId', 'title category level thumbnail')
+        .sort({ issueDate: -1 })
+        .exec();
+
+      // Filter by type (course category)
+      if (filters.type) {
+        certificates = certificates.filter(cert => 
+          cert.courseId?.category === filters.type
+        );
+      }
+
+      // Apply pagination
+      const total = certificates.length;
       if (filters.skip) {
         certificates = certificates.slice(filters.skip);
       }
@@ -168,17 +193,20 @@ class CertificateService {
       return {
         success: true,
         count: certificates.length,
+        total,
         certificates: certificates.map(cert => ({
           certificateId: cert.certificateId,
           courseName: cert.courseName,
           courseTitle: cert.courseId?.title,
           courseThumbnail: cert.courseId?.thumbnail,
           courseCategory: cert.courseId?.category,
+          courseLevel: cert.courseId?.level,
           issueDate: cert.issueDate,
           status: cert.status,
           verificationUrl: cert.verificationUrl,
           pdfUrl: cert.pdfUrl,
-          isValid: cert.isValid()
+          isValid: cert.isValid(),
+          isHidden: cert.isHidden
         }))
       };
     } catch (error) {
@@ -228,15 +256,66 @@ class CertificateService {
       const certificate = await Certificate.findOne({ certificateId });
 
       if (!certificate) {
-        throw new Error('Certificate not found');
+        throw new Error('Certificate not found | الشهادة غير موجودة');
       }
 
       if (certificate.status === 'revoked') {
-        throw new Error('Certificate is already revoked');
+        throw new Error('Certificate is already revoked | الشهادة ملغاة بالفعل');
       }
 
+      // التحقق من صلاحية المستخدم (المدرب أو الأدمن)
+      const { User } = require('../models/User');
+      const revoker = await User.findById(revokedBy);
+      if (!revoker) {
+        throw new Error('Revoker user not found | المستخدم غير موجود');
+      }
+
+      const isAdmin = revoker.role === 'admin';
+      const isInstructor = revoker.role === 'instructor';
+
+      if (!isAdmin && !isInstructor) {
+        throw new Error('Unauthorized: Only instructors or admins can revoke certificates | غير مصرح: فقط المدربون والمسؤولون يمكنهم إلغاء الشهادات');
+      }
+
+      // إذا كان مدرباً، تحقق أنه مدرب الدورة
+      if (isInstructor && !isAdmin) {
+        const EducationalCourse = require('../models/EducationalCourse');
+        const course = await EducationalCourse.findById(certificate.courseId);
+        if (!course) {
+          throw new Error('Course not found | الدورة غير موجودة');
+        }
+        const courseInstructorId = course.instructor?._id?.toString() || course.instructor?.toString();
+        if (courseInstructorId !== revokedBy.toString()) {
+          throw new Error('Unauthorized: You can only revoke certificates for your own courses | غير مصرح: يمكنك فقط إلغاء شهادات دوراتك');
+        }
+      }
+
+      // تنفيذ الإلغاء
       certificate.revoke(revokedBy, reason);
+
+      // إضافة سجل في auditLog
+      certificate.addAuditEntry(
+        'revoked',
+        revokedBy,
+        `Revoked by ${revoker.firstName} ${revoker.lastName}. Reason: ${reason || 'No reason provided'}`
+      );
+
       await certificate.save();
+
+      // إرسال إشعار للمتدرب
+      try {
+        const notificationService = require('./notificationService');
+        await notificationService.createNotification({
+          recipient: certificate.userId,
+          type: 'system',
+          title: `تم إلغاء شهادتك | Your Certificate Has Been Revoked`,
+          message: `تم إلغاء شهادة "${certificate.courseName}". السبب: ${reason || 'لم يُذكر سبب'} | Your certificate for "${certificate.courseName}" has been revoked. Reason: ${reason || 'No reason provided'}`,
+          priority: 'high'
+        });
+      } catch (notifError) {
+        console.error('Error sending revocation notification:', notifError);
+        // لا نفشل العملية إذا فشل الإشعار
+      }
 
       return {
         success: true,
@@ -260,12 +339,46 @@ class CertificateService {
       const originalCertificate = await Certificate.findOne({ certificateId: originalCertificateId });
 
       if (!originalCertificate) {
-        throw new Error('Original certificate not found');
+        throw new Error('Original certificate not found | الشهادة الأصلية غير موجودة');
       }
 
-      originalCertificate.revoke(reissuedBy, 'Reissued');
+      // التحقق من صلاحية المستخدم (المدرب أو الأدمن)
+      const { User } = require('../models/User');
+      const reissuer = await User.findById(reissuedBy);
+      if (!reissuer) {
+        throw new Error('Reissuer user not found | المستخدم غير موجود');
+      }
+
+      const isAdmin = reissuer.role === 'admin';
+      const isInstructor = reissuer.role === 'instructor';
+
+      if (!isAdmin && !isInstructor) {
+        throw new Error('Unauthorized: Only instructors or admins can reissue certificates | غير مصرح: فقط المدربون والمسؤولون يمكنهم إعادة إصدار الشهادات');
+      }
+
+      // إذا كان مدرباً، تحقق أنه مدرب الدورة
+      if (isInstructor && !isAdmin) {
+        const EducationalCourse = require('../models/EducationalCourse');
+        const course = await EducationalCourse.findById(originalCertificate.courseId);
+        if (!course) {
+          throw new Error('Course not found | الدورة غير موجودة');
+        }
+        const courseInstructorId = course.instructor?._id?.toString() || course.instructor?.toString();
+        if (courseInstructorId !== reissuedBy.toString()) {
+          throw new Error('Unauthorized: You can only reissue certificates for your own courses | غير مصرح: يمكنك فقط إعادة إصدار شهادات دوراتك');
+        }
+      }
+
+      // إلغاء الشهادة الأصلية مع سبب إعادة الإصدار
+      originalCertificate.revoke(reissuedBy, 'Reissued - replaced by new certificate');
+      originalCertificate.addAuditEntry(
+        'reissued',
+        reissuedBy,
+        `Original certificate revoked for reissue by ${reissuer.firstName} ${reissuer.lastName}. Reason: ${reason || 'No reason provided'}`
+      );
       await originalCertificate.save();
 
+      // إنشاء شهادة جديدة
       const newCertificateId = crypto.randomUUID();
       const verificationUrl = `${process.env.FRONTEND_URL || 'https://careerak.com'}/verify/${newCertificateId}`;
       const qrCodeData = await this.generateQRCode(verificationUrl);
@@ -285,10 +398,33 @@ class CertificateService {
           reissuedAt: new Date(),
           reissuedBy: reissuedBy,
           reason: reason || 'No reason provided'
-        }
+        },
+        auditLog: [
+          {
+            action: 'issued',
+            performedBy: reissuedBy,
+            performedAt: new Date(),
+            details: `Reissued from certificate ${originalCertificateId} by ${reissuer.firstName} ${reissuer.lastName}. Reason: ${reason || 'No reason provided'}`
+          }
+        ]
       });
 
       await newCertificate.save();
+
+      // إرسال إشعار للمتدرب
+      try {
+        const notificationService = require('./notificationService');
+        await notificationService.createNotification({
+          recipient: originalCertificate.userId,
+          type: 'system',
+          title: `تم إعادة إصدار شهادتك | Your Certificate Has Been Reissued`,
+          message: `تم إعادة إصدار شهادة "${originalCertificate.courseName}" برقم جديد: ${newCertificateId} | Your certificate for "${originalCertificate.courseName}" has been reissued with new ID: ${newCertificateId}`,
+          priority: 'high'
+        });
+      } catch (notifError) {
+        console.error('Error sending reissue notification:', notifError);
+        // لا نفشل العملية إذا فشل الإشعار
+      }
 
       return {
         success: true,
@@ -298,7 +434,9 @@ class CertificateService {
           certificateId: newCertificate.certificateId,
           originalCertificateId: originalCertificateId,
           verificationUrl: newCertificate.verificationUrl,
-          qrCode: newCertificate.qrCode
+          qrCode: newCertificate.qrCode,
+          issueDate: newCertificate.issueDate,
+          status: newCertificate.status
         }
       };
     } catch (error) {
@@ -368,7 +506,8 @@ class CertificateService {
         qrCodeData: certificate.verificationUrl,
         verificationUrl: certificate.verificationUrl,
         instructorName: course?.instructor?.name || 'Careerak Team',
-        instructorSignature: course?.instructor?.signature || null
+        instructorSignature: course?.instructor?.signature || null,
+        language: user.language || user.preferredLanguage || 'ar'
       };
 
       // توليد PDF
@@ -423,6 +562,34 @@ class CertificateService {
       };
     } catch (error) {
       console.error('Error generating and uploading PDF:', error);
+      throw error;
+    }
+  }
+
+  async updateCertificateVisibility(certificateId, userId, isHidden) {
+    try {
+      const certificate = await Certificate.findOne({ certificateId });
+      
+      if (!certificate) {
+        throw new Error('Certificate not found');
+      }
+
+      // التحقق من أن المستخدم هو صاحب الشهادة
+      if (certificate.userId.toString() !== userId.toString()) {
+        throw new Error('Unauthorized: You can only update your own certificates');
+      }
+
+      certificate.isHidden = isHidden;
+      await certificate.save();
+
+      return {
+        success: true,
+        certificate,
+        message: `Certificate visibility updated to ${isHidden ? 'hidden' : 'visible'}`,
+        messageAr: `تم تحديث رؤية الشهادة إلى ${isHidden ? 'مخفية' : 'مرئية'}`
+      };
+    } catch (error) {
+      console.error('Error updating certificate visibility:', error);
       throw error;
     }
   }

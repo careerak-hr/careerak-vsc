@@ -1,0 +1,1399 @@
+/* ============================================================
+   Referral & Rewards System - Responsive CSS
+   نظام الإحالة والمكافآت - CSS متجاوب شامل
+   
+   Breakpoints:
+     Mobile:  < 640px
+     Tablet:  640px - 1023px
+     Desktop: >= 1024px
+   
+   Colors: #304B60 (navy), #E3DAD1 (beige), #D48161 (copper)
+   Fonts:  Amiri (Arabic), Cormorant Garamond (English)
+   Borders: 2px solid #D4816180 (copper 50% - never changes)
+   ============================================================ */
+
+/* ============================================================
+   1. GLOBAL REFERRAL SYSTEM BASE
+   ============================================================ */
+
+/* Prevent horizontal scroll across all referral pages */
+.my-referrals-page,
+.referral-stats-page,
+.rsp-page,
+.rs-page {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Safe area support for iOS notch */
+.my-referrals-page,
+.referral-stats-page,
+.rsp-page,
+.rs-page {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+
+/* Font enforcement for referral system */
+[lang="ar"] .my-referrals-page,
+[lang="ar"] .referral-stats-page,
+[lang="ar"] .rsp-page,
+[lang="ar"] .rs-page,
+[dir="rtl"] .my-referrals-page,
+[dir="rtl"] .referral-stats-page,
+[dir="rtl"] .rsp-page,
+[dir="rtl"] .rs-page {
+  font-family: 'Amiri', serif;
+}
+
+[lang="en"] .my-referrals-page,
+[lang="en"] .referral-stats-page,
+[lang="en"] .rsp-page,
+[lang="en"] .rs-page,
+[dir="ltr"] .my-referrals-page,
+[dir="ltr"] .referral-stats-page,
+[dir="ltr"] .rsp-page,
+[dir="ltr"] .rs-page {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+/* ============================================================
+   2. INPUT FIELDS - COPPER BORDER (NEVER CHANGES)
+   ============================================================ */
+
+/* All input fields in referral system keep copper border always */
+.my-referrals-page input,
+.my-referrals-page select,
+.my-referrals-page textarea,
+.referral-stats-page input,
+.referral-stats-page select,
+.referral-stats-page textarea,
+.rsp-page input,
+.rsp-page select,
+.rsp-page textarea,
+.rs-page input,
+.rs-page select,
+.rs-page textarea,
+.rcm-modal input,
+.rcm-modal select,
+.rcm-modal textarea {
+  border: 2px solid #D4816180 !important;
+  font-size: 16px !important; /* Prevent iOS zoom */
+  min-height: 44px;
+}
+
+/* Copper border stays on focus/hover - never changes */
+.my-referrals-page input:focus,
+.my-referrals-page select:focus,
+.my-referrals-page textarea:focus,
+.referral-stats-page input:focus,
+.referral-stats-page select:focus,
+.referral-stats-page textarea:focus,
+.rsp-page input:focus,
+.rsp-page select:focus,
+.rsp-page textarea:focus,
+.rs-page input:focus,
+.rs-page select:focus,
+.rs-page textarea:focus,
+.rcm-modal input:focus,
+.rcm-modal select:focus,
+.rcm-modal textarea:focus {
+  border: 2px solid #D4816180 !important;
+  outline: none !important;
+}
+
+.my-referrals-page input:hover,
+.my-referrals-page select:hover,
+.my-referrals-page textarea:hover,
+.rsp-page input:hover,
+.rsp-page select:hover,
+.rsp-page textarea:hover {
+  border: 2px solid #D4816180 !important;
+}
+
+/* ============================================================
+   3. TOUCH TARGETS - MIN 44px
+   ============================================================ */
+
+/* All interactive elements in referral system */
+.referrals-retry-btn,
+.referrals-share-btn,
+.pagination-btn,
+.referral-share-btn,
+.rsp-retry-btn,
+.rsp-page button,
+.rs-page button,
+.rl-retry-btn,
+.rl-page-btn,
+.rh-retry-btn,
+.rh-page-btn,
+.rdc-btn,
+.rcm-btn,
+.pbw-btn,
+.stats-retry-btn,
+.stats-share-btn,
+.stats-back-link {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* ============================================================
+   4. MY REFERRALS PAGE - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .my-referrals-page {
+    padding: 2rem 2rem;
+    max-width: 1100px;
+  }
+
+  .referrals-header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .referrals-title {
+    font-size: 2rem;
+  }
+
+  .referrals-table-wrapper {
+    display: block;
+  }
+
+  .referrals-cards {
+    display: none;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .my-referrals-page {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .referrals-title {
+    font-size: 1.75rem;
+  }
+
+  .referrals-header {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .referrals-table th,
+  .referrals-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .referrals-table-wrapper {
+    display: block;
+  }
+
+  .referrals-cards {
+    display: none;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .my-referrals-page {
+    padding: 1rem max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  .referrals-title {
+    font-size: 1.4rem;
+  }
+
+  .referrals-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .referrals-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .referrals-total-badge {
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .referrals-total-number {
+    font-size: 1.5rem;
+  }
+
+  /* Hide table, show cards */
+  .referrals-table-wrapper {
+    display: none !important;
+  }
+
+  .referrals-cards {
+    display: flex !important;
+  }
+
+  .referral-card {
+    padding: 0.875rem;
+  }
+
+  .referrals-pagination {
+    gap: 0.75rem;
+  }
+
+  .pagination-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .my-referrals-page {
+    padding: 0.75rem;
+  }
+
+  .referrals-title {
+    font-size: 1.25rem;
+  }
+
+  .referral-card-header {
+    gap: 0.5rem;
+  }
+
+  .referral-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================================
+   5. REWARDS STORE PAGE (rsp-page) - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .rsp-page {
+    padding: 2rem 2rem 4rem;
+    max-width: 1100px;
+  }
+
+  .rsp-header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .rsp-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .rsp-page {
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+  .rsp-title {
+    font-size: 1.75rem;
+  }
+
+  .rsp-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .rsp-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .rsp-balance-widget {
+    min-width: 140px;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .rsp-page {
+    padding: 1rem max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-bottom: max(3rem, env(safe-area-inset-bottom));
+  }
+
+  .rsp-title {
+    font-size: 1.4rem;
+  }
+
+  .rsp-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .rsp-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .rsp-balance-widget {
+    justify-content: center;
+    min-width: unset;
+    width: 100%;
+  }
+
+  .rsp-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .rsp-section-title {
+    font-size: 1.1rem;
+  }
+
+  /* Toast positioning for mobile */
+  .rsp-toast {
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+    transform: none;
+    max-width: unset;
+    width: auto;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .rsp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .rsp-balance-value {
+    font-size: 1.25rem;
+  }
+}
+
+/* ============================================================
+   6. REWARDS STORE COMPONENT (rs-page) - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .rs-page {
+    padding: 1.5rem 2rem 3rem;
+  }
+
+  .rs-options-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .rs-page {
+    padding: 1.25rem 1.25rem 2.5rem;
+  }
+
+  .rs-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .rs-options-grid {
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .rs-page {
+    padding: 1rem max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+
+  .rs-title {
+    font-size: 1.4rem;
+  }
+
+  .rs-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rs-balance-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-width: unset;
+    padding: 1rem 1.25rem;
+  }
+
+  .rs-balance-number {
+    font-size: 1.75rem;
+  }
+
+  .rs-options-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .rs-options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   7. REFERRAL STATS PAGE - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .referral-stats-page {
+    padding: 2rem 2rem;
+    max-width: 1200px;
+  }
+
+  .stats-kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stats-charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stats-header {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .referral-stats-page {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .stats-title {
+    font-size: 1.75rem;
+  }
+
+  .stats-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .stats-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+  }
+
+  .stats-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-chart-full {
+    grid-column: 1;
+  }
+
+  .stats-kpi-value {
+    font-size: 1.875rem;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .referral-stats-page {
+    padding: 1rem max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  .stats-title {
+    font-size: 1.4rem;
+  }
+
+  .stats-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .stats-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .stats-back-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stats-kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .stats-kpi-value {
+    font-size: 1.75rem;
+  }
+
+  .stats-kpi-card {
+    padding: 1rem;
+  }
+
+  .stats-charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .stats-chart-full {
+    grid-column: 1;
+  }
+
+  .stats-chart-card {
+    padding: 1rem;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .stats-kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .stats-kpi-value {
+    font-size: 1.5rem;
+  }
+
+  .stats-kpi-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* ============================================================
+   8. REFERRAL SHARE BUTTONS - RESPONSIVE
+   ============================================================ */
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .referral-share-actions {
+    flex-wrap: wrap;
+  }
+
+  .referral-share-btn {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .referral-share-actions {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .referral-share-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .referral-share-title {
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================================================
+   9. REFERRALS LIST COMPONENT - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .rl-table-wrapper {
+    display: block;
+  }
+
+  .rl-cards {
+    display: none;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .rl-table-wrapper {
+    display: block;
+  }
+
+  .rl-cards {
+    display: none;
+  }
+
+  .rl-table th,
+  .rl-table td {
+    padding: 0.7rem 0.875rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .rl-table-wrapper {
+    display: none !important;
+  }
+
+  .rl-cards {
+    display: flex !important;
+  }
+
+  .rl-card {
+    padding: 0.875rem;
+  }
+
+  .rl-card-name {
+    font-size: 0.9rem;
+  }
+
+  .rl-pagination {
+    gap: 0.75rem;
+  }
+
+  .rl-page-btn {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================================
+   10. REDEMPTION CARD - RESPONSIVE
+   ============================================================ */
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .rdc-card {
+    padding: 1.1rem;
+    border-radius: 12px;
+  }
+
+  .rdc-icon {
+    font-size: 2rem;
+  }
+
+  .rdc-name {
+    font-size: 0.9rem;
+  }
+
+  .rdc-description {
+    font-size: 0.8rem;
+  }
+
+  .rdc-cost-number {
+    font-size: 1.1rem;
+  }
+
+  .rdc-btn {
+    padding: 0.6rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* --- Small Mobile (< 360px) --- */
+@media (max-width: 359px) {
+  .rdc-card {
+    padding: 0.875rem;
+  }
+
+  .rdc-icon {
+    font-size: 1.75rem;
+  }
+}
+
+/* ============================================================
+   11. REDEMPTION CONFIRM MODAL - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .rcm-modal {
+    max-width: 480px;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .rcm-modal {
+    max-width: 440px;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .rcm-overlay {
+    padding: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    align-items: flex-end;
+  }
+
+  .rcm-modal {
+    border-radius: 1.25rem 1.25rem 0 0;
+    max-width: 100%;
+    width: 100%;
+    border-bottom: none;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .rcm-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .rcm-title {
+    font-size: 1.1rem;
+  }
+
+  .rcm-body {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .rcm-message {
+    font-size: 0.95rem;
+  }
+
+  .rcm-actions {
+    padding: 0.875rem 1.25rem 1.25rem;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .rcm-btn {
+    min-height: 50px;
+    font-size: 0.95rem;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .rcm-header {
+    padding: 0.875rem 1rem;
+  }
+
+  .rcm-body {
+    padding: 1rem;
+  }
+
+  .rcm-actions {
+    padding: 0.75rem 1rem 1rem;
+  }
+}
+
+/* ============================================================
+   12. REDEMPTION HISTORY - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .rh-table-wrapper {
+    display: block;
+  }
+
+  .rh-cards {
+    display: none;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .rh-table-wrapper {
+    display: block;
+  }
+
+  .rh-cards {
+    display: none;
+  }
+
+  .rh-table th,
+  .rh-table td {
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .rh-container {
+    margin-top: 1.75rem;
+  }
+
+  .rh-title {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .rh-table-wrapper {
+    display: none !important;
+  }
+
+  .rh-cards {
+    display: flex !important;
+  }
+
+  .rh-card {
+    padding: 0.875rem;
+  }
+
+  .rh-pagination {
+    gap: 0.75rem;
+  }
+
+  .rh-page-btn {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================================
+   13. REFERRAL CHARTS - RESPONSIVE
+   ============================================================ */
+
+/* --- Desktop (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .referral-charts {
+    padding: 1.5rem;
+  }
+
+  .referral-charts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .chart-wrapper {
+    height: 280px;
+  }
+}
+
+/* --- Tablet (640px - 1023px) --- */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .referral-charts {
+    padding: 1.25rem;
+  }
+
+  .referral-charts-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  .chart-stat-card {
+    min-width: 100px;
+  }
+
+  .chart-stat-value {
+    font-size: 1.75rem;
+  }
+
+  .chart-wrapper {
+    height: 240px;
+  }
+}
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .referral-charts {
+    padding: 0.875rem;
+  }
+
+  .referral-charts-title {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .referral-charts-summary {
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .chart-stat-card {
+    min-width: 80px;
+    padding: 0.65rem 0.75rem;
+  }
+
+  .chart-stat-value {
+    font-size: 1.4rem;
+  }
+
+  .chart-stat-label {
+    font-size: 0.72rem;
+  }
+
+  .referral-charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .chart-card {
+    padding: 1rem;
+  }
+
+  .chart-wrapper {
+    height: 200px;
+  }
+
+  .chart-wrapper--doughnut {
+    height: 220px;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .referral-charts-summary {
+    flex-wrap: wrap;
+  }
+
+  .chart-stat-card {
+    flex: 1 1 calc(50% - 0.3rem);
+    min-width: 0;
+  }
+
+  .chart-wrapper {
+    height: 180px;
+  }
+}
+
+/* ============================================================
+   14. POINTS BALANCE WIDGET - RESPONSIVE
+   ============================================================ */
+
+/* --- Mobile (< 640px) --- */
+@media (max-width: 639px) {
+  .pbw-container {
+    padding: 1rem;
+    border-radius: 0.875rem;
+  }
+
+  .pbw-balance-number {
+    font-size: 2rem;
+  }
+
+  .pbw-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.65rem;
+    min-height: 44px;
+  }
+
+  .pbw-actions {
+    gap: 0.4rem;
+  }
+}
+
+/* --- Small Mobile (< 400px) --- */
+@media (max-width: 399px) {
+  .pbw-balance-number {
+    font-size: 1.75rem;
+  }
+
+  .pbw-actions {
+    flex-direction: column;
+  }
+
+  .pbw-btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ============================================================
+   15. RTL FULL SUPPORT
+   ============================================================ */
+
+/* My Referrals Page RTL */
+[dir="rtl"] .referrals-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referral-name-cell {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referral-card-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referral-card-footer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referrals-pagination {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referrals-table th,
+[dir="rtl"] .referrals-table td {
+  text-align: right;
+}
+
+/* Rewards Store RTL */
+[dir="rtl"] .rsp-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rsp-balance-widget {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rsp-section-title {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rsp-toast {
+  flex-direction: row-reverse;
+}
+
+/* Stats Page RTL */
+[dir="rtl"] .stats-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stats-kpi-breakdown {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .stats-back-link {
+  flex-direction: row-reverse;
+}
+
+/* Referral Charts RTL */
+[dir="rtl"] .referral-charts-summary {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referral-charts-grid {
+  direction: rtl;
+}
+
+/* Redemption History RTL */
+[dir="rtl"] .rh-table th,
+[dir="rtl"] .rh-table td {
+  text-align: right;
+}
+
+[dir="rtl"] .rh-card-top,
+[dir="rtl"] .rh-card-bottom {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rh-pagination {
+  flex-direction: row-reverse;
+}
+
+/* Referrals List RTL */
+[dir="rtl"] .rl-table th,
+[dir="rtl"] .rl-table td {
+  text-align: right;
+}
+
+[dir="rtl"] .rl-name-cell {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rl-card-top {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rl-card-footer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rl-pagination {
+  flex-direction: row-reverse;
+}
+
+/* Redemption Confirm Modal RTL */
+[dir="rtl"] .rcm-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rcm-balance-row {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rcm-warning {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rcm-actions {
+  flex-direction: row-reverse;
+}
+
+/* Points Balance Widget RTL */
+[dir="rtl"] .pbw-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .pbw-balance-display {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .pbw-actions {
+  flex-direction: row-reverse;
+}
+
+/* Share Buttons RTL */
+[dir="rtl"] .referral-share-btn {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referral-share-actions {
+  flex-direction: row-reverse;
+}
+
+/* Mobile RTL overrides */
+@media (max-width: 639px) {
+  [dir="rtl"] .referrals-header {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  [dir="rtl"] .stats-header {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  [dir="rtl"] .rsp-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  [dir="rtl"] .referral-share-actions {
+    flex-direction: column;
+  }
+
+  [dir="rtl"] .rcm-actions {
+    flex-direction: column;
+  }
+
+  [dir="rtl"] .pbw-actions {
+    flex-direction: row-reverse;
+  }
+}
+
+/* ============================================================
+   16. SAFE AREA SUPPORT (iOS Notch / Dynamic Island)
+   ============================================================ */
+
+/* Bottom navigation safe area for referral pages */
+@supports (padding: max(0px)) {
+  .my-referrals-page,
+  .referral-stats-page,
+  .rsp-page,
+  .rs-page {
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+
+  /* Modal safe area */
+  .rcm-overlay {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  /* Toast safe area */
+  .rsp-toast {
+    bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* ============================================================
+   17. LANDSCAPE MODE SUPPORT
+   ============================================================ */
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .my-referrals-page,
+  .referral-stats-page,
+  .rsp-page,
+  .rs-page {
+    padding-top: 0.75rem;
+  }
+
+  .referrals-title,
+  .stats-title,
+  .rsp-title {
+    font-size: 1.25rem;
+  }
+
+  .referrals-header,
+  .stats-header,
+  .rsp-header {
+    margin-bottom: 1rem;
+  }
+
+  /* Modal in landscape */
+  .rcm-overlay {
+    align-items: center;
+    padding: 0.5rem;
+  }
+
+  .rcm-modal {
+    border-radius: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .rcm-body {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  /* Charts in landscape */
+  .chart-wrapper {
+    height: 160px;
+  }
+
+  .referral-charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ============================================================
+   18. ACCESSIBILITY & REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .rdc-card,
+  .referral-share-btn,
+  .rsp-toast,
+  .rcm-modal,
+  .pbw-btn,
+  .rdc-btn,
+  .rcm-btn {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .rdc-card:hover {
+    transform: none !important;
+  }
+
+  .referral-share-btn:hover {
+    transform: none !important;
+  }
+
+  .rcm-modal {
+    animation: none !important;
+  }
+
+  .rs-balance-skeleton,
+  .pbw-skeleton,
+  .rsp-spinner,
+  .rl-spinner,
+  .rh-spinner,
+  .stats-spinner,
+  .referrals-spinner {
+    animation: none !important;
+  }
+}
+
+/* Focus indicators for keyboard navigation */
+.referral-share-btn:focus-visible,
+.rsp-retry-btn:focus-visible,
+.rdc-btn:focus-visible,
+.rcm-btn:focus-visible,
+.pbw-btn:focus-visible,
+.pagination-btn:focus-visible,
+.rl-page-btn:focus-visible,
+.rh-page-btn:focus-visible,
+.stats-back-link:focus-visible,
+.stats-retry-btn:focus-visible,
+.referrals-retry-btn:focus-visible {
+  outline: 3px solid #D48161 !important;
+  outline-offset: 2px !important;
+}
+
+/* ============================================================
+   19. PRINT STYLES
+   ============================================================ */
+
+@media print {
+  .referral-share-buttons,
+  .referrals-pagination,
+  .rl-pagination,
+  .rh-pagination,
+  .rsp-toast,
+  .rcm-overlay,
+  .pbw-actions {
+    display: none !important;
+  }
+
+  .my-referrals-page,
+  .referral-stats-page,
+  .rsp-page,
+  .rs-page {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .referrals-table-wrapper,
+  .rh-table-wrapper,
+  .rl-table-wrapper {
+    display: block !important;
+    border: 1px solid #304B60;
+  }
+
+  .referrals-cards,
+  .rh-cards,
+  .rl-cards {
+    display: none !important;
+  }
+
+  .stats-kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .stats-charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ============================================================
+   20. COMPANY REFERRALS PAGE - RESPONSIVE
+   ============================================================ */
+
+.company-referrals-page {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+@media (max-width: 639px) {
+  .company-referrals-page {
+    padding: 1rem max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    padding-bottom: max(2rem, env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .company-referrals-page {
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .company-referrals-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}

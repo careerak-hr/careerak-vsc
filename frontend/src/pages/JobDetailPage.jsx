@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { SEOHead } from '../components/SEO';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import ShareButton from '../components/ShareButton/ShareButton';
 import './JobDetailPage.css';
 
 // Lazy load components
@@ -52,6 +53,7 @@ const JobDetailPage = () => {
           <header className="job-detail-header">
             <h1>{job.title}</h1>
             <p className="company-name">Posted by <Link to={`/company/${job.postedBy?._id}`}>{job.postedBy?.companyName || 'a company'}</Link></p>
+            <ShareButton job={job} variant="outline" size="medium" />
           </header>
 
           <section className="job-description-section">

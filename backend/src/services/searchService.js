@@ -318,8 +318,6 @@ class SearchService {
       }
 
       return searchResults;
-        }
-      };
     } catch (error) {
       console.error('Error in textSearch:', error);
       throw error;

@@ -136,6 +136,36 @@ const dataExportLimiter = createRateLimiter({
 });
 
 /**
+ * Rate limiter for search operations (60 requests/minute)
+ */
+const searchRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  max: 60,
+  message: 'تم تجاوز الحد المسموح لعمليات البحث. يرجى المحاولة بعد دقيقة.',
+  keyGenerator: (req) => req.user?.id || req.ip // Allow both authenticated and anonymous
+});
+
+/**
+ * Rate limiter for autocomplete operations (100 requests/minute)
+ */
+const autocompleteRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  max: 100,
+  message: 'تم تجاوز الحد المسموح للاقتراحات التلقائية. يرجى المحاولة بعد دقيقة.',
+  keyGenerator: (req) => req.user?.id || req.ip // Allow both authenticated and anonymous
+});
+
+/**
+ * General rate limiter for API routes (120 requests/minute)
+ */
+const generalRateLimiter = createRateLimiter({
+  windowMs: 60 * 1000, // 1 minute
+  max: 120,
+  message: 'تم تجاوز الحد المسموح. يرجى المحاولة بعد دقيقة.',
+  keyGenerator: (req) => req.user?.id || req.ip // Allow both authenticated and anonymous
+});
+
+/**
  * Clean up expired entries from rate limit store
  */
 const cleanupExpiredEntries = () => {
@@ -181,6 +211,9 @@ module.exports = {
   contactChangeLimiter,
   twoFactorLimiter,
   dataExportLimiter,
+  searchRateLimiter,
+  autocompleteRateLimiter,
+  generalRateLimiter,
   getRateLimitInfo,
   resetRateLimit
 };

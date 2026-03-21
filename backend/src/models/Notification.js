@@ -21,9 +21,15 @@ const notificationSchema = new mongoose.Schema({
       'certificate_issued',  // تم إصدار شهادة جديدة
       'badge_earned',        // تم الحصول على badge جديد
       'new_device_login',    // تسجيل دخول من جهاز جديد
-      'interview_reminder_24h', // تذكير قبل 24 ساعة من المقابلة
-      'interview_reminder_15m', // تذكير قبل 15 دقيقة من المقابلة
-      'interview_rescheduled',  // تم إعادة جدولة المقابلة
+      'appointment_confirmed',    // تم تأكيد الموعد
+      'appointment_cancelled',   // تم إلغاء الموعد
+      'appointment_rescheduled', // تم إعادة جدولة الموعد
+      'interview_reminder_24h',  // تذكير قبل 24 ساعة من المقابلة
+      'interview_reminder_15m',  // تذكير قبل 15 دقيقة من المقابلة
+      'appointment_reminder',    // تذكير بموعد (24h أو 1h)
+      'interview_rescheduled',   // تم إعادة جدولة المقابلة
+      'referral_reward',     // مكافأة إحالة (للمحيل والمُحال)
+      'attendance_alert',    // تنبيه معدل الحضور أقل من 85%
       'system'               // إشعار نظام عام
     ],
     required: true
@@ -42,6 +48,7 @@ const notificationSchema = new mongoose.Schema({
   // البيانات المرتبطة بالإشعار
   relatedData: {
     jobPosting: { type: mongoose.Schema.Types.ObjectId, ref: 'JobPosting' },
+    referral: { type: mongoose.Schema.Types.ObjectId, ref: 'Referral' },
     jobApplication: { type: mongoose.Schema.Types.ObjectId, ref: 'JobApplication' },
     course: { type: mongoose.Schema.Types.ObjectId, ref: 'TrainingCourse' },
     certificate: { type: mongoose.Schema.Types.ObjectId, ref: 'Certificate' },
@@ -53,6 +60,11 @@ const notificationSchema = new mongoose.Schema({
     meetingLink: String,
     scheduledAt: Date,
     canJoinNow: Boolean,
+    reason: String,
+    cancelledBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    oldAppointmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
+    newAppointmentId: { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
+    newScheduledAt: Date,
     organizer: {
       name: String,
       email: String

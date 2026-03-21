@@ -348,3 +348,76 @@
 ---
 
 **ملاحظة**: هذا الفهرس يُحدّث تلقائياً. آخر تحديث: 2026-03-07
+
+
+---
+
+## 17. LinkedIn Integration - تكامل LinkedIn
+
+### 📂 المجلد: `docs/`
+
+#### ملفات التكامل
+- **LINKEDIN_INTEGRATION.md** - دليل شامل (500+ سطر)
+- **LINKEDIN_INTEGRATION_QUICK_START.md** - دليل البدء السريع (5 دقائق)
+- **LINKEDIN_INTEGRATION_SUMMARY.md** - ملخص التنفيذ
+- **LINKEDIN_SETUP_GUIDE.md** - دليل الإعداد خطوة بخطوة (مصور)
+- **LINKEDIN_QUICK_REFERENCE.md** - مرجع سريع
+
+#### الميزات المكتملة
+- ✅ OAuth 2.0 authentication كامل
+- ✅ مشاركة الشهادات على LinkedIn كمنشورات
+- ✅ إضافة الشهادات إلى قسم Certifications
+- ✅ إدارة الاتصال (ربط/إلغاء ربط)
+- ✅ التحقق من حالة الربط وصلاحية التوكن
+- ✅ معالجة أخطاء شاملة
+- ✅ أمان محكم (state parameter, token encryption)
+- ✅ 20+ اختبار شامل
+
+#### API Endpoints (7)
+- `GET /api/linkedin/auth-url` - رابط OAuth
+- `GET /api/linkedin/callback` - معالجة callback
+- `POST /api/linkedin/share-certificate` - مشاركة شهادة
+- `POST /api/linkedin/add-certification` - إضافة لـ Certifications
+- `GET /api/linkedin/status` - حالة الربط
+- `GET /api/linkedin/profile` - الملف الشخصي
+- `DELETE /api/linkedin/unlink` - إلغاء الربط
+
+#### الملفات المرتبطة
+- Backend Service: `backend/src/services/linkedInService.js` (400+ سطر)
+- Backend Controller: `backend/src/controllers/linkedInController.js` (300+ سطر)
+- Backend Routes: `backend/src/routes/linkedInRoutes.js`
+- Backend Tests: `backend/tests/linkedIn.test.js` (20+ tests)
+- Frontend Example: `frontend/src/examples/LinkedInIntegrationExample.jsx`
+- Frontend Styles: `frontend/src/examples/LinkedInIntegrationExample.css`
+- Service README: `backend/src/services/README_LINKEDIN.md`
+- Spec: `.kiro/specs/certificates-achievements/`
+
+#### المتغيرات المطلوبة
+```env
+LINKEDIN_CLIENT_ID=your_client_id_here
+LINKEDIN_CLIENT_SECRET=your_client_secret_here
+LINKEDIN_REDIRECT_URI=https://careerak.com/linkedin/callback
+FRONTEND_URL=https://careerak.com
+```
+
+#### الفوائد المتوقعة
+- 📱 زيادة مشاركة الشهادات بنسبة 40%
+- 🌐 توسيع الوصول على LinkedIn (3x)
+- 💼 تحسين فرص التوظيف (+25%)
+- ✅ زيادة مصداقية الشهادات (+50%)
+
+#### دليل البدء السريع
+1. احصل على LinkedIn Client ID و Secret من [LinkedIn Developers](https://www.linkedin.com/developers/)
+2. أضف المفاتيح في `backend/.env`
+3. أضف Redirect URLs في LinkedIn App
+4. فعّل الصلاحيات (Sign In + Share)
+5. أعد تشغيل السيرفر
+6. اختبر OAuth flow
+
+#### المراجع
+- [LinkedIn OAuth 2.0 Documentation](https://docs.microsoft.com/en-us/linkedin/shared/authentication/authentication)
+- [LinkedIn Share API](https://docs.microsoft.com/en-us/linkedin/consumer/integrations/self-serve/share-on-linkedin)
+
+---
+
+**ملاحظة**: هذا الفهرس يُحدّث تلقائياً. آخر تحديث: 2026-03-13

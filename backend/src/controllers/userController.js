@@ -173,6 +173,16 @@ exports.login = async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res.status(401).json({ error: 'بيانات الدخول غير صحيحة' });
     }
+
+    // التحقق من حظر الحساب
+    if (user.isBlocked) {
+      return res.status(403).json({
+        error: 'تم حظر حسابك بسبب انتهاك سياسة الإحالة. يرجى التواصل مع الدعم الفني.',
+        isBlocked: true,
+        blockedReason: user.blockedReason || 'انتهاك سياسة الإحالة',
+        code: 'ACCOUNT_BLOCKED'
+      });
+    }
     
     res.status(200).json({ token: generateToken(user), user: sanitizeUser(user) });
   } catch (error) {

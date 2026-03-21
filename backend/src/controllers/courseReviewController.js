@@ -180,11 +180,6 @@ async function updateCourseRatingStats(courseId) {
   }
 }
 
-module.exports = {
-  createCourseReview,
-  updateCourseRatingStats
-};
-
 /**
  * Get all reviews for a course
  * GET /courses/:id/reviews
@@ -587,3 +582,7 @@ exports.addReviewResponse = async (req, res) => {
     });
   }
 };
+
+
+// Export the helper function as well
+exports.updateCourseRatingStats = updateCourseRatingStats;

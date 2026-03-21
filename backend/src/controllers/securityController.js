@@ -1,5 +1,5 @@
-const TwoFactorService = require('../services/twoFactorService');
-const SessionService = require('../services/sessionService');
+const twoFactorService = require('../services/twoFactorService');
+const sessionService = require('../services/sessionService');
 const logger = require('../utils/logger');
 
 /**
@@ -8,8 +8,8 @@ const logger = require('../utils/logger');
  */
 class SecurityController {
   constructor() {
-    this.twoFactorService = new TwoFactorService();
-    this.sessionService = new SessionService();
+    this.twoFactorService = twoFactorService;
+    this.sessionService = sessionService;
   }
 
   /**

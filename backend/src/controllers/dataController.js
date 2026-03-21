@@ -1,5 +1,5 @@
-const DataExportService = require('../services/dataExportService');
-const AccountDeletionService = require('../services/accountDeletionService');
+const dataExportService = require('../services/dataExportService');
+const accountDeletionService = require('../services/accountDeletionService');
 const logger = require('../utils/logger');
 
 /**
@@ -8,8 +8,8 @@ const logger = require('../utils/logger');
  */
 class DataController {
   constructor() {
-    this.dataExportService = new DataExportService();
-    this.accountDeletionService = new AccountDeletionService();
+    this.dataExportService = dataExportService;
+    this.accountDeletionService = accountDeletionService;
   }
 
   /**

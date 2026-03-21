@@ -96,25 +96,58 @@ class ProgressService {
   async issueCertificate(enrollment) {
     try {
       // Check if certificate already issued
-      if (enrollment.certificateIssued.issued) {
+      if (enrollment.certificateIssued && enrollment.certificateIssued.issued) {
         return enrollment.certificateIssued;
       }
 
-      // Generate certificate using certificate service
-      const certificate = await this.certificateService.generateCertificate(enrollment);
+      // Issue certificate using the correct method signature
+      const result = await this.certificateService.issueCertificate(
+        enrollment.student,
+        enrollment.course
+      );
+
+      if (!result || !result.success) {
+        throw new Error('Certificate issuance returned unsuccessful result');
+      }
+
+      const { certificate } = result;
+
+      // Build the certificate URL
+      const baseUrl = process.env.FRONTEND_URL || 'https://careerak.com';
+      const certificateUrl = `${baseUrl}/certificates/${certificate.certificateId}`;
 
       // Update enrollment with certificate details
       enrollment.certificateIssued = {
         issued: true,
         issuedAt: new Date(),
-        certificateUrl: certificate.certificateUrl,
+        certificateUrl,
         certificateId: certificate.certificateId
       };
 
-      await enrollment.save();
-
       return enrollment.certificateIssued;
     } catch (error) {
+      // If certificate already exists for this user/course, fetch it and update enrollment
+      if (error.message && error.message.includes('Certificate already exists')) {
+        try {
+          const Certificate = require('../models/Certificate');
+          const existing = await Certificate.findOne({
+            userId: enrollment.student,
+            courseId: enrollment.course
+          });
+          if (existing) {
+            const baseUrl = process.env.FRONTEND_URL || 'https://careerak.com';
+            enrollment.certificateIssued = {
+              issued: true,
+              issuedAt: existing.issueDate,
+              certificateUrl: `${baseUrl}/certificates/${existing.certificateId}`,
+              certificateId: existing.certificateId
+            };
+            return enrollment.certificateIssued;
+          }
+        } catch (fetchError) {
+          console.error('Error fetching existing certificate:', fetchError);
+        }
+      }
       throw new Error(`Failed to issue certificate: ${error.message}`);
     }
   }

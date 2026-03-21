@@ -796,29 +796,110 @@ const sendCertificateIssuedEmail = async (user, certificate, course) => {
   const verificationUrl = certificate.verificationUrl;
   const pdfUrl = certificate.pdfUrl || certificateUrl;
 
-  const subject = `تهانينا! شهادتك جاهزة - ${course.title} | Careerak`;
+  const lang = user.language || user.preferredLanguage || 'ar';
+  const isAr = lang === 'ar';
+  const isFr = lang === 'fr';
+
+  const emailTexts = {
+    ar: {
+      subject: `تهانينا! شهادتك جاهزة - ${course.title} | Careerak`,
+      dir: 'rtl', htmlLang: 'ar',
+      greeting: `مرحباً <strong>${user.firstName} ${user.lastName}</strong>،`,
+      congrats: 'تهانينا!',
+      ready: 'شهادتك جاهزة للتحميل',
+      completed: `نهنئك على إكمال دورة <strong>"${course.title}"</strong> بنجاح! 🎓`,
+      certIdLabel: 'رقم الشهادة',
+      issueDateLabel: 'تاريخ الإصدار',
+      downloadBtn: '📥 تحميل الشهادة (PDF)',
+      viewBtn: '👁️ عرض الشهادة',
+      featuresTitle: '✨ ميزات شهادتك:',
+      features: ['✅ <strong>شهادة رسمية معتمدة</strong> من Careerak','🔐 <strong>رقم فريد</strong> للتحقق من الصحة','📱 <strong>QR Code</strong> للمشاركة والتحقق السريع','🌐 <strong>رابط تحقق عام</strong> يمكن مشاركته مع أي جهة','💼 <strong>قابلة للمشاركة</strong> على LinkedIn وجميع المنصات'],
+      shareTitle: '📢 شارك إنجازك!',
+      shareDesc: 'أضف شهادتك إلى ملفك الشخصي على LinkedIn وشاركها مع شبكتك المهنية',
+      shareBtn: 'مشاركة على LinkedIn',
+      verifyTitle: '🔍 التحقق من الشهادة',
+      verifyDesc: 'يمكن لأي شخص التحقق من صحة شهادتك باستخدام:',
+      verifyLink: 'رابط التحقق',
+      closing: 'نتمنى لك التوفيق في مسيرتك المهنية! 🚀',
+      contact: 'إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.',
+      footer: '© 2026 Careerak. جميع الحقوق محفوظة.',
+      dateLocale: 'ar-EG',
+    },
+    en: {
+      subject: `Congratulations! Your certificate is ready - ${course.title} | Careerak`,
+      dir: 'ltr', htmlLang: 'en',
+      greeting: `Hello <strong>${user.firstName} ${user.lastName}</strong>,`,
+      congrats: 'Congratulations!',
+      ready: 'Your certificate is ready to download',
+      completed: `Congratulations on successfully completing <strong>"${course.title}"</strong>! 🎓`,
+      certIdLabel: 'Certificate ID',
+      issueDateLabel: 'Issue Date',
+      downloadBtn: '📥 Download Certificate (PDF)',
+      viewBtn: '👁️ View Certificate',
+      featuresTitle: '✨ Your certificate features:',
+      features: ['✅ <strong>Official certificate</strong> from Careerak','🔐 <strong>Unique ID</strong> for authenticity verification','📱 <strong>QR Code</strong> for quick sharing and verification','🌐 <strong>Public verification link</strong> shareable with anyone','💼 <strong>Shareable</strong> on LinkedIn and all platforms'],
+      shareTitle: '📢 Share your achievement!',
+      shareDesc: 'Add your certificate to your LinkedIn profile and share it with your professional network',
+      shareBtn: 'Share on LinkedIn',
+      verifyTitle: '🔍 Certificate Verification',
+      verifyDesc: 'Anyone can verify your certificate using:',
+      verifyLink: 'Verification link',
+      closing: 'We wish you success in your career! 🚀',
+      contact: 'If you have any questions, feel free to contact us.',
+      footer: '© 2026 Careerak. All rights reserved.',
+      dateLocale: 'en-US',
+    },
+    fr: {
+      subject: `Félicitations! Votre certificat est prêt - ${course.title} | Careerak`,
+      dir: 'ltr', htmlLang: 'fr',
+      greeting: `Bonjour <strong>${user.firstName} ${user.lastName}</strong>,`,
+      congrats: 'Félicitations!',
+      ready: 'Votre certificat est prêt à télécharger',
+      completed: `Félicitations pour avoir complété avec succès <strong>"${course.title}"</strong>! 🎓`,
+      certIdLabel: 'N° de certificat',
+      issueDateLabel: 'Date d\'émission',
+      downloadBtn: '📥 Télécharger le certificat (PDF)',
+      viewBtn: '👁️ Voir le certificat',
+      featuresTitle: '✨ Caractéristiques de votre certificat:',
+      features: ['✅ <strong>Certificat officiel</strong> de Careerak','🔐 <strong>Identifiant unique</strong> pour la vérification','📱 <strong>QR Code</strong> pour le partage et la vérification rapide','🌐 <strong>Lien de vérification public</strong> partageable avec n\'importe qui','💼 <strong>Partageable</strong> sur LinkedIn et toutes les plateformes'],
+      shareTitle: '📢 Partagez votre réussite!',
+      shareDesc: 'Ajoutez votre certificat à votre profil LinkedIn et partagez-le avec votre réseau professionnel',
+      shareBtn: 'Partager sur LinkedIn',
+      verifyTitle: '🔍 Vérification du certificat',
+      verifyDesc: 'N\'importe qui peut vérifier votre certificat en utilisant:',
+      verifyLink: 'Lien de vérification',
+      closing: 'Nous vous souhaitons du succès dans votre carrière! 🚀',
+      contact: 'Si vous avez des questions, n\'hésitez pas à nous contacter.',
+      footer: '© 2026 Careerak. Tous droits réservés.',
+      dateLocale: 'fr-FR',
+    },
+  };
+
+  const tx = emailTexts[lang] || emailTexts.ar;
+  const subject = tx.subject;
   
+  const formattedDate = new Date(certificate.issueDate).toLocaleDateString(tx.dateLocale, {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
   const html = `
     <!DOCTYPE html>
-    <html dir="rtl" lang="ar">
+    <html dir="${tx.dir}" lang="${tx.htmlLang}">
     <head>
       <meta charset="UTF-8">
       <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: ${tx.dir}; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         .header { background: linear-gradient(135deg, #304B60 0%, #D48161 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
         .header h1 { margin: 0; font-size: 32px; }
-        .header .icon { font-size: 64px; margin-bottom: 10px; }
         .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
         .certificate-box { background: white; border: 3px solid #D48161; padding: 25px; border-radius: 10px; margin: 20px 0; text-align: center; }
         .certificate-title { color: #304B60; font-size: 24px; font-weight: bold; margin: 15px 0; }
         .certificate-info { color: #666; font-size: 16px; margin: 10px 0; }
         .button { display: inline-block; background: #D48161; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; margin: 10px 5px; font-size: 16px; font-weight: bold; }
-        .button:hover { background: #c06f51; }
         .button-secondary { background: #304B60; }
-        .button-secondary:hover { background: #243a4d; }
-        .features { background: #e8f4f8; border-right: 4px solid #304B60; padding: 20px; margin: 20px 0; }
-        .features ul { margin: 10px 0; padding-right: 20px; }
+        .features { background: #e8f4f8; border-${tx.dir === 'rtl' ? 'right' : 'left'}: 4px solid #304B60; padding: 20px; margin: 20px 0; }
+        .features ul { margin: 10px 0; padding-${tx.dir === 'rtl' ? 'right' : 'left'}: 20px; }
         .features li { margin: 8px 0; }
         .share-section { background: #fff3e0; border: 2px solid #ff9800; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; }
         .footer { text-align: center; color: #666; margin-top: 20px; font-size: 12px; }
@@ -827,70 +908,306 @@ const sendCertificateIssuedEmail = async (user, certificate, course) => {
     <body>
       <div class="container">
         <div class="header">
-          <div class="icon">🎉</div>
-          <h1>تهانينا!</h1>
-          <p style="font-size: 18px; margin: 10px 0 0 0;">شهادتك جاهزة للتحميل</p>
+          <div style="font-size: 64px; margin-bottom: 10px;">🎉</div>
+          <h1>${tx.congrats}</h1>
+          <p style="font-size: 18px; margin: 10px 0 0 0;">${tx.ready}</p>
         </div>
         <div class="content">
-          <p style="font-size: 18px;">مرحباً <strong>${user.firstName} ${user.lastName}</strong>،</p>
-          
-          <p>نهنئك على إكمال دورة <strong>"${course.title}"</strong> بنجاح! 🎓</p>
-          
+          <p style="font-size: 18px;">${tx.greeting}</p>
+          <p>${tx.completed}</p>
           <div class="certificate-box">
             <div style="font-size: 48px; margin-bottom: 15px;">📜</div>
             <div class="certificate-title">${course.title}</div>
             <div class="certificate-info">
-              <p><strong>رقم الشهادة:</strong> ${certificate.certificateId}</p>
-              <p><strong>تاريخ الإصدار:</strong> ${new Date(certificate.issueDate).toLocaleDateString('ar-EG', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}</p>
+              <p><strong>${tx.certIdLabel}:</strong> ${certificate.certificateId}</p>
+              <p><strong>${tx.issueDateLabel}:</strong> ${formattedDate}</p>
             </div>
           </div>
-          
           <div style="text-align: center; margin: 30px 0;">
-            <a href="${pdfUrl}" class="button">📥 تحميل الشهادة (PDF)</a>
-            <a href="${certificateUrl}" class="button button-secondary">👁️ عرض الشهادة</a>
+            <a href="${pdfUrl}" class="button">${tx.downloadBtn}</a>
+            <a href="${certificateUrl}" class="button button-secondary">${tx.viewBtn}</a>
           </div>
-          
           <div class="features">
-            <h3 style="color: #304B60; margin-top: 0;">✨ ميزات شهادتك:</h3>
-            <ul>
-              <li>✅ <strong>شهادة رسمية معتمدة</strong> من Careerak</li>
-              <li>🔐 <strong>رقم فريد</strong> للتحقق من الصحة</li>
-              <li>📱 <strong>QR Code</strong> للمشاركة والتحقق السريع</li>
-              <li>🌐 <strong>رابط تحقق عام</strong> يمكن مشاركته مع أي جهة</li>
-              <li>💼 <strong>قابلة للمشاركة</strong> على LinkedIn وجميع المنصات</li>
-            </ul>
+            <h3 style="color: #304B60; margin-top: 0;">${tx.featuresTitle}</h3>
+            <ul>${tx.features.map(f => `<li>${f}</li>`).join('')}</ul>
           </div>
-          
           <div class="share-section">
-            <h3 style="color: #ff9800; margin-top: 0;">📢 شارك إنجازك!</h3>
-            <p>أضف شهادتك إلى ملفك الشخصي على LinkedIn وشاركها مع شبكتك المهنية</p>
-            <a href="${certificateUrl}" class="button" style="background: #0077b5;">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn" style="width: 20px; vertical-align: middle; margin-left: 5px;">
-              مشاركة على LinkedIn
-            </a>
+            <h3 style="color: #ff9800; margin-top: 0;">${tx.shareTitle}</h3>
+            <p>${tx.shareDesc}</p>
+            <a href="${certificateUrl}" class="button" style="background: #0077b5;">${tx.shareBtn}</a>
           </div>
-          
           <div style="background: white; border: 2px solid #10b981; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #10b981; margin-top: 0;">🔍 التحقق من الشهادة</h3>
-            <p>يمكن لأي شخص التحقق من صحة شهادتك باستخدام:</p>
-            <ul style="margin: 10px 0; padding-right: 20px;">
-              <li><strong>رقم الشهادة:</strong> ${certificate.certificateId}</li>
-              <li><strong>رابط التحقق:</strong> <a href="${verificationUrl}" style="color: #10b981;">${verificationUrl}</a></li>
-              <li><strong>QR Code:</strong> موجود على الشهادة</li>
+            <h3 style="color: #10b981; margin-top: 0;">${tx.verifyTitle}</h3>
+            <p>${tx.verifyDesc}</p>
+            <ul style="margin: 10px 0; padding-${tx.dir === 'rtl' ? 'right' : 'left'}: 20px;">
+              <li><strong>${tx.certIdLabel}:</strong> ${certificate.certificateId}</li>
+              <li><strong>${tx.verifyLink}:</strong> <a href="${verificationUrl}" style="color: #10b981;">${verificationUrl}</a></li>
             </ul>
           </div>
-          
-          <p style="font-size: 16px; color: #555; margin-top: 30px;">
-            نتمنى لك التوفيق في مسيرتك المهنية! 🚀
-          </p>
-          
-          <p style="font-size: 14px; color: #777;">
-            إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.
-          </p>
+          <p style="font-size: 16px; color: #555; margin-top: 30px;">${tx.closing}</p>
+          <p style="font-size: 14px; color: #777;">${tx.contact}</p>
+        </div>
+        <div class="footer">
+          <p>${tx.footer}</p>
+          <p>careerak.hr@gmail.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const text = `${tx.congrats}\n${tx.greeting.replace(/<[^>]+>/g, '')}\n\n${tx.completed.replace(/<[^>]+>/g, '')}\n\n${tx.certIdLabel}: ${certificate.certificateId}\n${tx.issueDateLabel}: ${formattedDate}\n\n${tx.downloadBtn.replace(/📥 /, '')}: ${pdfUrl}\n${tx.viewBtn.replace(/👁️ /, '')}: ${certificateUrl}\n\n${tx.verifyLink}: ${verificationUrl}\n\n${tx.closing}\n\n© 2026 Careerak\ncareerak.hr@gmail.com`;
+
+  return await sendEmail({
+    to: user.email,
+    subject,
+    html,
+    text
+  });
+};
+
+/**
+ * إرسال بريد إلكتروني تأكيد الموعد للطرفين
+ */
+const sendAppointmentConfirmationEmail = async (appointment, companyUser, jobSeekerUser) => {
+  const scheduledDate = new Date(appointment.scheduledAt);
+  const formattedDate = scheduledDate.toLocaleDateString('ar-EG', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const formattedTime = scheduledDate.toLocaleTimeString('ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  const buildHtml = (recipientName, role) => `
+    <!DOCTYPE html>
+    <html dir="rtl" lang="ar">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background: #304B60; color: white; padding: 25px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 30px; }
+        .info-box { background: #f9f9f9; border: 2px solid #D48161; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .info-row { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .info-row:last-child { border-bottom: none; }
+        .label { font-weight: bold; color: #304B60; }
+        .button { display: inline-block; background: #D48161; color: white; padding: 14px 35px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-size: 16px; font-weight: bold; }
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #777; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>✅ تم تأكيد الموعد</h1>
+        </div>
+        <div class="content">
+          <p>مرحباً <strong>${recipientName}</strong>،</p>
+          <p>نؤكد لك تأكيد موعد المقابلة التالية:</p>
+          <div class="info-box">
+            <div class="info-row">
+              <span class="label">عنوان المقابلة:</span>
+              <span>${appointment.title}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">📅 التاريخ:</span>
+              <span>${formattedDate}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">🕐 الوقت:</span>
+              <span>${formattedTime}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">⏱️ المدة:</span>
+              <span>${appointment.duration} دقيقة</span>
+            </div>
+            ${appointment.location ? `
+            <div class="info-row">
+              <span class="label">📍 المكان:</span>
+              <span>${appointment.location}</span>
+            </div>` : ''}
+            ${(appointment.meetLink || appointment.googleMeetLink) ? `
+            <div class="info-row" style="background: #e8f5e9; border-radius: 5px; padding: 10px;">
+              <span class="label">🎥 رابط Google Meet:</span>
+              <span><a href="${appointment.meetLink || appointment.googleMeetLink}" style="color: #1a73e8; font-weight: bold;">${appointment.meetLink || appointment.googleMeetLink}</a></span>
+            </div>` : appointment.meetingLink ? `
+            <div class="info-row">
+              <span class="label">🔗 رابط المقابلة:</span>
+              <span><a href="${appointment.meetingLink}">${appointment.meetingLink}</a></span>
+            </div>` : ''}
+            <div class="info-row">
+              <span class="label">👤 الشركة:</span>
+              <span>${companyUser.companyName || companyUser.firstName || 'الشركة'}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">👤 المرشح:</span>
+              <span>${jobSeekerUser.firstName || ''} ${jobSeekerUser.lastName || ''}</span>
+            </div>
+          </div>
+          ${(appointment.meetLink || appointment.googleMeetLink) ? `
+          <div style="text-align: center;">
+            <a href="${appointment.meetLink || appointment.googleMeetLink}" class="button">🎥 الانضمام عبر Google Meet</a>
+          </div>` : appointment.meetingLink ? `
+          <div style="text-align: center;">
+            <a href="${appointment.meetingLink}" class="button">🎥 الانضمام للمقابلة</a>
+          </div>` : ''}
+          ${appointment.notes ? `
+          <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 5px; margin: 20px 0;">
+            <strong>📝 ملاحظات:</strong>
+            <p style="margin: 8px 0 0 0;">${appointment.notes}</p>
+          </div>` : ''}
+          <p>إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.</p>
+        </div>
+        <div class="footer">
+          <p>© 2026 Careerak. جميع الحقوق محفوظة.</p>
+          <p>careerak.hr@gmail.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const buildText = (recipientName) => `
+مرحباً ${recipientName}،
+
+✅ تم تأكيد موعد المقابلة
+
+عنوان المقابلة: ${appointment.title}
+التاريخ: ${formattedDate}
+الوقت: ${formattedTime}
+المدة: ${appointment.duration} دقيقة
+${appointment.location ? `المكان: ${appointment.location}\n` : ''}${(appointment.meetLink || appointment.googleMeetLink) ? `رابط Google Meet: ${appointment.meetLink || appointment.googleMeetLink}\n` : appointment.meetingLink ? `رابط المقابلة: ${appointment.meetingLink}\n` : ''}الشركة: ${companyUser.companyName || companyUser.firstName || 'الشركة'}
+المرشح: ${jobSeekerUser.firstName || ''} ${jobSeekerUser.lastName || ''}
+${appointment.notes ? `\nملاحظات: ${appointment.notes}\n` : ''}
+© 2026 Careerak
+careerak.hr@gmail.com
+  `;
+
+  const subject = `تأكيد موعد المقابلة: ${appointment.title} | Careerak`;
+
+  const emailPromises = [];
+
+  if (jobSeekerUser?.email) {
+    emailPromises.push(sendEmail({
+      to: jobSeekerUser.email,
+      subject,
+      html: buildHtml(`${jobSeekerUser.firstName || ''} ${jobSeekerUser.lastName || ''}`.trim(), 'seeker'),
+      text: buildText(`${jobSeekerUser.firstName || ''} ${jobSeekerUser.lastName || ''}`.trim()),
+    }));
+  }
+
+  if (companyUser?.email) {
+    emailPromises.push(sendEmail({
+      to: companyUser.email,
+      subject,
+      html: buildHtml(companyUser.companyName || companyUser.firstName || 'الشركة', 'company'),
+      text: buildText(companyUser.companyName || companyUser.firstName || 'الشركة'),
+    }));
+  }
+
+  return await Promise.all(emailPromises);
+};
+
+/**
+ * إرسال بريد إلكتروني تذكير بموعد مقابلة
+ * Requirements: 3.4 (دعم البريد الإلكتروني للتذكيرات)
+ * 
+ * @param {Object} appointment - بيانات الموعد
+ * @param {Object} recipient - بيانات المستلم { firstName, lastName, email }
+ * @param {'24h'|'1h'} reminderType - نوع التذكير
+ */
+const sendAppointmentReminderEmail = async (appointment, recipient, reminderType) => {
+  const scheduledDate = new Date(appointment.scheduledAt);
+  const formattedDate = scheduledDate.toLocaleDateString('ar-EG', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  const formattedTime = scheduledDate.toLocaleTimeString('ar-EG', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+  const timeLabel = reminderType === '24h' ? 'غداً' : 'خلال ساعة';
+  const urgencyColor = reminderType === '1h' ? '#D48161' : '#304B60';
+  const recipientName = `${recipient.firstName || ''} ${recipient.lastName || ''}`.trim() || 'عزيزي المستخدم';
+
+  const subject = `تذكير: موعد مقابلة ${timeLabel} - ${appointment.title} | Careerak`;
+
+  const html = `
+    <!DOCTYPE html>
+    <html dir="rtl" lang="ar">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; direction: rtl; background: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .header { background: ${urgencyColor}; color: white; padding: 25px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .content { padding: 30px; }
+        .info-box { background: #f9f9f9; border: 2px solid #D48161; border-radius: 8px; padding: 20px; margin: 20px 0; }
+        .info-row { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+        .info-row:last-child { border-bottom: none; }
+        .label { font-weight: bold; color: #304B60; }
+        .button { display: inline-block; background: #D48161; color: white; padding: 14px 35px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-size: 16px; font-weight: bold; }
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; font-size: 12px; color: #777; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>⏰ تذكير بموعد مقابلة</h1>
+          <p style="margin: 8px 0 0 0; font-size: 16px;">موعدك ${timeLabel}</p>
+        </div>
+        <div class="content">
+          <p>مرحباً <strong>${recipientName}</strong>،</p>
+          <p>هذا تذكير بموعد مقابلتك القادمة:</p>
+          <div class="info-box">
+            <div class="info-row">
+              <span class="label">عنوان المقابلة:</span>
+              <span>${appointment.title}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">📅 التاريخ:</span>
+              <span>${formattedDate}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">🕐 الوقت:</span>
+              <span>${formattedTime}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">⏱️ المدة:</span>
+              <span>${appointment.duration} دقيقة</span>
+            </div>
+            ${appointment.location ? `
+            <div class="info-row">
+              <span class="label">📍 المكان:</span>
+              <span>${appointment.location}</span>
+            </div>` : ''}
+            ${(appointment.meetLink || appointment.googleMeetLink) ? `
+            <div class="info-row" style="background: #e8f5e9; border-radius: 5px; padding: 10px;">
+              <span class="label">🎥 رابط Google Meet:</span>
+              <span><a href="${appointment.meetLink || appointment.googleMeetLink}" style="color: #1a73e8; font-weight: bold;">${appointment.meetLink || appointment.googleMeetLink}</a></span>
+            </div>` : appointment.meetingLink ? `
+            <div class="info-row">
+              <span class="label">🔗 رابط المقابلة:</span>
+              <span><a href="${appointment.meetingLink}">${appointment.meetingLink}</a></span>
+            </div>` : ''}
+          </div>
+          ${(appointment.meetLink || appointment.googleMeetLink) ? `
+          <div style="text-align: center;">
+            <a href="${appointment.meetLink || appointment.googleMeetLink}" class="button">🎥 الانضمام عبر Google Meet</a>
+          </div>` : appointment.meetingLink ? `
+          <div style="text-align: center;">
+            <a href="${appointment.meetingLink}" class="button">🎥 الانضمام للمقابلة</a>
+          </div>` : ''}
+          <p style="color: #666; font-size: 14px;">إذا كنت بحاجة إلى إلغاء أو تعديل الموعد، يرجى التواصل في أقرب وقت ممكن.</p>
         </div>
         <div class="footer">
           <p>© 2026 Careerak. جميع الحقوق محفوظة.</p>
@@ -902,51 +1219,26 @@ const sendCertificateIssuedEmail = async (user, certificate, course) => {
   `;
 
   const text = `
-مرحباً ${user.firstName} ${user.lastName}،
+مرحباً ${recipientName}،
 
-🎉 تهانينا! شهادتك جاهزة للتحميل
+⏰ تذكير: موعد مقابلتك ${timeLabel}
 
-نهنئك على إكمال دورة "${course.title}" بنجاح! 🎓
-
-📜 معلومات الشهادة:
-- رقم الشهادة: ${certificate.certificateId}
-- تاريخ الإصدار: ${new Date(certificate.issueDate).toLocaleDateString('ar-EG')}
-
-📥 تحميل الشهادة:
-${pdfUrl}
-
-👁️ عرض الشهادة:
-${certificateUrl}
-
-✨ ميزات شهادتك:
-✅ شهادة رسمية معتمدة من Careerak
-🔐 رقم فريد للتحقق من الصحة
-📱 QR Code للمشاركة والتحقق السريع
-🌐 رابط تحقق عام يمكن مشاركته مع أي جهة
-💼 قابلة للمشاركة على LinkedIn وجميع المنصات
-
-🔍 التحقق من الشهادة:
-يمكن لأي شخص التحقق من صحة شهادتك باستخدام:
-- رقم الشهادة: ${certificate.certificateId}
-- رابط التحقق: ${verificationUrl}
-- QR Code: موجود على الشهادة
-
-📢 شارك إنجازك!
-أضف شهادتك إلى ملفك الشخصي على LinkedIn وشاركها مع شبكتك المهنية.
-
-نتمنى لك التوفيق في مسيرتك المهنية! 🚀
-
-إذا كان لديك أي استفسارات، لا تتردد في التواصل معنا.
+عنوان المقابلة: ${appointment.title}
+التاريخ: ${formattedDate}
+الوقت: ${formattedTime}
+المدة: ${appointment.duration} دقيقة
+${appointment.location ? `المكان: ${appointment.location}\n` : ''}${(appointment.meetLink || appointment.googleMeetLink) ? `رابط Google Meet: ${appointment.meetLink || appointment.googleMeetLink}\n` : appointment.meetingLink ? `رابط المقابلة: ${appointment.meetingLink}\n` : ''}
+إذا كنت بحاجة إلى إلغاء أو تعديل الموعد، يرجى التواصل في أقرب وقت ممكن.
 
 © 2026 Careerak
 careerak.hr@gmail.com
   `;
 
   return await sendEmail({
-    to: user.email,
+    to: recipient.email,
     subject,
     html,
-    text
+    text,
   });
 };
 
@@ -958,5 +1250,7 @@ module.exports = {
   sendVideoInterviewInvitation,
   sendVideoInterviewReminder,
   sendInterviewRescheduledEmail,
-  sendCertificateIssuedEmail
+  sendCertificateIssuedEmail,
+  sendAppointmentConfirmationEmail,
+  sendAppointmentReminderEmail,
 };

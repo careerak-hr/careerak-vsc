@@ -11,17 +11,10 @@ const { protect } = require('../middleware/auth');
 router.get('/:id/similar', similarJobsController.getSimilarJobs);
 
 /**
- * @route   POST /api/jobs/similarity
- * @desc    حساب درجة التشابه بين وظيفتين
- * @access  Public
- */
-router.post('/similarity', similarJobsController.calculateSimilarity);
-
-/**
- * @route   DELETE /api/jobs/:id/similar/cache
+ * @route   POST /api/jobs/:id/similar/refresh
  * @desc    تحديث cache الوظائف المشابهة
  * @access  Private (Admin only)
  */
-router.delete('/:id/similar/cache', protect, similarJobsController.invalidateCache);
+router.post('/:id/similar/refresh', protect, similarJobsController.refreshSimilarJobs);
 
 module.exports = router;

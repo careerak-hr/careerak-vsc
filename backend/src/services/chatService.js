@@ -45,7 +45,7 @@ class ChatService {
   }
   
   // إرسال رسالة
-  async sendMessage({ conversationId, senderId, type = 'text', content, file }) {
+  async sendMessage({ conversationId, senderId, type = 'text', content, file, sharedContent }) {
     try {
       const conversation = await Conversation.findById(conversationId);
       if (!conversation) {
@@ -62,14 +62,21 @@ class ChatService {
       }
       
       // إنشاء الرسالة
-      const message = await Message.create({
+      const messageData = {
         conversation: conversationId,
         sender: senderId,
         type,
         content,
         file,
         status: 'sent'
-      });
+      };
+
+      if (type === 'shared_content' && sharedContent) {
+        messageData.sharedContent = sharedContent;
+        messageData.content = sharedContent.url || sharedContent.title || '[shared content]';
+      }
+
+      const message = await Message.create(messageData);
       
       // تحديث آخر رسالة في المحادثة
       conversation.lastMessage = {

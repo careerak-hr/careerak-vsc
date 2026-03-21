@@ -1,0 +1,328 @@
+/* ========== Filter Panel Container ========== */
+.filter-panel {
+  background: var(--bg-secondary, #E3DAD1);
+  border: 2px solid var(--primary, #304B60);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .filter-panel {
+    background: var(--bg-secondary-dark, #2a2a2a);
+    border-color: var(--primary-dark, #5a7a96);
+  }
+}
+
+/* ========== Filter Header ========== */
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--primary, #304B60);
+}
+
+.filter-title {
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary, #304B60);
+  margin: 0;
+}
+
+.clear-all-btn {
+  background: transparent;
+  border: 1px solid var(--accent, #D48161);
+  color: var(--accent, #D48161);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.clear-all-btn:hover {
+  background: var(--accent, #D48161);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.clear-all-btn:active {
+  transform: translateY(0);
+}
+
+/* ========== Active Filters (Chips) ========== */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(212, 129, 97, 0.1);
+  border-radius: 8px;
+}
+
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent, #D48161);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.remove-chip-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.remove-chip-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ========== Results Count ========== */
+.results-count {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary, #304B60);
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: rgba(48, 75, 96, 0.05);
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* ========== Filter Sections ========== */
+.filter-section {
+  margin-bottom: 1.5rem;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-section-title {
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary, #304B60);
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(48, 75, 96, 0.2);
+}
+
+/* ========== Filter Options ========== */
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  user-select: none;
+}
+
+.filter-option:hover {
+  background: rgba(48, 75, 96, 0.05);
+}
+
+.filter-option input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent, #D48161);
+}
+
+.filter-option-label {
+  font-size: 0.95rem;
+  color: var(--text-primary, #304B60);
+  font-weight: 500;
+}
+
+/* ========== Responsive Design ========== */
+
+/* Tablet (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .filter-panel {
+    padding: 1.25rem;
+  }
+  
+  .filter-title {
+    font-size: 1.3rem;
+  }
+  
+  .filter-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+}
+
+/* Mobile (< 640px) */
+@media (max-width: 639px) {
+  .filter-panel {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .filter-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .filter-title {
+    font-size: 1.2rem;
+  }
+  
+  .clear-all-btn {
+    width: 100%;
+    padding: 0.75rem;
+  }
+  
+  .active-filters {
+    padding: 0.5rem;
+  }
+  
+  .filter-chip {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.7rem;
+  }
+  
+  .results-count {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+  
+  .filter-section-title {
+    font-size: 1rem;
+  }
+  
+  .filter-option {
+    padding: 0.6rem 0.5rem;
+  }
+  
+  .filter-option-label {
+    font-size: 0.9rem;
+  }
+}
+
+/* Very Small Mobile (< 375px) */
+@media (max-width: 374px) {
+  .filter-panel {
+    padding: 0.75rem;
+  }
+  
+  .filter-title {
+    font-size: 1.1rem;
+  }
+  
+  .filter-chip {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+  
+  .filter-option-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* ========== RTL Support ========== */
+[dir="rtl"] .filter-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filter-option {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filter-chip {
+  flex-direction: row-reverse;
+}
+
+/* ========== Print Styles ========== */
+@media print {
+  .filter-panel {
+    display: none;
+  }
+}
+
+/* ========== Accessibility ========== */
+.filter-option:focus-within {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+.clear-all-btn:focus,
+.remove-chip-btn:focus {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+/* Touch Targets (min 44x44px) */
+@media (pointer: coarse) {
+  .filter-option {
+    min-height: 44px;
+  }
+  
+  .clear-all-btn {
+    min-height: 44px;
+  }
+  
+  .remove-chip-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  .filter-chip {
+    animation: none;
+  }
+  
+  .clear-all-btn,
+  .filter-option {
+    transition: none;
+  }
+}

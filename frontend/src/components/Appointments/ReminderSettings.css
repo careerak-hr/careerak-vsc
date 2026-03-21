@@ -1,0 +1,23 @@
+.rs-root { padding: 20px; background: #fff; border-radius: 12px; border: 2px solid #D4816180; max-width: 480px; }
+.rs-rtl { direction: rtl; text-align: right; }
+.rs-ltr { direction: ltr; text-align: left; }
+.rs-title { font-size: 1.1rem; font-weight: 700; color: #304B60; margin: 0 0 4px; }
+.rs-subtitle { font-size: 0.85rem; color: #6b7280; margin: 0 0 18px; }
+.rs-section { margin-bottom: 18px; }
+.rs-section-title { font-size: 0.85rem; font-weight: 600; color: #304B60; margin: 0 0 8px; }
+.rs-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 0.82rem; margin: 0 4px 6px 0; }
+.rs-chip--default { background: #E3DAD1; color: #304B60; }
+.rs-chip--custom { background: #304B60; color: #E3DAD1; }
+.rs-chip-remove { background: none; border: none; color: inherit; cursor: pointer; font-size: 1rem; padding: 0 0 0 4px; line-height: 1; }
+.rs-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.rs-add-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rs-input { padding: 8px 10px; border: 2px solid #D4816180; border-radius: 8px; font-size: 0.9rem; color: #304B60; width: 90px; outline: none; }
+.rs-input:focus { border-color: #D4816180; }
+.rs-unit { font-size: 0.82rem; color: #6b7280; }
+.rs-error { font-size: 0.8rem; color: #c62828; margin: 4px 0 0; }
+.rs-btn { padding: 8px 18px; border-radius: 8px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; }
+.rs-btn--add { background: #E3DAD1; color: #304B60; }
+.rs-btn--add:hover { background: #d4c8be; }
+.rs-btn--save { background: #304B60; color: #E3DAD1; margin-top: 12px; }
+.rs-btn--save:hover:not(:disabled) { background: #253d50; }
+.rs-btn--save:disabled { opacity: 0.6; cursor: not-allowed; }

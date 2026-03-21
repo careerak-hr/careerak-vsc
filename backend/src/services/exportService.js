@@ -8,6 +8,7 @@ const JobApplication = require('../models/JobApplication');
 const EducationalCourse = require('../models/EducationalCourse');
 const TrainingCourse = require('../models/TrainingCourse');
 const ActivityLog = require('../models/ActivityLog');
+const Appointment = require('../models/Appointment');
 const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
@@ -109,6 +110,25 @@ class ExportService {
           .populate('actorId', 'name email')
           .lean();
 
+      case 'appointments':
+        // Apply appointment-specific filters
+        if (filters.status) query.status = filters.status;
+        if (filters.type) query.type = filters.type;
+        if (filters.organizerId) query.organizerId = filters.organizerId;
+        if (filters.dateRange) {
+          query.scheduledAt = {
+            $gte: new Date(filters.dateRange.start),
+            $lte: new Date(filters.dateRange.end)
+          };
+          delete query.createdAt;
+        }
+
+        return await Appointment.find(query)
+          .populate('organizerId', 'name email')
+          .populate('participants.userId', 'name email')
+          .populate('jobApplicationId', 'status')
+          .lean();
+
       default:
         throw new Error(`Unknown data type: ${dataType}`);
     }
@@ -142,6 +162,10 @@ class ExportService {
 
       case 'activity_log':
         this._addActivityLogSheet(workbook, data);
+        break;
+
+      case 'appointments':
+        this._addAppointmentsSheet(workbook, data);
         break;
 
       default:
@@ -280,6 +304,57 @@ class ExportService {
   }
 
   /**
+   * Add appointments sheet to workbook
+   * Validates: Requirements 6 - تصدير البيانات
+   */
+  _addAppointmentsSheet(workbook, appointments) {
+    const typeLabels = {
+      video_interview: 'مقابلة فيديو',
+      phone_call: 'مكالمة هاتفية',
+      in_person: 'حضوري',
+      other: 'أخرى'
+    };
+    const statusLabels = {
+      scheduled: 'مجدولة',
+      confirmed: 'مؤكدة',
+      in_progress: 'جارية',
+      completed: 'مكتملة',
+      cancelled: 'ملغاة',
+      rescheduled: 'معاد جدولتها'
+    };
+
+    const apptData = appointments.map(appt => ({
+      'العنوان': appt.title || '',
+      'النوع': typeLabels[appt.type] || appt.type || '',
+      'الحالة': statusLabels[appt.status] || appt.status || '',
+      'المنظم': appt.organizerId?.name || '',
+      'بريد المنظم': appt.organizerId?.email || '',
+      'المشاركون': (appt.participants || []).map(p => p.userId?.name || '').filter(Boolean).join('، '),
+      'تاريخ الموعد': appt.scheduledAt ? new Date(appt.scheduledAt).toLocaleString('ar-EG') : '',
+      'المدة (دقيقة)': appt.duration || '',
+      'الموقع': appt.location || '',
+      'رابط الاجتماع': appt.meetLink || appt.meetingLink || appt.googleMeetLink || '',
+      'ملاحظات': appt.notes || '',
+      'سبب الإلغاء': appt.cancellationReason || '',
+      'تاريخ الإنشاء': appt.createdAt ? new Date(appt.createdAt).toLocaleDateString('ar-EG') : ''
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(apptData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'المقابلات');
+
+    // Summary sheet
+    const summary = [
+      { 'المقياس': 'إجمالي المقابلات', 'القيمة': appointments.length },
+      { 'المقياس': 'مجدولة', 'القيمة': appointments.filter(a => a.status === 'scheduled').length },
+      { 'المقياس': 'مؤكدة', 'القيمة': appointments.filter(a => a.status === 'confirmed').length },
+      { 'المقياس': 'مكتملة', 'القيمة': appointments.filter(a => a.status === 'completed').length },
+      { 'المقياس': 'ملغاة', 'القيمة': appointments.filter(a => a.status === 'cancelled').length }
+    ];
+    const summarySheet = XLSX.utils.json_to_sheet(summary);
+    XLSX.utils.book_append_sheet(workbook, summarySheet, 'الملخص');
+  }
+
+  /**
    * Generate CSV file
    * @param {Array} data - Data to export
    * @param {string} dataType - Type of data
@@ -349,6 +424,24 @@ class ExportService {
         }));
         break;
 
+      case 'appointments':
+        csvData = data.map(appt => ({
+          'العنوان': appt.title || '',
+          'النوع': appt.type || '',
+          'الحالة': appt.status || '',
+          'المنظم': appt.organizerId?.name || '',
+          'بريد المنظم': appt.organizerId?.email || '',
+          'المشاركون': (appt.participants || []).map(p => p.userId?.name || '').filter(Boolean).join('، '),
+          'تاريخ الموعد': appt.scheduledAt ? new Date(appt.scheduledAt).toLocaleString('ar-EG') : '',
+          'المدة (دقيقة)': appt.duration || '',
+          'الموقع': appt.location || '',
+          'رابط الاجتماع': appt.meetLink || appt.meetingLink || appt.googleMeetLink || '',
+          'ملاحظات': appt.notes || '',
+          'سبب الإلغاء': appt.cancellationReason || '',
+          'تاريخ الإنشاء': appt.createdAt ? new Date(appt.createdAt).toLocaleDateString('ar-EG') : ''
+        }));
+        break;
+
       default:
         throw new Error(`Unknown data type: ${dataType}`);
     }
@@ -391,7 +484,8 @@ class ExportService {
       jobs: 'تقرير الوظائف',
       applications: 'تقرير الطلبات',
       courses: 'تقرير الدورات',
-      activity_log: 'سجل النشاطات'
+      activity_log: 'سجل النشاطات',
+      appointments: 'تقرير المقابلات'
     };
     doc.setFontSize(16);
     doc.setFont(undefined, 'bold');
@@ -453,6 +547,18 @@ class ExportService {
           log.actorId?.name || log.actorName || '',
           log.actionType || '',
           log.details || ''
+        ]);
+        break;
+
+      case 'appointments':
+        headers = ['العنوان', 'النوع', 'الحالة', 'المنظم', 'تاريخ الموعد', 'المدة'];
+        tableData = data.slice(0, 100).map(appt => [
+          appt.title || '',
+          appt.type || '',
+          appt.status || '',
+          appt.organizerId?.name || '',
+          appt.scheduledAt ? new Date(appt.scheduledAt).toLocaleString('ar-EG') : '',
+          appt.duration ? `${appt.duration} دقيقة` : ''
         ]);
         break;
 

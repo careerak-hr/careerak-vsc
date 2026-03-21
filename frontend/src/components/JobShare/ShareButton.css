@@ -18,6 +18,8 @@
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 500;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .share-button:hover {
@@ -158,6 +160,8 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
+  min-width: 44px;
+  min-height: 44px;
   border: none;
   border-radius: 0.5rem;
   background-color: transparent;
@@ -214,6 +218,8 @@
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 500;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 .share-option:hover {

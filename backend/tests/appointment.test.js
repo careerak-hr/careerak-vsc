@@ -196,7 +196,7 @@ describe('Appointment Scheduling System', () => {
     let appointmentId;
 
     beforeEach(async () => {
-      const scheduledAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      const scheduledAt = new Date(Date.now() + 48 * 60 * 60 * 1000); // بعد يومين
       
       const appointment = await Appointment.create({
         type: 'video_interview',
@@ -211,7 +211,7 @@ describe('Appointment Scheduling System', () => {
     });
 
     it('يجب أن يعيد جدولة موعد بنجاح', async () => {
-      const newScheduledAt = new Date(Date.now() + 48 * 60 * 60 * 1000); // بعد يومين
+      const newScheduledAt = new Date(Date.now() + 72 * 60 * 60 * 1000); // بعد 3 أيام
 
       const response = await request(app)
         .put(`/api/appointments/${appointmentId}/reschedule`)
@@ -234,7 +234,7 @@ describe('Appointment Scheduling System', () => {
 
     it('يجب أن يرفض إعادة الجدولة من غير المنظم', async () => {
       const participantToken = jwt.sign({ _id: participantId }, process.env.JWT_SECRET);
-      const newScheduledAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
+      const newScheduledAt = new Date(Date.now() + 72 * 60 * 60 * 1000);
 
       const response = await request(app)
         .put(`/api/appointments/${appointmentId}/reschedule`)
@@ -245,6 +245,56 @@ describe('Appointment Scheduling System', () => {
 
       expect(response.status).toBe(403);
       expect(response.body.success).toBe(false);
+    });
+
+    /**
+     * يجب رفض إعادة الجدولة إذا كان الموعد أقل من 24 ساعة
+     * Validates: Requirements 4.2
+     */
+    it('يجب أن يرفض إعادة الجدولة إذا كان الموعد أقل من 24 ساعة', async () => {
+      // إنشاء موعد بعد 12 ساعة (أقل من 24 ساعة)
+      const scheduledAt = new Date(Date.now() + 12 * 60 * 60 * 1000);
+      
+      const nearAppointment = await Appointment.create({
+        type: 'video_interview',
+        title: 'موعد قريب',
+        organizerId: userId,
+        participants: [{ userId: participantId, status: 'accepted' }],
+        scheduledAt,
+        duration: 60,
+      });
+
+      const newScheduledAt = new Date(Date.now() + 72 * 60 * 60 * 1000);
+
+      const response = await request(app)
+        .put(`/api/appointments/${nearAppointment._id}/reschedule`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ scheduledAt: newScheduledAt, reason: 'محاولة إعادة جدولة متأخرة' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe('RESCHEDULE_DEADLINE_PASSED');
+
+      // التحقق من أن الموعد لم يتغير
+      const unchanged = await Appointment.findById(nearAppointment._id);
+      expect(unchanged.status).toBe('scheduled');
+
+      await Appointment.findByIdAndDelete(nearAppointment._id);
+    });
+
+    it('يجب أن يدعم POST /reschedule أيضاً', async () => {
+      const newScheduledAt = new Date(Date.now() + 72 * 60 * 60 * 1000);
+
+      const response = await request(app)
+        .post(`/api/appointments/${appointmentId}/reschedule`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          scheduledAt: newScheduledAt,
+          reason: 'اختبار POST',
+        });
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
     });
   });
 
@@ -281,6 +331,94 @@ describe('Appointment Scheduling System', () => {
       const appointment = await Appointment.findById(appointmentId);
       expect(appointment.status).toBe('cancelled');
       expect(appointment.cancellationReason).toBe('ظروف طارئة');
+    });
+
+    /**
+     * Property 3: Cancellation Deadline
+     * يجب رفض الإلغاء إذا كان الموعد أقل من ساعة واحدة
+     * Validates: Requirements 4.1
+     */
+    it('يجب أن يرفض الإلغاء إذا كان الموعد أقل من ساعة واحدة', async () => {
+      // إنشاء موعد بعد 30 دقيقة (أقل من ساعة)
+      const scheduledAt = new Date(Date.now() + 30 * 60 * 1000);
+      
+      const nearAppointment = await Appointment.create({
+        type: 'video_interview',
+        title: 'موعد قريب',
+        organizerId: userId,
+        participants: [{ userId: participantId, status: 'accepted' }],
+        scheduledAt,
+        duration: 60,
+      });
+
+      const response = await request(app)
+        .delete(`/api/appointments/${nearAppointment._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ reason: 'محاولة إلغاء متأخرة' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe('CANCELLATION_DEADLINE_PASSED');
+
+      // التحقق من أن الموعد لم يُلغَ
+      const unchanged = await Appointment.findById(nearAppointment._id);
+      expect(unchanged.status).toBe('scheduled');
+
+      await Appointment.findByIdAndDelete(nearAppointment._id);
+    });
+
+    it('يجب أن يرفض الإلغاء إذا كان الموعد بعد 59 دقيقة', async () => {
+      const scheduledAt = new Date(Date.now() + 59 * 60 * 1000);
+      
+      const nearAppointment = await Appointment.create({
+        type: 'video_interview',
+        title: 'موعد قريب جداً',
+        organizerId: userId,
+        participants: [{ userId: participantId, status: 'accepted' }],
+        scheduledAt,
+        duration: 60,
+      });
+
+      const response = await request(app)
+        .delete(`/api/appointments/${nearAppointment._id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ reason: 'محاولة إلغاء' });
+
+      expect(response.status).toBe(400);
+      expect(response.body.success).toBe(false);
+      expect(response.body.code).toBe('CANCELLATION_DEADLINE_PASSED');
+
+      await Appointment.findByIdAndDelete(nearAppointment._id);
+    });
+
+    it('يجب أن يسمح بالإلغاء إذا كان الموعد بعد أكثر من ساعة', async () => {
+      // الموعد المُنشأ في beforeEach هو بعد 24 ساعة - يجب أن ينجح
+      const response = await request(app)
+        .delete(`/api/appointments/${appointmentId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ reason: 'إلغاء مشروع' });
+
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+    });
+
+    it('يجب أن يرفض الإلغاء من غير المنظم أو المشاركين', async () => {
+      const otherUser = await User.create({
+        name: 'Unauthorized User',
+        email: 'unauth@test.com',
+        password: 'password123',
+      });
+      const otherToken = jwt.sign({ _id: otherUser._id }, process.env.JWT_SECRET);
+
+      const response = await request(app)
+        .delete(`/api/appointments/${appointmentId}`)
+        .set('Authorization', `Bearer ${otherToken}`)
+        .send({ reason: 'محاولة غير مصرح بها' });
+
+      expect(response.status).toBe(403);
+      expect(response.body.success).toBe(false);
+
+      await User.findByIdAndDelete(otherUser._id);
     });
   });
 

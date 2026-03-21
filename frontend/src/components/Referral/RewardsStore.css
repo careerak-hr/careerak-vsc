@@ -1,0 +1,313 @@
+/* ===========================
+   RewardsStore Styles
+   Colors: #304B60 (navy), #E3DAD1 (beige), #D48161 (copper)
+   =========================== */
+
+.rs-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  min-height: 60vh;
+}
+
+/* ---- Header ---- */
+.rs-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.rs-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.rs-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.2;
+}
+
+.rs-title-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.rs-subtitle {
+  font-size: 1rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* ---- Balance Card ---- */
+.rs-balance-card {
+  background: linear-gradient(135deg, #304B60 0%, #3d6080 100%);
+  border-radius: 1rem;
+  padding: 1.25rem 1.75rem;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 180px;
+  box-shadow: 0 4px 16px rgba(48, 75, 96, 0.25);
+  flex-shrink: 0;
+}
+
+.rs-balance-label {
+  font-size: 0.85rem;
+  color: #E3DAD1;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.rs-balance-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.rs-balance-number {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.rs-balance-unit {
+  font-size: 1rem;
+  color: #D48161;
+  font-weight: 600;
+}
+
+.rs-balance-skeleton {
+  width: 100px;
+  height: 2.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  animation: rs-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes rs-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ---- Success Toast ---- */
+.rs-success-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: #D1FAE5;
+  border: 2px solid #6EE7B7;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  animation: rs-slide-down 0.3s ease-out;
+}
+
+@keyframes rs-slide-down {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rs-success-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.rs-success-toast strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #065F46;
+  font-weight: 700;
+}
+
+.rs-success-toast p {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: #047857;
+}
+
+.rs-success-close {
+  margin-inline-start: auto;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: #065F46;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+  min-width: 28px;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.rs-success-close:hover {
+  background: rgba(6, 95, 70, 0.1);
+}
+
+/* ---- Section Title ---- */
+.rs-section-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 1.25rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid #D4816180;
+}
+
+/* ---- Loading / Error ---- */
+.rs-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: #6B7280;
+}
+
+.rs-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #E3DAD1;
+  border-top-color: #D48161;
+  border-radius: 50%;
+  animation: rs-spin 0.8s linear infinite;
+}
+
+@keyframes rs-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rs-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+
+.rs-error p {
+  color: #991B1B;
+  font-size: 0.95rem;
+}
+
+.rs-retry-btn {
+  padding: 0.6rem 1.5rem;
+  background: #D48161;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+  transition: background 0.2s;
+}
+
+.rs-retry-btn:hover {
+  background: #C47050;
+}
+
+.rs-no-options {
+  text-align: center;
+  color: #6B7280;
+  padding: 2rem;
+  font-size: 0.95rem;
+}
+
+/* ---- Options Grid ---- */
+.rs-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+/* ---- RTL ---- */
+[dir="rtl"] .rs-title {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rs-balance-display {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rs-success-toast {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .rs-success-close {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 767px) {
+  .rs-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rs-balance-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-width: unset;
+    padding: 1rem 1.25rem;
+  }
+
+  .rs-balance-number {
+    font-size: 1.75rem;
+  }
+
+  .rs-title {
+    font-size: 1.4rem;
+  }
+
+  .rs-options-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .rs-page {
+    padding: 1rem 0.75rem 2.5rem;
+  }
+
+  .rs-options-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .rs-balance-card {
+    padding: 0.85rem 1rem;
+  }
+
+  .rs-balance-number {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 359px) {
+  .rs-options-grid {
+    grid-template-columns: 1fr;
+  }
+}

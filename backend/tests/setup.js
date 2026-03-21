@@ -22,6 +22,13 @@ beforeAll(async () => {
         useUnifiedTopology: true,
         serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
       });
+      // Sync indexes to ensure old unique referrals.token index is replaced with correct settings
+      try {
+        const EducationalCourse = require('../src/models/EducationalCourse');
+        await EducationalCourse.syncIndexes();
+      } catch (e) {
+        // Ignore errors
+      }
     } catch (error) {
       console.warn('MongoDB connection failed for tests, using memory database');
     }

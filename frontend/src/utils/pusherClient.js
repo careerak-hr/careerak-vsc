@@ -279,6 +279,13 @@ class PusherClientService {
       
       case 'new_message':
         return relatedData.conversationId ? `/chat/${relatedData.conversationId}` : '/chat';
+
+      case 'appointment_confirmed':
+      case 'appointment_reminder':
+      case 'interview_reminder_24h':
+      case 'interview_reminder_15m':
+      case 'interview_rescheduled':
+        return relatedData.appointment ? `/appointments/${relatedData.appointment}` : '/appointments';
       
       case 'system':
       default:

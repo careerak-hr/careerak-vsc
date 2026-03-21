@@ -59,4 +59,12 @@ router.get('/status', protect, linkedInController.getConnectionStatus);
  */
 router.get('/profile', protect, linkedInController.getProfile);
 
+/**
+ * @route   POST /api/linkedin/preview-post
+ * @desc    معاينة المنشور قبل النشر على LinkedIn
+ * @access  Private
+ * @body    { certificateId: string }
+ */
+router.post('/preview-post', protect, linkedInController.previewPost);
+
 module.exports = router;

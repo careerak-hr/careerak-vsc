@@ -1,0 +1,142 @@
+.shared-content-preview {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: #ffffff;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: start;
+  width: 100%;
+  max-width: 300px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.shared-content-preview:hover,
+.shared-content-preview:focus {
+  border-color: #D48161;
+  box-shadow: 0 4px 14px rgba(48, 75, 96, 0.12);
+  outline: none;
+}
+
+.shared-content-preview:focus-visible {
+  outline: 2px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Type badge */
+.shared-content-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #304B60;
+  color: #E3DAD1;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.shared-content-badge-icon {
+  color: #D48161;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Body */
+.shared-content-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+}
+
+/* Thumbnail (when imageUrl is present) */
+.shared-content-thumbnail {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #E3DAD1;
+}
+
+.shared-content-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Info section */
+.shared-content-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Icon (shown when no imageUrl) */
+.shared-content-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #304B60;
+  color: #E3DAD1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Text block */
+.shared-content-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.shared-content-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #304B60;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.shared-content-description {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.shared-content-arrow {
+  color: #304B60;
+  opacity: 0.45;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+}
+
+/* RTL adjustments */
+[dir='rtl'] .shared-content-badge {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .shared-content-body {
+  flex-direction: row-reverse;
+}
+
+[dir='rtl'] .shared-content-info {
+  flex-direction: row-reverse;
+}

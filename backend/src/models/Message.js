@@ -18,7 +18,7 @@ const messageSchema = new mongoose.Schema({
   // نوع الرسالة
   type: {
     type: String,
-    enum: ['text', 'file', 'image', 'system'],
+    enum: ['text', 'file', 'image', 'system', 'shared_content'],
     default: 'text',
     required: true
   },
@@ -29,6 +29,21 @@ const messageSchema = new mongoose.Schema({
     required: function() {
       return this.type === 'text' || this.type === 'system';
     }
+  },
+
+  // محتوى مشترك (للرسائل من نوع shared_content)
+  sharedContent: {
+    contentType: {
+      type: String,
+      enum: ['job', 'course', 'profile', 'company']
+    },
+    contentId: {
+      type: mongoose.Schema.Types.ObjectId
+    },
+    title: String,
+    description: String,
+    imageUrl: String,
+    url: String
   },
   
   // معلومات الملف (للملفات والصور)

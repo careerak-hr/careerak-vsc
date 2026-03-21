@@ -107,6 +107,12 @@
 
 /* Responsive Design */
 @media (max-width: 640px) {
+  /* Ensure minimum 44x44px touch target on mobile */
+  .share-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
   .share-button-medium {
     padding: 8px 14px;
     font-size: 14px;
@@ -123,6 +129,12 @@
 
   .share-button-large .share-button-icon {
     font-size: 16px;
+  }
+
+  .share-button-icon-only {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
   }
 }
 

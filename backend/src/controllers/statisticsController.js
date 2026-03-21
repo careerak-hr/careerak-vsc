@@ -1,5 +1,5 @@
 const statisticsService = require('../services/statisticsService');
-const { shortCacheHeaders } = require('../middleware/cacheHeaders');
+const { cachePresets } = require('../middleware/cacheHeaders');
 
 /**
  * Statistics Controller for Admin Dashboard

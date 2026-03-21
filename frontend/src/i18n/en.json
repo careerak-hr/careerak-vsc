@@ -266,5 +266,25 @@
   "takePhoto": "Take Photo",
   "cropTitle": "Crop Image",
   "preview": "Preview:",
-  "aiAnalyzing": "AI Analyzing..."
+  "aiAnalyzing": "AI Analyzing...",
+  "share": {
+    "button": "Share",
+    "title": "Share",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "whatsapp": "WhatsApp",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter",
+    "facebook": "Facebook",
+    "telegram": "Telegram",
+    "email": "Email",
+    "chat": "Share via Chat",
+    "more": "More options",
+    "success": "Link copied successfully",
+    "error": "Share failed, please try again",
+    "job": "Job",
+    "course": "Course",
+    "profile": "Profile",
+    "company": "Company"
+  }
 }

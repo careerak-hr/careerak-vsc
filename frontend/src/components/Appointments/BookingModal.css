@@ -1,0 +1,182 @@
+/* BookingModal.css - نافذة حجز موعد مقابلة */
+
+.bm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(48, 75, 96, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.bm-modal {
+  background: #E3DAD1;
+  border: 4px solid #304B60;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 40px rgba(48, 75, 96, 0.25);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 2rem;
+  position: relative;
+}
+
+.bm-close {
+  position: absolute;
+  top: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #304B60;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
+.bm-rtl .bm-close { left: 1rem; }
+.bm-ltr .bm-close { right: 1rem; }
+
+.bm-close:hover { background: rgba(48, 75, 96, 0.1); }
+
+.bm-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 1.25rem;
+  text-align: center;
+}
+
+/* تفاصيل الموعد */
+.bm-details {
+  background: rgba(48, 75, 96, 0.07);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.bm-details-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #304B60;
+  margin: 0 0 0.75rem;
+  opacity: 0.8;
+}
+
+.bm-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  color: #304B60;
+}
+
+.bm-rtl .bm-detail-row { flex-direction: row-reverse; }
+
+.bm-detail-icon { font-size: 1rem; flex-shrink: 0; }
+
+/* الحقول */
+.bm-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.bm-field { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.bm-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.bm-select,
+.bm-textarea {
+  border: 2px solid #D4816180;
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #304B60;
+  outline: none;
+  transition: border-color 0.2s;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bm-select:focus,
+.bm-textarea:focus {
+  border-color: #D4816180;
+}
+
+.bm-textarea { resize: vertical; min-height: 80px; }
+
+/* الأزرار */
+.bm-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.bm-rtl .bm-actions { flex-direction: row-reverse; }
+
+.bm-btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.bm-btn--primary {
+  background: #304B60;
+  color: #E3DAD1;
+  border-color: #304B60;
+}
+
+.bm-btn--primary:hover:not(:disabled) {
+  background: #253d50;
+}
+
+.bm-btn--ghost {
+  background: transparent;
+  color: #304B60;
+  border-color: #304B60;
+}
+
+.bm-btn--ghost:hover:not(:disabled) {
+  background: rgba(48, 75, 96, 0.08);
+}
+
+.bm-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* رسائل الحالة */
+.bm-error {
+  color: #c0392b;
+  font-size: 0.875rem;
+  margin: 0;
+  text-align: center;
+}
+
+.bm-success {
+  color: #27ae60;
+  font-size: 0.875rem;
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .bm-modal { padding: 1.25rem; border-radius: 1rem; }
+  .bm-title { font-size: 1.2rem; }
+  .bm-actions { flex-direction: column; }
+}

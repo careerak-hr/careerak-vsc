@@ -1,0 +1,361 @@
+/* AppointmentNotesRating.css
+   Requirements: User Story 6 - نظام ملاحظات وتقييم
+   Colors: #304B60 (primary), #E3DAD1 (secondary), #D48161 (accent)
+   Fonts: Amiri (ar), Cormorant Garamond (en), EB Garamond (fr)
+*/
+
+.anr-container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* RTL / LTR */
+.anr-rtl {
+  direction: rtl;
+  text-align: right;
+}
+.anr-ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* ==================== Section ==================== */
+.anr-section {
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.anr-section-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #E3DAD1;
+}
+
+/* ==================== Form ==================== */
+.anr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.anr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.anr-field--center {
+  align-items: center;
+}
+
+.anr-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.anr-select,
+.anr-textarea {
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.95rem;
+  color: #304B60;
+  background: #fafaf9;
+  outline: none;
+  resize: vertical;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.anr-select:focus,
+.anr-textarea:focus {
+  border: 2px solid #D4816180;
+  background: #fff;
+}
+
+.anr-textarea {
+  min-height: 90px;
+}
+
+/* ==================== Buttons ==================== */
+.anr-btn {
+  align-self: flex-start;
+  padding: 0.55rem 1.4rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.1s;
+  font-family: inherit;
+}
+
+.anr-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.anr-btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.anr-btn--primary {
+  background: #304B60;
+  color: #E3DAD1;
+}
+
+.anr-btn--primary:not(:disabled):hover {
+  background: #253d50;
+}
+
+.anr-btn--accent {
+  background: #D48161;
+  color: #fff;
+}
+
+.anr-btn--accent:not(:disabled):hover {
+  background: #c0704f;
+}
+
+/* ==================== Messages ==================== */
+.anr-msg {
+  padding: 0.5rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.anr-msg--success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.anr-msg--error {
+  background: #fdecea;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.anr-info-msg {
+  padding: 0.65rem 1rem;
+  background: #f5f0eb;
+  border: 1px solid #D4816180;
+  border-radius: 8px;
+  color: #304B60;
+  font-size: 0.875rem;
+}
+
+/* ==================== Stars ==================== */
+.anr-stars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.anr-stars--sm .anr-star { font-size: 1rem; }
+.anr-stars--md .anr-star { font-size: 1.4rem; }
+.anr-stars--lg .anr-star { font-size: 1.8rem; }
+.anr-stars--xl .anr-star { font-size: 2.2rem; }
+
+.anr-star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ccc;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.15s, transform 0.1s;
+}
+
+.anr-star--filled {
+  color: #D48161;
+}
+
+.anr-stars--readonly .anr-star {
+  cursor: default;
+}
+
+.anr-star:not(:disabled):hover {
+  transform: scale(1.15);
+}
+
+.anr-star-label {
+  font-size: 0.875rem;
+  color: #304B60;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* ==================== Rating Summary ==================== */
+.anr-rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #f5f0eb;
+  border-radius: 8px;
+  border: 1px solid #D4816180;
+}
+
+.anr-avg-score {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #D48161;
+  min-width: 2.5rem;
+}
+
+.anr-rating-count {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.2rem;
+}
+
+/* ==================== My Rating ==================== */
+.anr-my-rating {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  background: #f5f0eb;
+  border-radius: 8px;
+  border: 1px solid #D4816180;
+}
+
+.anr-my-rating-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.anr-my-rating-comment {
+  font-size: 0.9rem;
+  color: #444;
+  margin: 0;
+}
+
+/* ==================== Lists ==================== */
+.anr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.anr-loading,
+.anr-empty {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  padding: 1rem 0;
+}
+
+/* ==================== Note Card ==================== */
+.anr-note-card {
+  border: 1px solid #E3DAD1;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: #fafaf9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.anr-note-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.anr-note-type {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+}
+
+.anr-note-type--pre_interview {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.anr-note-type--post_interview {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.anr-note-meta {
+  font-size: 0.78rem;
+  color: #888;
+  margin-inline-start: auto;
+}
+
+.anr-note-content {
+  font-size: 0.95rem;
+  color: #304B60;
+  margin: 0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* ==================== Rating Card ==================== */
+.anr-rating-card {
+  border: 1px solid #E3DAD1;
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  background: #fafaf9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.anr-rating-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.anr-rating-comment {
+  font-size: 0.9rem;
+  color: #444;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 640px) {
+  .anr-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .anr-section {
+    padding: 1rem;
+  }
+
+  .anr-stars--xl .anr-star {
+    font-size: 1.8rem;
+  }
+
+  .anr-rating-summary {
+    flex-wrap: wrap;
+  }
+
+  .anr-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

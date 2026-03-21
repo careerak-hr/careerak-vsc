@@ -9,8 +9,10 @@ import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
 import { RelatedLinks, Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import ShareButton from '../components/ShareButton/ShareButton';
 
 // Lazy load components for performance (Task 12.3)
+const PointsBalanceWidget = lazy(() => import('../components/Referral/PointsBalanceWidget'));
 const ProfileCompletionWidget = lazy(() => import('../components/ProfileImprovement/ProfileCompletionWidget'));
 const SuggestionsPanel = lazy(() => import('../components/ProfileImprovement/SuggestionsPanel'));
 const PortfolioGallery = lazy(() => import('../components/Portfolio/PortfolioGallery'));
@@ -19,6 +21,7 @@ const SkillsSection = lazy(() => import('../components/Skills/SkillsSection'));
 const AboutSection = lazy(() => import('../components/About/AboutSection'));
 const ProfileAnalytics = lazy(() => import('../components/ProfileImprovement/ProfileAnalytics'));
 const ProfilePreview = lazy(() => import('../components/ProfileImprovement/ProfilePreview'));
+const CertificatesGallery = lazy(() => import('../components/Certificates/CertificatesGallery'));
 
 /**
  * Enhanced Profile Page
@@ -119,6 +122,14 @@ const ProfilePage = () => {
                                     <span>معاينة كصاحب عمل</span>
                                 </motion.button>
 
+                                <ShareButton
+                                    content={user}
+                                    contentType="profile"
+                                    variant="outline"
+                                    size="medium"
+                                    className="w-full"
+                                />
+
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
@@ -129,6 +140,16 @@ const ProfilePage = () => {
                                 </motion.button>
                             </div>
                         </motion.section>
+
+                        {/* Points Balance Widget - Lazy Loaded (Requirements 2.4) */}
+                        <Suspense fallback={<div className="h-32 bg-gray-100 rounded-2xl animate-pulse" />}>
+                            <motion.div variants={listVariants.item}>
+                                <PointsBalanceWidget
+                                    onReferFriend={() => window.location.href = '/referrals'}
+                                    onViewHistory={() => window.location.href = '/referrals'}
+                                />
+                            </motion.div>
+                        </Suspense>
 
                         {/* Profile Completion Widget - Lazy Loaded */}
                         <Suspense fallback={<div className="h-40 bg-gray-100 rounded-2xl animate-pulse" />}>
@@ -184,6 +205,13 @@ const ProfilePage = () => {
                         <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl animate-pulse" />}>
                             <motion.div variants={listVariants.item}>
                                 <PortfolioGallery />
+                            </motion.div>
+                        </Suspense>
+
+                        {/* Certificates Gallery - Lazy Loaded */}
+                        <Suspense fallback={<div className="h-96 bg-gray-100 rounded-2xl animate-pulse" />}>
+                            <motion.div variants={listVariants.item}>
+                                <CertificatesGallery userId={user?._id} isOwnProfile={true} />
                             </motion.div>
                         </Suspense>
                     </motion.div>

@@ -39,6 +39,8 @@ const BookmarkedJobsPage = React.lazy(() => import('../pages/BookmarkedJobsPage'
 const PostCoursePage = React.lazy(() => import('../pages/12_PostCoursePage'));
 const PolicyPage = React.lazy(() => import('../pages/13_PolicyPage'));
 const CertificateVerificationPage = React.lazy(() => import('../pages/CertificateVerificationPage'));
+const VerificationPage = React.lazy(() => import('../pages/VerificationPage'));
+const CertificatePublicVerifyPage = React.lazy(() => import('../pages/CertificatePublicVerifyPage'));
 const SettingsPage = React.lazy(() => import('../pages/14_SettingsPage'));
 const OnboardingIlliterate = React.lazy(() => import('../pages/15_OnboardingIlliterate'));
 const OnboardingVisual = React.lazy(() => import('../pages/16_OnboardingVisual'));
@@ -58,6 +60,17 @@ const AdminDatabaseManager = React.lazy(() => import('../pages/29_AdminDatabaseM
 const AdminCodeEditor = React.lazy(() => import('../pages/30_AdminCodeEditor'));
 const NotificationsPage = React.lazy(() => import('../pages/NotificationsPage'));
 const ConnectedAccountsPage = React.lazy(() => import('../pages/ConnectedAccountsPage'));
+const AchievementsPage = React.lazy(() => import('../pages/AchievementsPage'));
+const CertificatesGalleryPage = React.lazy(() => import('../pages/CertificatesGalleryPage'));
+const MyReferralsPage = React.lazy(() => import('../pages/MyReferrals/MyReferralsPage'));
+const ReferralStatsPage = React.lazy(() => import('../pages/ReferralStats/ReferralStatsPage'));
+const RewardsStorePage = React.lazy(() => import('../pages/RewardsStore/RewardsStorePage'));
+const CompanyReferralDashboard = React.lazy(() => import('../pages/CompanyReferrals/CompanyReferralDashboard'));
+const LeaderboardPage = React.lazy(() => import('./Leaderboard/LeaderboardPage'));
+const MyAppointmentsPage = React.lazy(() => import('../pages/MyAppointmentsPage'));
+const GoogleCalendarCallback = React.lazy(() => import('../pages/GoogleCalendarCallback'));
+const FraudReviewDashboard = React.lazy(() => import('../pages/admin/FraudReviewDashboard'));
+const FraudDashboard = React.lazy(() => import('../pages/admin/FraudDashboard'));
 const NotFoundPage = React.lazy(() => import('../pages/NotFoundPage'));
 const ServerErrorPage = React.lazy(() => import('../pages/ServerErrorPage'));
 const ErrorBoundaryTest = React.lazy(() => import('../test/ErrorBoundaryTest'));
@@ -163,10 +176,19 @@ function AppRoutes() {
           } />
           
           {/* Certificate Verification Route - Public */}
-          <Route path="/verify/:certificateId?" element={
+          <Route path="/verify/:certificateId" element={
             <SuspenseWrapper>
               <PageTransition variant="fadeIn">
-                <CertificateVerificationPage />
+                <VerificationPage />
+              </PageTransition>
+            </SuspenseWrapper>
+          } />
+          
+          {/* Public Certificate Verification Landing - no ID required */}
+          <Route path="/verify" element={
+            <SuspenseWrapper>
+              <PageTransition variant="fadeIn">
+                <CertificatePublicVerifyPage />
               </PageTransition>
             </SuspenseWrapper>
           } />
@@ -472,6 +494,110 @@ function AppRoutes() {
               </SuspenseWrapper>
             </ProtectedRoute>
           } />
+          <Route path="/achievements" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <AchievementsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/certificates" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <CertificatesGalleryPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/my-referrals" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <MyReferralsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/referral-stats" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <ReferralStatsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/company-referrals" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <CompanyReferralDashboard />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/rewards-store" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <RewardsStorePage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/leaderboard" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <LeaderboardPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+          <Route path="/my-appointments" element={
+            <ProtectedRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <MyAppointmentsPage />
+                </PageTransition>
+              </SuspenseWrapper>
+            </ProtectedRoute>
+          } />
+
+          {/* Google Calendar OAuth Callback - Public */}
+          <Route path="/google-calendar/callback" element={
+            <SuspenseWrapper>
+              <PageTransition variant="fadeIn">
+                <GoogleCalendarCallback />
+              </PageTransition>
+            </SuspenseWrapper>
+          } />
+
+          {/* Admin Fraud Review Dashboard - Admin Only */}
+          <Route path="/admin/fraud-review" element={
+            <AdminRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <FraudReviewDashboard />
+                </PageTransition>
+              </SuspenseWrapper>
+            </AdminRoute>
+          } />
+
+          {/* Admin Fraud Dashboard (Enhanced) - Admin Only */}
+          <Route path="/admin/fraud" element={
+            <AdminRoute>
+              <SuspenseWrapper>
+                <PageTransition variant="fadeIn">
+                  <FraudDashboard />
+                </PageTransition>
+              </SuspenseWrapper>
+            </AdminRoute>
+          } />
+
           <Route path="/policy" element={
             <ProtectedRoute>
               <SuspenseWrapper>

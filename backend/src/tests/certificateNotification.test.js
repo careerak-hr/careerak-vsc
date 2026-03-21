@@ -48,14 +48,16 @@ describe('Certificate Notification Tests', () => {
       lastName: 'محمد',
       email: 'ahmed@test.com',
       password: 'password123',
-      role: 'individual'
+      role: 'Employee',
+      phone: '+966501234567',
+      country: 'Saudi Arabia',
     });
 
     testCourse = await EducationalCourse.create({
       title: 'دورة تطوير الويب',
       description: 'دورة شاملة في تطوير الويب',
       category: 'programming',
-      level: 'intermediate',
+      level: 'Intermediate',
       instructor: testUser._id
     });
 

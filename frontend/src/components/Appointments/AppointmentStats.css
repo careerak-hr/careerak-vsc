@@ -1,0 +1,387 @@
+/* AppointmentStats.css
+   Requirements: User Story 6 - إحصائيات (عدد المقابلات، معدل الحضور، إلخ)
+   KPI: معدل الحضور > 85% - مؤشر أخضر (≥85%) أو أحمر (<85%)
+   Colors: #304B60 (primary), #E3DAD1 (secondary), #D48161 (accent)
+   Fonts: Amiri (ar), Cormorant Garamond (en), EB Garamond (fr)
+   Borders: #D4816180 دائماً
+*/
+
+.appt-stats {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* RTL / LTR */
+.appt-stats--rtl {
+  direction: rtl;
+  text-align: right;
+}
+.appt-stats--ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* ==================== Header ==================== */
+.appt-stats__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.appt-stats__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0;
+}
+
+.appt-stats__subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ==================== Filters ==================== */
+.appt-stats__filters {
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.appt-stats__filters-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.appt-stats__filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+.appt-stats__filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 160px;
+}
+
+.appt-stats__filter-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.appt-stats__filter-input {
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  color: #304B60;
+  background: #fafaf9;
+  outline: none;
+}
+
+.appt-stats__filter-input:focus {
+  border: 2px solid #D4816180;
+  background: #fff;
+}
+
+.appt-stats__filter-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-end;
+}
+
+/* ==================== Buttons ==================== */
+.appt-stats__btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.appt-stats__btn:hover {
+  opacity: 0.85;
+}
+
+.appt-stats__btn--primary {
+  background: #304B60;
+  color: #fff;
+}
+
+.appt-stats__btn--secondary {
+  background: #E3DAD1;
+  color: #304B60;
+}
+
+/* ==================== Loading / Error ==================== */
+.appt-stats__loading,
+.appt-stats__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 1rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
+.appt-stats__spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #E3DAD1;
+  border-top-color: #304B60;
+  border-radius: 50%;
+  animation: appt-spin 0.8s linear infinite;
+}
+
+@keyframes appt-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== KPI Card (Attendance) ==================== */
+.appt-stats__kpi-card {
+  border: 2px solid;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.appt-stats__kpi-card:hover {
+  box-shadow: 0 6px 24px rgba(48, 75, 96, 0.12);
+}
+
+.appt-stats__kpi-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.appt-stats__kpi-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.appt-stats__kpi-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #304B60;
+}
+
+.appt-stats__kpi-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.appt-stats__kpi-rate {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.appt-stats__kpi-percent {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-inline-start: 4px;
+}
+
+/* شريط التقدم مع خط الهدف */
+.appt-stats__kpi-progress-wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.appt-stats__kpi-bar-bg {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 99px;
+  overflow: hidden;
+  position: relative;
+}
+
+.appt-stats__kpi-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+/* خط الهدف (85%) */
+.appt-stats__kpi-target-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #304B60;
+  z-index: 2;
+  transform: translateX(-50%);
+}
+
+.appt-stats__kpi-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  font-size: 0.75rem;
+}
+
+.appt-stats__kpi-target-label {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* RTL: عكس موضع خط الهدف */
+.appt-stats--rtl .appt-stats__kpi-target-line {
+  left: auto;
+  right: 85%;
+  transform: translateX(50%);
+}
+
+.appt-stats--rtl .appt-stats__kpi-target-label {
+  left: auto;
+  right: 85%;
+  transform: translateX(50%);
+}
+
+.appt-stats__kpi-message {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.appt-stats__kpi-tracked {
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+/* ==================== Grid ==================== */
+.appt-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+/* ==================== Card ==================== */
+.appt-stats__card {
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-top: 4px solid #304B60;
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+  transition: box-shadow 0.2s;
+}
+
+.appt-stats__card:hover {
+  box-shadow: 0 4px 16px rgba(48, 75, 96, 0.1);
+}
+
+.appt-stats__card-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.appt-stats__card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #304B60;
+  line-height: 1.1;
+}
+
+.appt-stats__card-percent {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-inline-start: 2px;
+}
+
+.appt-stats__card-suffix {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.appt-stats__card-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-top: 0.2rem;
+}
+
+/* ==================== Progress Bar ==================== */
+.appt-stats__progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #E3DAD1;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.appt-stats__progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s ease;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 640px) {
+  .appt-stats__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .appt-stats__filters-row {
+    flex-direction: column;
+  }
+
+  .appt-stats__filter-field {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .appt-stats__filter-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .appt-stats__kpi-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .appt-stats__kpi-rate {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .appt-stats__grid {
+    grid-template-columns: 1fr;
+  }
+}

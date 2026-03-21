@@ -3,10 +3,10 @@ const router = express.Router();
 const settingsController = require('../controllers/settingsController');
 const securityController = require('../controllers/securityController');
 const dataController = require('../controllers/dataController');
-const { authenticate } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 
 // جميع المسارات تتطلب مصادقة
-router.use(authenticate);
+router.use(protect);
 
 // ========================================
 // Settings Controller Routes

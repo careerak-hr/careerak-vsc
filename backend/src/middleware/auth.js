@@ -25,14 +25,22 @@ const auth = async (req, res, next) => {
     // Verify JWT token
     const decoded = jwt.verify(token, secret);
 
-    // Check if account is disabled (skip for admin)
+    // Check if account is disabled or blocked (skip for admin)
     if (decoded.role !== 'Admin') {
-      const user = await User.findById(decoded.id).select('accountDisabled');
+      const user = await User.findById(decoded.id).select('accountDisabled isBlocked blockedReason');
       if (user && user.accountDisabled) {
         return res.status(403).json({ 
           error: 'تم تعطيل حسابك. يرجى التواصل مع الدعم الفني.',
           accountDisabled: true,
           code: 'ACCOUNT_DISABLED'
+        });
+      }
+      if (user && user.isBlocked) {
+        return res.status(403).json({
+          error: 'تم حظر حسابك بسبب انتهاك سياسة الإحالة. يرجى التواصل مع الدعم الفني.',
+          isBlocked: true,
+          blockedReason: user.blockedReason || 'انتهاك سياسة الإحالة',
+          code: 'ACCOUNT_BLOCKED'
         });
       }
     }

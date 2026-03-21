@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext';
 import { useAnimation } from '../context/AnimationContext';
 import SEOHead from '../components/SEO/SEOHead';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import ShareButton from '../components/ShareButton/ShareButton';
 import './CompanyProfilePage.css';
 
 /**
@@ -157,6 +158,13 @@ const CompanyProfilePage = () => {
             )}
             <div className="company-header-content">
               <h1>{company.name}</h1>
+
+              <ShareButton
+                content={company}
+                contentType="company"
+                variant="outline"
+                size="medium"
+              />
               
               {/* Company Stats */}
               <div className="company-stats">

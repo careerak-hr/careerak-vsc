@@ -13,6 +13,7 @@ import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
 import './18_AdminDashboard.css';
 import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
+import ShareAnalytics from '../components/ShareAnalytics/ShareAnalytics';
 
 const AdminDashboard = () => {
     const { logout, user, language, token, startBgMusic } = useApp();
@@ -40,6 +41,7 @@ const AdminDashboard = () => {
         { keys: '2', description: language === 'ar' ? 'المستخدمون' : language === 'fr' ? 'Utilisateurs' : 'Users', category: 'navigation' },
         { keys: '3', description: language === 'ar' ? 'المحتوى' : language === 'fr' ? 'Contenu' : 'Content', category: 'navigation' },
         { keys: '4', description: language === 'ar' ? 'الإعدادات' : language === 'fr' ? 'Paramètres' : 'Settings', category: 'navigation' },
+        { keys: '5', description: language === 'ar' ? 'تحليلات المشاركة' : language === 'fr' ? 'Analytiques de partage' : 'Share Analytics', category: 'navigation' },
         
         // Actions
         { keys: 'Ctrl+R', description: language === 'ar' ? 'تحديث البيانات' : language === 'fr' ? 'Actualiser' : 'Refresh Data', category: 'actions' },
@@ -57,6 +59,7 @@ const AdminDashboard = () => {
         '2': () => setActiveTab('users'),
         '3': () => setActiveTab('content'),
         '4': () => setActiveTab('settings'),
+        '5': () => setActiveTab('analytics'),
         'ctrl+r': (e) => {
             e.preventDefault();
             fetchDashboardData();
@@ -80,7 +83,7 @@ const AdminDashboard = () => {
     }, !loading); // Disable shortcuts while loading
 
     // Tab navigation order
-    const tabs = ['overview', 'users', 'content', 'settings'];
+    const tabs = ['overview', 'users', 'content', 'settings', 'analytics'];
 
     // Keyboard navigation for tabs
     const handleTabKeyDown = (e) => {
@@ -690,6 +693,17 @@ const AdminDashboard = () => {
         </div>
     );
 
+    const renderAnalyticsTab = () => (
+        <div className="admin-tab-content" role="tabpanel" id="analytics-panel" aria-labelledby="analytics-tab">
+            <h2 className="admin-section-title">
+                {language === 'ar' ? 'تحليلات المشاركة' : 
+                 language === 'fr' ? 'Analytiques de partage' : 
+                 'Share Analytics'}
+            </h2>
+            <ShareAnalytics token={token} />
+        </div>
+    );
+
     const renderSettingsTab = () => (
         <div className="admin-tab-content" role="tabpanel" id="settings-panel" aria-labelledby="settings-tab">
             <h2 className="admin-section-title">
@@ -915,6 +929,28 @@ const AdminDashboard = () => {
                              'Settings'}
                         </span>
                     </button>
+
+                    <button
+                        onClick={() => setActiveTab('analytics')}
+                        onKeyDown={handleTabKeyDown}
+                        className={`admin-tab-btn ${
+                            activeTab === 'analytics' 
+                                ? 'admin-tab-btn-active' 
+                                : 'admin-tab-btn-inactive'
+                        }`}
+                        role="tab"
+                        aria-selected={activeTab === 'analytics'}
+                        aria-controls="analytics-panel"
+                        id="analytics-tab"
+                        tabIndex={activeTab === 'analytics' ? 0 : -1}
+                    >
+                        <span>📈</span>
+                        <span>
+                            {language === 'ar' ? 'تحليلات المشاركة' : 
+                             language === 'fr' ? 'Analytiques' : 
+                             'Share Analytics'}
+                        </span>
+                    </button>
                 </div>
             </nav>
 
@@ -924,6 +960,7 @@ const AdminDashboard = () => {
             {activeTab === 'users' && renderUsersTab()}
             {activeTab === 'content' && renderContentTab()}
             {activeTab === 'settings' && renderSettingsTab()}
+            {activeTab === 'analytics' && renderAnalyticsTab()}
             </div>
         </main>
         </>

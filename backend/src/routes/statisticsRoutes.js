@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const statisticsController = require('../controllers/statisticsController');
 const { protect, authorize } = require('../middleware/auth');
-const { shortCacheHeaders } = require('../middleware/cacheHeaders');
+const { cachePresets } = require('../middleware/cacheHeaders');
 
 /**
  * Statistics Routes for Admin Dashboard
@@ -16,8 +16,8 @@ const { shortCacheHeaders } = require('../middleware/cacheHeaders');
 router.use(protect);
 router.use(authorize('Admin', 'HR')); // Only Admin and HR roles can access statistics
 
-// Apply cache headers middleware to all statistics routes (30 seconds TTL)
-router.use(shortCacheHeaders());
+// Apply cache headers middleware to all statistics routes (5 minutes TTL)
+router.use(cachePresets.short);
 
 /**
  * @route   GET /api/admin/statistics/overview

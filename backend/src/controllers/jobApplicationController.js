@@ -476,6 +476,16 @@ exports.updateApplicationStatus = async (req, res) => {
           application._id,
           jobTitle
         );
+
+        // منح نقاط الإحالة عند قبول الطلب (غير متزامن)
+        setImmediate(async () => {
+          try {
+            const rewardsService = require('../services/rewardsService');
+            await rewardsService.awardJobReward(application.applicant._id);
+          } catch (err) {
+            logger.error('خطأ في منح نقاط الوظيفة:', err);
+          }
+        });
       } else if (status === 'Rejected') {
         await notificationService.notifyApplicationRejected(
           application.applicant._id,

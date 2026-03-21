@@ -167,9 +167,49 @@ class PusherService {
     }
   }
   
-  // إرسال تحديث عدد الرسائل غير المقروءة
-  async sendUnreadCountUpdate(userId, count) {
+  // إرسال تحديث لوحة المتصدرين لجميع المستخدمين
+  async broadcastLeaderboardUpdate(period, topRankings) {
+    if (!this.isInitialized || !this.pusher) {
+      logger.debug('Pusher not initialized, skipping leaderboard broadcast');
+      return;
+    }
+
+    try {
+      await this.pusher.trigger(
+        'leaderboard',
+        'leaderboard-updated',
+        {
+          period,
+          topRankings,
+          timestamp: new Date().toISOString()
+        }
+      );
+      logger.debug(`Leaderboard update broadcasted for period: ${period}`);
+    } catch (error) {
+      logger.error('Error broadcasting leaderboard update:', error);
+    }
+  }
+
+  // إرسال تحديث ترتيب مستخدم معين
+  async sendRankUpdate(userId, rankData) {
     if (!this.isInitialized || !this.pusher) return;
+
+    try {
+      await this.pusher.trigger(
+        `private-user-${userId}`,
+        'rank-updated',
+        {
+          ...rankData,
+          timestamp: new Date().toISOString()
+        }
+      );
+    } catch (error) {
+      logger.error('Error sending rank update:', error);
+    }
+  }
+
+  // إرسال تحديث عدد الرسائل غير المقروءة
+  async sendUnreadCountUpdate(userId, count) {    if (!this.isInitialized || !this.pusher) return;
     
     try {
       await this.pusher.trigger(

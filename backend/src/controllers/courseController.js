@@ -8,27 +8,21 @@ const CourseEnrollment = require('../models/CourseEnrollment');
 const CourseLesson = require('../models/CourseLesson');
 const FilterService = require('../services/filterService');
 const ProgressService = require('../services/progressService');
-const CertificateService = require('../services/certificateService');
+const certificateService = require('../services/certificateService');
 const User = require('../models/User');
 const crypto = require('crypto');
 
 // Initialize services
 const filterService = new FilterService();
 
-// Initialize certificate service
-const certificateService = new CertificateService(
-  CourseEnrollment,
-  EducationalCourse,
-  User
-);
-
 // Initialize progress service
+const notificationService = require('../services/notificationService');
 const progressService = new ProgressService(
   CourseEnrollment,
   EducationalCourse,
   CourseLesson,
   certificateService,
-  null // notificationService will be added later
+  notificationService
 );
 
 /**

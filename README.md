@@ -1,11 +1,19 @@
 # Careerak - منصة إدارة الموارد البشرية المتقدمة
 
-**الإصدار:** v1.4.0 | **تاريخ الإصدار:** 22 فبراير 2026
+**الإصدار:** v1.5.0 | **تاريخ الإصدار:** 17 مارس 2026
 **الحالة:** جاهز للنشر العالمي 🚀
 
 > منصة شاملة لإدارة الموارد البشرية مبنية بـ Node.js/Express في الخلفية و React في الواجهة الأمامية.
 
 ## ✨ الميزات الرئيسية
+
+### 0. **Content Sharing**
+- 🔗 Share job postings, courses, and profiles via social media (Facebook, Twitter, LinkedIn, WhatsApp, Telegram, Email)
+- 💬 Internal sharing via the built-in chat system with rich content previews
+- 📋 Copy-to-clipboard with short, trackable share links
+- 📊 Share analytics dashboard (shares by platform, top content, conversion rates)
+- 📱 Native share sheet on mobile devices (Web Share API)
+- 🔔 Real-time notifications when content is shared with you
 
 ### 1. **Job Management**
 - 📋 Post job openings with detailed requirements and descriptions
@@ -30,6 +38,22 @@
 - 👤 Different roles: Admin, HR, Manager, Employee, Applicant
 - 📝 User profile management
 - 🔒 Secure password hashing with bcryptjs
+
+## 🌟 الميزات الجديدة في الإصدار 1.5.0
+
+### 🔗 **مشاركة المحتوى (Content Sharing)**
+- ✅ **مشاركة خارجية:** Facebook, Twitter/X, LinkedIn, WhatsApp, Telegram, Email
+- ✅ **مشاركة داخلية:** إرسال المحتوى عبر نظام المحادثات مع معاينة غنية
+- ✅ **نسخ الرابط:** روابط قصيرة قابلة للتتبع مع تأكيد فوري
+- ✅ **روابط UTM:** تتبع مصادر الزيارات لكل منصة
+- ✅ **Open Graph & Twitter Cards:** معاينات جذابة على وسائل التواصل
+- ✅ **مشاركة الوظائف:** مشاركة فرص العمل مع بيانات وصفية كاملة
+- ✅ **مشاركة الدورات:** مشاركة الدورات التدريبية مع تفاصيل المحتوى
+- ✅ **مشاركة الملفات الشخصية:** مشاركة ملفات المستخدمين والشركات
+- ✅ **لوحة تحليلات:** إحصاءات المشاركة حسب المنصة والمحتوى
+- ✅ **الخصوصية والأمان:** احترام إعدادات الخصوصية وصلاحيات المستخدمين
+- ✅ **دعم الموبايل:** Web Share API مع fallback للأجهزة غير المدعومة
+- ✅ **دعم متعدد اللغات:** واجهة المشاركة بالعربية والإنجليزية والفرنسية
 
 ## 🌟 الميزات الجديدة في الإصدار 1.4.0
 
@@ -158,6 +182,20 @@ npm start   # Starts on port 3000
 
 ## API Endpoints
 
+### Share API
+- `POST /api/shares` - Record a share event
+- `GET /api/shares/analytics` - Get share analytics
+- `GET /api/shares/:contentType/:contentId` - Get share count for content
+- `GET /api/shares/analytics/summary` - Analytics summary
+- `GET /api/shares/analytics/by-platform` - Shares grouped by platform
+- `GET /api/shares/analytics/top-content` - Top shared content
+
+### Metadata API
+- `GET /api/metadata/job/:id` - Open Graph metadata for a job
+- `GET /api/metadata/course/:id` - Open Graph metadata for a course
+- `GET /api/metadata/profile/:id` - Open Graph metadata for a user profile
+- `GET /api/metadata/company/:id` - Open Graph metadata for a company
+
 ### Authentication
 - `POST /api/users/register` - Register new user
 - `POST /api/users/login` - Login user
@@ -219,9 +257,10 @@ npm start   # Starts on port 3000
 4. **EducationalCourse** - Educational course details
 5. **TrainingCourse** - Internal training programs
 
-## User Roles
+6. **Share** - Share events with method, UTM params, and timestamps
+7. **ShareAnalytics** - Aggregated sharing metrics per content item
 
-- **Admin** - Full system access
+## User Roles
 - **HR** - HR department operations
 - **Manager** - Department management
 - **Employee** - Regular employee
@@ -257,6 +296,9 @@ npm start   # Starts on port 3000
 ## 📚 Documentation
 
 Comprehensive documentation is available in the `docs/` directory:
+
+### Content Sharing
+- `docs/COURSE_SHARING_IMPLEMENTATION.md` - Course sharing implementation guide
 
 ### Setup & Configuration
 - `docs/Backend Setup/HOW_TO_START.md` - Backend setup guide
@@ -298,6 +340,15 @@ Comprehensive documentation is available in the `docs/` directory:
 - [ ] Integration with third-party HR tools
 
 ## 📋 إصدارات التطبيق (Version History)
+
+### v1.5.0 - مشاركة المحتوى الشاملة (17 مارس 2026)
+- 🔗 **Content Sharing:** مشاركة الوظائف والدورات والملفات الشخصية عبر 7 قنوات
+- 💬 **Internal Sharing:** مشاركة داخلية عبر المحادثات مع معاينة غنية
+- 📊 **Share Analytics:** لوحة تحليلات شاملة للمشاركات
+- 📱 **Mobile Native Share:** دعم Web Share API للأجهزة المحمولة
+- 🔔 **Share Notifications:** إشعارات فورية عند مشاركة المحتوى
+- 🏷️ **UTM Tracking:** تتبع مصادر الزيارات لكل منصة
+- 🖼️ **Open Graph & Twitter Cards:** معاينات جذابة على وسائل التواصل
 
 ### v1.4.0 - التحسينات الشاملة للمنصة (22 فبراير 2026)
 - 🌓 **Dark Mode:** وضع داكن كامل مع حفظ التفضيلات

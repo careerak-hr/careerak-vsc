@@ -172,7 +172,7 @@ courseEnrollmentSchema.pre('save', async function(next) {
 });
 
 /**
- * Post-save middleware to issue certificate automatically
+ * Post-save middleware to issue certificate automatically and award referral points
  * This runs after the enrollment is saved to avoid blocking the save operation
  */
 courseEnrollmentSchema.post('save', async function(doc) {
@@ -186,13 +186,33 @@ courseEnrollmentSchema.post('save', async function(doc) {
         // Import certificateService here to avoid circular dependency
         const certificateService = require('../services/certificateService');
         
-        // Issue certificate asynchronously (don't wait for it)
+        // Issue certificate and update enrollment record
         setImmediate(async () => {
           try {
-            await certificateService.issueCertificate(doc.student, doc.course);
-            console.log(`✅ Certificate issued automatically for user ${doc.student} on course ${doc.course}`);
+            const result = await certificateService.issueCertificate(doc.student, doc.course);
+            
+            if (result && result.success && result.certificate) {
+              const baseUrl = process.env.FRONTEND_URL || 'https://careerak.com';
+              const certificateUrl = `${baseUrl}/certificates/${result.certificate.certificateId}`;
+              
+              // Update the enrollment to mark certificate as issued
+              const CourseEnrollment = mongoose.model('CourseEnrollment');
+              await CourseEnrollment.findByIdAndUpdate(doc._id, {
+                'certificateIssued.issued': true,
+                'certificateIssued.issuedAt': new Date(),
+                'certificateIssued.certificateUrl': certificateUrl,
+                'certificateIssued.certificateId': result.certificate.certificateId
+              });
+              
+              console.log(`✅ Certificate issued automatically for user ${doc.student} on course ${doc.course}`);
+            }
           } catch (error) {
-            console.error('❌ Error issuing certificate automatically:', error.message);
+            // If certificate already exists, just update the enrollment
+            if (error.message && error.message.includes('Certificate already exists')) {
+              console.log(`ℹ️ Certificate already exists for user ${doc.student} on course ${doc.course}`);
+            } else {
+              console.error('❌ Error issuing certificate automatically:', error.message);
+            }
           }
         });
       }
@@ -200,6 +220,30 @@ courseEnrollmentSchema.post('save', async function(doc) {
       // Log error but don't throw (post-save should not fail)
       console.error('Error in post-save certificate issuance:', error);
     }
+  }
+
+  // منح نقاط الإحالة عند إكمال الدورة
+  if (doc._shouldIssueCertificate) {
+    setImmediate(async () => {
+      try {
+        const rewardsService = require('../services/rewardsService');
+
+        // مكافأة أول دورة
+        await rewardsService.awardFirstCourseReward(doc.student);
+
+        // مكافأة 5 دورات - التحقق من عدد الدورات المكتملة
+        const CourseEnrollment = mongoose.model('CourseEnrollment');
+        const completedCount = await CourseEnrollment.countDocuments({
+          student: doc.student,
+          status: 'completed'
+        });
+        if (completedCount >= 5) {
+          await rewardsService.awardFiveCoursesReward(doc.student);
+        }
+      } catch (err) {
+        console.error('❌ خطأ في منح نقاط إكمال الدورة:', err.message);
+      }
+    });
   }
 });
 

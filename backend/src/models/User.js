@@ -17,6 +17,9 @@ const userSchema = new mongoose.Schema({
   profileImage: String,
   privacyAccepted: { type: Boolean, default: true },
   isVerified: { type: Boolean, default: false },
+  isBlocked: { type: Boolean, default: false },
+  blockedAt: { type: Date, default: null },
+  blockedReason: { type: String, default: null },
   otp: {
     code: String,
     expiresAt: Date,
@@ -106,6 +109,34 @@ const userSchema = new mongoose.Schema({
       disabledReason: String // سبب التعطيل (اختياري)
     }
   },
+  // كود الإحالة الفريد (Referral Code)
+  referralCode: {
+    type: String,
+    unique: true,
+    sparse: true, // يسمح بـ null لكن يضمن الفرادة عند الوجود
+    uppercase: true,
+    trim: true
+  },
+
+  // رصيد النقاط (Points Balance)
+  pointsBalance: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+
+  // الاستبدالات النشطة (Active Redemptions)
+  activeRedemptions: [{
+    optionId: String,
+    type: { type: String, enum: ['discount', 'feature', 'subscription'] },
+    value: Number,
+    appliedAt: { type: Date, default: Date.now },
+    expiresAt: Date,
+    transactionId: { type: mongoose.Schema.Types.ObjectId, ref: 'PointsTransaction' },
+    isUsed: { type: Boolean, default: false },
+    usedAt: Date
+  }],
+
   // حالة الحساب (Account Status)
   accountDisabled: { type: Boolean, default: false },
   accountDisabledAt: Date,

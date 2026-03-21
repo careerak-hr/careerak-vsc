@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import LazyImage from '../LazyImage/LazyImage';
+import ShareButton from '../ShareButton/ShareButton';
 import './CourseCard.css';
 
 const CourseCard = ({ course, view = 'grid' }) => {
@@ -247,6 +248,13 @@ const CourseCard = ({ course, view = 'grid' }) => {
           <button className="view-details-button" onClick={handleViewDetails}>
             {t.viewDetails}
           </button>
+
+          <ShareButton
+            content={course}
+            contentType="course"
+            variant="icon-only"
+            size="small"
+          />
         </div>
       </div>
     </div>

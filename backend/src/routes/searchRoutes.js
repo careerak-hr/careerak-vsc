@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const searchController = require('../controllers/searchController');
 const savedSearchRoutes = require('./savedSearchRoutes');
-const { authenticate } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 const { searchRateLimiter, autocompleteRateLimiter } = require('../middleware/rateLimiter');
 const {
   sanitizeInput,
@@ -29,7 +29,7 @@ router.get('/autocomplete',
   (req, res, next) => {
     // نحاول المصادقة، لكن لا نفرضها
     if (req.headers.authorization) {
-      return authenticate(req, res, next);
+      return protect(req, res, next);
     }
     next();
   },
@@ -60,7 +60,7 @@ router.get('/jobs',
   (req, res, next) => {
     // نحاول المصادقة، لكن لا نفرضها
     if (req.headers.authorization) {
-      return authenticate(req, res, next);
+      return protect(req, res, next);
     }
     next();
   },
@@ -82,7 +82,7 @@ router.get('/courses',
   (req, res, next) => {
     // نحاول المصادقة، لكن لا نفرضها
     if (req.headers.authorization) {
-      return authenticate(req, res, next);
+      return protect(req, res, next);
     }
     next();
   },

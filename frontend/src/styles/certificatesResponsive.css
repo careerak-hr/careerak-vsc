@@ -1,0 +1,1100 @@
+/*
+ * certificatesResponsive.css
+ * تصميم متجاوب موحد لجميع مكونات نظام الشهادات والإنجازات
+ * Breakpoints: Mobile < 640px | Tablet 640-1023px | Desktop >= 1024px
+ */
+
+/* ============================================================
+   1. CSS Variables & Base
+   ============================================================ */
+:root {
+  --cert-primary: #304B60;
+  --cert-accent: #D48161;
+  --cert-bg: #E3DAD1;
+  --cert-white: #FFFFFF;
+  --cert-border: #D4816180;
+  --cert-radius: 12px;
+  --cert-touch-min: 44px;
+}
+
+/* ============================================================
+   2. Safe Area Support (iOS Notch / Dynamic Island)
+   ============================================================ */
+@supports (padding: max(0px)) {
+  .certificates-gallery-page,
+  .certificate-verification-page,
+  .cpv-page,
+  .achievements-page,
+  .cert-mgmt-dashboard {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* ============================================================
+   3. Touch Targets — all interactive elements >= 44x44px
+   ============================================================ */
+@media (pointer: coarse) {
+  /* Gallery */
+  .control-btn,
+  .action-btn,
+  .drag-handle {
+    min-height: var(--cert-touch-min);
+    min-width: var(--cert-touch-min);
+  }
+
+  /* Badges */
+  .badge-card,
+  .category-btn,
+  .modal-toggle-btn {
+    min-height: var(--cert-touch-min);
+  }
+
+  /* Achievements */
+  .achievement-card,
+  .filter-btn,
+  .status-btn,
+  .achievements-retry-btn {
+    min-height: var(--cert-touch-min);
+  }
+
+  /* Verification */
+  .search-button,
+  .action-button,
+  .cpv-btn-primary,
+  .cpv-tab,
+  .cpv-btn-sm {
+    min-height: var(--cert-touch-min);
+  }
+
+  /* Management */
+  .cert-mgmt-tab,
+  .action-icon-btn,
+  .page-btn,
+  .btn-save,
+  .btn-upload,
+  .btn-remove,
+  .cert-modal-btn {
+    min-height: var(--cert-touch-min);
+  }
+
+  /* Filter panel */
+  .filter-option,
+  .clear-all-btn,
+  .remove-chip-btn {
+    min-height: var(--cert-touch-min);
+  }
+
+  /* LinkedIn */
+  .linkedin-share-button,
+  .share-option-button,
+  .cancel-button,
+  .close-button,
+  .connect-button {
+    min-height: var(--cert-touch-min);
+  }
+}
+
+/* ============================================================
+   4. Mobile (< 640px)
+   ============================================================ */
+@media (max-width: 639px) {
+
+  /* --- Certificates Gallery Page --- */
+  .certificates-gallery-page {
+    padding: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .gallery-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .filter-sidebar {
+    position: static;
+  }
+
+  .certificates-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* --- Certificates Gallery Component --- */
+  .certificates-gallery {
+    padding: 1rem;
+  }
+
+  .gallery-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gallery-title {
+    font-size: 1.4rem;
+  }
+
+  .gallery-controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .control-group {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .certificates-container.grid {
+    grid-template-columns: 1fr;
+  }
+
+  .certificates-container.list .certificate-card {
+    flex-direction: column;
+  }
+
+  .certificates-container.list .certificate-thumbnail {
+    width: 100%;
+    height: 180px;
+  }
+
+  .certificate-actions {
+    flex-wrap: wrap;
+  }
+
+  /* --- Achievements Page --- */
+  .achievements-page {
+    padding: 1rem 0.9rem 3rem;
+  }
+
+  .achievements-title {
+    font-size: 1.5rem;
+  }
+
+  .achievements-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-group {
+    margin-inline-start: 0;
+  }
+
+  /* --- Badges Display --- */
+  .badges-display {
+    padding: 1rem 0;
+  }
+
+  .badges-title {
+    font-size: 1.2rem;
+  }
+
+  .badges-grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .badge-card {
+    padding: 0.75rem 0.4rem 0.6rem;
+  }
+
+  .badge-icon {
+    font-size: 1.75rem;
+  }
+
+  .badge-name {
+    font-size: 0.72rem;
+  }
+
+  /* --- Certificate Management Dashboard --- */
+  .cert-mgmt-dashboard {
+    padding: 1rem;
+  }
+
+  .cert-mgmt-title {
+    font-size: 1.4rem;
+  }
+
+  .cert-mgmt-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .cert-mgmt-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cert-mgmt-tab {
+    padding: 8px 14px;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  .cert-design-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .color-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toggle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sig-name-group {
+    grid-template-columns: 1fr;
+  }
+
+  .issued-certs-filters {
+    flex-direction: column;
+  }
+
+  .search-input-wrap {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
+
+  .certs-table th,
+  .certs-table td {
+    padding: 10px 10px;
+    font-size: 0.8rem;
+  }
+
+  .cert-modal-box {
+    padding: 20px 16px;
+  }
+
+  .cert-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cert-modal-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* --- Verification Page --- */
+  .certificate-verification-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .verification-title-ar {
+    font-size: 1.75rem;
+  }
+
+  .verification-title-en {
+    font-size: 1.4rem;
+  }
+
+  .search-input-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .search-button {
+    width: 100%;
+  }
+
+  .certificate-info-card {
+    padding: 1.25rem;
+  }
+
+  .certificate-actions {
+    flex-direction: column;
+  }
+
+  .action-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* --- Public Verify Page --- */
+  .cpv-hero {
+    padding: 2.5rem 1rem 2rem;
+  }
+
+  .cpv-hero-title {
+    font-size: 1.75rem;
+  }
+
+  .cpv-hero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .cpv-main {
+    padding: 0 0.75rem 1.5rem;
+  }
+
+  .cpv-form {
+    padding: 1.25rem;
+  }
+
+  .cpv-input-row {
+    flex-direction: column;
+  }
+
+  .cpv-btn-primary {
+    width: 100%;
+  }
+
+  .cpv-steps {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cpv-step {
+    max-width: none;
+  }
+
+  .cpv-step-arrow {
+    transform: rotate(90deg);
+    align-self: center;
+  }
+
+  .cpv-bulk-table th,
+  .cpv-bulk-table td {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.78rem;
+  }
+
+  /* --- Filter Panel --- */
+  .filter-panel {
+    padding: 1rem;
+  }
+
+  .filter-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .filter-title {
+    font-size: 1.2rem;
+  }
+
+  .clear-all-btn {
+    width: 100%;
+  }
+
+  /* --- LinkedIn Share --- */
+  .linkedin-share-button {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+
+  .share-options-content,
+  .success-content,
+  .error-content {
+    padding: 20px;
+  }
+
+  .share-options-content h3 {
+    font-size: 18px;
+  }
+
+  .share-option-button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================================
+   5. Very Small Mobile (< 375px)
+   ============================================================ */
+@media (max-width: 374px) {
+  .page-title,
+  .gallery-title,
+  .achievements-title,
+  .badges-title {
+    font-size: 1.25rem;
+  }
+
+  .certificate-thumbnail,
+  .certificates-container.list .certificate-thumbnail {
+    height: 150px;
+  }
+
+  .certificate-title,
+  .certificate-course {
+    font-size: 1rem;
+  }
+
+  .action-btn,
+  .action-button {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .cpv-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .cert-mgmt-title {
+    font-size: 1.2rem;
+  }
+
+  .filter-chip {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+/* ============================================================
+   6. Tablet (640px – 1023px)
+   ============================================================ */
+@media (min-width: 640px) and (max-width: 1023px) {
+
+  /* --- Gallery Page --- */
+  .certificates-gallery-page {
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .gallery-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .filter-sidebar {
+    position: static;
+  }
+
+  .certificates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+
+  /* --- Gallery Component --- */
+  .certificates-container.grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* --- Achievements --- */
+  .achievements-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .achievements-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  /* --- Badges --- */
+  .badges-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  /* --- Certificate Management --- */
+  .cert-design-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .issued-certs-filters {
+    flex-wrap: wrap;
+  }
+
+  /* --- Filter Panel --- */
+  .filter-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+
+  /* --- Public Verify Page --- */
+  .cpv-hero {
+    padding: 3rem 1.5rem 2.5rem;
+  }
+
+  .cpv-main {
+    padding: 0 1rem 2rem;
+  }
+}
+
+/* ============================================================
+   7. Desktop (>= 1024px)
+   ============================================================ */
+@media (min-width: 1024px) {
+
+  .gallery-container {
+    grid-template-columns: 280px 1fr;
+  }
+
+  .filter-sidebar {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+  }
+
+  .certificates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .achievements-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .achievements-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .cert-design-editor {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ============================================================
+   8. Landscape Mobile
+   ============================================================ */
+@media (max-height: 500px) and (orientation: landscape) {
+  .cpv-hero {
+    padding: 1.5rem 1rem;
+  }
+
+  .cpv-hero-title {
+    font-size: 1.5rem;
+  }
+
+  .verification-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .badge-modal,
+  .achievement-modal {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .cert-modal-box {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}
+
+/* ============================================================
+   9. RTL Overrides (all breakpoints)
+   ============================================================ */
+[dir="rtl"] .gallery-header,
+[dir="rtl"] .gallery-controls {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .drag-handle {
+  left: auto;
+  right: 10px;
+}
+
+[dir="rtl"] .hidden-badge {
+  right: auto;
+  left: 10px;
+}
+
+[dir="rtl"] .revoked-badge {
+  left: auto;
+  right: 10px;
+}
+
+[dir="rtl"] .status-badge {
+  right: auto;
+  left: 1rem;
+}
+
+[dir="rtl"] .certificate-actions {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filter-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filter-chip {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .filter-option {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .badges-header,
+[dir="rtl"] .badges-summary {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .badge-modal-close {
+  right: auto;
+  left: 0.75rem;
+}
+
+[dir="rtl"] .modal-close-btn {
+  right: auto;
+  left: 0.75rem;
+}
+
+[dir="rtl"] .achievements-filters {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .status-group {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+}
+
+[dir="rtl"] .ac-lock {
+  right: auto;
+  left: -4px;
+}
+
+[dir="rtl"] .search-input-group {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .verification-error {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .action-button {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .cpv-step-arrow {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .cpv-features-grid {
+  text-align: end;
+}
+
+[dir="rtl"] .certificate-status-badge,
+[dir="rtl"] .certificate-status-expiry {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .certificate-status-revocation-reason {
+  border-left: none;
+  border-right: 4px solid #EF4444;
+}
+
+[dir="rtl"] .linkedin-share-button,
+[dir="rtl"] .share-option-button {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .share-option-button:hover:not(:disabled) {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .search-icon {
+  left: auto;
+  right: 12px;
+}
+
+[dir="rtl"] .cert-modal-actions {
+  flex-direction: row-reverse;
+}
+
+/* RTL on mobile */
+@media (max-width: 639px) {
+  [dir="rtl"] .gallery-header {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  [dir="rtl"] .filter-header {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  [dir="rtl"] .cert-modal-actions {
+    flex-direction: column-reverse;
+  }
+}
+
+/* ============================================================
+   10. Dark Mode (all components)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+
+  /* Gallery Page */
+  .certificates-gallery-page {
+    background: #1a1a1a;
+  }
+
+  /* Gallery Component */
+  .certificates-gallery {
+    background: #1a1a1a;
+  }
+
+  .certificate-card {
+    background: #2a2a2a;
+    color: #e0e0e0;
+  }
+
+  .certificate-course,
+  .certificate-title {
+    color: #e0e0e0;
+  }
+
+  .certificate-date,
+  .certificate-status {
+    color: #b0b0b0;
+  }
+
+  .certificate-actions {
+    background: #333;
+    border-top-color: #444;
+  }
+
+  .control-group {
+    background: #2a2a2a;
+  }
+
+  .control-btn {
+    color: #e0e0e0;
+  }
+
+  .control-btn:hover {
+    background: rgba(212, 129, 97, 0.2);
+  }
+
+  /* Achievements */
+  .achievements-page {
+    background: #1a1a1a;
+  }
+
+  .achievement-card {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+
+  .ac-name,
+  .achievements-title,
+  .achievements-subtitle {
+    color: #e0e0e0;
+  }
+
+  .stat-card {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+
+  .stat-value,
+  .stat-label {
+    color: #e0e0e0;
+  }
+
+  .filter-btn {
+    color: #e0e0e0;
+    border-color: rgba(212, 129, 97, 0.4);
+  }
+
+  .filter-btn:hover {
+    background: #3a3a3a;
+  }
+
+  .filter-btn.active {
+    background: #304B60;
+    color: #fff;
+  }
+
+  /* Badges */
+  .badge-card {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+
+  .badge-name {
+    color: #e0e0e0;
+  }
+
+  .badge-modal {
+    background: #2a2a2a;
+    border-color: #304B60;
+  }
+
+  .modal-name,
+  .modal-description,
+  .modal-earned-date {
+    color: #e0e0e0;
+  }
+
+  /* Filter Panel */
+  .filter-panel {
+    background: #2a2a2a;
+    border-color: #5a7a96;
+  }
+
+  .filter-title,
+  .filter-section-title,
+  .filter-option-label,
+  .results-count {
+    color: #e0e0e0;
+  }
+
+  .filter-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Certificate Management */
+  .cert-mgmt-dashboard {
+    background: #1a1a1a;
+  }
+
+  .cert-mgmt-title,
+  .cert-mgmt-subtitle {
+    color: #e0e0e0;
+  }
+
+  .cert-mgmt-tab {
+    color: #b0b0b0;
+  }
+
+  .cert-mgmt-tab.active {
+    color: #e0e0e0;
+  }
+
+  .editor-panel,
+  .cert-preview-panel {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+
+  .editor-panel-title,
+  .cert-preview-title,
+  .form-label,
+  .toggle-label {
+    color: #e0e0e0;
+  }
+
+  .form-input,
+  .form-select,
+  .filter-select {
+    background: #1a1a1a;
+    color: #e0e0e0;
+    border-color: rgba(212, 129, 97, 0.4);
+  }
+
+  .toggle-item {
+    background: #333;
+    border-color: #444;
+  }
+
+  .certs-table-wrap {
+    border-color: #3a3a3a;
+  }
+
+  .certs-table th {
+    background: #3a3a3a;
+  }
+
+  .certs-table td {
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+  }
+
+  .certs-table tr:hover td {
+    background: #333;
+  }
+
+  .cert-modal-box {
+    background: #2a2a2a;
+    border-color: #5a7a96;
+  }
+
+  .cert-modal-title,
+  .cert-modal-msg,
+  .cert-modal-label {
+    color: #e0e0e0;
+  }
+
+  .cert-modal-textarea {
+    background: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .cert-modal-btn.cancel {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #5a7a96;
+  }
+
+  /* LinkedIn Share */
+  .share-options-content,
+  .success-content,
+  .error-content {
+    background: #2a2a2a;
+    color: #e0e0e0;
+  }
+
+  .share-options-content h3 {
+    color: #e0e0e0;
+  }
+
+  .share-option-button {
+    background: #333;
+    color: #e0e0e0;
+  }
+
+  .share-option-button:hover:not(:disabled) {
+    background: #3a3a3a;
+  }
+
+  .cancel-button,
+  .close-button {
+    border-color: #444;
+    color: #e0e0e0;
+  }
+
+  .cancel-button:hover,
+  .close-button:hover {
+    background: #333;
+  }
+
+  .success-content p,
+  .error-content p {
+    color: #e0e0e0;
+  }
+}
+
+/* ============================================================
+   11. Print Styles
+   ============================================================ */
+@media print {
+
+  /* Hide interactive elements */
+  .gallery-controls,
+  .filter-sidebar,
+  .filter-panel,
+  .certificate-actions,
+  .cert-mgmt-tabs,
+  .issued-certs-filters,
+  .pagination,
+  .linkedin-share-button,
+  .share-on-linkedin,
+  .cpv-hero,
+  .cpv-how,
+  .cpv-features,
+  .verification-search-form,
+  .verification-footer,
+  .achievements-filters,
+  .badges-categories {
+    display: none !important;
+  }
+
+  /* Single column layouts */
+  .gallery-container,
+  .cert-design-editor {
+    grid-template-columns: 1fr;
+  }
+
+  .certificates-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Prevent page breaks inside cards */
+  .certificate-card,
+  .achievement-card,
+  .badge-card,
+  .certificate-info-card,
+  .cert-modal-box {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Remove shadows and decorative borders */
+  .certificate-card,
+  .achievement-card,
+  .badge-card {
+    box-shadow: none;
+    border: 1px solid #304B60;
+  }
+
+  .certificate-info-card {
+    box-shadow: none;
+    border: 2px solid #304B60;
+  }
+
+  .cpv-card {
+    box-shadow: none;
+    border: 2px solid #304B60;
+  }
+
+  /* Ensure backgrounds print */
+  .certificate-status-green,
+  .certificate-status-red,
+  .certificate-status-orange {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ============================================================
+   12. Reduced Motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .certificate-card,
+  .achievement-card,
+  .badge-card,
+  .control-btn,
+  .action-btn,
+  .action-button,
+  .filter-btn,
+  .category-btn,
+  .linkedin-share-button,
+  .share-option-button,
+  .cpv-btn-primary,
+  .btn-save,
+  .btn-upload,
+  .cert-modal-btn,
+  .page-btn,
+  .action-icon-btn {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .certificate-card:hover,
+  .achievement-card:hover,
+  .badge-card:hover {
+    transform: none !important;
+  }
+
+  .verification-status,
+  .certificate-info-card,
+  .certificate-actions {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   13. Prevent horizontal scroll on all certificate pages
+   ============================================================ */
+.certificates-gallery-page,
+.certificate-verification-page,
+.cpv-page,
+.achievements-page,
+.cert-mgmt-dashboard {
+  overflow-x: hidden;
+}
+
+/* Prevent iOS font size adjustment */
+.certificates-gallery-page input,
+.certificate-verification-page input,
+.cpv-page input,
+.cert-mgmt-dashboard input,
+.cert-mgmt-dashboard select,
+.cert-mgmt-dashboard textarea {
+  font-size: 16px;
+}

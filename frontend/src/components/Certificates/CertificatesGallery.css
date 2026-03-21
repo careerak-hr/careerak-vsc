@@ -1,0 +1,467 @@
+/* Certificates Gallery Styles */
+.certificates-gallery {
+  width: 100%;
+  padding: 2rem;
+  background: var(--bg-primary, #E3DAD1);
+  min-height: 400px;
+}
+
+/* Header */
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gallery-title {
+  font-size: 2rem;
+  color: var(--primary, #304B60);
+  margin: 0;
+}
+
+/* Controls */
+.gallery-controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  border-radius: 8px;
+  padding: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.control-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--primary, #304B60);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.control-btn:hover {
+  background: rgba(212, 129, 97, 0.1);
+}
+
+.control-btn.active {
+  background: var(--accent, #D48161);
+  color: white;
+}
+
+/* Container */
+.certificates-container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.certificates-container.grid {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.certificates-container.list {
+  grid-template-columns: 1fr;
+}
+
+/* Certificate Card */
+.certificate-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.certificate-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.certificate-card.hidden {
+  opacity: 0.6;
+}
+
+.certificate-card.revoked {
+  border: 2px solid #dc3545;
+}
+
+/* Dragging States */
+.certificate-card.dragging {
+  opacity: 0.5;
+  transform: rotate(2deg);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.certificates-container.dragging-over {
+  background: rgba(212, 129, 97, 0.05);
+  border: 2px dashed var(--accent, #D48161);
+  border-radius: 12px;
+}
+
+/* Drag Handle */
+.drag-handle {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  background: rgba(48, 75, 96, 0.9);
+  color: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.drag-handle:hover {
+  background: rgba(48, 75, 96, 1);
+  transform: scale(1.1);
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+[dir="rtl"] .drag-handle {
+  left: auto;
+  right: 10px;
+}
+
+/* List View */
+.certificates-container.list .certificate-card {
+  flex-direction: row;
+}
+
+.certificates-container.list .certificate-thumbnail {
+  width: 200px;
+  height: 150px;
+  flex-shrink: 0;
+}
+
+.certificates-container.list .certificate-info {
+  flex: 1;
+}
+
+/* Thumbnail */
+.certificate-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #304B60 0%, #D48161 100%);
+}
+
+.certificate-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hidden-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.revoked-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Info */
+.certificate-info {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+.certificate-course {
+  font-size: 1.25rem;
+  color: var(--primary, #304B60);
+  margin: 0 0 0.5rem 0;
+  font-weight: 600;
+}
+
+.certificate-date,
+.certificate-status {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0.25rem 0;
+}
+
+/* Actions */
+.certificate-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #eee;
+  background: #f8f9fa;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.action-btn.download {
+  background: var(--primary, #304B60);
+  color: white;
+}
+
+.action-btn.download:hover {
+  background: #243a4d;
+}
+
+.action-btn.verify {
+  background: #28a745;
+  color: white;
+}
+
+.action-btn.verify:hover {
+  background: #218838;
+}
+
+.action-btn.visibility {
+  background: var(--accent, #D48161);
+  color: white;
+}
+
+.action-btn.visibility:hover {
+  background: #c06f51;
+}
+
+/* States */
+.loading-state,
+.error-state,
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--primary, #304B60);
+  font-size: 1.1rem;
+}
+
+.error-state {
+  color: #dc3545;
+}
+
+/* RTL Support */
+[dir="rtl"] .gallery-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .gallery-controls {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .certificate-actions {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .hidden-badge {
+  right: auto;
+  left: 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .certificates-gallery {
+    padding: 1rem;
+  }
+
+  .gallery-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .gallery-title {
+    font-size: 1.5rem;
+  }
+
+  .gallery-controls {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .control-group {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .certificates-container.grid {
+    grid-template-columns: 1fr;
+  }
+
+  .certificates-container.list .certificate-card {
+    flex-direction: column;
+  }
+
+  .certificates-container.list .certificate-thumbnail {
+    width: 100%;
+    height: 200px;
+  }
+
+  .certificate-actions {
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-title {
+    font-size: 1.25rem;
+  }
+
+  .control-btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .certificate-course {
+    font-size: 1.1rem;
+  }
+
+  .certificate-info {
+    padding: 1rem;
+  }
+
+  .certificate-actions {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .certificates-gallery {
+    background: #1a1a1a;
+  }
+
+  .certificate-card {
+    background: #2a2a2a;
+    color: #e0e0e0;
+  }
+
+  .certificate-course {
+    color: #e0e0e0;
+  }
+
+  .certificate-date,
+  .certificate-status {
+    color: #b0b0b0;
+  }
+
+  .certificate-actions {
+    background: #333;
+    border-top-color: #444;
+  }
+
+  .control-group {
+    background: #2a2a2a;
+  }
+
+  .control-btn {
+    color: #e0e0e0;
+  }
+
+  .control-btn:hover {
+    background: rgba(212, 129, 97, 0.2);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .gallery-controls,
+  .certificate-actions {
+    display: none;
+  }
+
+  .certificate-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .certificates-container {
+    gap: 1rem;
+  }
+}
+
+/* Accessibility */
+.action-btn:focus {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+.control-btn:focus {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.certificate-card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .certificate-card,
+  .control-btn,
+  .action-btn {
+    transition: none;
+    animation: none;
+  }
+
+  .certificate-card:hover {
+    transform: none;
+  }
+}

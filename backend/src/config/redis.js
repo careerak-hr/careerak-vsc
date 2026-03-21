@@ -280,7 +280,33 @@ const CacheKeys = {
   userRecommendationsPattern: (userId) => `recommendations:${userId}:*`,
   
   // نمط لحذف جميع الميزات
-  allFeaturesPattern: () => `features:*`
+  allFeaturesPattern: () => `features:*`,
+
+  // === Referral & Rewards Cache Keys ===
+
+  // كود الإحالة للمستخدم
+  referralCode: (userId) => `referral:code:${userId}`,
+
+  // رصيد نقاط المستخدم
+  pointsBalance: (userId) => `points:balance:${userId}`,
+
+  // خيارات الاستبدال (مشتركة لجميع المستخدمين)
+  redemptionOptions: () => `redemption:options`,
+
+  // لوحة المتصدرين حسب الفترة
+  leaderboard: (period) => `leaderboard:${period}`,
+
+  // ترتيب مستخدم في لوحة المتصدرين
+  userRank: (userId, period) => `leaderboard:rank:${userId}:${period}`,
+
+  // إحصائيات الإحالة للمستخدم
+  referralStats: (userId) => `referral:stats:${userId}`,
+
+  // نمط لحذف جميع بيانات الإحالة لمستخدم
+  referralPattern: (userId) => `referral:*:${userId}`,
+
+  // نمط لحذف جميع بيانات النقاط لمستخدم
+  pointsPattern: (userId) => `points:*:${userId}`
 };
 
 module.exports = {

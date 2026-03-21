@@ -39,6 +39,45 @@ class PDFGenerator {
   }
 
   /**
+   * نصوص الشهادة بحسب اللغة
+   */
+  getTexts(language = 'ar') {
+    const texts = {
+      ar: {
+        subtitle: 'شهادة إتمام',
+        subtitleEn: 'Certificate of Completion',
+        certificationText: 'يُشهد بأن',
+        completionText: 'قد أتم بنجاح دورة',
+        issuedOn: 'تاريخ الإصدار',
+        certId: 'رقم الشهادة',
+        scanVerify: 'امسح للتحقق',
+        dateLocale: 'ar-EG',
+      },
+      en: {
+        subtitle: 'Certificate of Completion',
+        subtitleEn: 'شهادة إتمام',
+        certificationText: 'This is to certify that',
+        completionText: 'has successfully completed',
+        issuedOn: 'Issue Date',
+        certId: 'Certificate ID',
+        scanVerify: 'Scan to verify',
+        dateLocale: 'en-US',
+      },
+      fr: {
+        subtitle: 'Certificat d\'Achèvement',
+        subtitleEn: 'Certificate of Completion',
+        certificationText: 'Ceci certifie que',
+        completionText: 'a complété avec succès',
+        issuedOn: 'Date d\'émission',
+        certId: 'N° de certificat',
+        scanVerify: 'Scanner pour vérifier',
+        dateLocale: 'fr-FR',
+      },
+    };
+    return texts[language] || texts.ar;
+  }
+
+  /**
    * توليد شهادة PDF
    * @param {Object} certificateData - بيانات الشهادة
    * @returns {Promise<Buffer>} - PDF buffer
@@ -93,49 +132,25 @@ class PDFGenerator {
    */
   async drawCertificate(doc, data) {
     const { userName, courseName, issueDate, certificateId, qrCodeData, verificationUrl } = data;
+    const texts = this.getTexts(data.language || 'ar');
 
-    // 1. رسم الإطار الخارجي
     this.drawBorder(doc);
-
-    // 2. رسم الزخارف الجانبية
     this.drawDecorations(doc);
-
-    // 3. إضافة شعار Careerak
     await this.drawLogo(doc);
-
-    // 4. العنوان الرئيسي
     this.drawTitle(doc);
-
-    // 5. نص "شهادة إتمام"
-    this.drawSubtitle(doc);
-
-    // 6. نص "يُشهد بأن"
-    this.drawCertificationText(doc);
-
-    // 7. اسم المتدرب
+    this.drawSubtitle(doc, texts);
+    this.drawCertificationText(doc, texts);
     this.drawUserName(doc, userName);
-
-    // 8. نص "قد أتم بنجاح دورة"
-    this.drawCompletionText(doc);
-
-    // 9. اسم الدورة
+    this.drawCompletionText(doc, texts);
     this.drawCourseName(doc, courseName);
+    this.drawDate(doc, issueDate, texts);
+    this.drawCertificateId(doc, certificateId, texts);
+    await this.drawQRCode(doc, qrCodeData, verificationUrl, texts);
 
-    // 10. التاريخ
-    this.drawDate(doc, issueDate);
-
-    // 11. رقم الشهادة
-    this.drawCertificateId(doc, certificateId);
-
-    // 12. QR Code
-    await this.drawQRCode(doc, qrCodeData, verificationUrl);
-
-    // 13. التوقيع (إذا كان متوفراً)
     if (data.instructorSignature) {
       await this.drawSignature(doc, data.instructorName, data.instructorSignature);
     }
 
-    // 14. Footer
     this.drawFooter(doc);
   }
 
@@ -251,33 +266,29 @@ class PDFGenerator {
   /**
    * رسم "شهادة إتمام"
    */
-  drawSubtitle(doc) {
+  drawSubtitle(doc, texts = {}) {
     const centerX = doc.page.width / 2;
     const subtitleY = 200;
+    const primary = texts.subtitle || 'شهادة إتمام';
+    const secondary = texts.subtitleEn || 'Certificate of Completion';
 
     doc
       .fontSize(24)
       .fillColor(this.colors.accent)
       .font('Helvetica')
-      .text('شهادة إتمام', centerX - 100, subtitleY, {
-        width: 200,
-        align: 'center'
-      });
+      .text(primary, centerX - 100, subtitleY, { width: 200, align: 'center' });
 
     doc
       .fontSize(18)
       .fillColor(this.colors.text)
       .font('Helvetica')
-      .text('Certificate of Completion', centerX - 120, subtitleY + 30, {
-        width: 240,
-        align: 'center'
-      });
+      .text(secondary, centerX - 120, subtitleY + 30, { width: 240, align: 'center' });
   }
 
   /**
    * رسم "يُشهد بأن"
    */
-  drawCertificationText(doc) {
+  drawCertificationText(doc, texts = {}) {
     const centerX = doc.page.width / 2;
     const textY = 260;
 
@@ -285,10 +296,7 @@ class PDFGenerator {
       .fontSize(14)
       .fillColor(this.colors.text)
       .font('Helvetica')
-      .text('يُشهد بأن', centerX - 50, textY, {
-        width: 100,
-        align: 'center'
-      });
+      .text(texts.certificationText || 'يُشهد بأن', centerX - 100, textY, { width: 200, align: 'center' });
   }
 
   /**
@@ -319,7 +327,7 @@ class PDFGenerator {
   /**
    * رسم "قد أتم بنجاح دورة"
    */
-  drawCompletionText(doc) {
+  drawCompletionText(doc, texts = {}) {
     const centerX = doc.page.width / 2;
     const textY = 340;
 
@@ -327,10 +335,7 @@ class PDFGenerator {
       .fontSize(14)
       .fillColor(this.colors.text)
       .font('Helvetica')
-      .text('قد أتم بنجاح دورة', centerX - 80, textY, {
-        width: 160,
-        align: 'center'
-      });
+      .text(texts.completionText || 'قد أتم بنجاح دورة', centerX - 100, textY, { width: 200, align: 'center' });
   }
 
   /**
@@ -353,11 +358,13 @@ class PDFGenerator {
   /**
    * رسم التاريخ
    */
-  drawDate(doc, issueDate) {
+  drawDate(doc, issueDate, texts = {}) {
     const centerX = doc.page.width / 2;
     const dateY = 420;
+    const locale = texts.dateLocale || 'ar-EG';
+    const label = texts.issuedOn || 'تاريخ الإصدار';
 
-    const formattedDate = new Date(issueDate).toLocaleDateString('ar-EG', {
+    const formattedDate = new Date(issueDate).toLocaleDateString(locale, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -367,61 +374,48 @@ class PDFGenerator {
       .fontSize(12)
       .fillColor(this.colors.text)
       .font('Helvetica')
-      .text(`تاريخ الإصدار: ${formattedDate}`, centerX - 100, dateY, {
-        width: 200,
-        align: 'center'
-      });
+      .text(`${label}: ${formattedDate}`, centerX - 120, dateY, { width: 240, align: 'center' });
   }
 
   /**
    * رسم رقم الشهادة
    */
-  drawCertificateId(doc, certificateId) {
+  drawCertificateId(doc, certificateId, texts = {}) {
     const leftX = 60;
     const bottomY = doc.page.height - 70;
+    const label = texts.certId || 'رقم الشهادة';
 
     doc
       .fontSize(10)
       .fillColor(this.colors.text)
       .font('Helvetica')
-      .text(`رقم الشهادة: ${certificateId}`, leftX, bottomY, {
-        width: 200,
-        align: 'left'
-      });
+      .text(`${label}: ${certificateId}`, leftX, bottomY, { width: 250, align: 'left' });
   }
 
   /**
    * رسم QR Code
    */
-  async drawQRCode(doc, qrCodeData, verificationUrl) {
+  async drawQRCode(doc, qrCodeData, verificationUrl, texts = {}) {
     const rightX = doc.page.width - 120;
     const bottomY = doc.page.height - 120;
     const qrSize = 80;
+    const scanLabel = texts.scanVerify || 'امسح للتحقق';
 
     try {
-      // توليد QR Code كـ buffer
       const qrBuffer = await QRCode.toBuffer(qrCodeData || verificationUrl, {
         errorCorrectionLevel: 'H',
         type: 'png',
-        width: qrSize * 3, // 3x للجودة العالية
+        width: qrSize * 3,
         margin: 1
       });
 
-      // إضافة QR Code للمستند
-      doc.image(qrBuffer, rightX, bottomY, {
-        width: qrSize,
-        height: qrSize
-      });
+      doc.image(qrBuffer, rightX, bottomY, { width: qrSize, height: qrSize });
 
-      // نص "للتحقق"
       doc
         .fontSize(8)
         .fillColor(this.colors.text)
         .font('Helvetica')
-        .text('امسح للتحقق', rightX, bottomY + qrSize + 5, {
-          width: qrSize,
-          align: 'center'
-        });
+        .text(scanLabel, rightX, bottomY + qrSize + 5, { width: qrSize, align: 'center' });
     } catch (error) {
       console.error('Error generating QR code:', error);
     }

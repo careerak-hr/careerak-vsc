@@ -1,0 +1,289 @@
+/* AppointmentsList.css */
+
+.al-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.al-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 1.25rem;
+}
+
+/* Toolbar */
+.al-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.al-filters {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.al-filter-btn {
+  padding: 0.4rem 0.9rem;
+  border-radius: 2rem;
+  border: 2px solid #304B60;
+  background: transparent;
+  color: #304B60;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.al-filter-btn--active,
+.al-filter-btn:hover {
+  background: #304B60;
+  color: #E3DAD1;
+}
+
+.al-search {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #D4816180;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  color: #304B60;
+  background: #fff;
+  outline: none;
+  font-family: inherit;
+}
+
+.al-search:focus { border-color: #D4816180; }
+
+/* States */
+.al-loading,
+.al-empty {
+  text-align: center;
+  color: #304B60;
+  opacity: 0.6;
+  padding: 3rem 1rem;
+  font-size: 1rem;
+}
+
+/* List */
+.al-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+/* Card */
+.al-card {
+  background: #E3DAD1;
+  border: 2px solid #304B60;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  transition: box-shadow 0.2s;
+}
+
+.al-card:hover { box-shadow: 0 4px 16px rgba(48, 75, 96, 0.12); }
+
+.al-card--cancelled { opacity: 0.7; }
+
+.al-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.al-rtl .al-card-header { flex-direction: row-reverse; }
+
+/* Badge */
+.al-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 1rem;
+}
+
+.al-badge--scheduled { background: #dbeafe; color: #1e40af; }
+.al-badge--confirmed { background: #d1fae5; color: #065f46; }
+.al-badge--completed { background: #e0e7ff; color: #3730a3; }
+.al-badge--cancelled { background: #fee2e2; color: #991b1b; }
+.al-badge--in_progress { background: #fef3c7; color: #92400e; }
+
+.al-type {
+  font-size: 0.8rem;
+  color: #D48161;
+  font-weight: 600;
+}
+
+.al-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 0.25rem;
+}
+
+.al-card-date {
+  font-size: 0.875rem;
+  color: #304B60;
+  opacity: 0.75;
+  margin: 0 0 0.5rem;
+}
+
+.al-participants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.al-participant {
+  font-size: 0.8rem;
+  background: rgba(48, 75, 96, 0.1);
+  color: #304B60;
+  padding: 0.15rem 0.5rem;
+  border-radius: 1rem;
+}
+
+/* Actions */
+.al-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.al-rtl .al-card-actions { flex-direction: row-reverse; }
+
+.al-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.al-btn--primary {
+  background: #304B60;
+  color: #E3DAD1;
+  border-color: #304B60;
+}
+
+.al-btn--primary:hover { background: #253d50; }
+
+.al-btn--outline {
+  background: transparent;
+  color: #304B60;
+  border-color: #304B60;
+}
+
+.al-btn--outline:hover { background: rgba(48, 75, 96, 0.08); }
+
+.al-btn--danger {
+  background: transparent;
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+.al-btn--danger:hover { background: rgba(192, 57, 43, 0.08); }
+
+.al-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Pagination */
+.al-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.al-page-btn {
+  padding: 0.4rem 0.9rem;
+  border: 2px solid #304B60;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #304B60;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.al-page-btn:hover:not(:disabled) { background: #304B60; color: #E3DAD1; }
+.al-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.al-page-info { font-size: 0.875rem; color: #304B60; }
+
+/* Cancel Modal */
+.al-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(48, 75, 96, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.al-cancel-modal {
+  background: #E3DAD1;
+  border: 4px solid #304B60;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(48, 75, 96, 0.2);
+}
+
+.al-cancel-msg {
+  font-size: 1rem;
+  color: #304B60;
+  font-weight: 600;
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.al-cancel-reason {
+  width: 100%;
+  border: 2px solid #D4816180;
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  color: #304B60;
+  background: #fff;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  box-sizing: border-box;
+  margin-bottom: 0.75rem;
+}
+
+.al-cancel-error { color: #c0392b; font-size: 0.875rem; text-align: center; margin: 0 0 0.5rem; }
+.al-cancel-success { color: #27ae60; font-size: 0.875rem; text-align: center; margin: 0 0 0.5rem; }
+
+.al-cancel-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.al-rtl .al-cancel-actions { flex-direction: row-reverse; }
+
+.al-cancel-actions .al-btn { flex: 1; justify-content: center; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .al-container { padding: 1rem; }
+  .al-toolbar { flex-direction: column; align-items: stretch; }
+  .al-search { min-width: unset; }
+  .al-card-actions { flex-direction: column; }
+  .al-card-actions .al-btn { justify-content: center; }
+}

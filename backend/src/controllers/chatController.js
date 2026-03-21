@@ -38,7 +38,7 @@ exports.getOrCreateConversation = async (req, res) => {
 // إرسال رسالة
 exports.sendMessage = async (req, res) => {
   try {
-    const { conversationId, type = 'text', content, file } = req.body;
+    const { conversationId, type = 'text', content, file, sharedContent } = req.body;
     const senderId = req.user.id;
     
     if (!conversationId) {
@@ -54,14 +54,46 @@ exports.sendMessage = async (req, res) => {
         message: 'يجب إدخال محتوى الرسالة'
       });
     }
+
+    if (type === 'shared_content' && !sharedContent) {
+      return res.status(400).json({
+        success: false,
+        message: 'يجب تحديد المحتوى المشترك'
+      });
+    }
     
     const message = await chatService.sendMessage({
       conversationId,
       senderId,
       type,
       content,
-      file
+      file,
+      sharedContent
     });
+
+    // Send notification to other participants when sharing content internally
+    if (type === 'shared_content' && sharedContent) {
+      try {
+        const Conversation = require('../models/Conversation');
+        const notificationService = require('../services/notificationService');
+        const conv = await Conversation.findById(conversationId).lean();
+        if (conv) {
+          const recipients = conv.participants
+            .filter(p => p.user.toString() !== senderId.toString())
+            .map(p => p.user);
+          for (const recipientId of recipients) {
+            notificationService.notifyContentShared(
+              recipientId,
+              senderId,
+              sharedContent.contentType,
+              sharedContent.title || ''
+            ).catch(() => {});
+          }
+        }
+      } catch (notifErr) {
+        // Non-blocking
+      }
+    }
     
     res.status(201).json({
       success: true,

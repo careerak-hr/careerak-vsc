@@ -1,185 +1,330 @@
-import React, { useState } from 'react';
-import { FaWhatsapp, FaLinkedin, FaTwitter, FaFacebook, FaLink, FaTimes, FaShare } from 'react-icons/fa';
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  FaWhatsapp, FaLinkedin, FaTwitter, FaFacebook,
+  FaLink, FaTimes, FaShare, FaTelegram, FaEnvelope,
+  FaCommentDots,
+} from 'react-icons/fa';
+import { useApp } from '../../context/AppContext';
+import ContactSelector from '../ContactSelector/ContactSelector';
+import ShareFeedbackWidget from '../ShareFeedback/ShareFeedbackWidget';
+import {
+  createShareData,
+  shareViaFacebook,
+  shareViaTwitter,
+  shareViaLinkedIn,
+  shareViaWhatsApp,
+  shareViaTelegram,
+  shareViaEmail,
+  copyShareLink,
+  shouldUseNativeShare,
+  isIOSSafari,
+  isAndroidChrome,
+  trackShare,
+} from '../../utils/shareUtils';
 import './ShareModal.css';
 
-const ShareModal = ({ isOpen, onClose, job }) => {
+const translations = {
+  ar: {
+    title: 'مشاركة',
+    copyLink: 'نسخ الرابط',
+    copied: 'تم النسخ!',
+    whatsapp: 'واتساب',
+    linkedin: 'لينكدإن',
+    twitter: 'تويتر',
+    facebook: 'فيسبوك',
+    telegram: 'تيليغرام',
+    email: 'البريد الإلكتروني',
+    chat: 'مشاركة عبر المحادثة',
+    more: 'المزيد من الخيارات',
+    success: 'تم نسخ الرابط بنجاح',
+    copyFailed: 'تعذّر النسخ التلقائي. انسخ الرابط يدوياً:',
+    error: 'فشل في المشاركة، يرجى المحاولة مجدداً',
+  },
+  en: {
+    title: 'Share',
+    copyLink: 'Copy Link',
+    copied: 'Copied!',
+    whatsapp: 'WhatsApp',
+    linkedin: 'LinkedIn',
+    twitter: 'Twitter',
+    facebook: 'Facebook',
+    telegram: 'Telegram',
+    email: 'Email',
+    chat: 'Share via Chat',
+    more: 'More options',
+    success: 'Link copied successfully',
+    copyFailed: 'Auto-copy failed. Copy the link manually:',
+    error: 'Share failed, please try again',
+  },
+  fr: {
+    title: 'Partager',
+    copyLink: 'Copier le lien',
+    copied: 'Copié !',
+    whatsapp: 'WhatsApp',
+    linkedin: 'LinkedIn',
+    twitter: 'Twitter',
+    facebook: 'Facebook',
+    telegram: 'Telegram',
+    email: 'E-mail',
+    chat: 'Partager via Chat',
+    more: "Plus d'options",
+    success: 'Lien copié avec succès',
+    copyFailed: 'Copie automatique échouée. Copiez le lien manuellement :',
+    error: 'Échec du partage, veuillez réessayer',
+  },
+};
+
+const ShareModal = ({ isOpen, onClose, content, contentType = 'job', job, token }) => {
   const [copied, setCopied] = useState(false);
+  const [copyFallbackUrl, setCopyFallbackUrl] = useState(null);
+  const [showContactSelector, setShowContactSelector] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [lastShareMethod, setLastShareMethod] = useState(null);
+  const { language } = useApp();
+  const isMountedRef = useRef(true);
 
-  if (!isOpen || !job) return null;
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
-  // بناء رابط الوظيفة
-  const jobUrl = `${window.location.origin}/jobs/${job._id}`;
-  const jobTitle = job.title || 'وظيفة';
-  const companyName = job.company?.name || 'شركة';
-  const shareText = `${jobTitle} في ${companyName}`;
+  // Backward compatibility
+  const resolvedContent = content || job;
+  const resolvedContentType = content ? contentType : 'job';
 
-  // نسخ الرابط
+  const t = translations[language] || translations.ar;
+  const isRTL = language === 'ar';
+
+  // Auto-trigger native share on mobile when modal opens.
+  // NOTE: On iOS Safari, navigator.share() MUST be called directly from a user
+  // gesture handler. Calling it from useEffect (which runs asynchronously after
+  // render) will be blocked by iOS Safari's user gesture requirement.
+  // Therefore, we do NOT auto-trigger here for iOS Safari — the user must tap
+  // the "More options" button or the share button directly.
+  //
+  // Android Chrome: navigator.share() is supported since Chrome 61 and does NOT
+  // have the same user-gesture restriction from useEffect. Auto-trigger works
+  // correctly on Android Chrome.
+  React.useEffect(() => {
+    if (!isOpen || !resolvedContent) return;
+    // Skip auto-trigger on iOS Safari — it blocks navigator.share() from useEffect
+    if (isIOSSafari()) return;
+    if (!shouldUseNativeShare()) return;
+
+    const shareData = createShareData(resolvedContent, resolvedContentType);
+    navigator.share(shareData)
+      .then(() => onClose?.())
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error('Native share failed:', err);
+      });
+  }, [isOpen, resolvedContent, resolvedContentType]);
+
+  if (!isOpen || !resolvedContent) return null;
+
+  const shareData = createShareData(resolvedContent, resolvedContentType);
+  const contentTitle = shareData.title;
+  const contentUrl = shareData.url;
+
+  // Req 12: Copy link with fallback for manual copy
   const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(jobUrl);
+    setCopyFallbackUrl(null);
+    const result = await copyShareLink(resolvedContent, resolvedContentType);
+    if (result.success) {
       setCopied(true);
+      setLastShareMethod('copy_link');
       setTimeout(() => {
-        setCopied(false);
-        onClose();
+        if (isMountedRef.current) {
+          setCopied(false);
+          setShowFeedback(true);
+        }
       }, 1500);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-      // Fallback للمتصفحات القديمة
-      const textArea = document.createElement('textarea');
-      textArea.value = jobUrl;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        onClose();
-      }, 1500);
+    } else {
+      // Req 12.5: show link for manual copying when clipboard access fails
+      setCopyFallbackUrl(result.url);
     }
   };
 
-  // مشاركة على WhatsApp
-  const handleWhatsAppShare = () => {
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + jobUrl)}`;
-    window.open(whatsappUrl, '_blank', 'width=600,height=400');
-    onClose();
+  // Req 9: WhatsApp - mobile deep link vs desktop web
+  const handleWhatsApp = () => {
+    shareViaWhatsApp(resolvedContent, resolvedContentType);
+    setLastShareMethod('whatsapp');
+    setShowFeedback(true);
   };
 
-  // مشاركة على LinkedIn
-  const handleLinkedInShare = () => {
-    const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(jobUrl)}`;
-    window.open(linkedinUrl, '_blank', 'width=600,height=400');
-    onClose();
+  // Req 8: LinkedIn with UTM params
+  const handleLinkedIn = () => {
+    shareViaLinkedIn(resolvedContent, resolvedContentType);
+    setLastShareMethod('linkedin');
+    setShowFeedback(true);
   };
 
-  // مشاركة على Twitter
-  const handleTwitterShare = () => {
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(jobUrl)}`;
-    window.open(twitterUrl, '_blank', 'width=600,height=400');
-    onClose();
+  // Req 7: Twitter with 280 char limit + hashtags + UTM
+  const handleTwitter = () => {
+    shareViaTwitter(resolvedContent, resolvedContentType);
+    setLastShareMethod('twitter');
+    setShowFeedback(true);
   };
 
-  // مشاركة على Facebook
-  const handleFacebookShare = () => {
-    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(jobUrl)}`;
-    window.open(facebookUrl, '_blank', 'width=600,height=400');
-    onClose();
+  // Req 6: Facebook with UTM params
+  const handleFacebook = () => {
+    shareViaFacebook(resolvedContent, resolvedContentType);
+    setLastShareMethod('facebook');
+    setShowFeedback(true);
   };
 
-  // Web Share API (للأجهزة المحمولة)
+  // Req 10: Telegram with UTM params
+  const handleTelegram = () => {
+    shareViaTelegram(resolvedContent, resolvedContentType);
+    setLastShareMethod('telegram');
+    setShowFeedback(true);
+  };
+
+  // Req 11: Email with UTM params + call-to-action
+  const handleEmail = () => {
+    shareViaEmail(resolvedContent, resolvedContentType);
+    setLastShareMethod('email');
+    setShowFeedback(true);
+  };
+
+  // Req 5: Internal chat share
+  const handleChat = () => {
+    setShowContactSelector(true);
+  };
+
   const handleNativeShare = async () => {
+    // This is called directly from a button click — safe for iOS Safari user gesture requirement
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: jobTitle,
-          text: shareText,
-          url: jobUrl
-        });
+        await navigator.share(shareData);
+        const id = resolvedContent?._id || resolvedContent?.id;
+        if (id) trackShare(id, 'native', resolvedContentType);
         onClose();
       } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.error('Share failed:', err);
-        }
+        if (err.name !== 'AbortError') console.error('Share failed:', err);
       }
     }
   };
 
   return (
     <>
-      {/* Overlay */}
       <div className="share-modal-overlay" onClick={onClose} />
-      
-      {/* Modal */}
-      <div className="share-modal">
-        {/* Header */}
-        <div className="share-modal-header">
-          <h3 className="share-modal-title">
-            <FaShare className="share-modal-icon" />
-            مشاركة الوظيفة
-          </h3>
-          <button 
-            className="share-modal-close"
-            onClick={onClose}
-            aria-label="إغلاق"
-          >
-            <FaTimes />
-          </button>
-        </div>
+      <div
+        className="share-modal"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        role="dialog"
+        aria-modal="true"
+        aria-label={t.title}
+      >
+        {showFeedback ? (
+          <ShareFeedbackWidget
+            contentType={resolvedContentType}
+            contentId={resolvedContent?._id || resolvedContent?.id}
+            shareMethod={lastShareMethod}
+            onClose={onClose}
+            token={token}
+          />
+        ) : showContactSelector ? (
+          <ContactSelector
+            content={resolvedContent}
+            contentType={resolvedContentType}
+            onClose={() => setShowContactSelector(false)}
+            onSent={onClose}
+          />
+        ) : (
+          <>
+            {/* Header */}
+            <div className="share-modal-header">
+              <h3 className="share-modal-title">
+                <FaShare className="share-modal-icon" />
+                {t.title}
+              </h3>
+              <button className="share-modal-close" onClick={onClose} aria-label="إغلاق">
+                <FaTimes />
+              </button>
+            </div>
 
-        {/* Job Info */}
-        <div className="share-modal-job-info">
-          <h4 className="share-modal-job-title">{jobTitle}</h4>
-          <p className="share-modal-job-company">{companyName}</p>
-        </div>
+            {/* Content Info */}
+            <div className="share-modal-content-info">
+              <h4 className="share-modal-content-title">{contentTitle}</h4>
+            </div>
 
-        {/* Share Options */}
-        <div className="share-modal-options">
-          {/* نسخ الرابط */}
-          <button
-            className="share-option share-option-copy"
-            onClick={handleCopyLink}
-            disabled={copied}
-          >
-            <FaLink className="share-option-icon" />
-            <span className="share-option-text">
-              {copied ? 'تم النسخ!' : 'نسخ الرابط'}
-            </span>
-          </button>
+            {/* Share Options Grid */}
+            <div className="share-modal-options">
+              <button
+                className="share-option share-option-copy"
+                onClick={handleCopyLink}
+                disabled={copied}
+              >
+                <FaLink className="share-option-icon" />
+                <span className="share-option-text">{copied ? t.copied : t.copyLink}</span>
+              </button>
 
-          {/* WhatsApp */}
-          <button
-            className="share-option share-option-whatsapp"
-            onClick={handleWhatsAppShare}
-          >
-            <FaWhatsapp className="share-option-icon" />
-            <span className="share-option-text">WhatsApp</span>
-          </button>
+              <button className="share-option share-option-whatsapp" onClick={handleWhatsApp}>
+                <FaWhatsapp className="share-option-icon" />
+                <span className="share-option-text">{t.whatsapp}</span>
+              </button>
 
-          {/* LinkedIn */}
-          <button
-            className="share-option share-option-linkedin"
-            onClick={handleLinkedInShare}
-          >
-            <FaLinkedin className="share-option-icon" />
-            <span className="share-option-text">LinkedIn</span>
-          </button>
+              <button className="share-option share-option-linkedin" onClick={handleLinkedIn}>
+                <FaLinkedin className="share-option-icon" />
+                <span className="share-option-text">{t.linkedin}</span>
+              </button>
 
-          {/* Twitter */}
-          <button
-            className="share-option share-option-twitter"
-            onClick={handleTwitterShare}
-          >
-            <FaTwitter className="share-option-icon" />
-            <span className="share-option-text">Twitter</span>
-          </button>
+              <button className="share-option share-option-twitter" onClick={handleTwitter}>
+                <FaTwitter className="share-option-icon" />
+                <span className="share-option-text">{t.twitter}</span>
+              </button>
 
-          {/* Facebook */}
-          <button
-            className="share-option share-option-facebook"
-            onClick={handleFacebookShare}
-          >
-            <FaFacebook className="share-option-icon" />
-            <span className="share-option-text">Facebook</span>
-          </button>
-        </div>
+              <button className="share-option share-option-facebook" onClick={handleFacebook}>
+                <FaFacebook className="share-option-icon" />
+                <span className="share-option-text">{t.facebook}</span>
+              </button>
 
-        {/* Native Share (للموبايل) */}
-        {navigator.share && (
-          <button
-            className="share-modal-native"
-            onClick={handleNativeShare}
-          >
-            <FaShare />
-            <span>المزيد من الخيارات</span>
-          </button>
-        )}
+              <button className="share-option share-option-telegram" onClick={handleTelegram}>
+                <FaTelegram className="share-option-icon" />
+                <span className="share-option-text">{t.telegram}</span>
+              </button>
 
-        {/* رسالة النجاح */}
-        {copied && (
-          <div className="share-modal-success">
-            ✓ تم نسخ الرابط بنجاح
-          </div>
+              <button className="share-option share-option-email" onClick={handleEmail}>
+                <FaEnvelope className="share-option-icon" />
+                <span className="share-option-text">{t.email}</span>
+              </button>
+
+              <button className="share-option share-option-chat" onClick={handleChat}>
+                <FaCommentDots className="share-option-icon" />
+                <span className="share-option-text">{t.chat}</span>
+              </button>
+            </div>
+
+            {/* Native Share */}
+            {navigator.share && (
+              <button className="share-modal-native" onClick={handleNativeShare}>
+                <FaShare />
+                <span>{t.more}</span>
+              </button>
+            )}
+
+            {/* Success Message */}
+            {copied && (
+              <div className="share-modal-success">✓ {t.success}</div>
+            )}
+
+            {/* Req 12.5: Clipboard fallback - show link for manual copy */}
+            {copyFallbackUrl && (
+              <div className="share-modal-copy-fallback">
+                <p className="share-modal-copy-fallback-label">{t.copyFailed}</p>
+                <input
+                  className="share-modal-copy-fallback-input"
+                  type="text"
+                  readOnly
+                  value={copyFallbackUrl}
+                  onFocus={(e) => e.target.select()}
+                  dir="ltr"
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
     </>

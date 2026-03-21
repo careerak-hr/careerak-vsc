@@ -1,0 +1,118 @@
+/* ===========================
+   RedemptionCard Styles
+   Colors: #304B60 (navy), #E3DAD1 (beige), #D48161 (copper)
+   =========================== */
+
+.rdc-card {
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  transition: box-shadow 0.25s, transform 0.25s, border-color 0.25s;
+  position: relative;
+}
+
+.rdc-card:not(.rdc-card--disabled):hover {
+  box-shadow: 0 6px 24px rgba(212, 129, 97, 0.18);
+  transform: translateY(-3px);
+  border-color: #D48161;
+}
+
+.rdc-card--disabled {
+  opacity: 0.65;
+  background: #F9F6F3;
+}
+
+/* Icon */
+.rdc-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+/* Content */
+.rdc-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rdc-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.rdc-description {
+  font-size: 0.85rem;
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Cost */
+.rdc-cost {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  background: #304B60;
+  color: #E3DAD1;
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+}
+
+.rdc-cost-number {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.rdc-cost-unit {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+/* Insufficient */
+.rdc-insufficient {
+  font-size: 0.8rem;
+  color: #991B1B;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Button */
+.rdc-btn {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  background: #D48161;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  min-height: 44px;
+}
+
+.rdc-btn:hover:not(:disabled) {
+  background: #C47050;
+  transform: translateY(-1px);
+}
+
+.rdc-btn:disabled {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* RTL */
+[dir="rtl"] .rdc-cost {
+  flex-direction: row-reverse;
+}

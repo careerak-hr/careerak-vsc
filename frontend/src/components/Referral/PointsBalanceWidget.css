@@ -1,0 +1,188 @@
+/* PointsBalanceWidget - رصيد النقاط في الملف الشخصي */
+
+.pbw-container {
+  background: linear-gradient(135deg, #304B60 0%, #3d6080 100%);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(48, 75, 96, 0.25);
+  transition: box-shadow 0.2s ease;
+}
+
+.pbw-container:hover {
+  box-shadow: 0 6px 24px rgba(48, 75, 96, 0.35);
+}
+
+/* Header */
+.pbw-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+[dir='rtl'] .pbw-header {
+  flex-direction: row-reverse;
+}
+
+.pbw-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.pbw-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #E3DAD1;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Balance */
+.pbw-balance-display {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+[dir='rtl'] .pbw-balance-display {
+  flex-direction: row-reverse;
+}
+
+.pbw-balance-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.pbw-balance-unit {
+  font-size: 1rem;
+  color: #D48161;
+  font-weight: 600;
+}
+
+/* Hint */
+.pbw-hint {
+  font-size: 0.8rem;
+  color: rgba(227, 218, 209, 0.75);
+  margin: 0 0 1rem;
+}
+
+/* Actions */
+.pbw-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+[dir='rtl'] .pbw-actions {
+  flex-direction: row-reverse;
+}
+
+.pbw-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pbw-btn:hover {
+  opacity: 0.9;
+}
+
+.pbw-btn:active {
+  transform: scale(0.97);
+}
+
+.pbw-btn--primary {
+  background: #D48161;
+  color: #fff;
+}
+
+.pbw-btn--secondary {
+  background: rgba(255, 255, 255, 0.15);
+  color: #E3DAD1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Loading state */
+.pbw-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+}
+
+.pbw-skeleton {
+  width: 100%;
+  height: 3rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  animation: pbw-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pbw-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.pbw-loading-text {
+  font-size: 0.85rem;
+  color: rgba(227, 218, 209, 0.75);
+  margin: 0;
+}
+
+/* Error state */
+.pbw-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.pbw-error-msg {
+  font-size: 0.85rem;
+  color: rgba(227, 218, 209, 0.85);
+  margin: 0;
+}
+
+.pbw-retry-btn {
+  padding: 0.4rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #E3DAD1;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.pbw-retry-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 639px) {
+  .pbw-balance-number {
+    font-size: 2rem;
+  }
+
+  .pbw-btn {
+    font-size: 0.75rem;
+    padding: 0.45rem 0.6rem;
+  }
+}

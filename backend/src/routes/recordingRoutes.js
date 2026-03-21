@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const recordingController = require('../controllers/recordingController');
-const { authenticate } = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
 const multer = require('multer');
 
 // إعداد multer للرفع
@@ -28,24 +28,24 @@ const upload = multer({
  */
 
 // بدء تسجيل
-router.post('/start', authenticate, recordingController.startRecording);
+router.post('/start', protect, recordingController.startRecording);
 
 // إيقاف تسجيل
-router.post('/stop', authenticate, recordingController.stopRecording);
+router.post('/stop', protect, recordingController.stopRecording);
 
 // رفع تسجيل
-router.post('/upload', authenticate, upload.single('recording'), recordingController.uploadRecording);
+router.post('/upload', protect, upload.single('recording'), recordingController.uploadRecording);
 
 // الحصول على التسجيلات التي ستنتهي قريباً (يجب أن يكون قبل /:recordingId)
-router.get('/expiring-soon', authenticate, recordingController.getExpiringSoonRecordings);
+router.get('/expiring-soon', protect, recordingController.getExpiringSoonRecordings);
 
 // الحصول على معلومات تسجيل
-router.get('/:recordingId', authenticate, recordingController.getRecording);
+router.get('/:recordingId', protect, recordingController.getRecording);
 
 // تحميل تسجيل
-router.get('/:recordingId/download', authenticate, recordingController.downloadRecording);
+router.get('/:recordingId/download', protect, recordingController.downloadRecording);
 
 // حذف تسجيل
-router.delete('/:recordingId', authenticate, recordingController.deleteRecording);
+router.delete('/:recordingId', protect, recordingController.deleteRecording);
 
 module.exports = router;

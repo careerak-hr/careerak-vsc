@@ -1,6 +1,7 @@
 const Appointment = require('../models/Appointment');
 const VideoInterview = require('../models/VideoInterview');
 const notificationService = require('./notificationService');
+const { sendAppointmentReminderEmail } = require('./emailService');
 const logger = require('../utils/logger');
 
 /**
@@ -46,7 +47,7 @@ async function send24HourReminders() {
         
         const meetingLink = appointment.videoInterviewId 
           ? `${process.env.FRONTEND_URL}/video-interview/${appointment.videoInterviewId.roomId}`
-          : appointment.meetingLink;
+          : appointment.meetLink || appointment.googleMeetLink || appointment.meetingLink;
         
         // إرسال تذكير للمنظم
         await notificationService.createNotification({
@@ -58,6 +59,7 @@ async function send24HourReminders() {
             appointment: appointment._id,
             videoInterview: appointment.videoInterviewId?._id,
             meetingLink,
+            meetLink: appointment.meetLink || null,
             scheduledAt: appointment.scheduledAt
           },
           priority: 'high',
@@ -75,6 +77,7 @@ async function send24HourReminders() {
                 appointment: appointment._id,
                 videoInterview: appointment.videoInterviewId?._id,
                 meetingLink,
+                meetLink: appointment.meetLink || null,
                 scheduledAt: appointment.scheduledAt,
                 organizer: {
                   name: appointment.organizerId.companyName || 
@@ -99,6 +102,7 @@ async function send24HourReminders() {
             appointmentTitle: appointment.title,
             scheduledAt: appointment.scheduledAt,
             meetingLink,
+            meetLink: appointment.meetLink || null,
             timestamp: new Date().toISOString()
           });
           
@@ -115,6 +119,7 @@ async function send24HourReminders() {
                   appointmentTitle: appointment.title,
                   scheduledAt: appointment.scheduledAt,
                   meetingLink,
+                  meetLink: appointment.meetLink || null,
                   organizerName: appointment.organizerId.companyName || 
                                `${appointment.organizerId.firstName} ${appointment.organizerId.lastName}`,
                   timestamp: new Date().toISOString()
@@ -122,6 +127,19 @@ async function send24HourReminders() {
               )
           );
         }
+
+        // إرسال بريد إلكتروني تذكير - Requirements: 3.4 (دعم البريد الإلكتروني)
+        const emailRecipients = [
+          appointment.organizerId,
+          ...appointment.participants
+            .filter(p => p.status === 'accepted' || p.status === 'pending')
+            .map(p => p.userId),
+        ];
+        await Promise.allSettled(
+          emailRecipients
+            .filter(u => u?.email)
+            .map(u => sendAppointmentReminderEmail(appointment, u, '24h'))
+        );
 
         // تسجيل إرسال التذكير
         await appointment.markReminderSent('24h');
@@ -176,7 +194,7 @@ async function send15MinuteReminders() {
         
         const meetingLink = appointment.videoInterviewId 
           ? `${process.env.FRONTEND_URL}/video-interview/${appointment.videoInterviewId.roomId}`
-          : appointment.meetingLink;
+          : appointment.meetLink || appointment.googleMeetLink || appointment.meetingLink;
         
         // إرسال تذكير للمنظم
         await notificationService.createNotification({
@@ -188,6 +206,7 @@ async function send15MinuteReminders() {
             appointment: appointment._id,
             videoInterview: appointment.videoInterviewId?._id,
             meetingLink,
+            meetLink: appointment.meetLink || null,
             scheduledAt: appointment.scheduledAt,
             canJoinNow: true
           },
@@ -206,6 +225,7 @@ async function send15MinuteReminders() {
                 appointment: appointment._id,
                 videoInterview: appointment.videoInterviewId?._id,
                 meetingLink,
+                meetLink: appointment.meetLink || null,
                 scheduledAt: appointment.scheduledAt,
                 canJoinNow: true,
                 organizer: {
@@ -231,6 +251,7 @@ async function send15MinuteReminders() {
             appointmentTitle: appointment.title,
             scheduledAt: appointment.scheduledAt,
             meetingLink,
+            meetLink: appointment.meetLink || null,
             canJoinNow: true,
             timestamp: new Date().toISOString()
           });
@@ -248,6 +269,7 @@ async function send15MinuteReminders() {
                   appointmentTitle: appointment.title,
                   scheduledAt: appointment.scheduledAt,
                   meetingLink,
+                  meetLink: appointment.meetLink || null,
                   canJoinNow: true,
                   organizerName: appointment.organizerId.companyName || 
                                `${appointment.organizerId.firstName} ${appointment.organizerId.lastName}`,
@@ -256,6 +278,19 @@ async function send15MinuteReminders() {
               )
           );
         }
+
+        // إرسال بريد إلكتروني تذكير - Requirements: 3.4 (دعم البريد الإلكتروني)
+        const emailRecipients15m = [
+          appointment.organizerId,
+          ...appointment.participants
+            .filter(p => p.status === 'accepted' || p.status === 'pending')
+            .map(p => p.userId),
+        ];
+        await Promise.allSettled(
+          emailRecipients15m
+            .filter(u => u?.email)
+            .map(u => sendAppointmentReminderEmail(appointment, u, '1h'))
+        );
 
         // تسجيل إرسال التذكير
         await appointment.markReminderSent('15m');

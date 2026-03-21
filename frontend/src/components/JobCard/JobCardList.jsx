@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Briefcase, DollarSign, Clock, Users, TrendingUp } from 'lucide-react';
 import BookmarkButton from './BookmarkButton';
-import ShareButton from '../JobShare/ShareButton';
+import ShareButton from '../ShareButton/ShareButton';
 import './JobCard.css';
 
 /**
@@ -182,9 +182,9 @@ const JobCardList = ({
 
           <ShareButton
             job={job}
+            contentType="job"
             size="medium"
-            variant="icon"
-            onShare={onShare}
+            variant="icon-only"
           />
         </div>
       </div>

@@ -49,10 +49,12 @@ exports.getCertificateById = async (req, res) => {
 exports.getUserCertificates = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { status, limit, skip } = req.query;
+    const { status, year, type, limit, skip } = req.query;
 
     const filters = {
       status,
+      year: year ? parseInt(year) : undefined,
+      type,
       limit: limit ? parseInt(limit) : undefined,
       skip: skip ? parseInt(skip) : undefined
     };
@@ -93,15 +95,27 @@ exports.revokeCertificate = async (req, res) => {
     const { reason } = req.body;
     const revokedBy = req.user._id;
 
+    if (!reason || reason.trim() === '') {
+      return res.status(400).json({
+        success: false,
+        message: 'Reason for revocation is required',
+        messageAr: 'سبب الإلغاء مطلوب'
+      });
+    }
+
     const result = await certificateService.revokeCertificate(certificateId, revokedBy, reason);
 
     res.status(200).json(result);
   } catch (error) {
     console.error('Error in revokeCertificate controller:', error);
-    res.status(500).json({
+
+    const isAuthError = error.message.includes('Unauthorized') || error.message.includes('غير مصرح');
+    res.status(isAuthError ? 403 : 500).json({
       success: false,
       message: error.message,
-      messageAr: 'حدث خطأ أثناء إلغاء الشهادة'
+      messageAr: isAuthError
+        ? 'غير مصرح لك بإلغاء هذه الشهادة'
+        : 'حدث خطأ أثناء إلغاء الشهادة'
     });
   }
 };
@@ -117,10 +131,14 @@ exports.reissueCertificate = async (req, res) => {
     res.status(201).json(result);
   } catch (error) {
     console.error('Error in reissueCertificate controller:', error);
-    res.status(500).json({
+
+    const isAuthError = error.message.includes('Unauthorized') || error.message.includes('غير مصرح');
+    res.status(isAuthError ? 403 : 500).json({
       success: false,
       message: error.message,
-      messageAr: 'حدث خطأ أثناء إعادة إصدار الشهادة'
+      messageAr: isAuthError
+        ? 'غير مصرح لك بإعادة إصدار هذه الشهادة'
+        : 'حدث خطأ أثناء إعادة إصدار الشهادة'
     });
   }
 };
@@ -192,6 +210,37 @@ exports.downloadCertificate = async (req, res) => {
       success: false,
       message: error.message,
       messageAr: 'حدث خطأ أثناء تحميل الشهادة'
+    });
+  }
+};
+
+exports.updateCertificateVisibility = async (req, res) => {
+  try {
+    const { certificateId } = req.params;
+    const { isHidden } = req.body;
+    const userId = req.user._id;
+
+    if (typeof isHidden !== 'boolean') {
+      return res.status(400).json({
+        success: false,
+        message: 'isHidden must be a boolean',
+        messageAr: 'يجب أن تكون قيمة isHidden منطقية (true/false)'
+      });
+    }
+
+    const result = await certificateService.updateCertificateVisibility(
+      certificateId,
+      userId,
+      isHidden
+    );
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error in updateCertificateVisibility controller:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      messageAr: 'حدث خطأ أثناء تحديث رؤية الشهادة'
     });
   }
 };

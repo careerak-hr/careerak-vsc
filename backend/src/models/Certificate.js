@@ -80,6 +80,12 @@ const certificateSchema = new mongoose.Schema({
     default: null
   },
   
+  // هل الشهادة مخفية في الملف الشخصي
+  isHidden: {
+    type: Boolean,
+    default: false
+  },
+  
   // قالب الشهادة المستخدم
   template: {
     type: mongoose.Schema.Types.ObjectId,
@@ -112,7 +118,30 @@ const certificateSchema = new mongoose.Schema({
       ref: 'User'
     },
     reason: String
-  }
+  },
+
+  // سجل العمليات (Audit Log)
+  auditLog: [
+    {
+      action: {
+        type: String,
+        enum: ['issued', 'revoked', 'reissued', 'viewed', 'downloaded', 'shared'],
+        required: true
+      },
+      performedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      performedAt: {
+        type: Date,
+        default: Date.now
+      },
+      details: {
+        type: String,
+        default: ''
+      }
+    }
+  ]
 }, {
   timestamps: true
 });
@@ -177,6 +206,24 @@ certificateSchema.methods.revoke = function(userId, reason) {
 certificateSchema.methods.markAsShared = function() {
   this.linkedInShared = true;
   this.linkedInSharedAt = new Date();
+};
+
+/**
+ * Add an entry to the audit log
+ * @param {String} action - Action performed
+ * @param {ObjectId} performedBy - User who performed the action
+ * @param {String} details - Additional details
+ */
+certificateSchema.methods.addAuditEntry = function(action, performedBy, details = '') {
+  if (!this.auditLog) {
+    this.auditLog = [];
+  }
+  this.auditLog.push({
+    action,
+    performedBy,
+    performedAt: new Date(),
+    details
+  });
 };
 
 /**
@@ -266,7 +313,7 @@ certificateSchema.statics.getCourseCertificates = function(courseId, options = {
  * @returns {Object} Count by status
  */
 certificateSchema.statics.countByStatus = async function(userId) {
-  const match = userId ? { userId: mongoose.Types.ObjectId(userId) } : {};
+  const match = userId ? { userId: new mongoose.Types.ObjectId(userId) } : {};
   
   const result = await this.aggregate([
     { $match: match },

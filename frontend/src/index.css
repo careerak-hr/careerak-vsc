@@ -11,6 +11,9 @@
 @import './styles/buttonAnimations.css'; /* Import button hover animations (Task 4.5.1) */
 @import './styles/hoverEffects.css'; /* Import hover effects for all interactive elements (Task 4.5.1, FR-ANIM-4) */
 @import './styles/contrastFixes.css'; /* Import WCAG AA contrast fixes (Task 5.5.3) */
+@import './styles/certificatesResponsive.css'; /* Responsive design for certificates & achievements system */
+@import './styles/referralRewardsResponsive.css'; /* Responsive design for referral & rewards system */
+@import './styles/appointmentsResponsive.css'; /* Responsive design for booking & appointments system */
 
 @tailwind base;
 @tailwind components;

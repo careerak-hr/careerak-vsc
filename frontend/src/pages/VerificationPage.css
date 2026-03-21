@@ -1,0 +1,504 @@
+/* صفحة التحقق من الشهادات */
+.verification-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E3DAD1 0%, #F5F1ED 100%);
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.verification-container {
+  max-width: 800px;
+  width: 100%;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(48, 75, 96, 0.15);
+  overflow: hidden;
+}
+
+/* Loading State */
+.verification-container .loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #304B60;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 3rem auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.verification-container p {
+  text-align: center;
+  color: #304B60;
+  font-size: 1.1rem;
+  margin-bottom: 3rem;
+}
+
+/* Error State */
+.verification-container.error {
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.verification-container.error h1 {
+  color: #DC2626;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.verification-container.error p {
+  color: #6B7280;
+  margin-bottom: 2rem;
+}
+
+/* Header */
+.verification-header {
+  padding: 3rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #304B60 0%, #3D5A73 100%);
+  color: white;
+}
+
+.verification-header.valid {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+}
+
+.verification-header.invalid {
+  background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+}
+
+.status-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.verification-header h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.certificate-id {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-family: 'Courier New', monospace;
+}
+
+/* Certificate Details */
+.certificate-details {
+  padding: 2rem;
+}
+
+.detail-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #E3DAD1;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section h2 {
+  color: #304B60;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.detail-section h3 {
+  color: #304B60;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Holder Info */
+.holder-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.holder-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #D48161;
+}
+
+.holder-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.25rem;
+}
+
+.holder-email {
+  color: #6B7280;
+  font-size: 0.95rem;
+}
+
+/* Course Info */
+.course-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #304B60;
+  margin-bottom: 0.75rem;
+}
+
+.course-meta {
+  color: #6B7280;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.course-meta span {
+  font-weight: 600;
+  color: #304B60;
+}
+
+/* Dates Grid */
+.dates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.dates-grid > div {
+  background: #F9FAFB;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 2px solid #E3DAD1;
+}
+
+.dates-grid p {
+  color: #304B60;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+/* URL Container */
+.url-container {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.url-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem 1rem;
+  border: 2px solid #D4816180;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-family: 'Courier New', monospace;
+  background: #F9FAFB;
+  color: #304B60;
+}
+
+.url-input:focus {
+  outline: none;
+  border-color: #D48161;
+}
+
+.btn-copy {
+  padding: 0.75rem 1.5rem;
+  background: #D48161;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-copy:hover {
+  background: #C06F51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+/* QR Code Section */
+.qr-section {
+  text-align: center;
+}
+
+.btn-qr {
+  padding: 1rem 2rem;
+  background: #304B60;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.btn-qr:hover {
+  background: #3D5A73;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(48, 75, 96, 0.3);
+}
+
+.qr-code-container {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: #F9FAFB;
+  border-radius: 15px;
+  border: 3px solid #304B60;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.qr-instruction {
+  color: #304B60;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.qr-code-image {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.btn-download-qr {
+  padding: 0.75rem 2rem;
+  background: #D48161;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-download-qr:hover {
+  background: #C06F51;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 129, 97, 0.3);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #10B981;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+}
+
+.btn-secondary {
+  background: #E3DAD1;
+  color: #304B60;
+}
+
+.btn-secondary:hover {
+  background: #D4C5B5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(48, 75, 96, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .verification-page {
+    padding: 1rem 0.5rem;
+  }
+
+  .verification-header {
+    padding: 2rem 1rem;
+  }
+
+  .verification-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .certificate-details {
+    padding: 1.5rem 1rem;
+  }
+
+  .holder-info {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .dates-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .url-container {
+    flex-direction: column;
+  }
+
+  .url-input {
+    min-width: 100%;
+  }
+
+  .btn-copy {
+    width: 100%;
+  }
+
+  .btn-qr {
+    width: 100%;
+    max-width: none;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .holder-info {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .dates-grid p {
+  text-align: right;
+}
+
+[dir="rtl"] .url-container {
+  flex-direction: row-reverse;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .verification-page {
+    background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
+  }
+
+  .verification-container {
+    background: #1F2937;
+  }
+
+  .detail-section {
+    border-bottom-color: #374151;
+  }
+
+  .detail-section h2,
+  .detail-section h3,
+  .holder-name,
+  .course-name,
+  .course-meta span {
+    color: #E3DAD1;
+  }
+
+  .holder-email,
+  .course-meta {
+    color: #9CA3AF;
+  }
+
+  .dates-grid > div {
+    background: #374151;
+    border-color: #4B5563;
+  }
+
+  .dates-grid p {
+    color: #E3DAD1;
+  }
+
+  .url-input {
+    background: #374151;
+    border-color: #4B5563;
+    color: #E3DAD1;
+  }
+
+  .qr-code-container {
+    background: #374151;
+    border-color: #4B5563;
+  }
+
+  .qr-instruction {
+    color: #E3DAD1;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .verification-page {
+    background: white;
+  }
+
+  .btn-qr,
+  .btn-copy,
+  .btn-download-qr,
+  .actions {
+    display: none;
+  }
+
+  .qr-code-container {
+    display: block !important;
+  }
+}

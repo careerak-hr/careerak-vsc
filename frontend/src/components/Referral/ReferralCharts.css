@@ -1,0 +1,156 @@
+.referral-charts {
+  padding: 1.5rem;
+  font-family: 'Amiri', serif;
+}
+
+.referral-charts.ltr {
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.referral-charts-title {
+  font-size: 1.5rem;
+  color: #304B60;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+/* Summary cards */
+.referral-charts-summary {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.chart-stat-card {
+  flex: 1;
+  min-width: 120px;
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.chart-stat-card.accent {
+  background: #304B60;
+  border-color: #304B60;
+}
+
+.chart-stat-card.accent .chart-stat-value,
+.chart-stat-card.accent .chart-stat-label {
+  color: #E3DAD1;
+}
+
+.chart-stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #304B60;
+  line-height: 1;
+}
+
+.chart-stat-label {
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+}
+
+/* Charts grid */
+.referral-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.chart-card-title {
+  font-size: 1rem;
+  color: #304B60;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.chart-wrapper {
+  height: 260px;
+  position: relative;
+}
+
+.chart-wrapper--doughnut {
+  height: 280px;
+}
+
+/* States */
+.referral-charts-loading,
+.referral-charts-empty {
+  text-align: center;
+  padding: 3rem;
+  color: #888;
+  font-size: 1rem;
+}
+
+.referral-charts-error {
+  text-align: center;
+  padding: 2rem;
+  color: #c0392b;
+}
+
+.referral-charts-error button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  background: #304B60;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.referral-charts-error button:hover {
+  background: #253d50;
+}
+
+/* Responsive */
+@media (max-width: 639px) {
+  .referral-charts {
+    padding: 1rem;
+  }
+
+  .referral-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-stat-card {
+    min-width: 90px;
+    padding: 0.75rem;
+  }
+
+  .chart-stat-value {
+    font-size: 1.5rem;
+  }
+
+  .chart-wrapper {
+    height: 220px;
+  }
+}
+
+/* ---- RTL Support ---- */
+[dir="rtl"] .referral-charts-summary {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .referral-charts-title {
+  text-align: right;
+}
+
+[dir="rtl"] .chart-card-title {
+  text-align: right;
+}

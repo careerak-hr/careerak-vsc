@@ -15,6 +15,21 @@ const appointmentSchema = new mongoose.Schema({
     required: true,
   },
 
+  // نوع المقابلة (للتمييز بين الحضوري والافتراضي والهاتفي)
+  // Validates: Requirements 5 - دعم إضافة رابط Meet للمقابلات الافتراضية
+  interviewType: {
+    type: String,
+    enum: ['in-person', 'virtual', 'phone', null],
+    default: null,
+  },
+
+  // رابط Google Meet (للمقابلات الافتراضية)
+  // يُولَّد تلقائياً من Google Calendar API عند إنشاء حدث للمقابلات الافتراضية
+  meetLink: {
+    type: String,
+    default: null,
+  },
+
   // العنوان
   title: {
     type: String,
@@ -154,10 +169,86 @@ const appointmentSchema = new mongoose.Schema({
     default: null,
   },
 
+  // سجل التعديلات (reschedule history)
+  rescheduleHistory: [{
+    oldDateTime: {
+      type: Date,
+      required: true,
+    },
+    newDateTime: {
+      type: Date,
+      required: true,
+    },
+    rescheduledBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    reason: {
+      type: String,
+      default: '',
+    },
+    rescheduledAt: {
+      type: Date,
+      default: Date.now,
+    },
+  }],
+
   // ملاحظات
   notes: {
     type: String,
     default: '',
+  },
+
+  // مستندات الباحث (CV محدث، Portfolio)
+  // Validates: Requirements 7 - رفع مستندات (CV محدث، Portfolio)
+  documents: [{
+    name: { type: String, required: true },
+    url: { type: String, required: true },
+    publicId: { type: String, required: true },
+    type: { type: String, enum: ['cv', 'portfolio', 'other'], default: 'other' },
+    uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    uploadedAt: { type: Date, default: Date.now },
+  }],
+
+  // معرف الحدث في Google Calendar (للمزامنة الثنائية)
+  googleEventId: {
+    type: String,
+    default: null,
+    index: true,
+  },
+
+  // رابط الحدث في Google Calendar
+  googleEventLink: {
+    type: String,
+    default: null,
+  },
+
+  // رابط Google Meet (للمقابلات الافتراضية)
+  googleMeetLink: {
+    type: String,
+    default: null,
+  },
+
+  // حالة الحضور - لتسجيل حضور المقابلة بعد انتهائها
+  // Validates: KPI "معدل الحضور > 85%"
+  attendanceStatus: {
+    type: String,
+    enum: ['attended', 'no_show', 'cancelled', null],
+    default: null,
+  },
+
+  // تاريخ تحديث حالة الحضور
+  attendanceUpdatedAt: {
+    type: Date,
+    default: null,
+  },
+
+  // من قام بتحديث حالة الحضور
+  attendanceUpdatedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
   },
 
 }, {

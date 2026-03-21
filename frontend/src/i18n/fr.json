@@ -271,5 +271,25 @@
   "takePhoto": "Prendre une photo",
   "cropTitle": "Rogner l'image",
   "preview": "Aperçu :",
-  "aiAnalyzing": "Analyse IA..."
+  "aiAnalyzing": "Analyse IA...",
+  "share": {
+    "button": "Partager",
+    "title": "Partager",
+    "copyLink": "Copier le lien",
+    "copied": "Copié !",
+    "whatsapp": "WhatsApp",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter",
+    "facebook": "Facebook",
+    "telegram": "Telegram",
+    "email": "E-mail",
+    "chat": "Partager via Chat",
+    "more": "Plus d'options",
+    "success": "Lien copié avec succès",
+    "error": "Échec du partage, veuillez réessayer",
+    "job": "Emploi",
+    "course": "Cours",
+    "profile": "Profil",
+    "company": "Entreprise"
+  }
 }

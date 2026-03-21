@@ -6,7 +6,7 @@
 
 const AcceptanceProbabilityService = require('../services/acceptanceProbabilityService');
 const User = require('../models/User');
-const Job = require('../models/Job');
+const JobPosting = require('../models/JobPosting');
 
 const acceptanceProbabilityService = new AcceptanceProbabilityService();
 
@@ -31,7 +31,7 @@ exports.getJobAcceptanceProbability = async (req, res) => {
     }
 
     // جلب بيانات الوظيفة
-    const job = await Job.findById(jobId)
+    const job = await JobPosting.findById(jobId)
       .populate('company', 'name logo');
 
     if (!job) {
@@ -100,7 +100,7 @@ exports.getBulkAcceptanceProbabilities = async (req, res) => {
     }
 
     // جلب بيانات الوظائف
-    const jobs = await Job.find({ _id: { $in: jobIds } })
+    const jobs = await JobPosting.find({ _id: { $in: jobIds } })
       .populate('company', 'name logo');
 
     if (jobs.length === 0) {
@@ -151,13 +151,13 @@ exports.getAllJobsProbabilities = async (req, res) => {
     }
 
     // جلب الوظائف النشطة
-    const jobs = await Job.find({ status: 'active' })
+    const jobs = await JobPosting.find({ status: 'active' })
       .populate('company', 'name logo')
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    const totalJobs = await Job.countDocuments({ status: 'active' });
+    const totalJobs = await JobPosting.countDocuments({ status: 'active' });
 
     // حساب احتمالية القبول لكل وظيفة
     const probabilities = await acceptanceProbabilityService.calculateBulkProbabilities(user, jobs);

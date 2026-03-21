@@ -8,6 +8,7 @@ import './CourseDetailsPage.css';
 import { SEOHead, StructuredData } from '../components/SEO';
 import { Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
+import ShareButton from '../components/ShareButton/ShareButton';
 // import CourseHero from '../components/Courses/CourseHero'; // Component not found
 // import CourseOverview from '../components/Courses/CourseOverview'; // Component not found
 // import CourseCurriculum from '../components/Courses/CourseCurriculum'; // Component not found
@@ -198,7 +199,12 @@ const CourseDetailsPage = () => {
                 <div className="container mx-auto px-4 py-8">
                     {/* Breadcrumb Navigation */}
                     <Breadcrumbs />
-                    
+
+                    {/* Share Button */}
+                    <div className="flex justify-end mb-4">
+                        <ShareButton content={course} contentType="course" variant="outline" size="medium" />
+                    </div>
+
                     {/* Course Hero Section */}
                     <ComponentErrorBoundary componentName="CourseHero">
                         <CourseHero 

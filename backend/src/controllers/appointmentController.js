@@ -1,6 +1,9 @@
 const Appointment = require('../models/Appointment');
+const AppointmentHistory = require('../models/AppointmentHistory');
 const VideoInterview = require('../models/VideoInterview');
 const notificationService = require('../services/notificationService');
+const appointmentService = require('../services/appointmentService');
+const reminderService = require('../services/reminderService');
 const logger = require('../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
@@ -42,6 +45,33 @@ exports.createAppointment = async (req, res) => {
       });
     }
 
+    // منع الحجز المزدوج: التحقق من عدم وجود تعارض في الوقت مع مراعاة maxConcurrent
+    // Validates: Requirements 1.4, 6.1 - No Double Booking
+    const durationMinutes = duration || 60;
+    const endTime = new Date(scheduledDate.getTime() + durationMinutes * 60 * 1000);
+
+    // جلب maxConcurrent من إعدادات الإتاحة للشركة
+    const Availability = require('../models/Availability');
+    const availability = await Availability.findOne({ companyId: organizerId, isActive: true });
+    const maxConcurrent = availability ? availability.maxConcurrent : 1;
+
+    const overlappingCount = await Appointment.countDocuments({
+      organizerId,
+      status: { $in: ['scheduled', 'confirmed', 'in_progress'] },
+      scheduledAt: { $lt: endTime },
+      endsAt: { $gt: scheduledDate },
+    });
+
+    if (overlappingCount >= maxConcurrent) {
+      return res.status(409).json({
+        success: false,
+        message: 'هذا الوقت محجوز بالفعل - الحجز المزدوج غير مسموح',
+        code: 'DOUBLE_BOOKING',
+        overlappingCount,
+        maxConcurrent,
+      });
+    }
+
     // إنشاء الموعد
     const appointment = new Appointment({
       type: type || 'video_interview',
@@ -61,7 +91,13 @@ exports.createAppointment = async (req, res) => {
 
     await appointment.save();
 
+    // إنشاء تذكيرات تلقائية للموعد (non-blocking)
+    reminderService.createRemindersForAppointment(appointment).catch(err => {
+      logger.error('Failed to create reminders for appointment:', { error: err.message, appointmentId: appointment._id });
+    });
+
     // إذا كان نوع الموعد مقابلة فيديو، إنشاء VideoInterview
+    let videoInterview = null;
     if (type === 'video_interview') {
       const roomId = uuidv4();
       
@@ -86,28 +122,66 @@ exports.createAppointment = async (req, res) => {
     }
 
     // إرسال إشعارات للمشاركين
-    const { sendVideoInterviewInvitation } = require('../services/emailService');
+    const { sendVideoInterviewInvitation, sendAppointmentConfirmationEmail } = require('../services/emailService');
     const User = require('../models/User');
     
     // جلب معلومات المشاركين
     const participantUsers = await User.find({ _id: { $in: participants } });
     
+    // تحديد الشركة والباحث (المنظم هو الشركة، المشاركون هم الباحثون)
+    const organizerUser = await User.findById(organizerId);
+    
     for (const participantId of participants) {
       await notificationService.createNotification({
-        userId: participantId,
-        type: 'appointment_scheduled',
-        title: 'موعد جديد',
-        message: `تم جدولة موعد: ${title}`,
-        data: {
-          appointmentId: appointment._id,
+        recipient: participantId,
+        type: 'appointment_confirmed',
+        title: 'تم تأكيد موعد مقابلتك ✅',
+        message: `تم تأكيد موعد مقابلتك: ${title}`,
+        relatedData: {
+          appointment: appointment._id,
           scheduledAt: scheduledDate,
-          type: appointment.type,
+          duration: appointment.duration,
+          meetingLink: appointment.meetingLink || null,
+          location: appointment.location || null,
         },
-        priority: 'high',
+        priority: 'urgent',
       });
     }
 
-    // إرسال بريد إلكتروني للمشاركين
+    // إشعار للمنظم (الشركة) أيضاً
+    await notificationService.createNotification({
+      recipient: organizerId,
+      type: 'appointment_confirmed',
+      title: 'تم تأكيد الموعد ✅',
+      message: `تم تأكيد موعد المقابلة: ${title}`,
+      relatedData: {
+        appointment: appointment._id,
+        scheduledAt: scheduledDate,
+        duration: appointment.duration,
+        meetingLink: appointment.meetingLink || null,
+        location: appointment.location || null,
+      },
+      priority: 'high',
+    });
+
+    // إرسال بريد إلكتروني تأكيد للطرفين
+    try {
+      for (const participantUser of participantUsers) {
+        await sendAppointmentConfirmationEmail(appointment, organizerUser, participantUser);
+      }
+      logger.info('Appointment confirmation emails sent', {
+        appointmentId: appointment._id,
+        participantCount: participantUsers.length
+      });
+    } catch (emailError) {
+      logger.error('Failed to send appointment confirmation emails', {
+        error: emailError.message,
+        appointmentId: appointment._id
+      });
+      // لا نفشل العملية إذا فشل إرسال البريد
+    }
+
+    // إرسال بريد دعوة مقابلة فيديو إضافي إذا كان النوع video_interview
     if (type === 'video_interview') {
       try {
         await sendVideoInterviewInvitation(appointment, videoInterview, participantUsers);
@@ -124,16 +198,40 @@ exports.createAppointment = async (req, res) => {
       }
     }
 
+    // إنشاء حدث Google Calendar (non-blocking)
+    try {
+      const googleCalendarService = require('../services/googleCalendarService');
+      googleCalendarService.createEventForAppointment(appointment, organizerId).catch(err => {
+        logger.warn('Google Calendar createEventForAppointment failed (non-blocking):', { error: err.message, appointmentId: appointment._id });
+      });
+    } catch (gcErr) {
+      logger.warn('Google Calendar service unavailable:', gcErr.message);
+    }
+
+    // إرجاع تفاصيل الموعد الكاملة
+    const populatedAppointment = await Appointment.findById(appointment._id)
+      .populate('organizerId', 'firstName lastName companyName email profilePicture')
+      .populate('participants.userId', 'firstName lastName email profilePicture');
+
     res.status(201).json({
       success: true,
-      message: 'تم جدولة الموعد بنجاح',
+      message: 'تم جدولة الموعد بنجاح وإرسال التأكيد للطرفين',
       appointment: {
-        id: appointment._id,
-        title: appointment.title,
-        scheduledAt: appointment.scheduledAt,
-        duration: appointment.duration,
-        meetingLink: appointment.meetingLink,
-        status: appointment.status,
+        id: populatedAppointment._id,
+        title: populatedAppointment.title,
+        description: populatedAppointment.description,
+        type: populatedAppointment.type,
+        status: populatedAppointment.status,
+        scheduledAt: populatedAppointment.scheduledAt,
+        endsAt: populatedAppointment.endsAt,
+        duration: populatedAppointment.duration,
+        meetingLink: populatedAppointment.meetingLink,
+        location: populatedAppointment.location,
+        notes: populatedAppointment.notes,
+        organizer: populatedAppointment.organizerId,
+        participants: populatedAppointment.participants,
+        jobApplicationId: populatedAppointment.jobApplicationId,
+        createdAt: populatedAppointment.createdAt,
       },
     });
   } catch (error) {
@@ -158,9 +256,14 @@ exports.getAppointment = async (req, res) => {
     const userId = req.user._id;
 
     const appointment = await Appointment.findById(id)
-      .populate('organizerId', 'name email profilePicture')
-      .populate('participants.userId', 'name email profilePicture')
-      .populate('videoInterviewId');
+      .populate('organizerId', 'firstName lastName companyName email profilePicture')
+      .populate('participants.userId', 'firstName lastName email profilePicture specialization')
+      .populate('videoInterviewId')
+      .populate({
+        path: 'jobApplicationId',
+        select: 'jobTitle jobId',
+        populate: { path: 'jobId', select: 'title company location' },
+      });
 
     if (!appointment) {
       return res.status(404).json({
@@ -199,15 +302,117 @@ exports.getAppointment = async (req, res) => {
 
 /**
  * الحصول على قائمة المواعيد
- * 
+ * يدعم role=company لعرض لوحة تحكم المقابلات للشركات مع pagination وفلترة متقدمة
+ *
  * @route GET /api/appointments
+ * @query role=company - لجلب مقابلات الشركة مع إحصائيات
+ * @query status - فلترة حسب الحالة
+ * @query type - فلترة حسب النوع
+ * @query upcoming - جلب المواعيد القادمة فقط
+ * @query search - بحث في اسم المرشح أو الوظيفة
+ * @query startDate / endDate - فلترة حسب نطاق التاريخ
+ * @query page / limit - pagination
  * @access Private
  */
 exports.getAppointments = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { status, type, upcoming, limit = 20, page = 1 } = req.query;
+    const {
+      role,
+      status,
+      type,
+      upcoming,
+      search,
+      startDate,
+      endDate,
+      limit = 20,
+      page = 1,
+    } = req.query;
 
+    // --- لوحة تحكم الشركة ---
+    if (role === 'company') {
+      // الشركة هي المنظم دائماً
+      const query = { organizerId: userId };
+
+      if (status) query.status = status;
+      if (type) query.type = type;
+
+      // فلترة حسب نطاق التاريخ
+      if (startDate || endDate) {
+        query.scheduledAt = {};
+        if (startDate) query.scheduledAt.$gte = new Date(startDate);
+        if (endDate) {
+          const end = new Date(endDate);
+          end.setHours(23, 59, 59, 999);
+          query.scheduledAt.$lte = end;
+        }
+      }
+
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+
+      let appointmentsQuery = Appointment.find(query)
+        .populate('organizerId', 'firstName lastName companyName email profilePicture')
+        .populate('participants.userId', 'firstName lastName email profilePicture specialization')
+        .populate('jobApplicationId', 'jobTitle')
+        .sort({ scheduledAt: -1 })
+        .limit(parseInt(limit))
+        .skip(skip);
+
+      const [appointments, total] = await Promise.all([
+        appointmentsQuery.exec(),
+        Appointment.countDocuments(query),
+      ]);
+
+      // فلترة بالبحث النصي (اسم المرشح) بعد populate
+      let filtered = appointments;
+      if (search && search.trim()) {
+        const q = search.trim().toLowerCase();
+        filtered = appointments.filter((appt) => {
+          const participantMatch = appt.participants.some((p) => {
+            const u = p.userId;
+            if (!u) return false;
+            const fullName = `${u.firstName || ''} ${u.lastName || ''}`.toLowerCase();
+            return fullName.includes(q) || (u.email || '').toLowerCase().includes(q);
+          });
+          const titleMatch = (appt.title || '').toLowerCase().includes(q);
+          return participantMatch || titleMatch;
+        });
+      }
+
+      // إحصائيات سريعة
+      const [statsTotal, statsUpcoming, statsCompleted, statsCancelled] = await Promise.all([
+        Appointment.countDocuments({ organizerId: userId }),
+        Appointment.countDocuments({
+          organizerId: userId,
+          status: { $in: ['scheduled', 'confirmed'] },
+          scheduledAt: { $gte: new Date() },
+        }),
+        Appointment.countDocuments({ organizerId: userId, status: 'completed' }),
+        Appointment.countDocuments({ organizerId: userId, status: 'cancelled' }),
+      ]);
+
+      return res.json({
+        success: true,
+        appointments: filtered,
+        pagination: {
+          total,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          pages: Math.ceil(total / parseInt(limit)),
+        },
+        stats: {
+          total: statsTotal,
+          upcoming: statsUpcoming,
+          completed: statsCompleted,
+          cancelled: statsCancelled,
+          attendanceRate: statsTotal > 0
+            ? Math.round((statsCompleted / statsTotal) * 100)
+            : 0,
+        },
+      });
+    }
+
+    // --- المسار الافتراضي (للباحثين والمستخدمين العاديين) ---
     const query = {
       $or: [
         { organizerId: userId },
@@ -215,13 +420,8 @@ exports.getAppointments = async (req, res) => {
       ],
     };
 
-    if (status) {
-      query.status = status;
-    }
-
-    if (type) {
-      query.type = type;
-    }
+    if (status) query.status = status;
+    if (type) query.type = type;
 
     if (upcoming === 'true') {
       query.scheduledAt = { $gte: new Date() };
@@ -229,8 +429,8 @@ exports.getAppointments = async (req, res) => {
     }
 
     const appointments = await Appointment.find(query)
-      .populate('organizerId', 'name email profilePicture')
-      .populate('participants.userId', 'name email profilePicture')
+      .populate('organizerId', 'firstName lastName companyName email profilePicture')
+      .populate('participants.userId', 'firstName lastName email profilePicture')
       .sort({ scheduledAt: 1 })
       .limit(parseInt(limit))
       .skip((parseInt(page) - 1) * parseInt(limit));
@@ -334,169 +534,105 @@ exports.respondToAppointment = async (req, res) => {
 
 /**
  * إعادة جدولة موعد
+ * يرفض إعادة الجدولة إذا كان الموعد أقل من 24 ساعة
  * 
- * @route PUT /api/appointments/:id/reschedule
- * @access Private (Organizer only)
+ * @route POST /api/appointments/:id/reschedule
+ * @route PUT  /api/appointments/:id/reschedule
+ * @body { newDateTime: ISO string, reason?: string }
+ * @access Private
  */
 exports.rescheduleAppointment = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user._id;
-    const { scheduledAt, duration, reason } = req.body;
 
-    const appointment = await Appointment.findById(id);
+    // دعم كلا الاسمين: newDateTime (المتطلب الجديد) و scheduledAt (للتوافق مع القديم)
+    const { newDateTime, scheduledAt, reason } = req.body;
+    const targetDateTime = newDateTime || scheduledAt;
 
-    if (!appointment) {
-      return res.status(404).json({
-        success: false,
-        message: 'الموعد غير موجود',
-      });
-    }
-
-    // التحقق من أن المستخدم هو المنظم
-    if (appointment.organizerId.toString() !== userId.toString()) {
-      return res.status(403).json({
-        success: false,
-        message: 'فقط المنظم يمكنه إعادة جدولة الموعد',
-      });
-    }
-
-    // التحقق من صحة التاريخ الجديد
-    const newScheduledDate = new Date(scheduledAt);
-    if (newScheduledDate < new Date()) {
+    if (!targetDateTime) {
       return res.status(400).json({
         success: false,
-        message: 'لا يمكن جدولة موعد في الماضي',
+        message: 'يجب تحديد الوقت الجديد للموعد (newDateTime) | newDateTime is required',
+        code: 'MISSING_NEW_DATE_TIME',
       });
     }
 
-    // إنشاء موعد جديد
-    const newAppointment = new Appointment({
-      type: appointment.type,
-      title: appointment.title,
-      description: appointment.description,
-      organizerId: appointment.organizerId,
-      participants: appointment.participants.map(p => ({
-        userId: p.userId,
-        status: 'pending', // إعادة تعيين الحالة
-      })),
-      scheduledAt: newScheduledDate,
-      duration: duration || appointment.duration,
-      location: appointment.location,
-      jobApplicationId: appointment.jobApplicationId,
-      notes: appointment.notes,
-      previousAppointmentId: appointment._id,
-    });
+    const { appointment, newAppointment } = await appointmentService.rescheduleAppointment(
+      id,
+      userId,
+      targetDateTime,
+      reason
+    );
 
-    await newAppointment.save();
-
-    // تحديث الموعد القديم
-    appointment.status = 'rescheduled';
-    appointment.rescheduledToId = newAppointment._id;
-    appointment.cancellationReason = reason || 'تم إعادة الجدولة';
-    await appointment.save();
-
-    // إذا كان هناك مقابلة فيديو، إنشاء واحدة جديدة
+    // إذا كان نوع الموعد مقابلة فيديو، إنشاء VideoInterview جديدة
     if (appointment.type === 'video_interview' && appointment.videoInterviewId) {
-      const oldVideoInterview = await VideoInterview.findById(appointment.videoInterviewId);
-      
-      if (oldVideoInterview) {
-        const roomId = uuidv4();
-        
-        const newVideoInterview = new VideoInterview({
-          roomId,
-          appointmentId: newAppointment._id,
-          hostId: appointment.organizerId,
-          participants: oldVideoInterview.participants.map(p => ({
-            userId: p.userId,
-            role: p.role,
-          })),
-          scheduledAt: newScheduledDate,
-          settings: oldVideoInterview.settings,
-        });
-
-        await newVideoInterview.save();
-
-        // تحديث الموعد الجديد برابط المقابلة
-        newAppointment.meetingLink = `${process.env.FRONTEND_URL}/video-interview/${roomId}`;
-        newAppointment.videoInterviewId = newVideoInterview._id;
-        await newAppointment.save();
-
-        // إلغاء المقابلة القديمة
-        oldVideoInterview.status = 'cancelled';
-        await oldVideoInterview.save();
-      }
-    }
-
-    // إرسال إشعارات للمشاركين
-    const { sendVideoInterviewInvitation } = require('../services/emailService');
-    const User = require('../models/User');
-    
-    // جلب معلومات المشاركين
-    const participantIds = appointment.participants.map(p => p.userId);
-    const participantUsers = await User.find({ _id: { $in: participantIds } });
-    
-    for (const participant of appointment.participants) {
-      await notificationService.createNotification({
-        userId: participant.userId,
-        type: 'appointment_rescheduled',
-        title: 'تم إعادة جدولة موعد',
-        message: `تم إعادة جدولة الموعد: ${appointment.title}`,
-        data: {
-          oldAppointmentId: appointment._id,
-          newAppointmentId: newAppointment._id,
-          newScheduledAt: newScheduledDate,
-          reason: reason || 'تم إعادة الجدولة',
-        },
-        priority: 'high',
-      });
-    }
-
-    // إرسال بريد إلكتروني للمشاركين
-    if (appointment.type === 'video_interview' && newAppointment.videoInterviewId) {
       try {
-        const newVideoInterview = await VideoInterview.findById(newAppointment.videoInterviewId);
-        await sendVideoInterviewInvitation(newAppointment, newVideoInterview, participantUsers);
-        logger.info('Rescheduled video interview invitation emails sent', {
-          oldAppointmentId: appointment._id,
-          newAppointmentId: newAppointment._id,
-          participantCount: participantUsers.length
-        });
-      } catch (emailError) {
-        logger.error('Failed to send rescheduled video interview invitation emails', {
-          error: emailError.message,
-          newAppointmentId: newAppointment._id
-        });
-        // لا نفشل العملية إذا فشل إرسال البريد
+        const oldVideoInterview = await VideoInterview.findById(appointment.videoInterviewId);
+        if (oldVideoInterview) {
+          const roomId = uuidv4();
+          const newVideoInterview = new VideoInterview({
+            roomId,
+            appointmentId: newAppointment._id,
+            hostId: appointment.organizerId,
+            participants: oldVideoInterview.participants.map(p => ({
+              userId: p.userId,
+              role: p.role,
+            })),
+            scheduledAt: newAppointment.scheduledAt,
+            settings: oldVideoInterview.settings,
+          });
+          await newVideoInterview.save();
+
+          newAppointment.meetingLink = `${process.env.FRONTEND_URL}/video-interview/${roomId}`;
+          newAppointment.videoInterviewId = newVideoInterview._id;
+          await newAppointment.save();
+
+          oldVideoInterview.status = 'cancelled';
+          await oldVideoInterview.save();
+        }
+      } catch (videoError) {
+        logger.error('Failed to create new video interview for rescheduled appointment:', videoError.message);
       }
     }
 
     res.json({
       success: true,
-      message: 'تم إعادة جدولة الموعد بنجاح',
+      message: 'تم إعادة جدولة الموعد بنجاح | Appointment rescheduled successfully',
       appointment: {
         id: newAppointment._id,
         scheduledAt: newAppointment.scheduledAt,
         duration: newAppointment.duration,
-        meetingLink: newAppointment.meetingLink,
+        meetingLink: newAppointment.meetingLink || null,
         status: newAppointment.status,
       },
+      previousAppointmentId: appointment._id,
+      rescheduleHistory: newAppointment.rescheduleHistory,
     });
   } catch (error) {
-    console.error('Error rescheduling appointment:', error);
-    res.status(500).json({
+    const statusCode = error.statusCode || 500;
+    const response = {
       success: false,
-      message: 'فشل إعادة جدولة الموعد',
-      error: error.message,
-    });
+      message: error.message || 'فشل إعادة جدولة الموعد | Failed to reschedule appointment',
+      code: error.code || 'INTERNAL_ERROR',
+    };
+
+    if (error.scheduledAt) response.scheduledAt = error.scheduledAt;
+    if (error.hoursRemaining !== undefined) response.hoursRemaining = error.hoursRemaining;
+    if (error.conflictingAppointmentId) response.conflictingAppointmentId = error.conflictingAppointmentId;
+
+    logger.error('Error rescheduling appointment:', { error: error.message, code: error.code });
+    res.status(statusCode).json(response);
   }
 };
 
 /**
  * إلغاء موعد
+ * يرفض الإلغاء إذا كان الموعد أقل من ساعة واحدة
+ * يُرسل إشعاراً تلقائياً للطرف الآخر
  * 
  * @route DELETE /api/appointments/:id
- * @access Private (Organizer only)
+ * @access Private (Organizer or Participant)
  */
 exports.cancelAppointment = async (req, res) => {
   try {
@@ -504,61 +640,44 @@ exports.cancelAppointment = async (req, res) => {
     const userId = req.user._id;
     const { reason } = req.body;
 
-    const appointment = await Appointment.findById(id);
-
-    if (!appointment) {
-      return res.status(404).json({
-        success: false,
-        message: 'الموعد غير موجود',
-      });
-    }
-
-    // التحقق من أن المستخدم هو المنظم
-    if (appointment.organizerId.toString() !== userId.toString()) {
-      return res.status(403).json({
-        success: false,
-        message: 'فقط المنظم يمكنه إلغاء الموعد',
-      });
-    }
-
-    // إلغاء الموعد
-    await appointment.cancel(reason || 'تم الإلغاء');
+    // استخدام appointmentService الذي يتولى التحقق وإرسال الإشعارات للطرف الآخر
+    const appointment = await appointmentService.cancelAppointment(id, userId, reason);
 
     // إلغاء مقابلة الفيديو إذا كانت موجودة
     if (appointment.videoInterviewId) {
-      const videoInterview = await VideoInterview.findById(appointment.videoInterviewId);
-      if (videoInterview) {
-        videoInterview.status = 'cancelled';
-        await videoInterview.save();
+      try {
+        const videoInterview = await VideoInterview.findById(appointment.videoInterviewId);
+        if (videoInterview) {
+          videoInterview.status = 'cancelled';
+          await videoInterview.save();
+        }
+      } catch (videoError) {
+        logger.error('Failed to cancel video interview:', videoError.message);
       }
-    }
-
-    // إرسال إشعارات للمشاركين
-    for (const participant of appointment.participants) {
-      await notificationService.createNotification({
-        userId: participant.userId,
-        type: 'appointment_cancelled',
-        title: 'تم إلغاء موعد',
-        message: `تم إلغاء الموعد: ${appointment.title}`,
-        data: {
-          appointmentId: appointment._id,
-          reason: reason || 'تم الإلغاء',
-        },
-        priority: 'high',
-      });
     }
 
     res.json({
       success: true,
-      message: 'تم إلغاء الموعد بنجاح',
+      message: 'تم إلغاء الموعد بنجاح وإشعار الطرف الآخر',
+      appointment: {
+        id: appointment._id,
+        status: appointment.status,
+        cancellationReason: appointment.cancellationReason,
+      },
     });
   } catch (error) {
-    console.error('Error cancelling appointment:', error);
-    res.status(500).json({
+    const statusCode = error.statusCode || 500;
+    const response = {
       success: false,
-      message: 'فشل إلغاء الموعد',
-      error: error.message,
-    });
+      message: error.message || 'فشل إلغاء الموعد',
+      code: error.code || 'INTERNAL_ERROR',
+    };
+
+    if (error.scheduledAt) response.scheduledAt = error.scheduledAt;
+    if (error.minutesRemaining !== undefined) response.minutesRemaining = error.minutesRemaining;
+
+    logger.error('Error cancelling appointment:', { error: error.message, code: error.code });
+    res.status(statusCode).json(response);
   }
 };
 
@@ -606,6 +725,951 @@ exports.confirmAppointment = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'فشل تأكيد الموعد',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * الحصول على سجل تاريخ موعد معين (الإلغاءات والتعديلات)
+ * 
+ * @route GET /api/appointments/:id/history
+ * @access Private (المنظم أو المشاركون أو الأدمن)
+ */
+exports.getAppointmentHistory = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const isAdmin = req.user.role === 'admin';
+
+    // التحقق من وجود الموعد
+    const appointment = await Appointment.findById(id);
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: 'الموعد غير موجود | Appointment not found',
+        code: 'APPOINTMENT_NOT_FOUND',
+      });
+    }
+
+    // التحقق من الصلاحية: يجب أن يكون المستخدم منظماً أو مشاركاً أو أدمن
+    if (!isAdmin) {
+      const isOrganizer = appointment.organizerId.toString() === userId.toString();
+      const isParticipant = appointment.participants.some(
+        p => p.userId.toString() === userId.toString()
+      );
+
+      if (!isOrganizer && !isParticipant) {
+        return res.status(403).json({
+          success: false,
+          message: 'ليس لديك صلاحية الوصول لسجل هذا الموعد | You do not have permission to view this appointment history',
+          code: 'FORBIDDEN',
+        });
+      }
+    }
+
+    // جلب سجل التاريخ مرتباً من الأحدث للأقدم
+    const history = await AppointmentHistory.find({ appointmentId: id })
+      .populate('performedBy', 'firstName lastName email profilePicture')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      appointmentId: id,
+      history,
+      total: history.length,
+    });
+  } catch (error) {
+    logger.error('Error getting appointment history:', { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'فشل الحصول على سجل الموعد | Failed to get appointment history',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * إحصائيات المواعيد
+ * Requirements: User Story 6 - إحصائيات (عدد المقابلات، معدل الحضور، إلخ)
+ *
+ * @route GET /api/appointments/stats
+ * @query startDate - تاريخ البداية (اختياري)
+ * @query endDate - تاريخ النهاية (اختياري)
+ * @access Private (company / admin)
+ */
+exports.getStats = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const isAdmin = req.user.role === 'admin';
+    const { startDate, endDate } = req.query;
+
+    // الأدمن يمكنه رؤية إحصائيات أي شركة عبر companyId query param
+    const companyId = isAdmin && req.query.companyId ? req.query.companyId : userId;
+
+    const filters = {};
+    if (startDate) filters.startDate = startDate;
+    if (endDate) filters.endDate = endDate;
+
+    const stats = await appointmentService.getAppointmentStats(companyId, filters);
+
+    res.json({
+      success: true,
+      stats,
+      filters: {
+        startDate: startDate || null,
+        endDate: endDate || null,
+      },
+    });
+  } catch (error) {
+    logger.error('Error getting appointment stats:', { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'فشل الحصول على الإحصائيات | Failed to get appointment stats',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * تصدير بيانات المقابلات (Excel / CSV / PDF)
+ * Validates: Requirements 6 - تصدير البيانات
+ *
+ * @route POST /api/appointments/export
+ * @access Private (company / admin)
+ */
+exports.exportAppointments = async (req, res) => {
+  try {
+    const { format = 'excel', filters = {} } = req.body;
+    const userId = req.user._id;
+    const isAdmin = req.user.role === 'admin';
+
+    // التحقق من الصيغة المطلوبة
+    if (!['excel', 'csv', 'pdf'].includes(format)) {
+      return res.status(400).json({
+        success: false,
+        message: 'صيغة التصدير غير صحيحة. يجب أن تكون excel أو csv أو pdf',
+      });
+    }
+
+    // التحقق من نطاق التاريخ إن وُجد
+    if (filters.dateRange) {
+      if (!filters.dateRange.start || !filters.dateRange.end) {
+        return res.status(400).json({
+          success: false,
+          message: 'يجب تحديد تاريخ البداية والنهاية',
+        });
+      }
+      if (new Date(filters.dateRange.start) > new Date(filters.dateRange.end)) {
+        return res.status(400).json({
+          success: false,
+          message: 'تاريخ البداية يجب أن يكون قبل تاريخ النهاية',
+        });
+      }
+    }
+
+    // غير الأدمن يرى مقابلاته فقط
+    if (!isAdmin) {
+      filters.organizerId = userId;
+    }
+
+    const exportService = require('../services/exportService');
+    const activityLogService = require('../services/activityLogService');
+
+    const result = await exportService.processExportJob({
+      dataType: 'appointments',
+      format,
+      filters,
+    });
+
+    // تسجيل عملية التصدير
+    await activityLogService.createActivityLog({
+      actorId: userId,
+      actorName: req.user.name,
+      actionType: 'data_exported',
+      targetType: 'appointments',
+      targetId: userId,
+      details: `تصدير بيانات المقابلات بصيغة ${format}`,
+      ipAddress: req.ip,
+    });
+
+    res.json({
+      success: true,
+      downloadUrl: result.downloadUrl,
+      expiresAt: result.expiresAt,
+      filename: result.filename,
+      size: result.size,
+    });
+  } catch (error) {
+    logger.error('Error exporting appointments:', { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'فشل تصدير بيانات المقابلات | Failed to export appointments',
+      error: error.message,
+    });
+  }
+};
+
+// ==================== ملاحظات المواعيد ====================
+
+/**
+ * إضافة ملاحظة على موعد
+ * Requirements: User Story 6 - نظام ملاحظات وتقييم
+ *
+ * @route POST /api/appointments/:id/notes
+ * @access Private
+ */
+exports.addNote = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { content, noteType } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ success: false, message: 'نص الملاحظة مطلوب' });
+    }
+
+    if (!['pre_interview', 'post_interview'].includes(noteType)) {
+      return res.status(400).json({
+        success: false,
+        message: 'نوع الملاحظة يجب أن يكون pre_interview أو post_interview',
+      });
+    }
+
+    // التحقق من وجود الموعد وصلاحية المستخدم
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    const isOrganizer = appointment.organizerId.toString() === userId.toString();
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+
+    if (!isOrganizer && !isParticipant) {
+      return res.status(403).json({ success: false, message: 'ليس لديك صلاحية إضافة ملاحظة على هذا الموعد' });
+    }
+
+    const AppointmentNote = require('../models/AppointmentNote');
+    const note = await AppointmentNote.create({
+      appointmentId: id,
+      userId,
+      content: content.trim(),
+      noteType,
+    });
+
+    const populated = await note.populate('userId', 'firstName lastName email profilePicture');
+
+    res.status(201).json({ success: true, message: 'تمت إضافة الملاحظة بنجاح', note: populated });
+  } catch (error) {
+    logger.error('Error adding appointment note:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل إضافة الملاحظة', error: error.message });
+  }
+};
+
+/**
+ * جلب ملاحظات موعد معين
+ * Requirements: User Story 6 - نظام ملاحظات وتقييم
+ *
+ * @route GET /api/appointments/:id/notes
+ * @access Private
+ */
+exports.getNotes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    const isOrganizer = appointment.organizerId.toString() === userId.toString();
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOrganizer && !isParticipant && !isAdmin) {
+      return res.status(403).json({ success: false, message: 'ليس لديك صلاحية عرض ملاحظات هذا الموعد' });
+    }
+
+    const AppointmentNote = require('../models/AppointmentNote');
+    const notes = await AppointmentNote.find({ appointmentId: id })
+      .populate('userId', 'firstName lastName email profilePicture')
+      .sort({ createdAt: -1 });
+
+    res.json({ success: true, notes, total: notes.length });
+  } catch (error) {
+    logger.error('Error getting appointment notes:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل جلب الملاحظات', error: error.message });
+  }
+};
+
+// ==================== تقييمات المواعيد ====================
+
+/**
+ * إضافة تقييم لموعد (بعد اكتماله فقط)
+ * Requirements: User Story 6 - نظام ملاحظات وتقييم
+ *
+ * @route POST /api/appointments/:id/rating
+ * @access Private
+ */
+exports.addRating = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { score, comment } = req.body;
+
+    // التحقق من صحة الدرجة
+    const parsedScore = parseInt(score, 10);
+    if (!parsedScore || parsedScore < 1 || parsedScore > 5) {
+      return res.status(400).json({ success: false, message: 'درجة التقييم يجب أن تكون بين 1 و 5' });
+    }
+
+    // التحقق من وجود الموعد
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    // التحقق من أن الموعد مكتمل
+    if (appointment.status !== 'completed') {
+      return res.status(400).json({
+        success: false,
+        message: 'لا يمكن تقييم الموعد إلا بعد اكتماله',
+        code: 'APPOINTMENT_NOT_COMPLETED',
+      });
+    }
+
+    // التحقق من أن المستخدم منظم أو مشارك
+    const isOrganizer = appointment.organizerId.toString() === userId.toString();
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+
+    if (!isOrganizer && !isParticipant) {
+      return res.status(403).json({ success: false, message: 'ليس لديك صلاحية تقييم هذا الموعد' });
+    }
+
+    const AppointmentRating = require('../models/AppointmentRating');
+
+    // التحقق من عدم وجود تقييم سابق (مرة واحدة فقط)
+    const existing = await AppointmentRating.findOne({ appointmentId: id, raterId: userId });
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        message: 'لقد قمت بتقييم هذا الموعد مسبقاً',
+        code: 'ALREADY_RATED',
+      });
+    }
+
+    const rating = await AppointmentRating.create({
+      appointmentId: id,
+      raterId: userId,
+      score: parsedScore,
+      comment: comment ? comment.trim() : '',
+    });
+
+    const populated = await rating.populate('raterId', 'firstName lastName email profilePicture');
+
+    res.status(201).json({ success: true, message: 'تم إضافة التقييم بنجاح', rating: populated });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: 'لقد قمت بتقييم هذا الموعد مسبقاً',
+        code: 'ALREADY_RATED',
+      });
+    }
+    logger.error('Error adding appointment rating:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل إضافة التقييم', error: error.message });
+  }
+};
+
+/**
+ * جلب تقييم موعد معين
+ * Requirements: User Story 6 - نظام ملاحظات وتقييم
+ *
+ * @route GET /api/appointments/:id/rating
+ * @access Private
+ */
+exports.getRating = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    const isOrganizer = appointment.organizerId.toString() === userId.toString();
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOrganizer && !isParticipant && !isAdmin) {
+      return res.status(403).json({ success: false, message: 'ليس لديك صلاحية عرض تقييم هذا الموعد' });
+    }
+
+    const AppointmentRating = require('../models/AppointmentRating');
+    const ratings = await AppointmentRating.find({ appointmentId: id })
+      .populate('raterId', 'firstName lastName email profilePicture')
+      .sort({ createdAt: -1 });
+
+    // حساب متوسط التقييم
+    const avgScore =
+      ratings.length > 0
+        ? Math.round((ratings.reduce((sum, r) => sum + r.score, 0) / ratings.length) * 10) / 10
+        : null;
+
+    // تقييم المستخدم الحالي
+    const myRating = ratings.find((r) => r.raterId._id.toString() === userId.toString()) || null;
+
+    res.json({
+      success: true,
+      ratings,
+      total: ratings.length,
+      averageScore: avgScore,
+      myRating,
+    });
+  } catch (error) {
+    logger.error('Error getting appointment rating:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل جلب التقييم', error: error.message });
+  }
+};
+
+// ==================== الملاحظات الشخصية (User Story 7) ====================
+
+/**
+ * إضافة ملاحظة شخصية على موعد
+ * الملاحظات خاصة بالباحث فقط - لا تظهر للشركة أو أي مستخدم آخر
+ *
+ * @route POST /api/appointments/:id/personal-notes
+ * @access Private (الباحث المشارك في الموعد فقط)
+ */
+exports.addPersonalNote = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ success: false, message: 'نص الملاحظة مطلوب' });
+    }
+
+    // التحقق من وجود الموعد
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    // التحقق من أن المستخدم مشارك في الموعد (باحث)
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+
+    if (!isParticipant) {
+      return res.status(403).json({
+        success: false,
+        message: 'الملاحظات الشخصية متاحة للمشاركين في الموعد فقط',
+      });
+    }
+
+    const PersonalNote = require('../models/PersonalNote');
+    const note = await PersonalNote.create({
+      appointmentId: id,
+      userId,
+      content: content.trim(),
+    });
+
+    res.status(201).json({
+      success: true,
+      message: 'تمت إضافة الملاحظة الشخصية بنجاح',
+      note: {
+        _id: note._id,
+        appointmentId: note.appointmentId,
+        content: note.content,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
+      },
+    });
+  } catch (error) {
+    logger.error('Error adding personal note:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل إضافة الملاحظة الشخصية', error: error.message });
+  }
+};
+
+/**
+ * جلب الملاحظات الشخصية لموعد معين (للمالك فقط)
+ *
+ * @route GET /api/appointments/:id/personal-notes
+ * @access Private (الباحث المالك فقط)
+ */
+exports.getPersonalNotes = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    // التحقق من وجود الموعد
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    // التحقق من أن المستخدم مشارك في الموعد
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+
+    if (!isParticipant) {
+      return res.status(403).json({
+        success: false,
+        message: 'الملاحظات الشخصية متاحة للمشاركين في الموعد فقط',
+      });
+    }
+
+    const PersonalNote = require('../models/PersonalNote');
+    // جلب ملاحظات المستخدم الحالي فقط (خاصة به)
+    const notes = await PersonalNote.find({ appointmentId: id, userId })
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      notes,
+      total: notes.length,
+    });
+  } catch (error) {
+    logger.error('Error getting personal notes:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل جلب الملاحظات الشخصية', error: error.message });
+  }
+};
+
+/**
+ * تعديل ملاحظة شخصية
+ *
+ * @route PUT /api/appointments/:id/personal-notes/:noteId
+ * @access Private (المالك فقط)
+ */
+exports.updatePersonalNote = async (req, res) => {
+  try {
+    const { id, noteId } = req.params;
+    const userId = req.user._id;
+    const { content } = req.body;
+
+    if (!content || !content.trim()) {
+      return res.status(400).json({ success: false, message: 'نص الملاحظة مطلوب' });
+    }
+
+    const PersonalNote = require('../models/PersonalNote');
+    const note = await PersonalNote.findOne({ _id: noteId, appointmentId: id, userId });
+
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: 'الملاحظة غير موجودة أو ليس لديك صلاحية تعديلها',
+      });
+    }
+
+    note.content = content.trim();
+    await note.save();
+
+    res.json({
+      success: true,
+      message: 'تم تعديل الملاحظة الشخصية بنجاح',
+      note: {
+        _id: note._id,
+        appointmentId: note.appointmentId,
+        content: note.content,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
+      },
+    });
+  } catch (error) {
+    logger.error('Error updating personal note:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل تعديل الملاحظة الشخصية', error: error.message });
+  }
+};
+
+/**
+ * حذف ملاحظة شخصية
+ *
+ * @route DELETE /api/appointments/:id/personal-notes/:noteId
+ * @access Private (المالك فقط)
+ */
+exports.deletePersonalNote = async (req, res) => {
+  try {
+    const { id, noteId } = req.params;
+    const userId = req.user._id;
+
+    const PersonalNote = require('../models/PersonalNote');
+    const note = await PersonalNote.findOneAndDelete({ _id: noteId, appointmentId: id, userId });
+
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: 'الملاحظة غير موجودة أو ليس لديك صلاحية حذفها',
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'تم حذف الملاحظة الشخصية بنجاح',
+    });
+  } catch (error) {
+    logger.error('Error deleting personal note:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل حذف الملاحظة الشخصية', error: error.message });
+  }
+};
+
+// ==================== مستندات الموعد (User Story 7) ====================
+
+/**
+ * رفع مستند للموعد (CV محدث، Portfolio)
+ * Requirements: User Story 7 - رفع مستندات (CV محدث، Portfolio)
+ *
+ * @route POST /api/appointments/:id/documents
+ * @access Private (المشاركون في الموعد فقط)
+ */
+exports.uploadDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { type = 'other' } = req.body;
+
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'لم يتم رفع أي ملف' });
+    }
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    // التحقق من أن المستخدم مشارك في الموعد
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+    if (!isParticipant) {
+      return res.status(403).json({
+        success: false,
+        message: 'رفع المستندات متاح للمشاركين في الموعد فقط',
+      });
+    }
+
+    // رفع الملف إلى Cloudinary
+    const cloudinary = require('../config/cloudinary');
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'careerak/appointment-documents', resource_type: 'raw' },
+        (error, res) => (error ? reject(error) : resolve(res))
+      );
+      stream.end(req.file.buffer);
+    });
+
+    const doc = {
+      name: req.file.originalname,
+      url: result.secure_url,
+      publicId: result.public_id,
+      type: ['cv', 'portfolio', 'other'].includes(type) ? type : 'other',
+      uploadedBy: userId,
+      uploadedAt: new Date(),
+    };
+
+    appointment.documents.push(doc);
+    await appointment.save();
+
+    res.status(201).json({
+      success: true,
+      message: 'تم رفع المستند بنجاح',
+      document: appointment.documents[appointment.documents.length - 1],
+    });
+  } catch (error) {
+    logger.error('Error uploading appointment document:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل رفع المستند', error: error.message });
+  }
+};
+
+/**
+ * جلب مستندات الموعد
+ *
+ * @route GET /api/appointments/:id/documents
+ * @access Private (المنظم والمشاركون)
+ */
+exports.getDocuments = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    const appointment = await Appointment.findById(id)
+      .populate('documents.uploadedBy', 'firstName lastName email profilePicture');
+
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    const isOrganizer = appointment.organizerId.toString() === userId.toString();
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+
+    if (!isOrganizer && !isParticipant) {
+      return res.status(403).json({ success: false, message: 'ليس لديك صلاحية الوصول لمستندات هذا الموعد' });
+    }
+
+    res.json({
+      success: true,
+      documents: appointment.documents,
+      total: appointment.documents.length,
+    });
+  } catch (error) {
+    logger.error('Error getting appointment documents:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل جلب المستندات', error: error.message });
+  }
+};
+
+/**
+ * حذف مستند من الموعد
+ *
+ * @route DELETE /api/appointments/:id/documents/:docId
+ * @access Private (من رفع المستند فقط)
+ */
+exports.deleteDocument = async (req, res) => {
+  try {
+    const { id, docId } = req.params;
+    const userId = req.user._id;
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({ success: false, message: 'الموعد غير موجود' });
+    }
+
+    const doc = appointment.documents.id(docId);
+    if (!doc) {
+      return res.status(404).json({ success: false, message: 'المستند غير موجود' });
+    }
+
+    if (doc.uploadedBy.toString() !== userId.toString()) {
+      return res.status(403).json({ success: false, message: 'يمكنك فقط حذف المستندات التي رفعتها' });
+    }
+
+    // حذف من Cloudinary (non-blocking)
+    try {
+      const cloudinary = require('../config/cloudinary');
+      await cloudinary.uploader.destroy(doc.publicId, { resource_type: 'raw' });
+    } catch (cloudErr) {
+      logger.warn('Failed to delete document from Cloudinary:', { publicId: doc.publicId });
+    }
+
+    appointment.documents.pull(docId);
+    await appointment.save();
+
+    res.json({ success: true, message: 'تم حذف المستند بنجاح' });
+  } catch (error) {
+    logger.error('Error deleting appointment document:', { error: error.message });
+    res.status(500).json({ success: false, message: 'فشل حذف المستند', error: error.message });
+  }
+};
+
+// ==================== معلومات الشركة (User Story 7) ====================
+
+/**
+ * جلب معلومات الشركة المرتبطة بالموعد
+ * Requirements: User Story 7 - روابط سريعة لمعلومات الشركة
+ *
+ * @route GET /api/appointments/:id/company-info
+ * @access Private (المشاركون في الموعد فقط)
+ */
+exports.getCompanyInfo = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+
+    // جلب الموعد مع populate للمنظم
+    const appointment = await Appointment.findById(id)
+      .populate('organizerId', 'firstName lastName companyName companyIndustry email profilePicture country city')
+      .populate({
+        path: 'jobApplicationId',
+        select: 'jobPosting',
+        populate: {
+          path: 'jobPosting',
+          select: 'title _id postedBy',
+        },
+      });
+
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: 'الموعد غير موجود | Appointment not found',
+        code: 'APPOINTMENT_NOT_FOUND',
+      });
+    }
+
+    // التحقق من الصلاحية: منظم أو مشارك
+    const isOrganizer = appointment.organizerId._id.toString() === userId.toString();
+    const isParticipant = appointment.participants.some(
+      (p) => p.userId.toString() === userId.toString()
+    );
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOrganizer && !isParticipant && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'ليس لديك صلاحية الوصول لهذا الموعد | Forbidden',
+        code: 'FORBIDDEN',
+      });
+    }
+
+    const organizer = appointment.organizerId;
+
+    // جلب CompanyInfo إن وجدت
+    const CompanyInfo = require('../models/CompanyInfo');
+    const companyInfo = await CompanyInfo.findOne({ company: organizer._id });
+
+    // بناء كائن معلومات الشركة
+    const company = {
+      id: organizer._id,
+      name: organizer.companyName || `${organizer.firstName || ''} ${organizer.lastName || ''}`.trim(),
+      industry: organizer.companyIndustry || null,
+      logo: companyInfo?.logo || organizer.profilePicture || null,
+      description: companyInfo?.description || null,
+      location: companyInfo ? null : (organizer.city && organizer.country ? `${organizer.city}, ${organizer.country}` : organizer.country || null),
+      website: companyInfo?.website || null,
+      verified: companyInfo?.verified || false,
+      responseRate: companyInfo?.responseRate || null,
+      socialMedia: companyInfo?.socialMedia || null,
+    };
+
+    // معلومات الوظيفة المرتبطة
+    let job = null;
+    if (appointment.jobApplicationId?.jobPosting) {
+      const jp = appointment.jobApplicationId.jobPosting;
+      job = {
+        id: jp._id,
+        title: jp.title,
+      };
+    }
+
+    // رابط المحادثة مع الشركة (إن وجد)
+    const Conversation = require('../models/Conversation');
+    const existingConversation = await Conversation.findOne({
+      participants: { $all: [userId, organizer._id] },
+    }).select('_id');
+
+    res.json({
+      success: true,
+      company,
+      job,
+      links: {
+        companyPage: `/company/${organizer._id}`,
+        jobPage: job ? `/job-postings/${job.id}` : null,
+        chatConversationId: existingConversation?._id || null,
+        startChat: `/chat?with=${organizer._id}`,
+      },
+    });
+  } catch (error) {
+    logger.error('Error getting company info for appointment:', { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'فشل جلب معلومات الشركة | Failed to get company info',
+      error: error.message,
+    });
+  }
+};
+
+/**
+ * تحديث حالة الحضور للموعد
+ * يتيح للشركة تسجيل ما إذا حضر المرشح أم لا بعد انتهاء الموعد
+ * Validates: KPI "معدل الحضور > 85%"
+ *
+ * @route PATCH /api/appointments/:id/attendance
+ * @body { attendanceStatus: 'attended' | 'no_show' | 'cancelled' }
+ * @access Private (Organizer / Company only)
+ */
+exports.updateAttendance = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user._id;
+    const { attendanceStatus } = req.body;
+
+    const validStatuses = ['attended', 'no_show', 'cancelled'];
+    if (!attendanceStatus || !validStatuses.includes(attendanceStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: `حالة الحضور يجب أن تكون إحدى القيم: ${validStatuses.join(', ')}`,
+        code: 'INVALID_ATTENDANCE_STATUS',
+      });
+    }
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: 'الموعد غير موجود',
+        code: 'APPOINTMENT_NOT_FOUND',
+      });
+    }
+
+    // فقط المنظم (الشركة) يمكنه تحديث حالة الحضور
+    const isOrganizer = appointment.organizerId.toString() === userId.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOrganizer && !isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: 'فقط الشركة المنظمة يمكنها تحديث حالة الحضور',
+        code: 'FORBIDDEN',
+      });
+    }
+
+    // يجب أن يكون الموعد مكتملاً أو في الماضي
+    const now = new Date();
+    const appointmentEnd = appointment.endsAt || new Date(appointment.scheduledAt.getTime() + (appointment.duration || 60) * 60000);
+    if (appointmentEnd > now && appointment.status !== 'completed') {
+      return res.status(400).json({
+        success: false,
+        message: 'لا يمكن تحديث حالة الحضور قبل انتهاء الموعد',
+        code: 'APPOINTMENT_NOT_ENDED',
+      });
+    }
+
+    // تحديث حالة الحضور
+    appointment.attendanceStatus = attendanceStatus;
+    appointment.attendanceUpdatedAt = new Date();
+    appointment.attendanceUpdatedBy = userId;
+
+    // إذا كان الموعد لم يُكتمل بعد، نحدّث حالته
+    if (appointment.status !== 'completed' && appointment.status !== 'cancelled') {
+      appointment.status = 'completed';
+    }
+
+    await appointment.save();
+
+    logger.info('Attendance status updated', {
+      appointmentId: id,
+      attendanceStatus,
+      updatedBy: userId,
+    });
+
+    res.json({
+      success: true,
+      message: 'تم تحديث حالة الحضور بنجاح',
+      appointment: {
+        id: appointment._id,
+        attendanceStatus: appointment.attendanceStatus,
+        attendanceUpdatedAt: appointment.attendanceUpdatedAt,
+        status: appointment.status,
+      },
+    });
+  } catch (error) {
+    logger.error('Error updating attendance status:', { error: error.message });
+    res.status(500).json({
+      success: false,
+      message: 'فشل تحديث حالة الحضور',
       error: error.message,
     });
   }

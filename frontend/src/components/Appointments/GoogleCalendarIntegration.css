@@ -1,0 +1,270 @@
+/* GoogleCalendarIntegration.css */
+
+.gci-container {
+  background: #E3DAD1;
+  border: 2px solid #304B60;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 520px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header */
+.gci-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.gci-logo {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #D4816180;
+  box-shadow: 0 2px 6px rgba(48, 75, 96, 0.1);
+}
+
+.gci-google-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.gci-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.gci-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 2px 0;
+}
+
+.gci-subtitle {
+  font-size: 0.82rem;
+  color: #304B60cc;
+  margin: 0;
+}
+
+/* Status Badge */
+.gci-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gci-status-badge--connected {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.gci-status-badge--disconnected {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.gci-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.gci-status-badge--connected .gci-status-dot {
+  background: #28a745;
+}
+
+.gci-status-badge--disconnected .gci-status-dot {
+  background: #dc3545;
+}
+
+/* Message */
+.gci-message {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.gci-message--success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.gci-message--error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Info Card */
+.gci-info-card {
+  background: rgba(48, 75, 96, 0.06);
+  border: 2px solid #D4816180;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gci-info-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: #304B60;
+  flex-wrap: wrap;
+}
+
+.gci-info-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.gci-info-label {
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.gci-info-value {
+  color: #304B60cc;
+  word-break: break-all;
+}
+
+/* Benefits */
+.gci-benefits {
+  margin-bottom: 18px;
+}
+
+.gci-benefits-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 8px 0;
+}
+
+.gci-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gci-benefits-list li {
+  font-size: 0.85rem;
+  color: #304B60cc;
+  padding: 4px 0;
+}
+
+/* Actions */
+.gci-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.gci-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid #D4816180;
+  transition: opacity 0.2s, transform 0.1s;
+  white-space: nowrap;
+}
+
+.gci-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.gci-btn:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+.gci-btn:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.gci-btn--connect {
+  background: #304B60;
+  color: #E3DAD1;
+  flex: 1;
+}
+
+.gci-btn--sync {
+  background: #D48161;
+  color: #fff;
+  flex: 1;
+}
+
+.gci-btn--disconnect {
+  background: transparent;
+  color: #304B60;
+  border-color: #D4816180;
+}
+
+/* Loading */
+.gci-loading {
+  text-align: center;
+  color: #304B60cc;
+  padding: 24px;
+  font-size: 0.9rem;
+}
+
+/* RTL */
+.gci-rtl .gci-header {
+  flex-direction: row-reverse;
+}
+
+.gci-rtl .gci-info-row {
+  flex-direction: row-reverse;
+}
+
+.gci-rtl .gci-actions {
+  flex-direction: row-reverse;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .gci-container {
+    padding: 16px;
+  }
+
+  .gci-header {
+    gap: 10px;
+  }
+
+  .gci-actions {
+    flex-direction: column;
+  }
+
+  .gci-btn {
+    width: 100%;
+    text-align: center;
+  }
+}

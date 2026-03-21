@@ -212,18 +212,34 @@ app.use('/profile-analysis', require('./routes/profileAnalysisRoutes'));
 app.use('/ab-testing', require('./routes/abTestingRoutes')); // A/B Testing
 app.use('/waiting-room', require('./routes/waitingRoomRoutes')); // Waiting Room
 app.use('/appointments', require('./routes/appointmentRoutes')); // Appointments
+app.use('/integrations/google', require('./routes/googleCalendarRoutes')); // Google Calendar Integration
+app.use('/availability', require('./routes/availabilityRoutes')); // Availability
+app.use('/reminders', require('./routes/reminderRoutes')); // Reminders
 app.use('/interviews', require('./routes/videoInterviewRoutes')); // Video Interviews
 app.use('/interview-notes', require('./routes/interviewNoteRoutes')); // Interview Notes & Ratings
 app.use('/search', require('./routes/searchRoutes')); // Advanced Search & Filtering
 app.use('/admin/alert-scheduler', require('./routes/alertSchedulerRoutes')); // Alert Scheduler (Admin)
 app.use('/courses', require('./routes/courseRoutes')); // Educational Courses
+app.use('/certificates/management', require('./routes/certificateManagementRoutes')); // Certificate Management (Instructor)
 app.use('/certificates', require('./routes/certificateRoutes')); // Certificates & Achievements
+app.use('/badges', require('./routes/badgeRoutes')); // Badges & Achievements
 app.use('/verify', require('./routes/verificationRoutes')); // Certificate Verification (Public)
+app.use('/linkedin', require('./routes/linkedInRoutes')); // LinkedIn Integration
 app.use('/wishlist', require('./routes/wishlistRoutes')); // Course Wishlist
 app.use('/companies', require('./routes/companyInfoRoutes')); // Company Information
 app.use('/acceptance-probability', require('./routes/acceptanceProbabilityRoutes')); // Acceptance Probability
 app.use('/settings', require('./routes/settingsRoutes')); // Settings Page Enhancements
 app.use('/api/cron', require('./routes/cronRoutes')); // Cron Jobs Management (Admin)
+app.use('/shares', require('./routes/shareRoutes')); // Content Sharing
+app.use('/share-feedback', require('./routes/shareFeedbackRoutes')); // Share Feedback (Task 9.10)
+app.use('/metadata', require('./routes/metadataRoutes')); // Share Metadata
+app.use('/share', require('./routes/shareHtmlRoutes')); // Share HTML pages with OG/Twitter meta tags
+app.use('/referrals', require('./routes/referralRoutes')); // Referral System
+app.use('/fraud', require('./routes/fraudRoutes')); // Anti-Fraud System
+app.use('/rewards', require('./routes/rewardsRoutes')); // Rewards & Points System
+app.use('/leaderboard', require('./routes/leaderboardRoutes')); // Leaderboard System
+app.use('/api/company-referrals', require('./routes/companyReferralRoutes')); // Company Referral System
+app.use('/admin/referrals', require('./routes/adminReferralExportRoutes')); // Admin Referral Export
 
 // 📊 مسار الإحصائيات (محمي)
 app.get('/stats', (req, res) => {
@@ -264,12 +280,24 @@ if (process.env.NODE_ENV !== 'test') {
       
       startAppointmentReminderCron();
       console.log('✅ تم بدء جدولة التذكيرات بالمواعيد');
+
+      const { startReminderCronJob } = require('./jobs/reminderCronJob');
+      startReminderCronJob();
+      console.log('✅ تم بدء جدولة التذكيرات التلقائية (24h و 1h)');
       
       startReminderJobs();
       console.log('✅ تم بدء جدولة تذكيرات مقابلات الفيديو');
       
       alertScheduler.start();
       console.log('✅ تم بدء جدولة التنبيهات الذكية (يومية وأسبوعية)');
+
+      const badgeCheckerCron = require('./jobs/badgeCheckerCron');
+      badgeCheckerCron.start();
+      console.log('✅ تم بدء جدولة فحص الإنجازات ومنح الـ Badges');
+
+      const { startAttendanceRateCron } = require('./jobs/attendanceRateCron');
+      startAttendanceRateCron();
+      console.log('✅ تم بدء جدولة فحص معدل الحضور الأسبوعي (KPI: >85%)');
     } catch (error) {
       console.error('❌ خطأ في بدء الجدولة:', error);
     }

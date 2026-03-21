@@ -1,0 +1,331 @@
+/* PersonalNotes.css
+   Requirements: User Story 7 - نظام ملاحظات شخصية
+   Colors: #304B60 (primary), #E3DAD1 (secondary), #D48161 (accent)
+   Fonts: Amiri (ar), Cormorant Garamond (en), EB Garamond (fr)
+*/
+
+.pn-container {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* RTL / LTR */
+.pn-rtl {
+  direction: rtl;
+  text-align: right;
+}
+.pn-ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* ==================== Header ==================== */
+.pn-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pn-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pn-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pn-private-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: #f5f0eb;
+  color: #D48161;
+  border: 1px solid #D4816180;
+  border-radius: 20px;
+  padding: 0.15rem 0.55rem;
+}
+
+.pn-subtitle {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+}
+
+/* ==================== Buttons ==================== */
+.pn-btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, transform 0.1s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.pn-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pn-btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.pn-btn--primary {
+  background: #304B60;
+  color: #E3DAD1;
+}
+
+.pn-btn--primary:not(:disabled):hover {
+  background: #253d50;
+}
+
+.pn-btn--ghost {
+  background: transparent;
+  color: #304B60;
+  border: 1.5px solid #D4816180;
+}
+
+.pn-btn--ghost:not(:disabled):hover {
+  background: #f5f0eb;
+}
+
+/* ==================== Messages ==================== */
+.pn-msg {
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.pn-msg--success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.pn-msg--error {
+  background: #fdecea;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+/* ==================== Form ==================== */
+.pn-form {
+  background: #fff;
+  border: 2px solid #D4816180;
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.pn-form-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #304B60;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #E3DAD1;
+}
+
+.pn-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pn-textarea {
+  border: 2px solid #D4816180;
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.95rem;
+  color: #304B60;
+  background: #fafaf9;
+  outline: none;
+  resize: vertical;
+  min-height: 110px;
+  transition: background 0.2s;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+.pn-textarea:focus {
+  border: 2px solid #D4816180;
+  background: #fff;
+}
+
+.pn-char-count {
+  font-size: 0.75rem;
+  color: #aaa;
+  text-align: end;
+}
+
+.pn-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ==================== Notes List ==================== */
+.pn-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.pn-loading {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  padding: 1.5rem 0;
+}
+
+/* ==================== Empty State ==================== */
+.pn-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  background: #fafaf9;
+  border: 2px dashed #D4816180;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.pn-empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.6;
+}
+
+.pn-empty-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #304B60;
+}
+
+.pn-empty-hint {
+  font-size: 0.82rem;
+  color: #aaa;
+}
+
+/* ==================== Note Card ==================== */
+.pn-note-card {
+  background: #fff;
+  border: 1px solid #E3DAD1;
+  border-radius: 10px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.2s;
+}
+
+.pn-note-card:hover {
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.08);
+}
+
+.pn-note-content {
+  font-size: 0.95rem;
+  color: #304B60;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.pn-note-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f0ebe5;
+}
+
+.pn-note-date {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.pn-note-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pn-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+  transition: background 0.15s, transform 0.1s;
+  line-height: 1;
+}
+
+.pn-action-btn:hover {
+  background: #f5f0eb;
+}
+
+.pn-action-btn:active {
+  transform: scale(0.92);
+}
+
+.pn-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 640px) {
+  .pn-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .pn-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pn-btn--primary {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pn-form {
+    padding: 1rem;
+  }
+
+  .pn-form-actions {
+    flex-direction: column;
+  }
+
+  .pn-form-actions .pn-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pn-note-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

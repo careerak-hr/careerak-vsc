@@ -13,8 +13,11 @@ class NotificationService {
       const preferences = await this.getUserPreferences(recipient);
       
       if (!preferences.preferences[type]?.enabled) {
-        logger.info(`Notification type ${type} is disabled for user ${recipient}`);
-        return null;
+        // إذا كان النوع غير موجود في التفضيلات، نعتبره مفعلاً افتراضياً
+        if (preferences.preferences[type] !== undefined) {
+          logger.info(`Notification type ${type} is disabled for user ${recipient}`);
+          return null;
+        }
       }
       
       // التحقق من ساعات الهدوء
@@ -73,6 +76,80 @@ class NotificationService {
     });
   }
   
+  // إشعار بتأكيد الموعد (للطرفين: الشركة والباحث)
+  async notifyAppointmentConfirmed(appointment, companyId, jobSeekerId) {
+    const scheduledTime = new Date(appointment.scheduledAt).toLocaleString('ar-EG', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    const relatedData = {
+      appointment: appointment._id,
+      scheduledAt: appointment.scheduledAt,
+      duration: appointment.duration,
+      meetingLink: appointment.meetingLink || null,
+      location: appointment.location || null,
+    };
+
+    // إشعار للباحث عن عمل
+    const seekerNotification = await this.createNotification({
+      recipient: jobSeekerId,
+      type: 'appointment_confirmed',
+      title: 'تم تأكيد موعد مقابلتك ✅',
+      message: `تم تأكيد موعد مقابلتك "${appointment.title}" في ${scheduledTime}`,
+      relatedData,
+      priority: 'urgent',
+    });
+
+    // إشعار للشركة
+    const companyNotification = await this.createNotification({
+      recipient: companyId,
+      type: 'appointment_confirmed',
+      title: 'تم تأكيد الموعد ✅',
+      message: `تم تأكيد موعد المقابلة "${appointment.title}" في ${scheduledTime}`,
+      relatedData,
+      priority: 'high',
+    });
+
+    // إرسال إشعارات فورية عبر Pusher
+    try {
+      const pusherService = require('./pusherService');
+      if (pusherService.isEnabled()) {
+        const pusherPayload = {
+          type: 'appointment_confirmed',
+          appointmentId: appointment._id,
+          appointmentTitle: appointment.title,
+          scheduledAt: appointment.scheduledAt,
+          duration: appointment.duration,
+          meetingLink: appointment.meetingLink || null,
+          location: appointment.location || null,
+          timestamp: new Date().toISOString(),
+        };
+
+        await Promise.all([
+          pusherService.sendNotificationToUser(jobSeekerId, {
+            ...pusherPayload,
+            title: 'تم تأكيد موعد مقابلتك ✅',
+            message: `مقابلة "${appointment.title}" في ${scheduledTime}`,
+          }),
+          pusherService.sendNotificationToUser(companyId, {
+            ...pusherPayload,
+            title: 'تم تأكيد الموعد ✅',
+            message: `مقابلة "${appointment.title}" في ${scheduledTime}`,
+          }),
+        ]);
+      }
+    } catch (pusherError) {
+      logger.warn('Pusher notification failed for appointment confirmation:', pusherError.message);
+    }
+
+    return { seekerNotification, companyNotification };
+  }
+
   // إشعار برفض الطلب
   async notifyApplicationRejected(userId, applicationId, jobTitle) {
     return await this.createNotification({
@@ -1134,6 +1211,166 @@ class NotificationService {
     } catch (error) {
       logger.error('Error sending queued notifications:', error);
       throw error;
+    }
+  }
+
+  // إشعار بمشاركة محتوى داخلياً عبر المحادثة
+  async notifyContentShared(recipientId, senderId, contentType, contentTitle) {
+    try {
+      const { User } = require('../models/User');
+      const sender = await User.findById(senderId).select('firstName lastName companyName').lean();
+      const senderName = sender
+        ? (sender.firstName ? `${sender.firstName} ${sender.lastName || ''}`.trim() : sender.companyName || 'مستخدم')
+        : 'مستخدم';
+
+      const typeLabels = { job: 'وظيفة', course: 'دورة', profile: 'ملف شخصي', company: 'شركة' };
+      const typeLabel = typeLabels[contentType] || 'محتوى';
+
+      return await this.createNotification({
+        recipient: recipientId,
+        type: 'system',
+        title: `شارك معك ${typeLabel} 📤`,
+        message: `قام ${senderName} بمشاركة ${typeLabel} "${contentTitle}" معك`,
+        relatedData: { contentType, contentTitle, senderId },
+        priority: 'medium'
+      });
+    } catch (error) {
+      logger.error('Error notifying content shared:', error);
+      // Non-blocking - don't throw
+    }
+  }
+
+  // ==================== Referral Reward Notifications ====================
+
+  /**
+   * إرسال إشعار مكافأة الإحالة
+   * @param {string} referrerId - معرف المحيل
+   * @param {string} referredUserId - معرف المُحال
+   * @param {string} rewardType - نوع المكافأة: 'signup' | 'first_course' | 'job' | 'paid_subscription'
+   * @param {number} points - عدد النقاط الممنوحة
+   * @param {string} referralId - معرف الإحالة (اختياري)
+   */
+  async sendReferralRewardNotification(referrerId, referredUserId, rewardType, points, referralId = null) {
+    try {
+      const rewardMessages = {
+        signup: {
+          referrerTitle: 'كسبت نقاطاً جديدة! 🎉',
+          referrerMsg: `صديقك سجّل باستخدام رابط إحالتك وكسبت ${points} نقطة`,
+          referredTitle: 'مرحباً بك! هدية ترحيبية 🎁',
+          referredMsg: `حصلت على ${points} نقطة كمكافأة ترحيبية بعد تسجيلك`
+        },
+        first_course: {
+          referrerTitle: 'مكافأة جديدة! 📚',
+          referrerMsg: `أكمل صديقك المُحال أول دورة وكسبت ${points} نقطة`
+        },
+        job: {
+          referrerTitle: 'مكافأة الوظيفة! 💼',
+          referrerMsg: `حصل صديقك المُحال على وظيفة وكسبت ${points} نقطة`
+        },
+        paid_subscription: {
+          referrerTitle: 'مكافأة الاشتراك! 💎',
+          referrerMsg: `اشترك صديقك المُحال في باقة مدفوعة وكسبت ${points} نقطة`
+        }
+      };
+
+      const config = rewardMessages[rewardType];
+      if (!config) {
+        logger.warn(`Unknown referral reward type: ${rewardType}`);
+        return null;
+      }
+
+      const relatedData = { rewardType, points };
+      if (referralId) relatedData.referral = referralId;
+
+      const results = {};
+
+      // إشعار المحيل
+      if (referrerId) {
+        results.referrerNotification = await this.createNotification({
+          recipient: referrerId,
+          type: 'referral_reward',
+          title: config.referrerTitle,
+          message: config.referrerMsg,
+          relatedData,
+          priority: 'high'
+        });
+
+        // إشعار فوري عبر Pusher
+        try {
+          const pusherService = require('./pusherService');
+          if (pusherService.isEnabled()) {
+            await pusherService.sendNotificationToUser(referrerId, {
+              type: 'referral_reward',
+              title: config.referrerTitle,
+              message: config.referrerMsg,
+              rewardType,
+              points,
+              timestamp: new Date().toISOString()
+            });
+          }
+        } catch (pusherError) {
+          logger.warn('Pusher notification failed (non-blocking):', pusherError.message);
+        }
+      }
+
+      // إشعار المُحال (فقط عند التسجيل)
+      if (rewardType === 'signup' && referredUserId && config.referredTitle) {
+        results.referredNotification = await this.createNotification({
+          recipient: referredUserId,
+          type: 'referral_reward',
+          title: config.referredTitle,
+          message: config.referredMsg,
+          relatedData: { rewardType: 'welcome_bonus', points: 25, referral: referralId },
+          priority: 'high'
+        });
+
+        try {
+          const pusherService = require('./pusherService');
+          if (pusherService.isEnabled()) {
+            await pusherService.sendNotificationToUser(referredUserId, {
+              type: 'referral_reward',
+              title: config.referredTitle,
+              message: config.referredMsg,
+              rewardType: 'welcome_bonus',
+              points: 25,
+              timestamp: new Date().toISOString()
+            });
+          }
+        } catch (pusherError) {
+          logger.warn('Pusher notification failed (non-blocking):', pusherError.message);
+        }
+      }
+
+      logger.info(`Referral reward notifications sent - type: ${rewardType}, referrer: ${referrerId}`);
+      return results;
+
+    } catch (error) {
+      logger.error('Error sending referral reward notification:', error);
+      // Non-blocking - لا نفشل عملية المكافأة بسبب فشل الإشعار
+    }
+  }
+
+  // إشعار باكتمال الدورة
+  async sendCourseCompletionNotification(enrollment) {
+    try {
+      const CourseEnrollment = require('../models/CourseEnrollment');
+      const populated = await CourseEnrollment.findById(enrollment._id)
+        .populate('course', 'title')
+        .lean();
+      
+      const courseName = populated?.course?.title || 'الدورة';
+      
+      return await this.createNotification({
+        recipient: enrollment.student,
+        type: 'system',
+        title: 'تهانينا! أكملت الدورة 🎓',
+        message: `لقد أكملت دورة "${courseName}" بنجاح. سيتم إصدار شهادتك قريباً!`,
+        relatedData: { courseId: enrollment.course },
+        priority: 'high'
+      });
+    } catch (error) {
+      logger.error('Error sending course completion notification:', error);
+      // لا نفشل العملية إذا فشل الإشعار
     }
   }
 }
