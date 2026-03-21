@@ -112,7 +112,7 @@ class RouteErrorBoundary extends React.Component {
               onRetry={this.handleRetry}
               onDismiss={this.handleGoHome}
               size="large"
-              showDetails={process.env.NODE_ENV === 'development'}
+              showDetails={import.meta.env.DEV}
               autoRetryOnline={true}
               maxAutoRetries={3}
             />
@@ -222,7 +222,7 @@ const RouteErrorUI = ({ error, errorInfo, errorTimestamp, onRetry, onGoHome, lan
         </div>
 
         {/* Error Details (Development Only) */}
-        {process.env.NODE_ENV === 'development' && error && (
+        {import.meta.env.DEV && error && (
           <details className="route-error-details">
             <summary className="route-error-details-summary">
               {messages.detailsTitle}

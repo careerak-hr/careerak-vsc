@@ -105,7 +105,10 @@ export const trackDarkModeEvent = (eventType, data = {}) => {
  */
 const sendToBackend = async (event) => {
   try {
-    const apiUrl = import.meta.env.VITE_API_URL || process.env.REACT_APP_API_URL;
+    // لا ترسل إذا كانت Analytics معطلة
+    if (import.meta.env.VITE_ENABLE_ANALYTICS !== 'true') return;
+
+    const apiUrl = import.meta.env.VITE_API_URL;
     if (!apiUrl) return;
 
     await fetch(`${apiUrl}/api/analytics/dark-mode`, {

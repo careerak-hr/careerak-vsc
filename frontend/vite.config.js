@@ -92,36 +92,12 @@ const workboxPlugin = () => ({
   },
 });
 
-// Custom plugin to add preload tags for critical resources
-const preloadPlugin = () => ({
-  name: 'preload-plugin',
-  transformIndexHtml(html) {
-    // Vite automatically handles modulepreload for entry chunks
-    // This plugin ensures critical vendor chunks are also preloaded
-    return {
-      html,
-      tags: [
-        {
-          tag: 'link',
-          attrs: {
-            rel: 'modulepreload',
-            // React vendor chunk is critical for initial render
-            href: '/assets/js/react-vendor-[hash].js',
-            crossorigin: true,
-          },
-          injectTo: 'head-prepend',
-        },
-      ],
-    };
-  },
-});
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    // Preload plugin for critical resources
-    preloadPlugin(),
     // Bundle analyzer - generates stats.html after build
     visualizer({
       filename: './build/stats.html',

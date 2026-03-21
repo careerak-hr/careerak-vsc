@@ -98,7 +98,7 @@ export const initErrorTracking = (config = {}) => {
   };
 
   if (!errorTrackingConfig.enabled) {
-    console.log('[ErrorTracking] Disabled in', process.env.NODE_ENV);
+    console.log('[ErrorTracking] Disabled in', import.meta.env.MODE);
     return;
   }
 

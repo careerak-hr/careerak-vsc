@@ -309,7 +309,7 @@ export const logAuditResults = () => {
 };
 
 // Export for use in development
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   window.auditImageAltText = logAuditResults;
 }
 

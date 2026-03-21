@@ -105,7 +105,7 @@ class ComponentErrorBoundary extends React.Component {
             error={this.state.error.networkError || this.state.error}
             onRetry={this.handleRetry}
             size="medium"
-            showDetails={process.env.NODE_ENV === 'development'}
+            showDetails={import.meta.env.DEV}
             autoRetryOnline={true}
             maxAutoRetries={2}
           />
@@ -230,7 +230,7 @@ const ComponentErrorUI = ({
         </div>
 
         {/* Error Details (Development Only) */}
-        {process.env.NODE_ENV === 'development' && error && (
+        {import.meta.env.DEV && error && (
           <details className="component-error-details">
             <summary className="component-error-details-summary">
               {messages.detailsTitle}

@@ -142,11 +142,10 @@ function storeMetric(metric) {
  */
 async function sendMetricToBackend(metric) {
   try {
-    // Check if backend API is available
-    const apiUrl = process.env.REACT_APP_API_URL || process.env.VITE_API_URL;
-    if (!apiUrl) {
-      return;
-    }
+    if (import.meta.env.VITE_ENABLE_ANALYTICS !== 'true') return;
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+    if (!apiUrl) return;
     
     const endpoint = `${apiUrl}/analytics/pwa-install`;
     

@@ -405,7 +405,7 @@ export const auditCurrentPage = () => {
 };
 
 // Export for development use
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   window.auditAllImages = auditCurrentPage;
   window.imageAuditReport = generateAuditReport;
 }

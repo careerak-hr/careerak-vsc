@@ -636,7 +636,7 @@ function AppRoutes() {
           } />
           
           {/* Error Boundary Test Route - Development Only */}
-          {process.env.NODE_ENV === 'development' && (
+          {import.meta.env.DEV && (
             <>
               <Route path="/error-boundary-test" element={
                 <SuspenseWrapper>

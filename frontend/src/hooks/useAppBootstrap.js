@@ -126,6 +126,6 @@ export const useAppBootstrap = () => {
     getSystemStatus,
 
     // معلومات إضافية
-    bootstrapManager: process.env.NODE_ENV === 'development' ? bootstrapManager : undefined
+    bootstrapManager: import.meta.env.DEV ? bootstrapManager : undefined
   };
 };

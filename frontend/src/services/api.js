@@ -10,16 +10,15 @@ let performanceMonitor = null;
 let trackApiCall = null;
 let logError = null;
 
-try {
-  const monitoring = require('../utils/monitoring');
-  trackApiCall = monitoring.trackApiCall;
-  logError = monitoring.logError;
-} catch (error) {
-  console.warn('Performance monitoring not available:', error.message);
-  // إنشاء دوال بديلة فارغة
-  trackApiCall = () => {};
-  logError = () => {};
-}
+// تحميل monitoring بشكل غير متزامن (dynamic import للبيئة ESM)
+import('../utils/monitoring')
+  .then((monitoring) => {
+    trackApiCall = monitoring.trackApiCall;
+    logError = monitoring.logError;
+  })
+  .catch(() => {
+    // monitoring غير متاح - الدوال البديلة الفارغة تبقى كما هي
+  });
 
 // ✅ استخدام متغير البيئة مع fallback للرابط المستقر
 const BASE_URL = import.meta.env.VITE_API_URL || 'https://careerak-vsc.vercel.app';

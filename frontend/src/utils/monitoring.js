@@ -183,7 +183,7 @@ class PerformanceMonitor {
   // 📊 إرسال المقاييس
   sendMetric(metric) {
     // يمكن إرسالها إلى Google Analytics أو خدمة أخرى
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       // gtag('event', metric.name, {
       //   value: Math.round(metric.value),
       //   metric_rating: metric.rating
@@ -193,7 +193,7 @@ class PerformanceMonitor {
 
   // 🚨 إرسال تقرير الأخطاء
   sendErrorReport(error) {
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       // يمكن إرسالها إلى Sentry أو خدمة أخرى
       console.error('Critical error reported:', error);
     }
@@ -201,7 +201,7 @@ class PerformanceMonitor {
 
   // 📄 إرسال عرض الصفحة
   sendPageView(pageView) {
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       // gtag('config', 'GA_MEASUREMENT_ID', {
       //   page_path: pageView.to
       // });

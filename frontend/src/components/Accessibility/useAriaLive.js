@@ -46,7 +46,7 @@ const useAriaLive = (options = {}) => {
     setPoliteness(level);
 
     // Log for debugging
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log(`[useAriaLive ${level}]:`, newMessage);
     }
 

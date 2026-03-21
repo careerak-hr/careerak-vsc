@@ -269,14 +269,14 @@ class AudioManager {
       
       // إنشاء عناصر الصوت
       this.musicAudio = new Audio();
-      const musicPath = process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/Music.mp3` : '/Music.mp3';
+      const musicPath = import.meta.env.BASE_URL ? `${import.meta.env.BASE_URL}Music.mp3` : '/Music.mp3';
       this.musicAudio.src = musicPath;
       this.musicAudio.loop = true; // ✅ تفعيل التكرار التلقائي
       this.musicAudio.volume = 0.3;
       this.musicAudio.preload = 'metadata'; // ✅ تحميل metadata فقط في البداية لتوفير الباندويث
 
       this.introAudio = new Audio();
-      const introPath = process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/intro.mp3` : '/intro.mp3';
+      const introPath = import.meta.env.BASE_URL ? `${import.meta.env.BASE_URL}intro.mp3` : '/intro.mp3';
       this.introAudio.src = introPath;
       this.introAudio.volume = 0.7;
       this.introAudio.preload = 'auto';

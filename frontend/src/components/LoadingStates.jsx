@@ -98,7 +98,7 @@ export const InitializationErrorScreen = ({ error, onRetry, onRestart }) => {
             حدث خطأ أثناء تهيئة التطبيق. يرجى المحاولة مرة أخرى.
           </p>
           
-          {process.env.NODE_ENV === 'development' && error && (
+          {import.meta.env.DEV && error && (
             <details className="mb-6 text-left">
               <summary className="error-details summary">
                 تفاصيل الخطأ (للمطورين)

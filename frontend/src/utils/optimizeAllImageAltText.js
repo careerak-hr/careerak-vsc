@@ -290,7 +290,7 @@ This will show all images with their SEO scores and suggestions.
 `;
 
 // Log report if run directly
-if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   console.log(quickReferenceGuide);
   const report = generateOptimizationReport();
   console.log(report.summary);

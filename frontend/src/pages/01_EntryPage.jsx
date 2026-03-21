@@ -79,7 +79,7 @@ export default function EntryPage() {
   useEffect(() => {
     if (audioEnabled && phase === 1 && !audioRef.current) {
       console.log("Playing intro.mp3");
-      const introPath = process.env.PUBLIC_URL ? `${process.env.PUBLIC_URL}/intro.mp3` : '/intro.mp3';
+      const introPath = import.meta.env.BASE_URL ? `${import.meta.env.BASE_URL}intro.mp3` : '/intro.mp3';
       audioRef.current = new Audio(introPath);
       audioRef.current.volume = 0.6;
       audioRef.current.play().catch((e) => console.log("Intro audio play failed:", e));

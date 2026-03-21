@@ -65,7 +65,7 @@ class BootstrapManager {
       initErrorTracking({
         service: 'custom',
         enabled: true,
-        environment: process.env.NODE_ENV || 'production',
+        environment: import.meta.env.MODE || 'production',
         release: '1.0.0',
         sampleRate: 1.0, // Track all errors
         ignoreErrors: [
@@ -233,7 +233,7 @@ class BootstrapManager {
     console.log('🔌 Initializing additional services...');
 
     // تحميل الأدوات المساعدة (فقط في التطوير)
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log('🛠️ Loading development utilities...');
       
       try {
@@ -347,7 +347,7 @@ class BootstrapManager {
 const bootstrapManager = new BootstrapManager();
 
 // إضافة إلى window للتشخيص (فقط في التطوير)
-if (process.env.NODE_ENV === 'development') {
+if (import.meta.env.DEV) {
   window.bootstrapManager = bootstrapManager;
 }
 

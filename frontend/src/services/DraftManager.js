@@ -11,7 +11,7 @@ const STORAGE_KEY_PREFIX = 'careerak_draft_';
 
 class DraftManager {
   constructor(apiBaseUrl) {
-    this.apiBaseUrl = apiBaseUrl || process.env.REACT_APP_API_URL || process.env.VITE_API_URL || '';
+    this.apiBaseUrl = apiBaseUrl || import.meta.env.VITE_API_URL || '';
   }
 
   /**

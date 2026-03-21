@@ -60,7 +60,7 @@ const AdminSystemControl = () => {
   const loadSystemInfo = () => {
     // معلومات النظام من المتصفح
     setSystemInfo({
-      nodeVersion: process.env.NODE_VERSION || 'N/A',
+      nodeVersion: import.meta.env.VITE_NODE_VERSION || 'N/A',
       reactVersion: React.version,
       capacitorVersion: '5.x',
       platform: navigator.platform,

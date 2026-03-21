@@ -13,8 +13,8 @@ import pusherPushService from '../services/pusherPushService';
  */
 export const usePusherPush = (userId, options = {}) => {
   const {
-    pusherKey = process.env.REACT_APP_PUSHER_KEY,
-    cluster = process.env.REACT_APP_PUSHER_CLUSTER || 'eu',
+    pusherKey = import.meta.env.VITE_PUSHER_KEY,
+    cluster = import.meta.env.VITE_PUSHER_CLUSTER || 'eu',
     autoInitialize = true,
     autoRequestPermission = false,
   } = options;

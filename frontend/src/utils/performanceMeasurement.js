@@ -434,7 +434,7 @@ class PerformanceMeasurement {
    */
   sendToAnalytics(report) {
     // In production, send to Google Analytics, Sentry, or custom endpoint
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       // Example: gtag('event', 'web_vitals', { ... });
       console.log('📤 Would send to analytics:', report);
     }
