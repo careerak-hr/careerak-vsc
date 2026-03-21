@@ -160,13 +160,34 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: 'البريد الإلكتروني وكلمة المرور مطلوبان' });
     }
     
-    // Admin login check - استخدام متغيرات البيئة للأمان
-    const adminUsername = process.env.ADMIN_USERNAME || 'admin01';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    
-    if (email === adminUsername && password === adminPassword) {
-      const adminUser = { _id: '000000000000000000000000', firstName: 'Master', role: 'Admin', email: 'admin01' };
-      return res.status(200).json({ token: generateToken(adminUser), user: adminUser });
+    // Admin login check
+    // المنطق: التطبيق (.env) أولاً، MongoDB ثانياً كـ fallback فقط عند غياب بيانات .env
+    const adminUsername = process.env.ADMIN_USERNAME;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (adminUsername && adminPassword) {
+      // بيانات الأدمن موجودة في .env - استخدمها مباشرة
+      if (email === adminUsername && password === adminPassword) {
+        const adminUser = { _id: '000000000000000000000000', firstName: 'Master', role: 'Admin', email: adminUsername };
+        return res.status(200).json({ token: generateToken(adminUser), user: adminUser });
+      }
+    } else {
+      // لا توجد بيانات أدمن في .env - ابحث في MongoDB كـ fallback
+      const adminFromDB = await User.findOne({
+        role: 'Admin',
+        $or: [{ email: email?.toLowerCase() }, { phone: email }]
+      }).select('+password').catch(() => null);
+
+      if (adminFromDB) {
+        const isMatch = await adminFromDB.comparePassword(password);
+        if (!isMatch) {
+          return res.status(401).json({ error: 'بيانات الدخول غير صحيحة' });
+        }
+        if (adminFromDB.accountDisabled) {
+          return res.status(403).json({ error: 'تم تعطيل الحساب', code: 'ACCOUNT_DISABLED' });
+        }
+        return res.status(200).json({ token: generateToken(adminFromDB), user: sanitizeUser(adminFromDB) });
+      }
     }
     
     const user = await User.findOne({ $or: [{ email: email?.toLowerCase() }, { phone: email }] });

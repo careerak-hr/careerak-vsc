@@ -54,7 +54,12 @@ const corsOptions = {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(null, true); // السماح بجميع الأصول مؤقتاً
+      // في التطوير نسمح بجميع الأصول، في الإنتاج نرفض
+      if (process.env.NODE_ENV === 'production') {
+        callback(new Error(`CORS: Origin '${origin}' not allowed`));
+      } else {
+        callback(null, true);
+      }
     }
   },
   credentials: true,
