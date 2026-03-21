@@ -69,14 +69,12 @@ const workboxPlugin = () => ({
         globPatterns: [
           '**/*.{js,css,html,png,jpg,jpeg,svg,ico,woff,woff2,ttf,eot}',
         ],
-        // Exclude large files and source maps
         globIgnores: [
           '**/node_modules/**/*',
           '**/stats.html',
           '**/*.map',
           '**/version.json',
         ],
-        // Maximum file size to precache (2MB)
         maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
       });
 
@@ -86,8 +84,18 @@ const workboxPlugin = () => ({
         console.warn('⚠ Workbox warnings:', warnings);
       }
     } catch (error) {
-      console.error('✗ Failed to generate service worker:', error);
-      throw error;
+      console.warn('⚠ Failed to generate service worker (build will continue):', error.message);
+      // Copy source SW as fallback without manifest injection
+      try {
+        const src = path.resolve(__dirname, 'public', 'service-worker.js');
+        const dest = path.resolve(__dirname, 'build', 'service-worker.js');
+        const content = fs.readFileSync(src, 'utf-8')
+          .replace('self.__WB_MANIFEST', '[]');
+        fs.writeFileSync(dest, content);
+        console.log('✓ Copied service worker with empty manifest as fallback');
+      } catch (copyError) {
+        console.warn('⚠ Could not copy service worker:', copyError.message);
+      }
     }
   },
 });
