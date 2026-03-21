@@ -201,7 +201,7 @@ echo Build completed at: %date% %time%
 echo.
 
 :: Check if APK exists
-set "apk_path=frontend\android\app\build\outputs\apk\debug\Careerak-v1.0-debug.apk"
+set "apk_path=frontend\android\app\build\outputs\apk\debug\Careerak-v1.1-debug.apk"
 if exist "%apk_path%" (
     echo ✅ APK file created successfully!
     
@@ -216,7 +216,7 @@ if exist "%apk_path%" (
     if not exist "apk_output" mkdir "apk_output"
     copy "%apk_path%" "apk_output\" >nul 2>&1
     
-    if exist "apk_output\Careerak-v1.0-debug.apk" (
+    if exist "apk_output\Careerak-v1.1-debug.apk" (
         echo.
         echo 📂 APK copied to: %CD%\apk_output\
         echo.
