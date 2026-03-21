@@ -6,8 +6,8 @@ export const SplashScreen = ({ onFinish }) => {
 
   useEffect(() => {
     // 1. تشغيل ملف intro.mp3
-    const introPath = import.meta.env.BASE_URL ? `${import.meta.env.BASE_URL}intro.mp3` : '/intro.mp3';
-    const audio = new Audio(introPath);
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+    const audio = new Audio(`${base}/intro.mp3`);
     audio.volume = 0.8;
     
     const playIntro = () => {

@@ -26,25 +26,23 @@ const CRITICAL_ASSETS = [
 // self.__WB_MANIFEST is injected by Workbox during build
 precacheAndRoute(self.__WB_MANIFEST);
 
-// Explicitly precache critical assets during install
-// This ensures they're available immediately, even before first visit
+// Precache critical assets during install (excluding media files)
 self.addEventListener('install', (event) => {
   event.waitUntil(
     Promise.all([
-      // Precache critical assets
       caches.open('critical-assets-v1').then((cache) => {
-        console.log('Precaching critical assets:', CRITICAL_ASSETS);
-        return cache.addAll(CRITICAL_ASSETS).catch((error) => {
-          console.error('Failed to precache critical assets:', error);
-          // Don't fail installation if some assets are missing
+        // Cache only static assets - exclude audio/video (not supported in all browsers)
+        const cacheableAssets = CRITICAL_ASSETS.filter(
+          url => !url.match(/\.(mp3|mp4|wav|ogg|webm)$/i)
+        );
+        return cache.addAll(cacheableAssets).catch((error) => {
+          console.warn('Failed to precache some assets:', error);
           return Promise.resolve();
         });
       }),
-      // Precache offline fallback page
       caches.open('offline-fallback').then((cache) => {
-        console.log('Precaching offline fallback page');
         return cache.add('/offline.html').catch((error) => {
-          console.error('Failed to precache offline page:', error);
+          console.warn('Failed to precache offline page:', error);
           return Promise.resolve();
         });
       })
@@ -52,13 +50,14 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Cache static assets (JS, CSS, fonts) with CacheFirst strategy
-// 30-day expiration as per FR-PWA-8
+// Cache static assets (JS, CSS, fonts) with CacheFirst - exclude audio/video
 registerRoute(
   ({ request }) => 
-    request.destination === 'script' ||
+    (request.destination === 'script' ||
     request.destination === 'style' ||
-    request.destination === 'font',
+    request.destination === 'font') &&
+    request.destination !== 'audio' &&
+    request.destination !== 'video',
   new CacheFirst({
     cacheName: 'static-assets',
     plugins: [
