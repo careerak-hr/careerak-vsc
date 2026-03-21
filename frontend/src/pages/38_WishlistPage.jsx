@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import CourseCard from '../components/Courses/CourseCard';
-import './WishlistPage.css';
+import './38_WishlistPage.css';
 
 const WishlistPage = () => {
   const { user, language } = useApp();

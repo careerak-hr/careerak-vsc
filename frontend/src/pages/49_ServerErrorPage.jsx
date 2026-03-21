@@ -6,7 +6,7 @@ import { useAnimation } from '../context/AnimationContext';
 import { feedbackVariants } from '../utils/animationVariants';
 import AriaLiveRegion from '../components/Accessibility/AriaLiveRegion';
 import SEOHead from '../components/SEO/SEOHead';
-import './ServerErrorPage.css';
+import './49_ServerErrorPage.css';
 
 /**
  * ServerErrorPage - Custom 500 Server Error Page

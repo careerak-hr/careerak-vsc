@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import QRCode from 'qrcode';
 import { useApp } from '../context/AppContext';
-import './VerificationPage.css';
+import './46_VerificationPage.css';
 
 /**
  * صفحة التحقق من الشهادات

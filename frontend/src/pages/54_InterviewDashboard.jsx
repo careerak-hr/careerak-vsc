@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import './InterviewDashboard.css';
+import './54_InterviewDashboard.css';
 
 /**
  * لوحة إدارة المقابلات

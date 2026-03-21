@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import './CertificatePublicVerifyPage.css';
+import './45_CertificatePublicVerifyPage.css';
 
 /**
  * صفحة التحقق العامة من الشهادات

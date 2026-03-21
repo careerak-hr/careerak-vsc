@@ -12,7 +12,7 @@ import NotificationList from '../components/NotificationList';
 import PageTransition from '../components/PageTransition';
 import InteractiveElement from '../components/InteractiveElement';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
-import './NotificationsPage.css';
+import './40_NotificationsPage.css';
 import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import CertificateStatus from '../components/Certificates/CertificateStatus';
-import './CertificateVerificationPage.css';
+import './44_CertificateVerificationPage.css';
 
 /**
  * صفحة التحقق من الشهادة

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 import { useNavigate } from 'react-router-dom';
 import pusherClient from '../utils/pusherClient';
-import './ActivityLogPage.css';
+import './52_ActivityLogPage.css';
 
 /**
  * ActivityLogPage Component

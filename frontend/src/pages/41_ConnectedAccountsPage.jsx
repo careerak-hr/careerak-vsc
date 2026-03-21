@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ConnectedAccountCard from '../components/auth/ConnectedAccountCard';
 import ConfirmationModal from '../components/modals/ConfirmationModal';
-import './ConnectedAccountsPage.css';
+import './41_ConnectedAccountsPage.css';
 
 // Translations
 const translations = {

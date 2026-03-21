@@ -6,7 +6,7 @@ import { useAnimation } from '../context/AnimationContext';
 import SEOHead from '../components/SEO/SEOHead';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import ShareButton from '../components/ShareButton/ShareButton';
-import './CompanyProfilePage.css';
+import './35_CompanyProfilePage.css';
 
 /**
  * CompanyProfilePage Component

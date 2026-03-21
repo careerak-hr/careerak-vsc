@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import './CompanyReferralDashboard.css';
+import './58_CompanyReferralDashboard.css';
 
 const translations = {
   ar: {

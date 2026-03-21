@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import ChartWidget from '../components/admin/ChartWidget';
 import ReferralStats from '../components/Referral/ReferralStats';
-import './ReferralStatsPage.css';
+import './56_ReferralStatsPage.css';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 

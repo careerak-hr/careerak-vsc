@@ -5,7 +5,7 @@ import AppointmentsList from '../components/Appointments/AppointmentsList';
 import AppointmentDetails from '../components/Appointments/AppointmentDetails';
 import AppointmentNotesRating from '../components/Appointments/AppointmentNotesRating';
 import ReminderSettings from '../components/Appointments/ReminderSettings';
-import './MyAppointmentsPage.css';
+import './50_MyAppointmentsPage.css';
 
 /**
  * MyAppointmentsPage - صفحة "مواعيدي" الشاملة للباحثين عن عمل

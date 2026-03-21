@@ -6,7 +6,7 @@ import FormErrorAnnouncer from '../components/Accessibility/FormErrorAnnouncer';
 import ButtonSpinner from '../components/Loading/ButtonSpinner';
 import { SEOHead } from '../components/SEO';
 import { useSEO } from '../hooks';
-import './ResetPasswordPage.css';
+import './32_ResetPasswordPage.css';
 
 /**
  * ResetPasswordPage Component

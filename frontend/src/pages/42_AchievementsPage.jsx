@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
-import './AchievementsPage.css';
+import './42_AchievementsPage.css';
 
 const translations = {
   ar: {

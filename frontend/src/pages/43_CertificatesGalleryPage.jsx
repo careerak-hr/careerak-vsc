@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
 import FilterPanel from '../components/Certificates/FilterPanel';
-import './CertificatesGalleryPage.css';
+import './43_CertificatesGalleryPage.css';
 
 const CertificatesGalleryPage = () => {
   const { language, user } = useApp();

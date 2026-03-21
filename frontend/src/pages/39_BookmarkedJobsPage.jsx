@@ -7,7 +7,7 @@ import ViewToggle from '../components/ViewToggle/ViewToggle';
 import JobCardGridSkeleton from '../components/SkeletonLoaders/JobCardGridSkeleton';
 import JobCardListSkeleton from '../components/SkeletonLoaders/JobCardListSkeleton';
 import useViewPreference from '../hooks/useViewPreference';
-import './BookmarkedJobsPage.css';
+import './39_BookmarkedJobsPage.css';
 
 /**
  * Page to display user's bookmarked jobs

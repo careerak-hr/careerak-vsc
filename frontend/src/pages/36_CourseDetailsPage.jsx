@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import { useAnimation } from '../context/AnimationContext';
 import { pageVariants } from '../utils/animationVariants'; // fadeInVariants not found
-import './CourseDetailsPage.css';
+import './36_CourseDetailsPage.css';
 import { SEOHead, StructuredData } from '../components/SEO';
 import { Breadcrumbs } from '../components/InternalLinks';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';

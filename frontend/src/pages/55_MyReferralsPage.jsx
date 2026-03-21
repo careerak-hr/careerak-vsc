@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import ReferralsList from '../components/Referral/ReferralsList';
-import './MyReferralsPage.css';
+import './55_MyReferralsPage.css';
 
 const translations = {
   ar: {

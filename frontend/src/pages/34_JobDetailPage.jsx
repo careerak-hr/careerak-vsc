@@ -4,7 +4,7 @@ import axios from 'axios';
 import { SEOHead } from '../components/SEO';
 import ComponentErrorBoundary from '../components/ErrorBoundary/ComponentErrorBoundary';
 import ShareButton from '../components/ShareButton/ShareButton';
-import './JobDetailPage.css';
+import './34_JobDetailPage.css';
 
 // Lazy load components
 const SimilarJobsSection = lazy(() => import('../components/SimilarJobs/SimilarJobsSection'));

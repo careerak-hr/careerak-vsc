@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import RedemptionCard from '../components/Referral/RedemptionCard';
 import RedemptionConfirmModal from '../components/Referral/RedemptionConfirmModal';
 import RedemptionHistory from '../components/Referral/RedemptionHistory';
-import './RewardsStorePage.css';
+import './57_RewardsStorePage.css';
 
 // ---- Translations ----
 const translations = {
