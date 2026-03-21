@@ -281,3 +281,29 @@ textarea:focus {
    </div>
    
    ============================================ */
+
+/* ============================================
+   DARK MODE DISABLED - Force Light Mode Always
+   ============================================ */
+.dark,
+html.dark,
+body.dark,
+[data-theme="dark"] {
+  /* Override all dark mode variables back to light mode values */
+  --bg-primary: #E3DAD1 !important;
+  --bg-secondary: #E8DFD6 !important;
+  --bg-tertiary: #F0EBE5 !important;
+  --bg-hover: #DDD4CB !important;
+  --text-primary: #304B60 !important;
+  --text-secondary: #3D5A73 !important;
+  --text-tertiary: #304B60 !important;
+  --text-muted: #3D5A73 !important;
+  --text-inverse: #FFFFFF !important;
+  --accent-primary: #A04D2F !important;
+  --accent-secondary: #B85A3A !important;
+  --accent-hover: #8A3F22 !important;
+  --border-primary: #D4816180 !important;
+  --border-secondary: #304B6040 !important;
+  --border-light: #E3DAD180 !important;
+  color-scheme: light !important;
+}

@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class', // Enable dark mode with class strategy
+  darkMode: false, // Dark mode disabled
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
     "./public/index.html",
@@ -26,6 +26,17 @@ module.exports = {
     'text-left',
     // Dark mode classes
     'dark',
+    // Entry page animation classes
+    'translate-y-0',
+    'translate-y-10',
+    'scale-75',
+    'scale-90',
+    'scale-100',
+    'scale-110',
+    'scale-150',
+    'scale-0',
+    'opacity-0',
+    'opacity-100',
   ],
   theme: {
     colors: {

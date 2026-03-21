@@ -1,0 +1,395 @@
+/* ========== Page Container ========== */
+.certificates-gallery-page {
+  min-height: 100vh;
+  padding: 2rem;
+  background: var(--bg-primary, #FFFFFF);
+  font-family: 'Amiri', 'Cormorant Garamond', serif;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .certificates-gallery-page {
+    background: var(--bg-primary-dark, #1a1a1a);
+  }
+}
+
+/* ========== Page Title ========== */
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary, #304B60);
+  margin: 0 0 2rem 0;
+  text-align: center;
+}
+
+/* ========== Gallery Container ========== */
+.gallery-container {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ========== Filter Sidebar ========== */
+.filter-sidebar {
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+}
+
+/* ========== Certificates Grid ========== */
+.certificates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ========== Certificate Card ========== */
+.certificate-card {
+  background: var(--bg-secondary, #E3DAD1);
+  border: 2px solid var(--primary, #304B60);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(48, 75, 96, 0.1);
+}
+
+.certificate-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(48, 75, 96, 0.2);
+}
+
+/* ========== Certificate Thumbnail ========== */
+.certificate-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: var(--primary, #304B60);
+}
+
+.certificate-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder-thumbnail {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--primary, #304B60), var(--accent, #D48161));
+}
+
+.placeholder-thumbnail span {
+  font-size: 4rem;
+}
+
+/* ========== Status Badge ========== */
+.status-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.status-active {
+  background: #28a745;
+}
+
+.status-revoked {
+  background: #dc3545;
+}
+
+.status-expired {
+  background: #6c757d;
+}
+
+/* RTL Support for Status Badge */
+[dir="rtl"] .status-badge {
+  right: auto;
+  left: 1rem;
+}
+
+/* ========== Certificate Info ========== */
+.certificate-info {
+  padding: 1.5rem;
+}
+
+.certificate-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary, #304B60);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.4;
+}
+
+.certificate-date {
+  font-size: 0.95rem;
+  color: var(--text-secondary, #666);
+  margin: 0 0 1rem 0;
+}
+
+/* ========== Certificate Actions ========== */
+.certificate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  text-align: center;
+}
+
+.action-btn.primary {
+  background: var(--primary, #304B60);
+  color: white;
+}
+
+.action-btn.primary:hover {
+  background: #243a4d;
+  transform: translateY(-2px);
+}
+
+.action-btn.secondary {
+  background: transparent;
+  border: 1px solid var(--accent, #D48161);
+  color: var(--accent, #D48161);
+}
+
+.action-btn.secondary:hover {
+  background: var(--accent, #D48161);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+}
+
+/* ========== Loading State ========== */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(48, 75, 96, 0.1);
+  border-top-color: var(--accent, #D48161);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== Error State ========== */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.error-message {
+  font-size: 1.2rem;
+  color: #dc3545;
+  text-align: center;
+}
+
+/* ========== Empty State ========== */
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.empty-message {
+  font-size: 1.2rem;
+  color: var(--text-secondary, #666);
+  text-align: center;
+}
+
+/* ========== Responsive Design ========== */
+
+/* Tablet (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .certificates-gallery-page {
+    padding: 1.5rem;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+  
+  .gallery-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .filter-sidebar {
+    position: static;
+  }
+  
+  .certificates-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* Mobile (< 640px) */
+@media (max-width: 639px) {
+  .certificates-gallery-page {
+    padding: 1rem;
+  }
+  
+  .page-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .gallery-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .filter-sidebar {
+    position: static;
+  }
+  
+  .certificates-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .certificate-thumbnail {
+    height: 180px;
+  }
+  
+  .certificate-info {
+    padding: 1rem;
+  }
+  
+  .certificate-title {
+    font-size: 1.1rem;
+  }
+  
+  .certificate-date {
+    font-size: 0.85rem;
+  }
+  
+  .action-btn {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Very Small Mobile (< 375px) */
+@media (max-width: 374px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .certificate-thumbnail {
+    height: 150px;
+  }
+  
+  .certificate-title {
+    font-size: 1rem;
+  }
+  
+  .action-btn {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ========== Print Styles ========== */
+@media print {
+  .certificates-gallery-page {
+    padding: 0;
+  }
+  
+  .filter-sidebar {
+    display: none;
+  }
+  
+  .gallery-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .certificates-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .certificate-card {
+    break-inside: avoid;
+  }
+  
+  .certificate-actions {
+    display: none;
+  }
+}
+
+/* ========== Accessibility ========== */
+.action-btn:focus {
+  outline: 2px solid var(--accent, #D48161);
+  outline-offset: 2px;
+}
+
+/* Touch Targets (min 44x44px) */
+@media (pointer: coarse) {
+  .action-btn {
+    min-height: 44px;
+  }
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  .certificate-card,
+  .action-btn,
+  .spinner {
+    animation: none;
+    transition: none;
+  }
+  
+  .certificate-card:hover {
+    transform: none;
+  }
+}
+
+/* ========== Safe Area Support (iOS Notch) ========== */
+@supports (padding: max(0px)) {
+  .certificates-gallery-page {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}

@@ -32,8 +32,8 @@ if not defined git_name (
 
 if not defined git_email (
     echo Git user.email not configured. Setting default...
-    git config user.email "eng.alaa@careerak.com"
-    set git_email=eng.alaa@careerak.com
+    git config user.email "careerak.hr@gmail.com"
+    set git_email=careerak.hr@gmail.com
 )
 
 echo Git user: %git_name% ^<%git_email%^>
@@ -151,14 +151,14 @@ echo.
 :: 7. Stop any running Gradle daemons
 echo [7/9] Stopping Gradle daemons...
 cd android
-call gradlew --stop
+call gradlew.bat --stop
 timeout /t 2 > nul
 echo.
 
 :: 8. Cleaning Android Project
 echo [8/9] Cleaning Android Project...
 echo This may take a few minutes on first run...
-call gradlew clean --no-daemon
+call gradlew.bat clean --no-daemon
 if %errorlevel% neq 0 (
     echo Error in Gradlew Clean!
     cd ..\..
@@ -173,7 +173,7 @@ echo [9/9] Assembling Debug APK...
 echo Building APK - This may take several minutes...
 echo Please be patient, especially on first build...
 echo.
-call gradlew assembleDebug --no-daemon --warning-mode none
+call gradlew.bat assembleDebug --no-daemon --warning-mode none
 if %errorlevel% neq 0 (
     echo.
     echo ==========================================

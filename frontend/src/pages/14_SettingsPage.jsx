@@ -132,50 +132,7 @@ const SettingsPage = () => {
                     </div>
                 </fieldset>
 
-                {/* Dark Mode Settings */}
-                <fieldset className="settings-section">
-                    <legend className="settings-section-title">
-                        {language === 'ar' ? 'المظهر' : language === 'fr' ? 'Thème' : 'Theme'}
-                    </legend>
-                    <p className="settings-section-text">
-                        {language === 'ar' ? `الوضع الحالي: ${isDark ? 'داكن' : 'فاتح'} (${themeMode === 'system' ? 'النظام' : themeMode === 'dark' ? 'داكن' : 'فاتح'})` :
-                         language === 'fr' ? `Mode actuel: ${isDark ? 'Sombre' : 'Clair'} (${themeMode})` :
-                         `Current Mode: ${isDark ? 'Dark' : 'Light'} (${themeMode})`}
-                    </p>
-                    <div className="settings-buttons" role="group" aria-labelledby="theme-legend">
-                        <button 
-                            onClick={() => setTheme('light')}
-                            className={`settings-btn ${themeMode === 'light' ? 'settings-btn-active' : ''}`}
-                            aria-label={language === 'ar' ? 'المظهر الفاتح' : language === 'fr' ? 'Thème clair' : 'Light theme'}
-                            aria-pressed={themeMode === 'light'}
-                        >
-                            ☀️ {language === 'ar' ? 'فاتح' : language === 'fr' ? 'Clair' : 'Light'}
-                        </button>
-                        <button 
-                            onClick={() => setTheme('dark')}
-                            className={`settings-btn ${themeMode === 'dark' ? 'settings-btn-active' : ''}`}
-                            aria-label={language === 'ar' ? 'المظهر الداكن' : language === 'fr' ? 'Thème sombre' : 'Dark theme'}
-                            aria-pressed={themeMode === 'dark'}
-                        >
-                            🌙 {language === 'ar' ? 'داكن' : language === 'fr' ? 'Sombre' : 'Dark'}
-                        </button>
-                        <button 
-                            onClick={() => setTheme('system')}
-                            className={`settings-btn ${themeMode === 'system' ? 'settings-btn-active' : ''}`}
-                            aria-label={language === 'ar' ? 'مظهر النظام' : language === 'fr' ? 'Thème système' : 'System theme'}
-                            aria-pressed={themeMode === 'system'}
-                        >
-                            💻 {language === 'ar' ? 'النظام' : language === 'fr' ? 'Système' : 'System'}
-                        </button>
-                    </div>
-                    <button 
-                        onClick={toggleTheme}
-                        className="settings-btn-toggle"
-                        aria-label={language === 'ar' ? 'تبديل بين الفاتح والداكن' : language === 'fr' ? 'Basculer entre clair et sombre' : 'Toggle between light and dark theme'}
-                    >
-                        {language === 'ar' ? 'تبديل المظهر' : language === 'fr' ? 'Basculer le thème' : 'Toggle Theme'}
-                    </button>
-                </fieldset>
+                {/* Dark Mode Settings - DISABLED */}
 
                 {/* Notification Settings */}
                 <fieldset className="settings-section">

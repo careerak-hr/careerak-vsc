@@ -1,0 +1,295 @@
+/* Connected Accounts Page Styles */
+
+.connected-accounts-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #E3DAD1 0%, #f5f0ea 100%);
+  padding: 2rem;
+}
+
+/* Header */
+.page-header {
+  max-width: 1200px;
+  margin: 0 auto 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #304B60;
+  color: #304B60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.back-button:hover {
+  background: #304B60;
+  color: white;
+  transform: scale(1.05);
+}
+
+.back-button:active {
+  transform: scale(0.95);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #304B60;
+  margin: 0 0 0.5rem 0;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Content */
+.page-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Loading State */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #E3DAD1;
+  border-top-color: #304B60;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  font-size: 1.125rem;
+  color: #666;
+}
+
+/* Error State */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1.5rem;
+}
+
+.error-state svg {
+  color: #ef4444;
+}
+
+.error-message {
+  font-size: 1.125rem;
+  color: #666;
+  text-align: center;
+}
+
+.retry-button {
+  padding: 0.75rem 2rem;
+  background: #304B60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: #243a4d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(48, 75, 96, 0.3);
+}
+
+.retry-button:active {
+  transform: translateY(0);
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.empty-state svg {
+  color: #999;
+}
+
+.empty-state h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #304B60;
+  margin: 0;
+}
+
+.empty-state p {
+  font-size: 1rem;
+  color: #666;
+  max-width: 500px;
+  margin: 0;
+}
+
+/* Accounts Grid */
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .connected-accounts-page {
+    padding: 1rem;
+  }
+  
+  .page-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .page-title {
+    font-size: 1.5rem;
+  }
+  
+  .page-subtitle {
+    font-size: 0.875rem;
+  }
+  
+  .back-button {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .accounts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .loading-state,
+  .error-state,
+  .empty-state {
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.25rem;
+  }
+  
+  .page-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .back-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .back-button svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+/* RTL Support */
+[dir="rtl"] .page-header {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .accounts-grid {
+  direction: rtl;
+}
+
+/* Dark Mode Support (Optional) */
+@media (prefers-color-scheme: dark) {
+  .connected-accounts-page {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  }
+  
+  .back-button {
+    background: #2d2d2d;
+    border-color: #E3DAD1;
+    color: #E3DAD1;
+  }
+  
+  .back-button:hover {
+    background: #E3DAD1;
+    color: #304B60;
+  }
+  
+  .page-title {
+    color: #E3DAD1;
+  }
+  
+  .page-subtitle,
+  .loading-state p,
+  .error-message,
+  .empty-state p {
+    color: #999;
+  }
+  
+  .empty-state h2 {
+    color: #E3DAD1;
+  }
+  
+  .spinner {
+    border-color: #2d2d2d;
+    border-top-color: #E3DAD1;
+  }
+}
+
+/* Accessibility */
+.back-button:focus-visible {
+  outline: 3px solid #D48161;
+  outline-offset: 2px;
+}
+
+.retry-button:focus-visible {
+  outline: 3px solid #D48161;
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .back-button,
+  .retry-button {
+    display: none;
+  }
+  
+  .connected-accounts-page {
+    background: white;
+  }
+}
