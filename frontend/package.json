@@ -52,7 +52,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "node --max-old-space-size=4096 node_modules/.bin/vite build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:slow-network": "node scripts/test-slow-network.js",
@@ -126,6 +126,7 @@
     "autoprefixer": "^10.4.14",
     "axe-core": "^4.11.1",
     "chrome-launcher": "^1.2.1",
+    "cross-env": "^10.1.0",
     "cssnano": "^7.1.2",
     "fast-check": "^4.5.3",
     "jsdom": "^28.1.0",

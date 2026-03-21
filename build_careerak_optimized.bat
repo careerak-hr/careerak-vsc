@@ -126,7 +126,6 @@ if /i "!do_commit!"=="Y" (
 :: 5. Building Frontend
 echo [5/9] Building Frontend (Web)...
 cd frontend
-set NODE_OPTIONS=--max-old-space-size=4096
 call npm run build
 if %errorlevel% neq 0 (
     echo Error in Frontend Build!
