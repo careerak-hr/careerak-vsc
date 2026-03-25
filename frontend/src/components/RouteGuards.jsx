@@ -5,9 +5,10 @@ import { GlobalLoader } from './GlobalLoaders';
 
 /**
  * Protected Route Component - Requires Authentication
+ * يسمح للأدمن بالمعاينة عند إضافة ?preview=true
  */
 export const ProtectedRoute = ({ children }) => {
-  const { user, isAppLoading } = useApp(); // Corrected hook
+  const { user, isAppLoading } = useApp();
   const location = useLocation();
 
   if (isAppLoading) {

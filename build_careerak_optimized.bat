@@ -77,7 +77,10 @@ if /i "!do_commit!"=="Y" (
     echo.
     
     set /p "commit_msg=Enter commit message (or press Enter for default): "
-    if "!commit_msg!"=="" set "commit_msg=Build update: %date% %time%"
+    if "!commit_msg!"=="" (
+        for /f "tokens=1-3 delims=/ " %%a in ("%date%") do set "today=%%c-%%b-%%a"
+        set "commit_msg=Update: !today!"
+    )
     
     echo Committing with message: "!commit_msg!"
     git commit -m "!commit_msg!"

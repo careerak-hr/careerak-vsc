@@ -547,27 +547,63 @@ export default function AuthPage() {
 
   const handleRegisterClick = (e) => {
     e.preventDefault();
+    // زر التسجيل النهائي - يتحقق من كل البيانات
     if (validateForm()) {
       setShowConfirmPopup(true);
+    } else {
+      // التمرير لأول خطأ
+      const firstError = document.querySelector('.auth-error-message, [class*="error"]');
+      if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
   const handleFinalRegister = async () => {
     setIsSubmitting(true);
     try {
-      console.log('Registering user:', { userType, formData, profileImage });
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // مسح التقدم المحفوظ بعد إكمال التسجيل (Requirement 6.5)
+      // بناء بيانات التسجيل
+      const registrationData = {
+        userType,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        companyName: formData.companyName,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        countryCode: formData.countryCode,
+        country: formData.country,
+        city: formData.city,
+        education: formData.education,
+        specialization: formData.specialization,
+        interests: formData.interests,
+        birthDate: formData.birthDate,
+        gender: formData.gender,
+        isSpecialNeeds: formData.isSpecialNeeds,
+        specialNeedType: formData.specialNeedType,
+        industry: formData.industry,
+        subIndustry: formData.subIndustry,
+        authorizedName: formData.authorizedName,
+        authorizedPosition: formData.authorizedPosition,
+        companyKeywords: formData.companyKeywords,
+        profileImage: profileImage || null,
+      };
+
+      const { default: api } = await import('../services/api');
+      const response = await api.post('/users/register', registrationData);
+
+      // مسح التقدم المحفوظ بعد إكمال التسجيل
       clearProgress();
-      console.log('🗑️ Progress cleared after successful registration');
-      
-      // Close confirmation popup after successful registration
       setShowConfirmPopup(false);
+
+      // الانتقال لصفحة OTP أو الدخول
+      const { default: navigate } = await import('react-router-dom').then(m => ({ default: m.useNavigate })).catch(() => ({ default: null }));
+      window.location.href = '/otp-verify';
+
     } catch (error) {
       console.error('Registration error:', error);
+      const errorMsg = error.response?.data?.error || error.response?.data?.message || 
+        (language === 'ar' ? 'حدث خطأ أثناء التسجيل' : 'Registration failed');
+      setFieldErrors(prev => ({ ...prev, general: errorMsg }));
+      setShowConfirmPopup(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -608,11 +644,14 @@ export default function AuthPage() {
   // Navigation Handlers (Requirement 5.6, 5.7)
   const handleNext = () => {
     if (currentStep < 4) {
+      // التحقق من الخطوة الحالية قبل الانتقال
+      if (isNextDisabled()) return;
       setCurrentStep(prev => prev + 1);
-      // حفظ التقدم عند الانتقال للخطوة التالية
       if (userType) {
         saveProgress(currentStep + 1, { userType, ...formData });
       }
+      // التمرير للأعلى
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 

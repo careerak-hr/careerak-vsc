@@ -53,21 +53,9 @@ export async function checkEmailAvailability(email) {
     }
 
     // التحقق عبر API (server-side)
-    const apiUrl = import.meta.env.VITE_API_URL || '';
-    const response = await fetch(`${apiUrl}/auth/check-email`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
+    const { default: api } = await import('../services/api');
+    const response = await api.post('/auth/check-email', { email });
+    return response.data;
   } catch (error) {
     console.error('Error checking email:', error);
     return {

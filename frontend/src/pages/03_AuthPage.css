@@ -23,7 +23,8 @@
 }
 
 .auth-user-type-btn-active {
-  @apply bg-primary text-accent;
+  background-color: #304B60;
+  color: #D48161;
 }
 
 .auth-user-type-btn-inactive {
@@ -307,7 +308,9 @@ textarea::-moz-validation-bubble-message {
 }
 
 .auth-submit-btn {
-  @apply w-full bg-primary text-accent py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-6;
+  @apply w-full py-6 rounded-3xl font-black text-xl shadow-2xl active:scale-95 transition-all mt-6;
+  background-color: #304B60;
+  color: #D48161;
 }
 /* Semantic Form Elements */
 .auth-fieldset {

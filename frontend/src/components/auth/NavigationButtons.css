@@ -44,16 +44,16 @@
 
 /* Primary Button (Next/Submit) */
 .navigation-btn-primary {
-  background-color: #D48161; /* Accent color */
-  color: white;
-  border-color: #D48161;
+  background-color: #304B60;
+  color: #D48161;
+  border-color: #304B60;
 }
 
 .navigation-btn-primary:hover:not(:disabled) {
-  background-color: #c06f51;
-  border-color: #c06f51;
+  background-color: #253d50;
+  border-color: #253d50;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(212, 129, 97, 0.3);
+  box-shadow: 0 4px 8px rgba(48, 75, 96, 0.3);
 }
 
 .navigation-btn-primary:active:not(:disabled) {
@@ -63,13 +63,13 @@
 /* Secondary Button (Previous) */
 .navigation-btn-secondary {
   background-color: transparent;
-  color: #304B60; /* Primary color */
+  color: #304B60;
   border-color: #304B60;
 }
 
 .navigation-btn-secondary:hover:not(:disabled) {
   background-color: #304B60;
-  color: white;
+  color: #D48161;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(48, 75, 96, 0.2);
 }

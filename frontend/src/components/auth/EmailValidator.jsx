@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
+import api from '../../services/api';
 
 // Simple SVG Icons
 const CheckCircle = ({ className, size = 20 }) => (
@@ -124,21 +125,8 @@ function EmailValidator({
         }
 
         // التحقق عبر API (server-side)
-        const apiUrl = import.meta.env.VITE_API_URL || '';
-        const response = await fetch(`${apiUrl}/auth/check-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email: value }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        setValidation(data);
+        const response = await api.post('/auth/check-email', { email: value });
+        setValidation(response.data);
       } catch (error) {
         console.error('Error checking email:', error);
         setValidation({

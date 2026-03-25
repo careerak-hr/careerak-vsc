@@ -291,7 +291,7 @@ const AdminDashboard = () => {
                         onChange={(e) => {
                             if (e.target.value) {
                                 navigate(e.target.value + '?preview=true');
-                                e.target.value = ''; // إعادة تعيين القيمة
+                                e.target.value = '';
                             }
                         }}
                         defaultValue=""
@@ -302,167 +302,83 @@ const AdminDashboard = () => {
                              'Select a page...'}
                         </option>
                         
-                        {/* الصفحات العامة */}
-                        <option value="/entry">
-                            {language === 'ar' ? '🏠 الصفحة الرئيسية' : 
-                             language === 'fr' ? '🏠 Page d\'accueil' : 
-                             '🏠 Home Page'}
-                        </option>
-                        <option value="/language">
-                            {language === 'ar' ? '🌐 اختيار اللغة' : 
-                             language === 'fr' ? '🌐 Choix de langue' : 
-                             '🌐 Language Selection'}
-                        </option>
-                        <option value="/login">
-                            {language === 'ar' ? '🔐 تسجيل الدخول' : 
-                             language === 'fr' ? '🔐 Connexion' : 
-                             '🔐 Login'}
-                        </option>
-                        <option value="/auth">
-                            {language === 'ar' ? '📝 التسجيل' : 
-                             language === 'fr' ? '📝 Inscription' : 
-                             '📝 Registration'}
-                        </option>
-                        <option value="/otp-verify">
-                            {language === 'ar' ? '🔢 التحقق من OTP' : 
-                             language === 'fr' ? '🔢 Vérification OTP' : 
-                             '🔢 OTP Verification'}
-                        </option>
-                        
-                        {/* صفحات التهيئة */}
-                        <option value="/onboarding-individuals">
-                            {language === 'ar' ? '🚀 تهيئة الأفراد' : 
-                             language === 'fr' ? '🚀 Intégration Individus' : 
-                             '🚀 Individuals Onboarding'}
-                        </option>
-                        <option value="/onboarding-companies">
-                            {language === 'ar' ? '🚀 تهيئة الشركات' : 
-                             language === 'fr' ? '🚀 Intégration Entreprises' : 
-                             '🚀 Companies Onboarding'}
-                        </option>
-                        <option value="/onboarding-illiterate">
-                            {language === 'ar' ? '🚀 تهيئة الأميين' : 
-                             language === 'fr' ? '🚀 Intégration Analphabètes' : 
-                             '🚀 Illiterate Onboarding'}
-                        </option>
-                        <option value="/onboarding-visual">
-                            {language === 'ar' ? '🚀 تهيئة المكفوفين' : 
-                             language === 'fr' ? '🚀 Intégration Malvoyants' : 
-                             '🚀 Visual Onboarding'}
-                        </option>
-                        <option value="/onboarding-ultimate">
-                            {language === 'ar' ? '🚀 التهيئة المتقدمة' : 
-                             language === 'fr' ? '🚀 Intégration Ultime' : 
-                             '🚀 Ultimate Onboarding'}
-                        </option>
-                        
-                        {/* الواجهات */}
-                        <option value="/interface-individuals">
-                            {language === 'ar' ? '👤 واجهة الأفراد' : 
-                             language === 'fr' ? '👤 Interface Individus' : 
-                             '👤 Individuals Interface'}
-                        </option>
-                        <option value="/interface-companies">
-                            {language === 'ar' ? '🏢 واجهة الشركات' : 
-                             language === 'fr' ? '🏢 Interface Entreprises' : 
-                             '🏢 Companies Interface'}
-                        </option>
-                        <option value="/interface-illiterate">
-                            {language === 'ar' ? '📖 واجهة الأميين' : 
-                             language === 'fr' ? '📖 Interface Analphabètes' : 
-                             '📖 Illiterate Interface'}
-                        </option>
-                        <option value="/interface-visual">
-                            {language === 'ar' ? '👁️ واجهة المكفوفين' : 
-                             language === 'fr' ? '👁️ Interface Malvoyants' : 
-                             '👁️ Visual Interface'}
-                        </option>
-                        <option value="/interface-ultimate">
-                            {language === 'ar' ? '⭐ الواجهة المتقدمة' : 
-                             language === 'fr' ? '⭐ Interface Ultime' : 
-                             '⭐ Ultimate Interface'}
-                        </option>
-                        <option value="/interface-shops">
-                            {language === 'ar' ? '🛍️ واجهة المتاجر' : 
-                             language === 'fr' ? '🛍️ Interface Boutiques' : 
-                             '🛍️ Shops Interface'}
-                        </option>
-                        <option value="/interface-workshops">
-                            {language === 'ar' ? '🔧 واجهة الورش' : 
-                             language === 'fr' ? '🔧 Interface Ateliers' : 
-                             '🔧 Workshops Interface'}
-                        </option>
-                        
-                        {/* الوظائف والدورات */}
-                        <option value="/job-postings">
-                            {language === 'ar' ? '💼 الوظائف' : 
-                             language === 'fr' ? '💼 Emplois' : 
-                             '💼 Job Postings'}
-                        </option>
-                        <option value="/post-job">
-                            {language === 'ar' ? '➕ نشر وظيفة' : 
-                             language === 'fr' ? '➕ Publier Emploi' : 
-                             '➕ Post Job'}
-                        </option>
-                        <option value="/courses">
-                            {language === 'ar' ? '🎓 الدورات' : 
-                             language === 'fr' ? '🎓 Cours' : 
-                             '🎓 Courses'}
-                        </option>
-                        <option value="/post-course">
-                            {language === 'ar' ? '➕ نشر دورة' : 
-                             language === 'fr' ? '➕ Publier Cours' : 
-                             '➕ Post Course'}
-                        </option>
-                        
-                        {/* الإعدادات والملف الشخصي */}
-                        <option value="/profile">
-                            {language === 'ar' ? '👤 الملف الشخصي' : 
-                             language === 'fr' ? '👤 Profil' : 
-                             '👤 Profile'}
-                        </option>
-                        <option value="/settings">
-                            {language === 'ar' ? '⚙️ الإعدادات' : 
-                             language === 'fr' ? '⚙️ Paramètres' : 
-                             '⚙️ Settings'}
-                        </option>
-                        <option value="/policy">
-                            {language === 'ar' ? '🔒 سياسة الخصوصية' : 
-                             language === 'fr' ? '🔒 Politique de Confidentialité' : 
-                             '🔒 Privacy Policy'}
-                        </option>
-                        
-                        {/* صفحات الأدمن */}
-                        <option value="/admin-dashboard">
-                            {language === 'ar' ? '📊 لوحة التحكم الرئيسية' : 
-                             language === 'fr' ? '📊 Tableau de Bord Principal' : 
-                             '📊 Main Dashboard'}
-                        </option>
-                        <option value="/admin-sub-dashboard">
-                            {language === 'ar' ? '📈 لوحة التحكم الفرعية' : 
-                             language === 'fr' ? '📈 Sous-Tableau de Bord' : 
-                             '📈 Sub Dashboard'}
-                        </option>
-                        <option value="/admin-pages">
-                            {language === 'ar' ? '📄 متصفح الصفحات' : 
-                             language === 'fr' ? '📄 Navigateur de Pages' : 
-                             '📄 Pages Navigator'}
-                        </option>
-                        <option value="/admin-system">
-                            {language === 'ar' ? '🖥️ التحكم بالنظام' : 
-                             language === 'fr' ? '🖥️ Contrôle Système' : 
-                             '🖥️ System Control'}
-                        </option>
-                        <option value="/admin-database">
-                            {language === 'ar' ? '🗄️ إدارة قاعدة البيانات' : 
-                             language === 'fr' ? '🗄️ Gestion Base de Données' : 
-                             '🗄️ Database Manager'}
-                        </option>
-                        <option value="/admin-code-editor">
-                            {language === 'ar' ? '💻 محرر الأكواد' : 
-                             language === 'fr' ? '💻 Éditeur de Code' : 
-                             '💻 Code Editor'}
-                        </option>
+                        {/* ── الصفحات العامة ── */}
+                        <optgroup label={language === 'ar' ? '🌐 عام' : language === 'fr' ? '🌐 Général' : '🌐 General'}>
+                            <option value="/entry">🏠 {language === 'ar' ? 'الصفحة الرئيسية' : language === 'fr' ? "Page d'accueil" : 'Home Page'}</option>
+                            <option value="/language">🌐 {language === 'ar' ? 'اختيار اللغة' : language === 'fr' ? 'Choix de langue' : 'Language Selection'}</option>
+                            <option value="/login">🔐 {language === 'ar' ? 'تسجيل الدخول' : language === 'fr' ? 'Connexion' : 'Login'}</option>
+                            <option value="/auth">📝 {language === 'ar' ? 'التسجيل' : language === 'fr' ? 'Inscription' : 'Registration'}</option>
+                            <option value="/otp-verify">🔢 {language === 'ar' ? 'التحقق OTP' : language === 'fr' ? 'Vérification OTP' : 'OTP Verification'}</option>
+                            <option value="/forgot-password">🔑 {language === 'ar' ? 'نسيت كلمة المرور' : language === 'fr' ? 'Mot de passe oublié' : 'Forgot Password'}</option>
+                            <option value="/policy">🔒 {language === 'ar' ? 'سياسة الخصوصية' : language === 'fr' ? 'Politique de Confidentialité' : 'Privacy Policy'}</option>
+                            <option value="/verify">✅ {language === 'ar' ? 'التحقق من الشهادة' : language === 'fr' ? 'Vérification Certificat' : 'Certificate Verification'}</option>
+                        </optgroup>
+
+                        {/* ── التهيئة ── */}
+                        <optgroup label={language === 'ar' ? '🚀 التهيئة' : language === 'fr' ? '🚀 Intégration' : '🚀 Onboarding'}>
+                            <option value="/onboarding-individuals">👤 {language === 'ar' ? 'تهيئة الأفراد' : language === 'fr' ? 'Intégration Individus' : 'Individuals Onboarding'}</option>
+                            <option value="/onboarding-companies">🏢 {language === 'ar' ? 'تهيئة الشركات' : language === 'fr' ? 'Intégration Entreprises' : 'Companies Onboarding'}</option>
+                            <option value="/onboarding-illiterate">📖 {language === 'ar' ? 'تهيئة الأميين' : language === 'fr' ? 'Intégration Analphabètes' : 'Illiterate Onboarding'}</option>
+                            <option value="/onboarding-visual">👁️ {language === 'ar' ? 'تهيئة المكفوفين' : language === 'fr' ? 'Intégration Malvoyants' : 'Visual Onboarding'}</option>
+                            <option value="/onboarding-ultimate">⭐ {language === 'ar' ? 'التهيئة المتقدمة' : language === 'fr' ? 'Intégration Ultime' : 'Ultimate Onboarding'}</option>
+                        </optgroup>
+
+                        {/* ── الواجهات ── */}
+                        <optgroup label={language === 'ar' ? '🖥️ الواجهات' : language === 'fr' ? '🖥️ Interfaces' : '🖥️ Interfaces'}>
+                            <option value="/interface-individuals">👤 {language === 'ar' ? 'واجهة الأفراد' : language === 'fr' ? 'Interface Individus' : 'Individuals Interface'}</option>
+                            <option value="/interface-companies">🏢 {language === 'ar' ? 'واجهة الشركات' : language === 'fr' ? 'Interface Entreprises' : 'Companies Interface'}</option>
+                            <option value="/interface-illiterate">📖 {language === 'ar' ? 'واجهة الأميين' : language === 'fr' ? 'Interface Analphabètes' : 'Illiterate Interface'}</option>
+                            <option value="/interface-visual">👁️ {language === 'ar' ? 'واجهة المكفوفين' : language === 'fr' ? 'Interface Malvoyants' : 'Visual Interface'}</option>
+                            <option value="/interface-ultimate">⭐ {language === 'ar' ? 'الواجهة المتقدمة' : language === 'fr' ? 'Interface Ultime' : 'Ultimate Interface'}</option>
+                            <option value="/interface-shops">🛍️ {language === 'ar' ? 'واجهة المتاجر' : language === 'fr' ? 'Interface Boutiques' : 'Shops Interface'}</option>
+                            <option value="/interface-workshops">🔧 {language === 'ar' ? 'واجهة الورش' : language === 'fr' ? 'Interface Ateliers' : 'Workshops Interface'}</option>
+                        </optgroup>
+
+                        {/* ── الوظائف ── */}
+                        <optgroup label={language === 'ar' ? '💼 الوظائف' : language === 'fr' ? '💼 Emplois' : '💼 Jobs'}>
+                            <option value="/job-postings">💼 {language === 'ar' ? 'قائمة الوظائف' : language === 'fr' ? 'Liste des Emplois' : 'Job Postings'}</option>
+                            <option value="/post-job">➕ {language === 'ar' ? 'نشر وظيفة' : language === 'fr' ? 'Publier Emploi' : 'Post Job'}</option>
+                            <option value="/bookmarked-jobs">🔖 {language === 'ar' ? 'الوظائف المحفوظة' : language === 'fr' ? 'Emplois Sauvegardés' : 'Bookmarked Jobs'}</option>
+                        </optgroup>
+
+                        {/* ── الدورات ── */}
+                        <optgroup label={language === 'ar' ? '🎓 الدورات' : language === 'fr' ? '🎓 Cours' : '🎓 Courses'}>
+                            <option value="/courses">🎓 {language === 'ar' ? 'قائمة الدورات' : language === 'fr' ? 'Liste des Cours' : 'Courses'}</option>
+                            <option value="/post-course">➕ {language === 'ar' ? 'نشر دورة' : language === 'fr' ? 'Publier Cours' : 'Post Course'}</option>
+                            <option value="/wishlist">❤️ {language === 'ar' ? 'قائمة الأمنيات' : language === 'fr' ? 'Liste de Souhaits' : 'Wishlist'}</option>
+                        </optgroup>
+
+                        {/* ── الملف الشخصي ── */}
+                        <optgroup label={language === 'ar' ? '👤 الملف الشخصي' : language === 'fr' ? '👤 Profil' : '👤 Profile'}>
+                            <option value="/profile">👤 {language === 'ar' ? 'الملف الشخصي' : language === 'fr' ? 'Profil' : 'Profile'}</option>
+                            <option value="/settings">⚙️ {language === 'ar' ? 'الإعدادات' : language === 'fr' ? 'Paramètres' : 'Settings'}</option>
+                            <option value="/notifications">🔔 {language === 'ar' ? 'الإشعارات' : language === 'fr' ? 'Notifications' : 'Notifications'}</option>
+                            <option value="/connected-accounts">🔗 {language === 'ar' ? 'الحسابات المرتبطة' : language === 'fr' ? 'Comptes Connectés' : 'Connected Accounts'}</option>
+                            <option value="/achievements">🏆 {language === 'ar' ? 'الإنجازات' : language === 'fr' ? 'Réalisations' : 'Achievements'}</option>
+                            <option value="/certificates">🎖️ {language === 'ar' ? 'الشهادات' : language === 'fr' ? 'Certificats' : 'Certificates'}</option>
+                            <option value="/my-appointments">📅 {language === 'ar' ? 'مواعيدي' : language === 'fr' ? 'Mes Rendez-vous' : 'My Appointments'}</option>
+                        </optgroup>
+
+                        {/* ── الإحالات والمكافآت ── */}
+                        <optgroup label={language === 'ar' ? '🎁 الإحالات والمكافآت' : language === 'fr' ? '🎁 Parrainages' : '🎁 Referrals & Rewards'}>
+                            <option value="/my-referrals">📨 {language === 'ar' ? 'إحالاتي' : language === 'fr' ? 'Mes Parrainages' : 'My Referrals'}</option>
+                            <option value="/referral-stats">📊 {language === 'ar' ? 'إحصائيات الإحالة' : language === 'fr' ? 'Stats Parrainages' : 'Referral Stats'}</option>
+                            <option value="/company-referrals">🏢 {language === 'ar' ? 'إحالات الشركة' : language === 'fr' ? 'Parrainages Entreprise' : 'Company Referrals'}</option>
+                            <option value="/rewards-store">🛒 {language === 'ar' ? 'متجر المكافآت' : language === 'fr' ? 'Boutique Récompenses' : 'Rewards Store'}</option>
+                            <option value="/leaderboard">🥇 {language === 'ar' ? 'لوحة المتصدرين' : language === 'fr' ? 'Classement' : 'Leaderboard'}</option>
+                        </optgroup>
+
+                        {/* ── صفحات الأدمن ── */}
+                        <optgroup label={language === 'ar' ? '🛡️ الأدمن' : language === 'fr' ? '🛡️ Admin' : '🛡️ Admin'}>
+                            <option value="/admin-dashboard">📊 {language === 'ar' ? 'لوحة التحكم الرئيسية' : language === 'fr' ? 'Tableau de Bord Principal' : 'Main Dashboard'}</option>
+                            <option value="/admin-sub-dashboard">📈 {language === 'ar' ? 'لوحة التحكم الفرعية' : language === 'fr' ? 'Sous-Tableau de Bord' : 'Sub Dashboard'}</option>
+                            <option value="/admin-pages">📄 {language === 'ar' ? 'متصفح الصفحات' : language === 'fr' ? 'Navigateur de Pages' : 'Pages Navigator'}</option>
+                            <option value="/admin-system">🖥️ {language === 'ar' ? 'التحكم بالنظام' : language === 'fr' ? 'Contrôle Système' : 'System Control'}</option>
+                            <option value="/admin-database">🗄️ {language === 'ar' ? 'إدارة قاعدة البيانات' : language === 'fr' ? 'Gestion Base de Données' : 'Database Manager'}</option>
+                            <option value="/admin-code-editor">💻 {language === 'ar' ? 'محرر الأكواد' : language === 'fr' ? 'Éditeur de Code' : 'Code Editor'}</option>
+                            <option value="/admin/fraud-review">🔍 {language === 'ar' ? 'مراجعة الاحتيال' : language === 'fr' ? 'Révision Fraude' : 'Fraud Review'}</option>
+                            <option value="/admin/fraud">🚨 {language === 'ar' ? 'لوحة الاحتيال' : language === 'fr' ? 'Tableau Fraude' : 'Fraud Dashboard'}</option>
+                        </optgroup>
                     </select>
                 </div>
 

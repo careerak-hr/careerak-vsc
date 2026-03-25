@@ -3,7 +3,9 @@
 }
 
 .entry-page-gradient {
-  @apply absolute inset-0 bg-gradient-to-b from-[#304B60]/10 to-transparent transition-opacity duration-1000;
+  @apply absolute inset-0 bg-gradient-to-b from-[#304B60]/10 to-transparent;
+  opacity: 0;
+  animation: entry-fade-in 1s ease-out 0.5s forwards;
 }
 
 .entry-page-main-content {
@@ -14,28 +16,55 @@
   @apply relative flex items-center justify-center;
 }
 
+/* الدائرة المضيئة - تبدأ بعد ثانية ونصف */
 .entry-page-glowing-circle {
-  @apply absolute w-[150vw] h-[150vw] max-w-[800px] max-h-[800px] bg-[#304B60] opacity-[0.03] rounded-full transition-transform duration-[7000ms] ease-out;
+  @apply absolute rounded-full bg-[#304B60];
+  width: 150vw;
+  height: 150vw;
+  max-width: 800px;
+  max-height: 800px;
+  opacity: 0;
+  transform: scale(0);
+  will-change: transform, opacity;
+  animation: entry-glow-expand 7s ease-out 1.5s forwards;
 }
 
+/* اللوجو - يظهر بعد ثانية */
 .entry-page-logo-animation-wrapper {
-  @apply relative transition-all duration-1000 ease-out transform;
+  @apply relative;
+  opacity: 0;
+  transform: scale(0.75);
+  will-change: transform, opacity;
+  animation:
+    entry-logo-appear 1s ease-out 0.8s forwards,
+    entry-logo-settle 0.8s ease-in-out 2.3s forwards,
+    entry-logo-exit 0.8s ease-in 8s forwards;
 }
 
 .entry-page-logo-inner-wrapper {
   @apply relative p-2 md:p-4;
 }
 
+/* الدوران - CSS فقط، لا يتأثر بالـ JS */
 .entry-page-spinning-border {
-  @apply absolute inset-0 border-2 border-[#D48161]/20 rounded-full animate-spin-slow;
+  @apply absolute inset-0 border-2 border-[#D48161]/20 rounded-full;
+  will-change: transform;
+  animation: entry-spin 8s linear infinite;
 }
 
 .entry-page-logo {
   @apply relative h-64 w-64 md:h-96 md:w-96 rounded-full border-[4px] border-[#304B60] shadow-2xl object-cover;
 }
 
+/* النص - يظهر بعد ثانية */
 .entry-page-text-container {
-  @apply mt-6 md:mt-12 text-center transition-all duration-1000 delay-300 transform;
+  @apply mt-6 md:mt-12 text-center;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: transform, opacity;
+  animation:
+    entry-text-appear 1s ease-out 1s forwards,
+    entry-text-exit 0.8s ease-in 7.8s forwards;
 }
 
 .entry-page-title {
@@ -58,6 +87,83 @@
   @apply absolute bottom-10 md:bottom-20 w-48 md:w-64 h-[2px] bg-[#304B60]/10 rounded-full overflow-hidden;
 }
 
+/* شريط التقدم - CSS animation بدلاً من JS */
 .entry-page-progress-bar {
-  @apply h-full bg-[#D48161] transition-all ease-linear;
+  @apply h-full bg-[#D48161];
+  width: 0%;
+  will-change: width;
+  animation: entry-progress 8.5s linear 0.8s forwards;
+}
+
+/* ========== Keyframes ========== */
+
+@keyframes entry-fade-in {
+  to { opacity: 1; }
+}
+
+@keyframes entry-logo-appear {
+  to {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes entry-logo-settle {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes entry-logo-exit {
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes entry-text-appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes entry-text-exit {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes entry-glow-expand {
+  0%   { opacity: 0;    transform: scale(0); }
+  10%  { opacity: 0.03; transform: scale(0.5); }
+  100% { opacity: 0.03; transform: scale(1.5); }
+}
+
+@keyframes entry-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes entry-progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* إيقاف الأنيميشن لمن يفضل تقليل الحركة */
+@media (prefers-reduced-motion: reduce) {
+  .entry-page-logo-animation-wrapper,
+  .entry-page-text-container,
+  .entry-page-spinning-border,
+  .entry-page-glowing-circle,
+  .entry-page-gradient {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .entry-page-progress-bar {
+    animation: entry-progress 8.5s linear 0.8s forwards;
+  }
 }
